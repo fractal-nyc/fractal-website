@@ -181,7 +181,7 @@ export const HOUSES: House[] = [
     name: "The Lab",
     subtitle: "Research + Writing",
     slug: "lab",
-    route: "/research-writing",
+    route: "/lab",
     color: "#6B4C9A",
     tagline: "Want to think, build, publish?",
     description:
