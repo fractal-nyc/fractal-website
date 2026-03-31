@@ -1,8 +1,6 @@
 import { Navbar } from "@/components/layout/Navbar";
 import { Hero } from "@/components/sections/Hero";
 import { OriginStory } from "@/components/sections/OriginStory";
-import { Campus } from "@/components/sections/Campus";
-import { Projects } from "@/components/sections/Projects";
 import { Vision } from "@/components/sections/Vision";
 import { Directory } from "@/components/sections/Directory";
 import { Footer } from "@/components/layout/Footer";
@@ -21,8 +19,6 @@ export function Home() {
       <Navbar />
       <Hero />
       <OriginStory />
-      <Campus />
-      <Projects />
       <Vision />
       <Directory />
       <Footer />
