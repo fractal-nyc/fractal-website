@@ -9,8 +9,9 @@ const directoryItems = [
   { title: "A Campus", href: "/campus" },
   { title: "Events", href: "/events" },
   { title: "Political Club", href: "/political-club" },
-  { title: "Research + Writing", href: "/research-writing" },
-  { title: "Mission", href: "/mission" },
+  { title: "Lab", href: "/lab" },
+  { title: "Story", href: "/story" },
+  { title: "People", href: "/people" },
 ];
 
 export function Directory() {

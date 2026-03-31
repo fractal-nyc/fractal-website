@@ -3,14 +3,15 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Home } from "@/pages/Home";
+import { ProtocolPage } from "@/pages/ProtocolPage";
+import { NeighborhoodPage } from "@/pages/NeighborhoodPage";
 import { EventsPage } from "@/pages/EventsPage";
 import { CampusPage } from "@/pages/CampusPage";
 import { LiberalArtsPage } from "@/pages/LiberalArtsPage";
-import { ProtocolPage } from "@/pages/ProtocolPage";
-import { NeighborhoodPage } from "@/pages/NeighborhoodPage";
 import { PoliticalClubPage } from "@/pages/PoliticalClubPage";
-import { ResearchPage } from "@/pages/ResearchPage";
-import { MissionPage } from "@/pages/MissionPage";
+import { LabPage } from "@/pages/LabPage";
+import { StoryPage } from "@/pages/StoryPage";
+import { PeoplePage } from "@/pages/PeoplePage";
 import NotFound from "@/pages/not-found";
 
 const queryClient = new QueryClient();
@@ -25,8 +26,9 @@ function Router() {
       <Route path="/campus" component={CampusPage} />
       <Route path="/events" component={EventsPage} />
       <Route path="/political-club" component={PoliticalClubPage} />
-      <Route path="/research-writing" component={ResearchPage} />
-      <Route path="/mission" component={MissionPage} />
+      <Route path="/lab" component={LabPage} />
+      <Route path="/story" component={StoryPage} />
+      <Route path="/people" component={PeoplePage} />
       <Route component={NotFound} />
     </Switch>
   );
