@@ -1,7 +1,5 @@
 import { Navbar } from "@/components/layout/Navbar";
 import { Hero } from "@/components/sections/Hero";
-import { OriginStory } from "@/components/sections/OriginStory";
-import { Vision } from "@/components/sections/Vision";
 import { HouseBannerGrid } from "@/components/house/HouseBannerGrid";
 import { Directory } from "@/components/sections/Directory";
 import { Footer } from "@/components/layout/Footer";
@@ -19,8 +17,6 @@ export function Home() {
     <main className="min-h-screen bg-background text-foreground selection:bg-foreground selection:text-background">
       <Navbar />
       <Hero />
-      <OriginStory />
-      <Vision />
       <HouseBannerGrid />
       <Directory />
       <Footer />
