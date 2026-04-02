@@ -21,6 +21,7 @@ export interface Person {
 export interface House {
   id: string;
   name: string;
+  displayName?: string; // user-facing label when different from name
   subtitle: string; // "The Neighborhood", "The School", etc.
   slug: string; // URL slug
   route: string; // full route path
@@ -97,6 +98,7 @@ export const HOUSES: House[] = [
   {
     id: "neighborhood",
     name: "The Neighborhood",
+    displayName: "Co-Living",
     subtitle: "Co-Living",
     slug: "neighborhood",
     route: "/neighborhood",
@@ -149,6 +151,7 @@ export const HOUSES: House[] = [
   {
     id: "school",
     name: "The School",
+    displayName: "New Liberal Arts",
     subtitle: "New Liberal Arts",
     slug: "new-liberal-arts",
     route: "/new-liberal-arts",
@@ -164,6 +167,7 @@ export const HOUSES: House[] = [
   {
     id: "forum",
     name: "The Forum",
+    displayName: "Political Club",
     subtitle: "Political Club",
     slug: "political-club",
     route: "/political-club",
