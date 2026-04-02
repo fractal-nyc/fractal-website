@@ -1,0 +1,41 @@
+{
+  "assigned_to": "human:jules",
+  "branch_links": [],
+  "comment_count": 1,
+  "complexity": null,
+  "created_at": "2026-03-31T16:00:18Z",
+  "created_by": "agent:claude-opus-4-orchestrator",
+  "custom_fields": {},
+  "description": null,
+  "done_at": null,
+  "evidence_refs": [],
+  "id": "task_01KN29ZNEPPHGZSEZRFH3GE0G9",
+  "last_event_id": "ev_01KN2A4RKJJD3WAD9T5AMXPGXR",
+  "last_status_changed_at": "2026-03-31T16:00:18Z",
+  "priority": "medium",
+  "relationships_out": [
+    {
+      "created_at": "2026-03-31T16:01:25Z",
+      "created_by": "agent:claude-opus-4-orchestrator",
+      "note": null,
+      "target_task_id": "task_01KN29ZJV2VZXTY8B3V8C15VYK",
+      "type": "depends_on"
+    },
+    {
+      "created_at": "2026-03-31T16:01:25Z",
+      "created_by": "agent:claude-opus-4-orchestrator",
+      "note": null,
+      "target_task_id": "task_01KN29ZKGX9CZ00ESEHXAX85GX",
+      "type": "depends_on"
+    }
+  ],
+  "reopened_count": 0,
+  "schema_version": 1,
+  "short_id": "FRAC-28",
+  "status": "backlog",
+  "tags": null,
+  "title": "Home page house banner grid \u2014 six clickable banners",
+  "type": "task",
+  "updated_at": "2026-03-31T16:03:05Z",
+  "urgency": null
+}
