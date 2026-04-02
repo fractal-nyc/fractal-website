@@ -2,6 +2,7 @@ import { Navbar } from "@/components/layout/Navbar";
 import { Hero } from "@/components/sections/Hero";
 import { OriginStory } from "@/components/sections/OriginStory";
 import { Vision } from "@/components/sections/Vision";
+import { HouseBannerGrid } from "@/components/house/HouseBannerGrid";
 import { Directory } from "@/components/sections/Directory";
 import { Footer } from "@/components/layout/Footer";
 import { useEffect } from "react";
@@ -20,6 +21,7 @@ export function Home() {
       <Hero />
       <OriginStory />
       <Vision />
+      <HouseBannerGrid />
       <Directory />
       <Footer />
     </main>
