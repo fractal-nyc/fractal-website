@@ -4,7 +4,6 @@ import { OriginStory } from "@/components/sections/OriginStory";
 import { Vision } from "@/components/sections/Vision";
 import { HouseBannerGrid } from "@/components/house/HouseBannerGrid";
 import { Directory } from "@/components/sections/Directory";
-import { HouseBannerGrid } from "@/components/house/HouseBannerGrid";
 import { Footer } from "@/components/layout/Footer";
 import { useEffect } from "react";
 

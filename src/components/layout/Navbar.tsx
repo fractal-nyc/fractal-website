@@ -27,6 +27,7 @@ export function Navbar() {
     { name: "New Liberal Arts", href: "/new-liberal-arts" },
     { name: "Political Club", href: "/political-club" },
     { name: "Lab", href: "/lab" },
+    { name: "People", href: "/people" },
   ];
 
   return (
@@ -45,7 +46,7 @@ export function Navbar() {
         <div className="relative py-5 max-md:hidden" style={{ paddingLeft: '6%', paddingRight: '6%' }}>
           <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-4">
             <nav className="flex items-center justify-between" style={{ transform: 'translateY(-20px)' }}>
-              {sectionLinks.slice(0, 3).map((link) => (
+              {sectionLinks.slice(0, 4).map((link) => (
                 <Link
                   key={link.name}
                   href={link.href}
@@ -62,7 +63,7 @@ export function Navbar() {
             </Link>
 
             <nav className="flex items-center justify-between" style={{ transform: 'translateY(-20px)' }}>
-              {sectionLinks.slice(3).map((link) => (
+              {sectionLinks.slice(4).map((link) => (
                 <Link
                   key={link.name}
                   href={link.href}
