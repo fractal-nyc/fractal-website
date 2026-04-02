@@ -1,4 +1,5 @@
 import { Canvas } from "@react-three/fiber";
+import { OrbitControls } from "@react-three/drei";
 import * as THREE from "three";
 import { FractalObject } from "./FractalObject";
 
@@ -14,23 +15,29 @@ function SceneLighting() {
   );
 }
 
-export function FractalCityScene() {
+export function FractalCityScene({ onNavigate }: { onNavigate: (route: string) => void }) {
   const imagePath = `${import.meta.env.BASE_URL}images/hero-bg.png`;
 
   return (
-    <div className="absolute inset-0 z-[1]" style={{ pointerEvents: "none" }}>
+    <div className="absolute inset-0 z-[1]">
       <Canvas
         camera={{ position: [0, 0.8, 8], fov: 50, near: 0.1, far: 100 }}
         dpr={[1, 1.5]}
         gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
-        style={{ background: "transparent" }}
+        style={{ background: "transparent", touchAction: "none" }}
         onCreated={({ gl }) => {
           gl.toneMapping = THREE.NoToneMapping;
           gl.setClearColor(0x000000, 0);
         }}
       >
         <SceneLighting />
-        <FractalObject imagePath={imagePath} />
+        <FractalObject imagePath={imagePath} onNavigate={onNavigate} />
+        <OrbitControls
+          enableZoom={false}
+          enablePan={false}
+          rotateSpeed={0.5}
+          target={[0, 0.35, 0]}
+        />
       </Canvas>
     </div>
   );
