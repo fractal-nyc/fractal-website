@@ -124,7 +124,7 @@ function PhotoCenter({
       <meshBasicMaterial map={texture} color="#ffffff" />
       {hovered && (
         <Html center distanceFactor={8} style={{ pointerEvents: "none" }}>
-          <div style={tooltipStyle("#1a1a1a")}>Fractal Collective</div>
+          <div style={tooltipStyle("#1a1a1a")}>The Protocol</div>
         </Html>
       )}
     </mesh>
