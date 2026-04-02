@@ -20,14 +20,13 @@ export function Navbar() {
   });
 
   const sectionLinks = [
-    { name: "The Protocol", href: "/the-protocol" },
-    { name: "Neighborhood", href: "/neighborhood" },
-    { name: "New Liberal Arts", href: "/new-liberal-arts" },
-    { name: "A Campus", href: "/campus" },
+    { name: "Our Story", href: "/story" },
+    { name: "Co-Living", href: "/neighborhood" },
     { name: "Events", href: "/events" },
+    { name: "Campus", href: "/campus" },
+    { name: "New Liberal Arts", href: "/new-liberal-arts" },
     { name: "Political Club", href: "/political-club" },
-    { name: "Research + Writing", href: "/research-writing" },
-    { name: "Mission", href: "/mission" },
+    { name: "Lab", href: "/lab" },
   ];
 
   return (
@@ -46,7 +45,7 @@ export function Navbar() {
         <div className="relative py-5 max-md:hidden" style={{ paddingLeft: '6%', paddingRight: '6%' }}>
           <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-4">
             <nav className="flex items-center justify-between" style={{ transform: 'translateY(-20px)' }}>
-              {sectionLinks.slice(0, 4).map((link) => (
+              {sectionLinks.slice(0, 3).map((link) => (
                 <Link
                   key={link.name}
                   href={link.href}
@@ -63,7 +62,7 @@ export function Navbar() {
             </Link>
 
             <nav className="flex items-center justify-between" style={{ transform: 'translateY(-20px)' }}>
-              {sectionLinks.slice(4).map((link) => (
+              {sectionLinks.slice(3).map((link) => (
                 <Link
                   key={link.name}
                   href={link.href}
