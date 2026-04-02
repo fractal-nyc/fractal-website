@@ -1,5 +1,3 @@
-import { SierpinskiCarpet } from "./SierpinskiCarpet";
-
 export function Hero() {
   return (
     <section className="relative min-h-screen flex flex-col items-center justify-center pt-20 overflow-hidden bg-[#faf8f5]">
@@ -22,15 +20,6 @@ export function Hero() {
           }}
         />
       </div>
-
-      {/* Sierpinski carpet — canvas-based animated ASCII art */}
-      <SierpinskiCarpet
-        photoUrl={`${import.meta.env.BASE_URL}images/hero-bg.png`}
-        autoPlay
-        padding={200}
-        className="absolute inset-0 z-[1] pointer-events-none"
-        style={{ transform: "translateY(-1px)" }}
-      />
     </section>
   );
 }
