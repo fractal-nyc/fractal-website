@@ -44,7 +44,7 @@ export function HouseBanner({
     <div
       className={`
         relative flex flex-col items-center justify-center text-center
-        ${isGrid ? "aspect-[3/5]" : "aspect-[3/4] max-w-2xl mx-auto"}
+        ${isGrid ? "aspect-[1/3]" : "aspect-[3/4] max-w-2xl mx-auto"}
         ${className}
       `}
       style={{
@@ -58,7 +58,7 @@ export function HouseBanner({
       <span
         className={`
           font-sans uppercase tracking-widest
-          ${isGrid ? "text-xs mb-3" : "text-sm mb-4"}
+          ${isGrid ? "text-[10px] lg:text-xs mb-2" : "text-sm mb-4"}
         `}
         style={{ opacity: 0.8 }}
       >
@@ -68,8 +68,8 @@ export function HouseBanner({
       {/* Name */}
       <h3
         className={`
-          font-serif leading-tight
-          ${isGrid ? "text-2xl md:text-3xl" : "text-4xl md:text-5xl"}
+          font-serif leading-tight px-2
+          ${isGrid ? "text-base sm:text-lg lg:text-xl" : "text-4xl md:text-5xl"}
         `}
       >
         {house.name}
@@ -78,8 +78,8 @@ export function HouseBanner({
       {/* Tagline */}
       <p
         className={`
-          font-serif italic
-          ${isGrid ? "text-base mt-2" : "text-lg mt-3"}
+          font-serif italic px-2
+          ${isGrid ? "text-xs sm:text-sm mt-1" : "text-lg mt-3"}
         `}
         style={{ opacity: 0.85 }}
       >
@@ -89,7 +89,7 @@ export function HouseBanner({
       {/* Mandelbrot icon — positioned at the V-notch point */}
       <div className="absolute left-1/2 -translate-x-1/2 bottom-[12%]">
         <MandelbrotIcon
-          size={isGrid ? 24 : 40}
+          size={isGrid ? 18 : 40}
           color={iconColor}
         />
       </div>

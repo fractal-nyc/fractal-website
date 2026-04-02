@@ -13,16 +13,16 @@ interface HouseBannerGridProps {
  */
 export function HouseBannerGrid({ className = "" }: HouseBannerGridProps) {
   return (
-    <section className={`py-24 md:py-40 bg-background ${className}`}>
+    <section className={`py-10 md:py-16 bg-background ${className}`}>
       <div className="max-w-7xl mx-auto px-6 md:px-12">
         {/* Section heading */}
         <FadeIn>
-          <div className="mb-16 md:mb-24 flex flex-col md:flex-row md:items-end justify-between gap-8 border-b border-border pb-12">
+          <div className="mb-8 md:mb-10 flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-border pb-6">
             <div>
               <h2 className="text-4xl md:text-6xl font-serif">
                 Six Houses
               </h2>
-              <p className="text-muted-foreground mt-4 font-light text-lg">
+              <p className="text-muted-foreground mt-2 font-light text-lg">
                 The sectors of Fractal.
               </p>
             </div>
@@ -30,7 +30,7 @@ export function HouseBannerGrid({ className = "" }: HouseBannerGridProps) {
         </FadeIn>
 
         {/* Banner grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 md:gap-5">
           {HOUSES.map((house, index) => (
             <FadeIn key={house.id} delay={index * 0.08}>
               <Link
