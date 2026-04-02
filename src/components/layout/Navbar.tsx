@@ -20,14 +20,14 @@ export function Navbar() {
   });
 
   const sectionLinks = [
-    { name: "The Protocol", href: "/the-protocol" },
-    { name: "Neighborhood", href: "/neighborhood" },
-    { name: "New Liberal Arts", href: "/new-liberal-arts" },
-    { name: "A Campus", href: "/campus" },
+    { name: "Our Story", href: "/story" },
+    { name: "Co-Living", href: "/neighborhood" },
     { name: "Events", href: "/events" },
+    { name: "Campus", href: "/campus" },
+    { name: "New Liberal Arts", href: "/new-liberal-arts" },
     { name: "Political Club", href: "/political-club" },
-    { name: "Research + Writing", href: "/research-writing" },
-    { name: "Mission", href: "/mission" },
+    { name: "Lab", href: "/lab" },
+    { name: "People", href: "/people" },
   ];
 
   return (
