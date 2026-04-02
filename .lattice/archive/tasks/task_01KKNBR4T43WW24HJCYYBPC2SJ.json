@@ -1,0 +1,39 @@
+{
+  "assigned_to": null,
+  "branch_links": [
+    {
+      "branch": "frac-17-mission-grid-emojis",
+      "linked_at": "2026-03-14T05:06:01Z",
+      "linked_by": "agent:claude-opus-4-orchestrator",
+      "repo": null
+    }
+  ],
+  "comment_count": 2,
+  "complexity": null,
+  "created_at": "2026-03-14T05:05:20Z",
+  "created_by": "agent:claude-opus-4-orchestrator",
+  "custom_fields": {},
+  "description": null,
+  "done_at": "2026-03-14T05:08:11Z",
+  "evidence_refs": [
+    {
+      "id": "ev_01KKNBX969GZRPX1QJJYC81JKT",
+      "role": "review",
+      "source_type": "comment"
+    }
+  ],
+  "id": "task_01KKNBR4T43WW24HJCYYBPC2SJ",
+  "last_event_id": "ev_01KN25CGD5XV40CQ684M0916Q1",
+  "last_status_changed_at": "2026-03-14T05:08:11Z",
+  "priority": "medium",
+  "relationships_out": [],
+  "reopened_count": 0,
+  "schema_version": 1,
+  "short_id": "FRAC-17",
+  "status": "done",
+  "tags": null,
+  "title": "Add Mission button and change directory grid to 4x2",
+  "type": "task",
+  "updated_at": "2026-03-31T14:39:56Z",
+  "urgency": null
+}

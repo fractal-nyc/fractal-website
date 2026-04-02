@@ -158,6 +158,19 @@ When in doubt, credit the human.
 
 Link feature branches to tasks: `lattice branch-link <task> <branch-name> --actor agent:<your-id>`. Auto-detection works when the branch contains the short code (e.g., `feat/LAT-42-login`), but explicit linking is preferred.
 
+### PRD Check (Mandatory)
+
+**The PRD lives at `.lattice/plans/FRAC-22.md`.** Before and after every PR, the agent must re-read the PRD:
+
+1. **Before starting work / opening PR:** Does the planned work align with the PRD's goals, constraints (especially mobile-first), and site architecture? Have there been any PRD updates that affect this task?
+2. **During review:** Does the implementation match what the PRD specified? Are acceptance criteria met? Does anything contradict the PRD?
+
+If a discrepancy is found between the PRD and the task, **flag it** — don't silently diverge. The PRD is the source of truth for what we're building.
+
+### Mobile-First (Non-Negotiable)
+
+This is a **mobile-first site**. The primary user experience is on a phone screen. Every component must be designed and built for mobile viewports first (375px baseline). Desktop is the progressive enhancement. Tests must include mobile viewport assertions.
+
 ### Leave Breadcrumbs
 
 You are not the last mind that will touch this work. Use `lattice comment` for what you tried, chose, and left undone. Use `plans/<task_id>.md` for structured plans and `notes/<task_id>.md` for working notes and context dumps. The record you leave is the only bridge to the next agent's context.

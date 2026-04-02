@@ -1,0 +1,52 @@
+{
+  "assigned_to": null,
+  "branch_links": [
+    {
+      "branch": "frac-26-house-data",
+      "linked_at": "2026-03-31T16:26:55Z",
+      "linked_by": "agent:claude-opus-4-orchestrator",
+      "repo": null
+    }
+  ],
+  "comment_count": 4,
+  "complexity": null,
+  "created_at": "2026-03-31T16:00:16Z",
+  "created_by": "agent:claude-opus-4-orchestrator",
+  "custom_fields": {},
+  "description": null,
+  "done_at": "2026-03-31T16:42:46Z",
+  "evidence_refs": [
+    {
+      "id": "ev_01KN2CA5CDMNYDHB3Z4J090924",
+      "role": "review",
+      "source_type": "comment"
+    },
+    {
+      "id": "ev_01KN2CD9PJSVPHF9FR782ZYKM7",
+      "role": "review",
+      "source_type": "comment"
+    }
+  ],
+  "id": "task_01KN29ZKGX9CZ00ESEHXAX85GX",
+  "last_event_id": "ev_01KN2CDD37YQNGPJYT9DFCRC3K",
+  "last_status_changed_at": "2026-03-31T16:42:46Z",
+  "priority": "medium",
+  "relationships_out": [
+    {
+      "created_at": "2026-03-31T16:01:24Z",
+      "created_by": "agent:claude-opus-4-orchestrator",
+      "note": null,
+      "target_task_id": "task_01KN29ZJG88FP1KC29EY8CYX10",
+      "type": "depends_on"
+    }
+  ],
+  "reopened_count": 1,
+  "schema_version": 1,
+  "short_id": "FRAC-26",
+  "status": "done",
+  "tags": null,
+  "title": "House data model \u2014 shared data for all 6 houses",
+  "type": "task",
+  "updated_at": "2026-03-31T16:42:46Z",
+  "urgency": null
+}

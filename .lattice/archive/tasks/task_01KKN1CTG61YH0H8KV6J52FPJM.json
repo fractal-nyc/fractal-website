@@ -1,0 +1,45 @@
+{
+  "assigned_to": null,
+  "branch_links": [],
+  "comment_count": 2,
+  "complexity": null,
+  "created_at": "2026-03-14T02:04:23Z",
+  "created_by": "agent:claude-cli",
+  "custom_fields": {},
+  "description": "Update/replace a site section to present Fractal's futurist liberal arts identity and philosophy.",
+  "done_at": "2026-03-14T02:54:44Z",
+  "evidence_refs": [
+    {
+      "id": "ev_01KKN491225CQQGXK54KPDMX34",
+      "role": "review",
+      "source_type": "comment"
+    },
+    {
+      "id": "art_01KKN49121FWE2HAQCK0YQFVVW",
+      "role": "review",
+      "source_type": "artifact"
+    }
+  ],
+  "id": "task_01KKN1CTG61YH0H8KV6J52FPJM",
+  "last_event_id": "ev_01KN25CG8HAD8RE0YBGYT6SHGD",
+  "last_status_changed_at": "2026-03-14T02:54:44Z",
+  "priority": "medium",
+  "relationships_out": [
+    {
+      "created_at": "2026-03-14T02:05:19Z",
+      "created_by": "agent:claude-cli",
+      "note": null,
+      "target_task_id": "task_01KKN1ECCFH85ENM386QJNTNMJ",
+      "type": "depends_on"
+    }
+  ],
+  "reopened_count": 0,
+  "schema_version": 1,
+  "short_id": "FRAC-1",
+  "status": "done",
+  "tags": null,
+  "title": "Rework section: Futurist Liberal Arts",
+  "type": "task",
+  "updated_at": "2026-03-31T14:39:56Z",
+  "urgency": null
+}
