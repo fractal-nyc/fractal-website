@@ -9,12 +9,18 @@ export interface ExternalLink {
   url: string;
 }
 
+export interface PersonSocials {
+  twitter?: string; // handle without @
+  substack?: string; // full URL
+  website?: string; // personal/project URL
+}
+
 export interface Person {
   id: string;
   name: string;
   role: string;
   houses: string[]; // house IDs this person leads or contributes to
-  handle?: string;
+  socials?: PersonSocials;
   avatar?: string; // URL — optional for now
   bio?: string;
 }
@@ -43,32 +49,49 @@ export const PEOPLE: Person[] = [
     name: "Andrew Rose",
     role: "Founder",
     houses: ["neighborhood", "events", "campus", "school", "forum", "lab"],
-    handle: "@andrewrosenyc",
+    socials: {
+      twitter: "andrewrosenyc",
+      substack: "https://andrewjrose.substack.com/",
+    },
   },
   {
     id: "priya",
     name: "Priya",
     role: "Co-founder",
     houses: ["neighborhood", "school"],
+    socials: {
+      twitter: "Prigoose",
+      substack: "https://prigoose.substack.com/",
+    },
   },
   {
     id: "liam",
     name: "Liam",
     role: "Engineering & Infrastructure",
     houses: ["events", "campus", "forum"],
-    handle: "@liamdanielduffy",
+    socials: {
+      twitter: "liamdanielduffy",
+    },
   },
   {
     id: "ivan",
     name: "Ivan Vendrov",
     role: "Advisor, Fractal Labs Co-founder",
     houses: ["lab"],
+    socials: {
+      twitter: "IvanVendrov",
+      substack: "https://nothinghuman.substack.com",
+    },
   },
   {
     id: "daniel",
     name: "Daniel Golliher",
     role: "Manhattan Institute Fellow",
     houses: ["forum"],
+    socials: {
+      twitter: "danielgolliher",
+      website: "https://www.maximumnewyork.com/",
+    },
   },
   {
     id: "david",
@@ -77,16 +100,20 @@ export const PEOPLE: Person[] = [
     houses: ["school"],
   },
   {
-    id: "paris",
-    name: "Paris Mitton",
-    role: "Advisor",
-    houses: [],
+    id: "tyler",
+    name: "Tyler Alterman",
+    role: "TODO", // TODO: confirm role
+    houses: [], // TODO: confirm house affiliations
+    // TODO: confirm social links / handles
   },
   {
     id: "crystal",
     name: "Crystal",
     role: "Content",
     houses: ["lab"],
+    socials: {
+      twitter: "crystalxduan",
+    },
   },
 ];
 

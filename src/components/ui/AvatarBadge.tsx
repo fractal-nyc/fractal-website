@@ -1,5 +1,6 @@
-import type { Person } from "@/data/houses";
+import type { Person, PersonSocials } from "@/data/houses";
 import { HOUSES } from "@/data/houses";
+import { Newspaper, Globe } from "lucide-react";
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -20,6 +21,71 @@ function getPersonColor(person: Person): string {
   if (person.houses.length === 0) return "#6B7280"; // gray-500
   const house = HOUSES.find((h) => h.id === person.houses[0]);
   return house?.color ?? "#6B7280";
+}
+
+// ---------------------------------------------------------------------------
+// Social link icons
+// ---------------------------------------------------------------------------
+
+/** Inline X (formerly Twitter) icon — lucide doesn't ship one. */
+function XIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      className={className}
+      aria-hidden="true"
+    >
+      <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+    </svg>
+  );
+}
+
+/** Row of social link icons for a person. */
+function SocialLinks({ socials }: { socials: PersonSocials }) {
+  const links: { href: string; label: string; icon: React.ReactNode }[] = [];
+
+  if (socials.twitter) {
+    links.push({
+      href: `https://x.com/${socials.twitter}`,
+      label: `@${socials.twitter} on X`,
+      icon: <XIcon className="h-3 w-3" />,
+    });
+  }
+  if (socials.substack) {
+    links.push({
+      href: socials.substack,
+      label: "Substack",
+      icon: <Newspaper className="h-3 w-3" />,
+    });
+  }
+  if (socials.website) {
+    links.push({
+      href: socials.website,
+      label: "Website",
+      icon: <Globe className="h-3 w-3" />,
+    });
+  }
+
+  if (links.length === 0) return null;
+
+  return (
+    <span className="mt-1 flex items-center gap-2">
+      {links.map((l) => (
+        <a
+          key={l.href}
+          href={l.href}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label={l.label}
+          onClick={(e) => e.stopPropagation()}
+          className="inline-flex h-6 w-6 items-center justify-center text-white/60 transition-colors hover:text-white"
+        >
+          {l.icon}
+        </a>
+      ))}
+    </span>
+  );
 }
 
 // ---------------------------------------------------------------------------
@@ -83,6 +149,7 @@ export function AvatarBadge({ person, className = "" }: AvatarBadgeProps) {
         <p className="mt-0.5 text-[11px] sm:text-xs leading-snug text-white/75">
           {person.role}
         </p>
+        {person.socials && <SocialLinks socials={person.socials} />}
       </div>
     </div>
   );
