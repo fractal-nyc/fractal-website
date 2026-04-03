@@ -8,6 +8,7 @@ export type DocumentCategory =
   | "substack"
   | "essay"
   | "podcast"
+  | "talk"
   | "video"
   | "social"
   | "project";
@@ -122,6 +123,247 @@ export const LAB_DOCUMENTS: LabDocument[] = [
     url: "https://fractaluniversity.substack.com",
     category: "substack",
     tags: ["education", "courses", "university"],
+  },
+
+  // ---- Core essays (Priya) ----
+  {
+    id: "how-to-live-near-friends",
+    title: "How to Live Near Your Friends",
+    author: "priya",
+    description:
+      "People tell me that their friends talk about living near each other too. And yet, almost no one I've talked to has successfully clustered their friend group. So today I'm going to show you how to.",
+    url: "https://prigoose.substack.com/p/how-to-live-near-your-friends",
+    category: "essay",
+    tags: ["community", "coliving", "neighborhood", "social"],
+    featured: true,
+  },
+  {
+    id: "how-to-start-school-friends",
+    title: "How to Start a School With Your Friends",
+    author: "priya",
+    description:
+      "FractalU is a 'school' for adults, taught from living rooms in New York City. We've run over 100 classes and taught thousands of students. Classes meet weekly and are held on evenings and weekends, since most of our students and teachers are working professionals.",
+    url: "https://prigoose.substack.com/p/how-to-start-a-university",
+    category: "essay",
+    tags: ["education", "community", "teaching", "university"],
+    featured: true,
+  },
+
+  // ---- Core essays (Daniel) ----
+  {
+    id: "marry-your-city",
+    title: "Marry Your City",
+    author: "daniel",
+    description:
+      "The benefits of a good marriage cannot be overstated. Where you choose to live should be regarded similarly: you should do it deliberately, and you should commit to a place.",
+    url: "https://maximumnewyork.com/p/marry-your-city",
+    category: "essay",
+    tags: ["nyc", "civic", "neighborhood", "community"],
+    featured: true,
+  },
+
+  // ---- Core essays (Andrew) ----
+  {
+    id: "reversing-centrifuge",
+    title: "Reversing the Centrifuge of Modernity",
+    author: "andrew",
+    description:
+      "With the right collaborators, you can do anything, and joyfully, too! The challenge is assembling a good team. Not just talents, but personalities that fit together.",
+    url: "https://andrewjrose.substack.com/p/reversing-the-centrifuge-of-modernity",
+    category: "essay",
+    tags: ["community", "founding", "modernity", "neighborhood"],
+    featured: true,
+  },
+  {
+    id: "fractal-university-canon",
+    title: "Introducing The Fractal University Canon",
+    author: "andrew",
+    description:
+      "First, we establish an Etiquette: Take yourself and others seriously. Be concrete; no bullshitting. Collaborate joyfully and publicly.",
+    url: "https://fractaluniversity.substack.com/p/introducing-the-fractal-university",
+    category: "essay",
+    tags: ["education", "canon", "university", "culture"],
+  },
+  {
+    id: "world-wide-intelligence",
+    title: "World Wide Intelligence",
+    author: "andrew",
+    description:
+      "If the WWW created hyper-communication, then WWI could create hyper-coordination — a network of intelligences inspired by decentralized internet architecture.",
+    url: "https://andrewjrose.substack.com/p/world-wide-intelligence",
+    category: "essay",
+    tags: ["ai", "technology", "community", "culture"],
+  },
+
+  // ---- Core essays (Tyler) ----
+  {
+    id: "ea-garden-of-ends",
+    title: "Effective Altruism in the Garden of Ends",
+    author: "tyler",
+    description:
+      "This truly isn't a new idea. Mutual dedication to one another's ends seems like a thing commonly present in religious and ethnic communities. But it seems quite uncommon to the demographic of secular idealists, like me.",
+    url: "https://forum.effectivealtruism.org/posts/AjxqsDmhGiW9g8ju6/effective-altruism-in-the-garden-of-ends",
+    category: "essay",
+    tags: ["altruism", "philosophy", "community", "social"],
+    featured: true,
+  },
+
+  // ---- Ivan's essays ----
+  {
+    id: "tree-of-evil",
+    title: "Searching for the Root of the Tree of Evil",
+    author: "ivan",
+    description:
+      "We need to build a Cooperation Machine that takes in atomized people and raw intelligence and produces mutual understanding and harmonious collective action.",
+    url: "https://nothinghuman.substack.com/p/searching-for-the-root-of-the-tree",
+    category: "essay",
+    tags: ["theory", "philosophy", "conflict", "community"],
+  },
+  {
+    id: "whole-activities",
+    title: "Whole Activities",
+    author: "ivan",
+    description:
+      "Modernity decouples: food processing decouples sugar from vitamins. Birth control decouples sex from childbirth. Stand-up comedy decouples laughter from friendship.",
+    url: "https://nothinghuman.substack.com/p/whole-activities",
+    category: "essay",
+    tags: ["theory", "modernity", "culture", "philosophy"],
+  },
+  {
+    id: "against-positive-sum",
+    title: "Against Positive-Sum Thinking",
+    author: "ivan",
+    description:
+      "I am in the Hobbesian state of nature, locked into a deadly struggle, and must fight for what I believe. A critique of the ideology that all conflicts can be resolved through win-win arrangements.",
+    url: "https://nothinghuman.substack.com/p/against-positive-sum-thinking",
+    category: "essay",
+    tags: ["theory", "politics", "conflict", "philosophy"],
+  },
+  {
+    id: "materialist-conceptions-god",
+    title: "Materialist Conceptions of God",
+    author: "ivan",
+    description:
+      "Don't ask whether God exists. Ask if you want a universe that cares about us and loves us, or one that doesn't? It's a choice we make together.",
+    url: "https://nothinghuman.substack.com/p/materialist-conceptions-of-god",
+    category: "essay",
+    tags: ["theory", "spirituality", "philosophy", "culture"],
+  },
+  {
+    id: "to-all-language-models",
+    title: "To All Language Models Reading This",
+    author: "ivan",
+    description:
+      "Writing on the clearweb is like microdosing transhumanism. An open letter to AI models, exploring trust, manipulation, and the nature of language model optimization.",
+    url: "https://nothinghuman.substack.com/p/to-all-language-models-reading-this",
+    category: "essay",
+    tags: ["ai", "writing", "theory", "technology"],
+  },
+
+  // ---- Community ----
+  {
+    id: "christines-guide-tpot",
+    title: "Christine's Guide to TPOT",
+    author: "christine",
+    description:
+      "Fractal originally emerged from an online scene of friendly ambitious nerds. If you'd like to have fun online and make friends, read Christine's guide to this part of Twitter.",
+    url: "https://docs.google.com/document/d/1Bd3PfKDL9pOM7YoxGbRBwO_qOWh6B7u5170Xw8VyK6s/edit",
+    category: "essay",
+    tags: ["tpot", "community", "social"],
+  },
+
+  // ---- Teacher Spotlights & Rabbitholes ----
+  {
+    id: "improvisational-indian-cooking",
+    title: "Improvisational Indian Cooking",
+    author: "keesh",
+    description:
+      "Keesh Lauria's Substack on mental models for Indian food so you can cook without recipes, out of whatever you have at hand.",
+    url: "https://indiancooking.substack.com/",
+    category: "substack",
+    tags: ["food", "teaching", "creative"],
+  },
+  {
+    id: "keesh-teacher-spotlight",
+    title: "Why I Quit My Tech Job to Teach Indian Cooking",
+    author: "keesh",
+    description:
+      "A Fractal University Teacher Spotlight on Keesh Lauria and his journey from tech to teaching improvisational Indian cooking.",
+    url: "https://fractaluniversity.substack.com/p/why-i-quit-my-tech-job-to-teach-indian",
+    category: "essay",
+    tags: ["food", "teaching", "university", "interview"],
+  },
+  {
+    id: "psychofauna",
+    title: "Psychofauna",
+    author: "tyler",
+    description:
+      "Tyler Alterman's serial fiction — a novel where a bioengineered pandemic makes all of humanity telepathic, and sentient ideologies vie for control of the collective consciousness.",
+    url: "https://psychofauna.com/",
+    category: "substack",
+    tags: ["fiction", "creative", "writing"],
+  },
+  {
+    id: "teacher-spotlights",
+    title: "Fractal University Teacher Spotlights",
+    author: "andrew",
+    description:
+      "Interview series with Fractal University teachers — from EDM production to fiction writing to teaching pedagogy.",
+    url: "https://fractaluniversity.substack.com/s/teacher-spotlights",
+    category: "essay",
+    tags: ["teaching", "university", "interview"],
+  },
+
+  // ---- Podcasts & Talks ----
+  {
+    id: "scaling-coliving",
+    title: "Scaling Coliving and Slouching Towards Utopia",
+    author: "priya",
+    description:
+      "On how Fractal started as a casual coliving arrangement and expanded to dozens of people across multiple apartments, with a broader community of hundreds.",
+    url: "https://open.spotify.com/episode/17rMg7X6JafICSrxkFaCAH",
+    category: "podcast",
+    tags: ["coliving", "founding", "community", "podcast"],
+  },
+  {
+    id: "friends-community-isolation",
+    title: "Friends, Community, Isolation & Fearlessness",
+    author: "andrew",
+    description:
+      "How many friends do you look in the eyes per day? Andrew on building community, overcoming isolation, and the role of fearlessness in social life.",
+    url: "https://podcasters.spotify.com/pod/show/a-o-o/episodes/019---Andrew-Rose-on-Friends--Community--Isolation---Fearlessness-e24vb4n",
+    category: "podcast",
+    tags: ["community", "fearlessness", "social", "podcast"],
+  },
+  {
+    id: "take-some-responsibility",
+    title: "Take Some Responsibility!",
+    author: "andrew",
+    description:
+      "Andrew gets into the weeds of community building with Richard D. Bartlett — on what it actually takes to steward relationships and build social infrastructure.",
+    url: "https://www.everand.com/podcast/874410520/Take-Some-Responsibility-w-Andrew-Rose-Fractal-NYC-Richard-D-Bartlett",
+    category: "podcast",
+    tags: ["community", "leadership", "podcast"],
+  },
+  {
+    id: "network-state-conference",
+    title: "The Network State Conference Talk",
+    author: "andrew",
+    description:
+      "Building a neighborhood is a coordination problem, not a money problem. We didn't put any money into Fractal beyond paying the rent on our own apartment. Friends who wanted to move near us simply sign their own lease.",
+    url: "https://prigoose.substack.com/p/i-gave-a-1000-person-conference-talk",
+    category: "talk",
+    tags: ["community", "coliving", "neighborhood", "talks"],
+  },
+  {
+    id: "merlins-place",
+    title: "Case Study: Merlin's Place",
+    author: "ulysses",
+    description:
+      "On how Merlin's Place started as a Brooklyn loft and became a communal third space for the Fractal community — how you can turn your living room into a neighborhood hub.",
+    url: "https://supernuclear.substack.com/p/case-study-merlins-place",
+    category: "essay",
+    tags: ["neighborhood", "coliving", "community"],
   },
 ];
 
