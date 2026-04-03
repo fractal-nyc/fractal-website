@@ -57,9 +57,9 @@ export function Hero() {
             </p>
           </FadeIn>
 
-          <a
-            href="#story"
-            className="inline-flex items-center gap-2 text-xs md:text-sm font-medium uppercase tracking-widest link-underline pb-1 shrink-0 hero-text-shadow"
+          <button
+            onClick={() => handleNavigate("/story")}
+            className="inline-flex items-center gap-2 text-xs md:text-sm font-medium uppercase tracking-widest link-underline pb-1 shrink-0 hero-text-shadow cursor-pointer"
           >
             Explore our story
             <svg
@@ -78,7 +78,7 @@ export function Hero() {
                 strokeLinejoin="round"
               />
             </svg>
-          </a>
+          </button>
         </div>
       </div>
     </section>
