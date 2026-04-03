@@ -1,0 +1,32 @@
+{
+  "assigned_to": null,
+  "branch_links": [],
+  "comment_count": 2,
+  "complexity": null,
+  "created_at": "2026-04-02T20:50:53Z",
+  "created_by": "human:jules",
+  "custom_fields": {},
+  "description": null,
+  "done_at": "2026-04-02T21:18:27Z",
+  "evidence_refs": [
+    {
+      "id": "ev_01KN80ZGA5YDNT9CW5GSRYBQSA",
+      "role": "review",
+      "source_type": "comment"
+    }
+  ],
+  "id": "task_01KN7ZD5G8ZEMEQCA6D6S26RZC",
+  "last_event_id": "ev_01KN80ZMAFSG68WAA5FP9J36PF",
+  "last_status_changed_at": "2026-04-02T21:18:27Z",
+  "priority": "medium",
+  "relationships_out": [],
+  "reopened_count": 0,
+  "schema_version": 1,
+  "short_id": "FRAC-46",
+  "status": "done",
+  "tags": null,
+  "title": "Replace hero with WebGL 3D animation from prototype",
+  "type": "task",
+  "updated_at": "2026-04-02T21:18:27Z",
+  "urgency": null
+}

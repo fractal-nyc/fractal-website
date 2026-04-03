@@ -1,0 +1,32 @@
+{
+  "assigned_to": null,
+  "branch_links": [],
+  "comment_count": 3,
+  "complexity": null,
+  "created_at": "2026-04-02T21:10:15Z",
+  "created_by": "human:jules",
+  "custom_fields": {},
+  "description": null,
+  "done_at": "2026-04-03T14:10:56Z",
+  "evidence_refs": [
+    {
+      "id": "ev_01KN9TXCQ76RQZSTXKBJCD8H6H",
+      "role": "review",
+      "source_type": "comment"
+    }
+  ],
+  "id": "task_01KN80GM0KJ7BJEPZGN1SQ5T02",
+  "last_event_id": "ev_01KN9TXHP8NR2GQ234FMDRYC46",
+  "last_status_changed_at": "2026-04-03T14:10:56Z",
+  "priority": "medium",
+  "relationships_out": [],
+  "reopened_count": 0,
+  "schema_version": 1,
+  "short_id": "FRAC-48",
+  "status": "done",
+  "tags": null,
+  "title": "Lab page: Search bar, tagging system, and archive navigation",
+  "type": "task",
+  "updated_at": "2026-04-03T14:10:56Z",
+  "urgency": null
+}

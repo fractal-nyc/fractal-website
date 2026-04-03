@@ -7,11 +7,11 @@
   "created_by": "agent:claude-opus-4-orchestrator",
   "custom_fields": {},
   "description": null,
-  "done_at": null,
+  "done_at": "2026-04-03T15:42:12Z",
   "evidence_refs": [],
   "id": "task_01KN29ZPS5QC6CP9QH8C1JPVD3",
-  "last_event_id": "ev_01KN2A56F0ZVH2XR4HZSCMJEW0",
-  "last_status_changed_at": "2026-03-31T16:00:20Z",
+  "last_event_id": "ev_01KNA04NEN36XY02S8V59FCZCK",
+  "last_status_changed_at": "2026-04-03T15:42:12Z",
   "priority": "medium",
   "relationships_out": [
     {
@@ -32,10 +32,10 @@
   "reopened_count": 0,
   "schema_version": 1,
   "short_id": "FRAC-31",
-  "status": "backlog",
+  "status": "done",
   "tags": null,
   "title": "Leader directory page",
   "type": "task",
-  "updated_at": "2026-03-31T16:03:20Z",
+  "updated_at": "2026-04-03T15:42:12Z",
   "urgency": null
 }

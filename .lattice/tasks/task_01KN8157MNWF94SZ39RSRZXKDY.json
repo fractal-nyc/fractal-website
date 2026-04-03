@@ -1,0 +1,39 @@
+{
+  "assigned_to": null,
+  "branch_links": [
+    {
+      "branch": "frac-50-social-links",
+      "linked_at": "2026-04-03T14:26:56Z",
+      "linked_by": "agent:claude-opus-4-impl",
+      "repo": null
+    }
+  ],
+  "comment_count": 10,
+  "complexity": null,
+  "created_at": "2026-04-02T21:21:30Z",
+  "created_by": "human:jules",
+  "custom_fields": {},
+  "description": null,
+  "done_at": "2026-04-03T14:30:45Z",
+  "evidence_refs": [
+    {
+      "id": "ev_01KN9W1Q1PCPF62PDK7S0BPZ4N",
+      "role": "review",
+      "source_type": "comment"
+    }
+  ],
+  "id": "task_01KN8157MNWF94SZ39RSRZXKDY",
+  "last_event_id": "ev_01KN9W1TKG4N5CEHR40XEH6KZF",
+  "last_status_changed_at": "2026-04-03T14:30:45Z",
+  "priority": "medium",
+  "relationships_out": [],
+  "reopened_count": 0,
+  "schema_version": 1,
+  "short_id": "FRAC-50",
+  "status": "done",
+  "tags": null,
+  "title": "Add leader Substack URLs and Twitter/social links to people data",
+  "type": "task",
+  "updated_at": "2026-04-03T14:30:45Z",
+  "urgency": null
+}

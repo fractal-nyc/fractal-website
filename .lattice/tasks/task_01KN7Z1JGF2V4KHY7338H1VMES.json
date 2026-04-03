@@ -1,0 +1,39 @@
+{
+  "assigned_to": null,
+  "branch_links": [
+    {
+      "branch": "frac-43-mandelbrot-banners",
+      "linked_at": "2026-04-02T21:42:21Z",
+      "linked_by": "agent:claude-opus-4-impl",
+      "repo": null
+    }
+  ],
+  "comment_count": 6,
+  "complexity": null,
+  "created_at": "2026-04-02T20:44:33Z",
+  "created_by": "human:jules",
+  "custom_fields": {},
+  "description": null,
+  "done_at": "2026-04-02T21:56:44Z",
+  "evidence_refs": [
+    {
+      "id": "ev_01KN835J8P2R9266A92AE0Z760",
+      "role": "review",
+      "source_type": "comment"
+    }
+  ],
+  "id": "task_01KN7Z1JGF2V4KHY7338H1VMES",
+  "last_event_id": "ev_01KN835QPF2GHW7J8T7K9RZDQ9",
+  "last_status_changed_at": "2026-04-02T21:56:44Z",
+  "priority": "medium",
+  "relationships_out": [],
+  "reopened_count": 0,
+  "schema_version": 1,
+  "short_id": "FRAC-43",
+  "status": "done",
+  "tags": null,
+  "title": "Add Mandelbrot PNG to house banners \u2014 crop and rotate the source image",
+  "type": "task",
+  "updated_at": "2026-04-02T21:56:44Z",
+  "urgency": null
+}

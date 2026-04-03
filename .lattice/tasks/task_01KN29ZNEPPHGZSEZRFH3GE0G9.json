@@ -7,11 +7,11 @@
   "created_by": "agent:claude-opus-4-orchestrator",
   "custom_fields": {},
   "description": null,
-  "done_at": null,
+  "done_at": "2026-04-03T15:41:57Z",
   "evidence_refs": [],
   "id": "task_01KN29ZNEPPHGZSEZRFH3GE0G9",
-  "last_event_id": "ev_01KN2A4RKJJD3WAD9T5AMXPGXR",
-  "last_status_changed_at": "2026-03-31T16:00:18Z",
+  "last_event_id": "ev_01KNA0478GF7ASNB094AF6Z211",
+  "last_status_changed_at": "2026-04-03T15:41:57Z",
   "priority": "medium",
   "relationships_out": [
     {
@@ -32,10 +32,10 @@
   "reopened_count": 0,
   "schema_version": 1,
   "short_id": "FRAC-28",
-  "status": "backlog",
+  "status": "done",
   "tags": null,
   "title": "Home page house banner grid \u2014 six clickable banners",
   "type": "task",
-  "updated_at": "2026-03-31T16:03:05Z",
+  "updated_at": "2026-04-03T15:41:57Z",
   "urgency": null
 }
