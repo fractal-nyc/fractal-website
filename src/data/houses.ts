@@ -16,6 +16,7 @@ export interface Person {
   houses: string[]; // house IDs this person leads or contributes to
   handle?: string;
   avatar?: string; // URL — optional for now
+  bio?: string;
 }
 
 export interface House {
