@@ -12,6 +12,7 @@ import { PoliticalClubPage } from "@/pages/PoliticalClubPage";
 import { LabPage } from "@/pages/LabPage";
 import { StoryPage } from "@/pages/StoryPage";
 import { PeoplePage } from "@/pages/PeoplePage";
+import { BadgePlayground } from "@/pages/BadgePlayground";
 import NotFound from "@/pages/not-found";
 
 const queryClient = new QueryClient();
@@ -29,6 +30,7 @@ function Router() {
       <Route path="/lab" component={LabPage} />
       <Route path="/story" component={StoryPage} />
       <Route path="/people" component={PeoplePage} />
+      <Route path="/playground/badge" component={BadgePlayground} />
       <Route component={NotFound} />
     </Switch>
   );

@@ -30,7 +30,7 @@ export function PeopleDirectory({ className = "" }: PeopleDirectoryProps) {
         </FadeIn>
 
         {/* Badge grid — 2 cols mobile, 3 cols sm+ */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 md:gap-5">
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-6 md:gap-8 overflow-visible">
           {PEOPLE.map((person, index) => (
             <FadeIn key={person.id} delay={index * 0.08}>
               <AvatarBadge person={person} />
