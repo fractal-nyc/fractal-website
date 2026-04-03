@@ -1,5 +1,6 @@
 import type { Person, PersonSocials } from "@/data/houses";
 import { HOUSES } from "@/data/houses";
+import { MandelbrotIcon } from "@/components/house/MandelbrotIcon";
 import { Newspaper, Globe } from "lucide-react";
 
 // ---------------------------------------------------------------------------
@@ -89,6 +90,29 @@ function SocialLinks({ socials }: { socials: PersonSocials }) {
 }
 
 // ---------------------------------------------------------------------------
+// Badge layout (from playground: 183×309 card inside 211×388 image)
+//
+// Component sizes to IMAGE (211×388). No overflow — grid-safe.
+// Lining + mandelbrots are percentage-inset overlays on the image.
+// ---------------------------------------------------------------------------
+
+// Lining position as % of image (card inset + 7px lining inset)
+const LINING = {
+  top: "13.1%",    // (44+7) / 388
+  bottom: "10.8%", // (35+7) / 388
+  left: "9.5%",    // (13+7) / 211
+  right: "10.4%",  // (15+7) / 211
+};
+
+// Mandelbrot: 3px outside lining corners (as % of image)
+const M = {
+  vNudge: "0.8%",  // 3 / 388
+  hNudge: "1.4%",  // 3 / 211
+};
+
+const MANDELBROT_SIZE = 16;
+
+// ---------------------------------------------------------------------------
 // AvatarBadge
 // ---------------------------------------------------------------------------
 
@@ -98,11 +122,8 @@ interface AvatarBadgeProps {
 }
 
 /**
- * Tall vertical photo card (aspect 2:3) with:
- * - Photo with object-cover (or initials fallback on colored bg)
- * - Thin border frame with 4 corner pin dots
- * - Bottom gradient overlay with name (serif, white) and role text
- * - Hover: scale-[1.02] transition
+ * Collectible-card badge (HP-inspired). Component = image boundary.
+ * Lining + mandelbrots are inset overlays. No overflow, grid-safe.
  */
 export function AvatarBadge({ person, className = "" }: AvatarBadgeProps) {
   const color = getPersonColor(person);
@@ -110,24 +131,17 @@ export function AvatarBadge({ person, className = "" }: AvatarBadgeProps) {
   return (
     <div
       className={`
-        group relative aspect-[2/3] overflow-hidden rounded-sm
-        border border-border
-        transition-transform duration-300 hover:scale-[1.02] hover:shadow-lg
+        group relative aspect-[211/388]
+        transition-transform duration-300 hover:scale-[1.02]
         ${className}
       `}
     >
-      {/* Corner pin dots */}
-      <span className="absolute top-1.5 left-1.5 z-10 h-1.5 w-1.5 rounded-full bg-white/60" />
-      <span className="absolute top-1.5 right-1.5 z-10 h-1.5 w-1.5 rounded-full bg-white/60" />
-      <span className="absolute bottom-1.5 left-1.5 z-10 h-1.5 w-1.5 rounded-full bg-white/60" />
-      <span className="absolute bottom-1.5 right-1.5 z-10 h-1.5 w-1.5 rounded-full bg-white/60" />
-
-      {/* Photo or initials fallback */}
+      {/* Image fills entire component */}
       {person.avatar ? (
         <img
           src={person.avatar}
           alt={person.name}
-          className="absolute inset-0 h-full w-full object-cover"
+          className="absolute inset-0 h-full w-full object-cover object-top"
           loading="lazy"
         />
       ) : (
@@ -141,9 +155,37 @@ export function AvatarBadge({ person, className = "" }: AvatarBadgeProps) {
         </div>
       )}
 
-      {/* Bottom gradient overlay */}
-      <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/60 via-black/30 to-transparent px-3 pb-3 pt-12">
-        <h3 className="font-serif text-sm sm:text-base font-medium leading-tight text-white">
+      {/* Inner lining */}
+      <div
+        className="absolute z-20 rounded-[2px] border border-white pointer-events-none"
+        style={{ top: LINING.top, bottom: LINING.bottom, left: LINING.left, right: LINING.right }}
+      />
+
+      {/* Mandelbrot corners — 45° rotated, tops pointing inward */}
+      {([
+        { top: `calc(${LINING.top} - ${M.vNudge})`, left: `calc(${LINING.left} - ${M.hNudge})`, rotate: "135deg" },
+        { top: `calc(${LINING.top} - ${M.vNudge})`, right: `calc(${LINING.right} - ${M.hNudge})`, rotate: "-135deg" },
+        { bottom: `calc(${LINING.bottom} - ${M.vNudge})`, left: `calc(${LINING.left} - ${M.hNudge})`, rotate: "45deg" },
+        { bottom: `calc(${LINING.bottom} - ${M.vNudge})`, right: `calc(${LINING.right} - ${M.hNudge})`, rotate: "-45deg" },
+      ] as const).map((pos, i) => (
+        <div
+          key={i}
+          className="absolute z-20 pointer-events-none"
+          style={{
+            top: "top" in pos ? pos.top : undefined,
+            bottom: "bottom" in pos ? pos.bottom : undefined,
+            left: "left" in pos ? pos.left : undefined,
+            right: "right" in pos ? pos.right : undefined,
+            transform: `rotate(${pos.rotate})`,
+          }}
+        >
+          <MandelbrotIcon size={MANDELBROT_SIZE} color="white" opacity={1} />
+        </div>
+      ))}
+
+      {/* Gradient + text at bottom of image */}
+      <div className="absolute inset-x-0 bottom-0 z-10 bg-gradient-to-t from-black/70 via-black/40 to-transparent px-4 pb-4 pt-16">
+        <h3 className="font-serif text-sm sm:text-base font-medium leading-tight text-white drop-shadow-sm">
           {person.name}
         </h3>
         <p className="mt-0.5 text-[11px] sm:text-xs leading-snug text-white/75">
