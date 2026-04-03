@@ -28,6 +28,9 @@ interface HouseBannerProps {
  *
  * - `variant="grid"` (default): compact card for the 6-grid layout
  * - `variant="full"`: wider banner for individual house pages
+ *
+ * The Mandelbrot icon sits outside the clip-path, centered at the V-notch
+ * tip on the cream page background.
  */
 export function HouseBanner({
   house,
@@ -36,62 +39,61 @@ export function HouseBanner({
 }: HouseBannerProps) {
   const isGrid = variant === "grid";
   const textColor = isDark(house.color) ? "#ffffff" : "#1a1a1a";
-  const iconColor = isDark(house.color)
-    ? "rgba(255,255,255,0.25)"
-    : "rgba(0,0,0,0.15)";
 
   return (
-    <div
-      className={`
-        relative flex flex-col items-center justify-center text-center
-        ${isGrid ? "aspect-[1/3]" : "aspect-[3/4] max-w-2xl mx-auto"}
-        ${className}
-      `}
-      style={{
-        backgroundColor: house.color,
-        clipPath:
-          "polygon(0% 0%, 100% 0%, 100% 100%, 50% 85%, 0% 100%)",
-        color: textColor,
-      }}
-    >
-      {/* Subtitle */}
-      <span
+    <div className={`relative ${className}`}>
+      {/* Clipped banner content */}
+      <div
         className={`
-          font-sans uppercase tracking-widest
-          ${isGrid ? "text-[10px] lg:text-xs mb-2" : "text-sm mb-4"}
+          relative flex flex-col items-center justify-center text-center
+          ${isGrid ? "aspect-[1/3]" : "aspect-[3/4] max-w-2xl mx-auto"}
         `}
-        style={{ opacity: 0.8 }}
+        style={{
+          backgroundColor: house.color,
+          clipPath:
+            "polygon(0% 0%, 100% 0%, 100% 100%, 50% 85%, 0% 100%)",
+          color: textColor,
+        }}
       >
-        {house.subtitle}
-      </span>
+        {/* Subtitle */}
+        <span
+          className={`
+            font-sans uppercase tracking-widest
+            ${isGrid ? "text-[10px] lg:text-xs mb-2" : "text-sm mb-4"}
+          `}
+          style={{ opacity: 0.8 }}
+        >
+          {house.subtitle}
+        </span>
 
-      {/* Name */}
-      <h3
-        className={`
-          font-serif leading-tight px-2
-          ${isGrid ? "text-base sm:text-lg lg:text-xl" : "text-4xl md:text-5xl"}
-        `}
+        {/* Name — use displayName when available */}
+        <h3
+          className={`
+            font-serif leading-tight px-2
+            ${isGrid ? "text-base sm:text-lg lg:text-xl" : "text-4xl md:text-5xl"}
+          `}
+        >
+          {house.displayName ?? house.name}
+        </h3>
+
+        {/* Tagline */}
+        <p
+          className={`
+            font-serif italic px-2
+            ${isGrid ? "text-xs sm:text-sm mt-1" : "text-lg mt-3"}
+          `}
+          style={{ opacity: 0.85 }}
+        >
+          {house.tagline}
+        </p>
+      </div>
+
+      {/* Mandelbrot icon — outside clip, centered at the V-notch tip */}
+      <div
+        className="absolute left-1/2 -translate-x-1/2"
+        style={{ bottom: "15%" }}
       >
-        {house.name}
-      </h3>
-
-      {/* Tagline */}
-      <p
-        className={`
-          font-serif italic px-2
-          ${isGrid ? "text-xs sm:text-sm mt-1" : "text-lg mt-3"}
-        `}
-        style={{ opacity: 0.85 }}
-      >
-        {house.tagline}
-      </p>
-
-      {/* Mandelbrot icon — positioned at the V-notch point */}
-      <div className="absolute left-1/2 -translate-x-1/2 bottom-[12%]">
-        <MandelbrotIcon
-          size={isGrid ? 18 : 40}
-          color={iconColor}
-        />
+        <MandelbrotIcon size={isGrid ? 24 : 36} opacity={0.2} />
       </div>
     </div>
   );
