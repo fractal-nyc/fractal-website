@@ -148,6 +148,17 @@ export const PEOPLE: Person[] = [
       substack: "https://indiancooking.substack.com/",
     },
   },
+  {
+    id: "julianna",
+    name: "Julianna Roberts",
+    role: "Creative Director",
+    houses: ["events", "lab"],
+    socials: {
+      twitter: "jannaaar",
+      website: "https://parallax.haus",
+    },
+    avatar: "/images/julianna.png",
+  },
 ];
 
 // ---------------------------------------------------------------------------
