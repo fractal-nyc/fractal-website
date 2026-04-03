@@ -3,10 +3,13 @@ import { Footer } from "@/components/layout/Footer";
 import { FadeIn } from "@/components/ui/FadeIn";
 import { HouseBanner } from "@/components/house/HouseBanner";
 import { DocumentGrid } from "@/components/lab/DocumentGrid";
+import { ArchiveToolbar } from "@/components/lab/ArchiveToolbar";
+import { useArchiveFilter } from "@/hooks/use-archive-filter";
 import { getHouseBySlug } from "@/data/houses";
 
 export function LabPage() {
   const house = getHouseBySlug("lab")!;
+  const filter = useArchiveFilter();
 
   return (
     <main className="min-h-screen bg-background text-foreground selection:bg-foreground selection:text-background">
@@ -52,7 +55,15 @@ export function LabPage() {
               </div>
             </FadeIn>
 
-            <DocumentGrid />
+            {/* Search + tag filter toolbar */}
+            <FadeIn delay={0.4}>
+              <ArchiveToolbar filter={filter} />
+            </FadeIn>
+
+            {/* Document grid — pass filtered docs when filtering, default otherwise */}
+            <DocumentGrid
+              documents={filter.isFiltering ? filter.filtered : undefined}
+            />
           </div>
         </section>
       </div>

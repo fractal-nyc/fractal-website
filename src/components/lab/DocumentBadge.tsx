@@ -54,7 +54,7 @@ export function DocumentBadge({ document, className = "" }: DocumentBadgeProps) 
       className={`
         group block rounded-lg border border-border bg-background
         transition-all duration-200 ease-out
-        hover:scale-[1.02] hover:shadow-lg hover:border-[${LAB_COLOR}]/40
+        hover:scale-[1.02] hover:shadow-lg hover:border-[#6B4C9A]/40
         focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring
         ${isFeatured ? "p-6 md:p-8" : "p-5 md:p-6"}
         ${className}

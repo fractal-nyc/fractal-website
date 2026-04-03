@@ -145,3 +145,25 @@ export function getDocumentsByTag(tags: string[]): LabDocument[] {
     d.tags.some((t) => tags.includes(t)),
   );
 }
+
+/** Return a sorted array of all unique tags across all documents. */
+export function getAllTags(): string[] {
+  const tagSet = new Set<string>();
+  for (const doc of LAB_DOCUMENTS) {
+    for (const tag of doc.tags) {
+      tagSet.add(tag);
+    }
+  }
+  return Array.from(tagSet).sort();
+}
+
+/** Return a map of tag → count of documents that have that tag. */
+export function getTagCounts(): Map<string, number> {
+  const counts = new Map<string, number>();
+  for (const doc of LAB_DOCUMENTS) {
+    for (const tag of doc.tags) {
+      counts.set(tag, (counts.get(tag) ?? 0) + 1);
+    }
+  }
+  return counts;
+}
