@@ -1,32 +1,21 @@
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
-import { FadeIn } from "@/components/ui/FadeIn";
 import { SierpinskiCarpet } from "@/components/sections/SierpinskiCarpet";
 
 export function ProtocolPage() {
   return (
     <main className="min-h-screen bg-background text-foreground selection:bg-foreground selection:text-background">
       <Navbar />
-      <div className="pt-32">
-        {/* Sierpinski carpet — canvas-based animated ASCII art */}
-        <div className="relative h-[50vh] md:h-[60vh] w-full bg-background">
+      <div className="flex-1 flex items-center justify-center pt-32 pb-16">
+        {/* Sierpinski carpet — canvas-based animated ASCII art, centered */}
+        <div className="w-[80%] md:w-[70%] lg:w-[60%] max-w-[800px] aspect-square">
           <SierpinskiCarpet
             photoUrl={`${import.meta.env.BASE_URL}images/hero-bg.png`}
             autoPlay
-            padding={40}
+            padding={0}
             className="w-full h-full"
           />
         </div>
-        <section className="py-24 md:py-40">
-          <div className="max-w-7xl mx-auto px-6 md:px-12">
-            <FadeIn>
-              <h2 className="text-sm font-semibold tracking-widest uppercase text-muted-foreground mb-4">The Protocol</h2>
-              <p className="text-3xl md:text-5xl font-serif max-w-2xl leading-tight">
-                Coming soon.
-              </p>
-            </FadeIn>
-          </div>
-        </section>
       </div>
       <Footer />
     </main>
