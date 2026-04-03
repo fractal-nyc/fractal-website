@@ -1,0 +1,39 @@
+{
+  "assigned_to": null,
+  "branch_links": [
+    {
+      "branch": "frac-47-lab-archive",
+      "linked_at": "2026-04-02T21:47:30Z",
+      "linked_by": "agent:claude-opus-4-impl",
+      "repo": null
+    }
+  ],
+  "comment_count": 4,
+  "complexity": null,
+  "created_at": "2026-04-02T21:10:11Z",
+  "created_by": "human:jules",
+  "custom_fields": {},
+  "description": null,
+  "done_at": "2026-04-02T21:56:23Z",
+  "evidence_refs": [
+    {
+      "id": "ev_01KN834ZPRBBDHH0K9ANSNM3BG",
+      "role": "review",
+      "source_type": "comment"
+    }
+  ],
+  "id": "task_01KN80GG61BBX8CQAEHQTTYANA",
+  "last_event_id": "ev_01KN9V4HQFVH1EBCVMZC34Y2E6",
+  "last_status_changed_at": "2026-04-02T21:56:23Z",
+  "priority": "medium",
+  "relationships_out": [],
+  "reopened_count": 0,
+  "schema_version": 1,
+  "short_id": "FRAC-47",
+  "status": "done",
+  "tags": null,
+  "title": "Lab page: Research & Writing archive with document badges",
+  "type": "task",
+  "updated_at": "2026-04-03T14:14:45Z",
+  "urgency": null
+}

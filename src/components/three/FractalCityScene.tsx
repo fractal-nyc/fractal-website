@@ -1,7 +1,10 @@
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
 import * as THREE from "three";
-import { FractalObject } from "./FractalObject";
+// Hero geometry variants — swap the import to try different shapes
+// import { FractalObject } from "./FractalObject";       // Icosahedron (original)
+// import { FractalObject } from "./MetatronCube";        // Nested hexahedra (Metatron's Cube)
+import { FractalObject } from "./OctahedronHero";         // Octahedron
 
 function SceneLighting() {
   return (

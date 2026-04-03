@@ -7,11 +7,11 @@
   "created_by": "agent:claude-opus-4-orchestrator",
   "custom_fields": {},
   "description": null,
-  "done_at": null,
+  "done_at": "2026-04-03T15:42:26Z",
   "evidence_refs": [],
   "id": "task_01KN29ZQ3QZSAQJCZSWNANB0KE",
-  "last_event_id": "ev_01KN2AKAPP7WKEWF9RJBXBHHG7",
-  "last_status_changed_at": "2026-03-31T16:00:20Z",
+  "last_event_id": "ev_01KNA052XPPTGD92MR0SG3PZSK",
+  "last_status_changed_at": "2026-04-03T15:42:26Z",
   "priority": "medium",
   "relationships_out": [
     {
@@ -25,10 +25,10 @@
   "reopened_count": 0,
   "schema_version": 1,
   "short_id": "FRAC-32",
-  "status": "backlog",
+  "status": "done",
   "tags": null,
   "title": "Story page \u2014 photo gallery",
   "type": "task",
-  "updated_at": "2026-03-31T16:11:03Z",
+  "updated_at": "2026-04-03T15:42:26Z",
   "urgency": null
 }
