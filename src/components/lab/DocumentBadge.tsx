@@ -4,6 +4,7 @@ import { PEOPLE } from "@/data/houses";
 import {
   ArrowUpRight,
   BookOpen,
+  Megaphone,
   Mic,
   Video,
   MessageSquare,
@@ -22,6 +23,7 @@ const CATEGORY_META: Record<
   substack: { icon: Newspaper, label: "Publication" },
   essay: { icon: BookOpen, label: "Essay" },
   podcast: { icon: Mic, label: "Podcast" },
+  talk: { icon: Megaphone, label: "Talk" },
   video: { icon: Video, label: "Video" },
   social: { icon: MessageSquare, label: "Social" },
   project: { icon: Boxes, label: "Project" },

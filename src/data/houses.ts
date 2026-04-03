@@ -102,9 +102,12 @@ export const PEOPLE: Person[] = [
   {
     id: "tyler",
     name: "Tyler Alterman",
-    role: "TODO", // TODO: confirm role
-    houses: [], // TODO: confirm house affiliations
-    // TODO: confirm social links / handles
+    role: "Writer & Contributor",
+    houses: ["school", "lab"],
+    socials: {
+      twitter: "TylerAlterman",
+      substack: "https://psychofauna.com/",
+    },
   },
   {
     id: "crystal",
@@ -113,6 +116,36 @@ export const PEOPLE: Person[] = [
     houses: ["lab"],
     socials: {
       twitter: "crystalxduan",
+    },
+  },
+  {
+    id: "ulysses",
+    name: "Ulysses Chuang",
+    role: "Alexander Technique, Merlin's Place",
+    houses: ["neighborhood"],
+  },
+  {
+    id: "hailey",
+    name: "Hailey",
+    role: "Content / Interviews",
+    houses: ["lab"],
+  },
+  {
+    id: "christine",
+    name: "Christine",
+    role: "Community Guide",
+    houses: ["lab"],
+    socials: {
+      twitter: "christineist",
+    },
+  },
+  {
+    id: "keesh",
+    name: "Keesh Lauria",
+    role: "Fractal University Teacher",
+    houses: ["school"],
+    socials: {
+      substack: "https://indiancooking.substack.com/",
     },
   },
 ];
