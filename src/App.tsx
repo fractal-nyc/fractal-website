@@ -11,7 +11,7 @@ import { LiberalArtsPage } from "@/pages/LiberalArtsPage";
 import { PoliticalClubPage } from "@/pages/PoliticalClubPage";
 import { LabPage } from "@/pages/LabPage";
 import { StoryPage } from "@/pages/StoryPage";
-import { PeoplePage } from "@/pages/PeoplePage";
+
 import { BadgePlayground } from "@/pages/BadgePlayground";
 import NotFound from "@/pages/not-found";
 
@@ -29,7 +29,7 @@ function Router() {
       <Route path="/political-club" component={PoliticalClubPage} />
       <Route path="/lab" component={LabPage} />
       <Route path="/story" component={StoryPage} />
-      <Route path="/people" component={PeoplePage} />
+
       <Route path="/playground/badge" component={BadgePlayground} />
       <Route component={NotFound} />
     </Switch>

@@ -27,7 +27,7 @@ export function Navbar() {
     { name: "New Liberal Arts", href: "/new-liberal-arts" },
     { name: "Political Club", href: "/political-club" },
     { name: "Lab", href: "/lab" },
-    { name: "People", href: "/people" },
+
   ];
 
   return (
