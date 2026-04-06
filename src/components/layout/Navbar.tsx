@@ -4,14 +4,14 @@ import { Menu, X } from "lucide-react";
 import { Link } from "wouter";
 
 const sectionLinks = [
-  { name: "Story", href: "/story", color: "#FFAB30" },
-  { name: "Campus", href: "/campus", color: "#B07DD4" },
-  { name: "Neighborhood", href: "/neighborhood", color: "#4F7D66" },
-  { name: "Events", href: "/events", color: "#FF9470" },
-  { name: "New Liberal Arts", href: "/new-liberal-arts", color: "#E8435F" },
-  { name: "Political Club", href: "/political-club", color: "#4A8AD0" },
-  { name: "Lab", href: "/lab", color: "#5BB89A" },
-  { name: "People", href: "/people", color: "#C4A85A" },
+  { name: "Story", href: "/story", color: "#D4BA58" },
+  { name: "Campus", href: "/campus", color: "#2B5A48" },
+  { name: "Neighborhood", href: "/neighborhood", color: "#889460" },
+  { name: "Events", href: "/events", color: "#D4857A" },
+  { name: "New Liberal Arts", href: "/new-liberal-arts", color: "#C41E20" },
+  { name: "Political Club", href: "/political-club", color: "#6E1830" },
+  { name: "Lab", href: "/lab", color: "#E870A0" },
+  { name: "People", href: "/people", color: "#C49040" },
 ];
 
 const LEFT_TEXT =
