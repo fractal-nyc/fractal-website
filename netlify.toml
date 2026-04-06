@@ -1,6 +1,9 @@
 [build]
-  command = "pnpm run build"
+  command = "corepack enable && pnpm install && pnpm run build"
   publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "22"
 
 [[redirects]]
   from = "/*"
