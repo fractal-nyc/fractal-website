@@ -15,12 +15,12 @@ interface NavNode {
 }
 
 const OUTER_NAV_NODES: NavNode[] = [
-  { label: "Co-Living",        route: "/neighborhood",     color: "#8B7355", vertexIndex: 0 },
-  { label: "Events",           route: "/events",           color: "#E07A5F", vertexIndex: 1 },
-  { label: "Campus",           route: "/campus",           color: "#457B9D", vertexIndex: 2 },
-  { label: "New Liberal Arts", route: "/new-liberal-arts", color: "#1D3557", vertexIndex: 3 },
-  { label: "Political Club",   route: "/political-club",   color: "#CC2936", vertexIndex: 4 },
-  { label: "Lab",              route: "/lab",              color: "#6B4C9A", vertexIndex: 5 },
+  { label: "Co-Living",        route: "/neighborhood",     color: "#4F7D66", vertexIndex: 3 },
+  { label: "Events",           route: "/events",           color: "#FF9470", vertexIndex: 2 },
+  { label: "Campus",           route: "/campus",           color: "#B07DD4", vertexIndex: 0 },
+  { label: "New Liberal Arts", route: "/new-liberal-arts", color: "#E8435F", vertexIndex: 1 },
+  { label: "Political Club",   route: "/political-club",   color: "#4A8AD0", vertexIndex: 4 },
+  { label: "Lab",              route: "/lab",              color: "#5BB89A", vertexIndex: 5 },
 ];
 
 // ---------------------------------------------------------------------------
@@ -353,7 +353,7 @@ function NavNodeMesh({
       <meshStandardMaterial
         color={node.color}
         emissive={node.color}
-        emissiveIntensity={hovered ? 3.0 : 1.5}
+        emissiveIntensity={hovered ? 2.0 : 1.0}
       />
       {hovered && (
         <Html center distanceFactor={8} style={{ pointerEvents: "none" }}>

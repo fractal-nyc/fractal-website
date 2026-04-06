@@ -3,6 +3,50 @@ import { motion, useScroll, useMotionValueEvent } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import { Link } from "wouter";
 
+const sectionLinks = [
+  { name: "Story", href: "/story", color: "#FFAB30" },
+  { name: "Campus", href: "/campus", color: "#B07DD4" },
+  { name: "Neighborhood", href: "/neighborhood", color: "#4F7D66" },
+  { name: "Events", href: "/events", color: "#FF9470" },
+  { name: "New Liberal Arts", href: "/new-liberal-arts", color: "#E8435F" },
+  { name: "Political Club", href: "/political-club", color: "#4A8AD0" },
+  { name: "Lab", href: "/lab", color: "#5BB89A" },
+  { name: "People", href: "/people", color: "#C4A85A" },
+];
+
+const LEFT_TEXT =
+  "In 2021, our small group of friends decided to live, learn, & build together. It started as just a single apartment with weekly dinners where people gave 5-minute talks & grew into A neighborhood & campus. now we are building A GOLDEN AGE PROTOCOL.";
+
+const RIGHT_TEXT =
+  "we believe small groups who share context deeply & build agentic tools for each other can move dramatically faster than individuals working alone, so We embrace experimentation, joyful cyborgism & fun-first collaboration to solve problems together with friends.";
+
+function NavLink({ name, href, color }: { name: string; href: string; color: string }) {
+  const first = name[0];
+  const rest = name.slice(1);
+  return (
+    <Link href={href} className="hover:opacity-70 transition-opacity" style={{ color }}>
+      <span
+        style={{
+          fontFamily: "'Jacquard 24', system-ui",
+          fontSize: "38px",
+          lineHeight: 1,
+        }}
+      >
+        {first}
+      </span>
+      <span
+        className="font-serif"
+        style={{
+          fontSize: "28px",
+          lineHeight: 1,
+        }}
+      >
+        {rest}
+      </span>
+    </Link>
+  );
+}
+
 export function Navbar() {
   const { scrollY } = useScroll();
   const [hidden, setHidden] = useState(false);
@@ -19,16 +63,8 @@ export function Navbar() {
     setIsScrolled(latest > 50);
   });
 
-  const sectionLinks = [
-    { name: "Our Story", href: "/story" },
-    { name: "Co-Living", href: "/neighborhood" },
-    { name: "Events", href: "/events" },
-    { name: "Campus", href: "/campus" },
-    { name: "New Liberal Arts", href: "/new-liberal-arts" },
-    { name: "Political Club", href: "/political-club" },
-    { name: "Lab", href: "/lab" },
-    { name: "People", href: "/people" },
-  ];
+  const leftLinks = sectionLinks.slice(0, 4);
+  const rightLinks = sectionLinks.slice(4);
 
   return (
     <>
@@ -43,41 +79,63 @@ export function Navbar() {
           isScrolled ? "backdrop-blur-md border-b border-border/30" : "bg-transparent"
         }`}
       >
-        <div className="relative py-5 max-md:hidden" style={{ paddingLeft: '6%', paddingRight: '6%' }}>
-          <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-4">
-            <nav className="flex items-center justify-between" style={{ transform: 'translateY(-20px)' }}>
-              {sectionLinks.slice(0, 4).map((link) => (
-                <Link
-                  key={link.name}
-                  href={link.href}
-                  className="text-[11px] font-medium text-foreground/80 hover:text-foreground transition-colors px-3 py-1.5 rounded-full border border-border/50 hover:border-border hover:bg-secondary/50 whitespace-nowrap"
-                >
-                  {link.name}
-                </Link>
-              ))}
-            </nav>
+        {/* Desktop */}
+        <div className="relative py-5 max-md:hidden" style={{ paddingLeft: "4.5%", paddingRight: "4.5%" }}>
+          <div className="grid grid-cols-[1fr_auto_1fr] items-end gap-6">
+            {/* Left side */}
+            <div className="flex flex-col gap-2">
+              <p
+                className="font-mono text-justify uppercase font-thin"
+                style={{ fontSize: "14px", lineHeight: 1.4 }}
+              >
+                {LEFT_TEXT}
+              </p>
+              <nav className="flex items-baseline justify-between">
+                {leftLinks.map((link) => (
+                  <NavLink key={link.name} {...link} />
+                ))}
+              </nav>
+            </div>
 
-            <Link href="/" className="text-center leading-[0.85] tracking-tighter">
-              <span className="text-5xl md:text-6xl lg:text-7xl block" style={{ fontFamily: "'Jacquard 24', system-ui" }}>Fractal</span>
-              <span className="font-serif text-3xl md:text-4xl lg:text-5xl block italic">Collective</span>
+            {/* Center title */}
+            <Link href="/" className="text-center leading-[1.1] tracking-tighter">
+              <span
+                className="block"
+                style={{ fontFamily: "'Jacquard 24', system-ui", fontSize: "82px" }}
+              >
+                Fractal
+              </span>
+              <span
+                className="font-serif block italic"
+                style={{ fontSize: "48px" }}
+              >
+                Collective
+              </span>
             </Link>
 
-            <nav className="flex items-center justify-between" style={{ transform: 'translateY(-20px)' }}>
-              {sectionLinks.slice(4).map((link) => (
-                <Link
-                  key={link.name}
-                  href={link.href}
-                  className="text-[11px] font-medium text-foreground/80 hover:text-foreground transition-colors px-3 py-1.5 rounded-full border border-border/50 hover:border-border hover:bg-secondary/50 whitespace-nowrap"
-                >
-                  {link.name}
-                </Link>
-              ))}
-            </nav>
+            {/* Right side */}
+            <div className="flex flex-col gap-2">
+              <p
+                className="font-mono text-justify uppercase font-thin"
+                style={{ fontSize: "14px", lineHeight: 1.4 }}
+              >
+                {RIGHT_TEXT}
+              </p>
+              <nav className="flex items-baseline justify-between">
+                {rightLinks.map((link) => (
+                  <NavLink key={link.name} {...link} />
+                ))}
+              </nav>
+            </div>
           </div>
         </div>
+
+        {/* Mobile */}
         <div className="md:hidden px-6 h-20 flex items-center justify-between">
           <Link href="/" className="tracking-tight">
-            <span className="text-2xl" style={{ fontFamily: "'Jacquard 24', system-ui" }}>Fractal</span>{" "}
+            <span className="text-2xl" style={{ fontFamily: "'Jacquard 24', system-ui" }}>
+              Fractal
+            </span>{" "}
             <span className="font-serif text-xl italic">Collective</span>
           </Link>
           <button
@@ -89,6 +147,7 @@ export function Navbar() {
         </div>
       </motion.header>
 
+      {/* Mobile menu overlay */}
       <motion.div
         initial={false}
         animate={mobileMenuOpen ? "open" : "closed"}
@@ -104,9 +163,21 @@ export function Navbar() {
               key={link.name}
               href={link.href}
               onClick={() => setMobileMenuOpen(false)}
-              className="font-serif text-3xl hover:text-foreground/70 transition-colors"
+              className="hover:opacity-70 transition-opacity"
             >
-              {link.name}
+              <span
+                style={{
+                  fontFamily: "'Jacquard 24', system-ui",
+                  fontSize: "28px",
+                  lineHeight: 1,
+                  color: link.color,
+                }}
+              >
+                {link.name[0]}
+              </span>
+              <span className="font-serif" style={{ fontSize: "22px" }}>
+                {link.name.slice(1)}
+              </span>
             </Link>
           ))}
         </nav>
