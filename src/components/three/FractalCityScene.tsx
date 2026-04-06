@@ -19,7 +19,7 @@ function SceneLighting() {
 }
 
 export function FractalCityScene({ onNavigate }: { onNavigate: (route: string) => void }) {
-  const imagePath = `${import.meta.env.BASE_URL}images/hero-bg.png`;
+  const imagePath = `${import.meta.env.BASE_URL}images/fractal-university.png`;
 
   return (
     <div className="absolute inset-0 z-[1]">
