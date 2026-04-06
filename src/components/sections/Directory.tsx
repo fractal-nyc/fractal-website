@@ -11,7 +11,7 @@ const directoryItems = [
   { title: "Political Club", href: "/political-club" },
   { title: "Lab", href: "/lab" },
   { title: "Story", href: "/story" },
-  { title: "People", href: "/people" },
+
 ];
 
 export function Directory() {
