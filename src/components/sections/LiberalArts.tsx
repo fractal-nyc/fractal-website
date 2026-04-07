@@ -38,7 +38,7 @@ export function LiberalArts() {
             {"The dream is 100s of writers, artists, and scientists and 1000s of great works to emerge from this program \u2014 but we are really in it just for the love of the game."}
           </PretextParagraph>
 
-          <p className="font-serif text-base md:text-lg mb-4">
+          <p className="font-serif text-xl md:text-2xl mb-4">
             <a
               href="https://fractaluniversity.substack.com/"
               target="_blank"
@@ -48,7 +48,7 @@ export function LiberalArts() {
               Learn more here.
             </a>
           </p>
-          <p className="font-serif text-base md:text-lg text-foreground/70">
+          <p className="font-serif text-xl md:text-2xl text-foreground/70">
             If you would like to offer a class as a TA or Instructor,{" "}
             <a
               href="https://airtable.com/appqj7FQhKgCdLnWM/shr23K8Sa62ptKc7Q"

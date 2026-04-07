@@ -11,7 +11,7 @@ export function EventsPage() {
         <SectorHeader letter="E" name="Events" color="#D4857A" />
 
         <FadeIn delay={0.1}>
-          <p className="font-serif text-lg md:text-xl leading-relaxed mb-10 text-pretty">
+          <p className="font-serif text-2xl md:text-3xl leading-relaxed mb-10 text-pretty">
             Public tech events are posted{" "}
             <a
               href="https://luma.com/nyc-tech"
@@ -37,7 +37,7 @@ export function EventsPage() {
         </FadeIn>
 
         <FadeIn delay={0.3}>
-          <p className="font-serif text-lg md:text-xl leading-relaxed">
+          <p className="font-serif text-2xl md:text-3xl leading-relaxed">
             Want to host an event at Fractal? Email{" "}
             <a
               href="mailto:events@merlins.place"

@@ -24,10 +24,10 @@ export function Campus() {
 
         <FadeIn>
           <div className="text-center mb-16">
-            <p className="font-serif text-lg md:text-xl font-light text-foreground/80 mb-4">
+            <p className="font-serif text-2xl md:text-3xl text-foreground/80 mb-4">
               Want to host an event at Fractal?
             </p>
-            <p className="font-serif text-base text-foreground/60 mb-6">
+            <p className="font-serif text-lg text-foreground/60 mb-6">
               We love bringing people together. Get in touch to book a space at Merlin's Place.
             </p>
             <a
