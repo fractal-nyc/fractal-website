@@ -2,6 +2,8 @@ import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { SectorHeader } from "@/components/layout/SectorHeader";
 import { FadeIn } from "@/components/ui/FadeIn";
+import { PretextParagraph } from "@/components/pretext/PretextParagraph";
+import { TEXT_SIZES } from "@/lib/pretext";
 
 export function NeighborhoodPage() {
   return (
@@ -17,11 +19,12 @@ export function NeighborhoodPage() {
                 <p className="text-xs font-semibold uppercase tracking-wider text-foreground/70 mb-3">
                   Note
                 </p>
-                <p className="text-base leading-relaxed text-foreground/80">
-                  Fractal is a decentralized network of apartments rather than a
-                  formal organization! So no one is in charge of sublets. The way
-                  staying here works:
-                </p>
+                <PretextParagraph
+                  size={TEXT_SIZES.base}
+                  className="text-foreground/80"
+                >
+                  {"Fractal is a decentralized network of apartments rather than a formal organization! So no one is in charge of sublets. The way staying here works:"}
+                </PretextParagraph>
                 <ol className="list-decimal list-inside mt-3 space-y-2 text-base leading-relaxed text-foreground/80">
                   <li>You fill out one of the forms below.</li>
                   <li>
@@ -38,9 +41,12 @@ export function NeighborhoodPage() {
 
             <FadeIn delay={0.3}>
               <div>
-                <p className="text-base text-foreground/80 mb-4">
-                  Want to visit? Fill out this form.
-                </p>
+                <PretextParagraph
+                  size={TEXT_SIZES.base}
+                  className="text-foreground/80 mb-4"
+                >
+                  {"Want to visit? Fill out this form."}
+                </PretextParagraph>
                 <a
                   href="https://airtable.com/appDkSh1TsmjHzacK/shrbrfFHeMTcSJ9dd"
                   target="_blank"

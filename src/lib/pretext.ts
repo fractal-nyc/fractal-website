@@ -17,6 +17,17 @@ export const FONTS = {
 
 export type FontFamily = (typeof FONTS)[keyof typeof FONTS];
 
+export const TEXT_SIZES = {
+  xs: 10,
+  sm: 12,
+  base: 13,
+  lg: 15,
+  xl: 18,
+  '2xl': 22,
+  '3xl': 28,
+  '4xl': 36,
+} as const;
+
 export function fontString(size: number, family: string): string {
   return `${size}px ${family}`;
 }
