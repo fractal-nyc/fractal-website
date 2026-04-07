@@ -146,19 +146,48 @@ export function Navbar() {
             </div>
 
             {/* Full mobile navbar */}
-            <div className="md:hidden px-6 h-20 flex items-center justify-between">
-              <Link href="/" className="tracking-tight">
-                <span className="text-2xl" style={{ fontFamily: "'Jacquard 24', system-ui" }}>
-                  Fractal
-                </span>{" "}
-                <span className="font-serif text-xl italic" style={{ textTransform: "none", fontWeight: 100 }}>Collective</span>
-              </Link>
-              <button
-                className="z-50 relative p-2 -mr-2 text-foreground"
-                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              >
-                {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-              </button>
+            <div className="md:hidden px-6 pt-5 pb-3">
+              {/* Top row: Fractal logo + blurb */}
+              <div className="flex items-start gap-3">
+                <Link href="/" className="tracking-tighter shrink-0 leading-[0.9]">
+                  <span
+                    className="block"
+                    style={{ fontFamily: "'Jacquard 24', system-ui", fontSize: "42px" }}
+                  >
+                    Fractal
+                  </span>
+                </Link>
+                <p
+                  className="font-mono uppercase font-thin text-justify flex-1"
+                  style={{ fontSize: "8px", lineHeight: 1.35, letterSpacing: "0.01em" }}
+                >
+                  {RIGHT_TEXT}
+                </p>
+              </div>
+
+              {/* Nav letters row */}
+              <nav className="flex items-baseline justify-between mt-2">
+                {sectionLinks.map((link) => (
+                  <Link
+                    key={link.name}
+                    href={link.href}
+                    className="hover:opacity-70 transition-opacity"
+                    style={{ color: link.color }}
+                  >
+                    <span
+                      style={{
+                        fontFamily: "'Jacquard 24', system-ui",
+                        fontSize: "20px",
+                        lineHeight: 1,
+                      }}
+                    >
+                      {link.name.length > 5
+                        ? link.name.split(" ").map(w => w[0]).join("")
+                        : link.name[0]}
+                    </span>
+                  </Link>
+                ))}
+              </nav>
             </div>
           </>
         ) : (
@@ -178,7 +207,7 @@ export function Navbar() {
         )}
       </motion.header>
 
-      {/* Menu overlay — full-screen split layout */}
+      {/* Menu overlay — WebGL model only, full screen */}
       <motion.div
         initial={false}
         animate={mobileMenuOpen ? "open" : "closed"}
@@ -187,66 +216,28 @@ export function Navbar() {
           closed: { opacity: 0, pointerEvents: "none" as const },
         }}
         transition={{ duration: 0.3, ease: "easeInOut" }}
-        className="fixed inset-0 z-40 bg-background overflow-y-auto"
+        className="fixed inset-0 z-40 bg-background"
       >
         {/* Close button */}
         <button
-          className="fixed top-6 right-4 z-50 p-2 text-foreground md:right-[4.5%]"
+          className="fixed top-6 right-4 z-50 p-2 text-foreground"
           onClick={() => setMobileMenuOpen(false)}
         >
           <X size={28} />
         </button>
 
-        <div className="flex flex-col md:flex-row min-h-screen">
-          {/* Left half — WebGL octahedron */}
-          <div className="relative w-full md:w-1/2 h-[45vh] md:h-screen shrink-0">
-            {mobileMenuOpen && (
-              <Suspense fallback={null}>
-                <FractalCityScene
-                  onNavigate={(route) => {
-                    setMobileMenuOpen(false);
-                    setLocation(route);
-                  }}
-                />
-              </Suspense>
-            )}
-          </div>
-
-          {/* Right half — logo, blurb, nav links */}
-          <div className="w-full md:w-1/2 flex flex-col justify-center px-8 py-10 md:px-12 md:py-16 gap-8">
-            {/* Logo */}
-            <Link href="/" onClick={() => setMobileMenuOpen(false)} className="block leading-[1.1] tracking-tighter">
-              <span
-                className="block"
-                style={{ fontFamily: "'Jacquard 24', system-ui", fontSize: "54px" }}
-              >
-                Fractal
-              </span>
-              <span
-                className="font-serif block italic"
-                style={{ fontSize: "34px", textTransform: "none", fontWeight: 100 }}
-              >
-                Collective
-              </span>
-            </Link>
-
-            {/* Blurb */}
-            <p
-              className="font-mono text-justify uppercase font-thin max-w-md"
-              style={{ fontSize: "11px", lineHeight: 1.5, letterSpacing: "0.01em" }}
-            >
-              {RIGHT_TEXT}
-            </p>
-
-            {/* Nav links */}
-            <nav className="flex flex-col gap-3">
-              {sectionLinks.map((link) => (
-                <div key={link.name} onClick={() => setMobileMenuOpen(false)}>
-                  <NavLink {...link} />
-                </div>
-              ))}
-            </nav>
-          </div>
+        {/* Centered WebGL model */}
+        <div className="relative w-full h-full">
+          {mobileMenuOpen && (
+            <Suspense fallback={null}>
+              <FractalCityScene
+                onNavigate={(route) => {
+                  setMobileMenuOpen(false);
+                  setLocation(route);
+                }}
+              />
+            </Suspense>
+          )}
         </div>
       </motion.div>
     </>
