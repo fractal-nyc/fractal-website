@@ -1,0 +1,10 @@
+{
+  "id": "FRAC58",
+  "title": "Widen text containers to fix orphan/widow issues",
+  "status": "in_progress",
+  "priority": "medium",
+  "type": "task",
+  "created_at": "2026-04-06T00:00:00Z",
+  "created_by": "agent:claude-opus-4-impl",
+  "branch": "frac-58-widen-containers"
+}
