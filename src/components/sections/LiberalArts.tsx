@@ -3,41 +3,59 @@ import { FadeIn } from "@/components/ui/FadeIn";
 export function LiberalArts() {
   return (
     <section id="new-liberal-arts" className="py-24 md:py-40 bg-background">
-      <div className="max-w-7xl mx-auto px-6 md:px-12">
+      <div className="max-w-3xl mx-auto px-6 md:px-12">
         <FadeIn>
-          <div className="mb-20 md:mb-32">
-            <h2 className="text-sm font-semibold tracking-widest uppercase text-muted-foreground mb-4">New Liberal Arts</h2>
-            <p className="text-3xl md:text-5xl font-serif max-w-2xl leading-tight">
-              Learning as a way of <span className="italic">living.</span>
-            </p>
-          </div>
+          <h2 className="text-3xl md:text-5xl font-serif mb-6">
+            New Liberal Arts
+          </h2>
+          <p className="text-lg text-foreground/70 leading-relaxed mb-16">
+            More information on the New Liberal Arts Launch coming June 2026
+          </p>
         </FadeIn>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-24 items-center">
-          <div>
-            <FadeIn direction="right">
-              <div className="flex flex-col gap-6">
-                <h3 className="text-3xl md:text-4xl font-serif">Fractal University</h3>
-                <p className="text-lg text-foreground/70 leading-relaxed font-light">
-                  Where we teach everything from art, to cooking, to coding. Classes are cozy (we teach them from our living rooms), and it's a lot of fun to learn from and with our friends.
-                </p>
-              </div>
-            </FadeIn>
-          </div>
+        <FadeIn delay={0.15}>
+          <h3 className="text-2xl md:text-3xl font-serif mb-6">Fractal U</h3>
+          <p className="text-base md:text-lg text-foreground/70 leading-relaxed mb-6">
+            Fractal University offers in-person, community sections of
+            world-class courses, for fun. We have courses in AI, computer
+            science, friendship + community, NYC government, cooking,
+            mind-body sciences, and more.
+          </p>
+          <p className="text-base md:text-lg text-foreground/70 leading-relaxed mb-6">
+            We aim to democratize enjoyable, community education and public
+            research culture by creating an easily replicable model for a
+            decentralized university — and the economic, social, and creative
+            opportunities they create.
+          </p>
+          <p className="text-base md:text-lg text-foreground/70 leading-relaxed mb-8">
+            The dream is 100s of writers, artists, and scientists and 1000s
+            of great works to emerge from this program — but we are really in
+            it just for the love of the game.
+          </p>
 
-          <div>
-            <FadeIn direction="left" delay={0.2}>
-              <div className="aspect-[4/5] md:aspect-square overflow-hidden bg-muted relative group">
-                <img
-                  src={`${import.meta.env.BASE_URL}images/fractal-university.png`}
-                  alt="Fractal University"
-                  className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
-                />
-                <div className="absolute inset-4 border border-background/30 pointer-events-none z-10 hidden md:block opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-              </div>
-            </FadeIn>
-          </div>
-        </div>
+          <p className="text-base md:text-lg mb-4">
+            <a
+              href="https://fractaluniversity.substack.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline underline-offset-4 hover:text-foreground/70 transition-colors"
+            >
+              Learn more here.
+            </a>
+          </p>
+          <p className="text-base md:text-lg text-foreground/70">
+            If you would like to offer a class as a TA or Instructor,{" "}
+            <a
+              href="https://airtable.com/appqj7FQhKgCdLnWM/shr23K8Sa62ptKc7Q"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline underline-offset-4 text-foreground hover:text-foreground/70 transition-colors"
+            >
+              apply here
+            </a>
+            .
+          </p>
+        </FadeIn>
       </div>
     </section>
   );
