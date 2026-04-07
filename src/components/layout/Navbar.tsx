@@ -1,7 +1,13 @@
-import { useState } from "react";
+import { useState, Suspense, lazy } from "react";
 import { motion, useScroll, useMotionValueEvent } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import { Link, useLocation } from "wouter";
+
+const FractalCityScene = lazy(() =>
+  import("@/components/three/FractalCityScene").then((m) => ({
+    default: m.FractalCityScene,
+  }))
+);
 
 const sectionLinks = [
   { name: "Story", href: "/story", color: "#D4BA58" },
@@ -53,10 +59,10 @@ function NavLink({ name, href, color }: { name: string; href: string; color: str
 export function Navbar() {
   const { scrollY } = useScroll();
   const [hidden, setHidden] = useState(false);
-  const [isScrolled, setIsScrolled] = useState(false);
+
   const [hasScrolledPast, setHasScrolledPast] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [location] = useLocation();
+  const [location, setLocation] = useLocation();
   const isHome = location === "/" || location === "";
 
   useMotionValueEvent(scrollY, "change", (latest) => {
@@ -70,7 +76,7 @@ export function Navbar() {
     if (latest < 10) {
       setHasScrolledPast(false);
     }
-    setIsScrolled(latest > 50);
+
   });
 
   const leftLinks = sectionLinks.slice(0, 4);
@@ -87,9 +93,7 @@ export function Navbar() {
         }}
         animate={hidden ? "hidden" : "visible"}
         transition={{ duration: 0.4, ease: [0.25, 1, 0.5, 1] }}
-        className={`fixed top-0 left-0 right-0 z-50 transition-colors duration-500 ${
-          isScrolled ? "backdrop-blur-md border-b border-border/30" : "bg-transparent"
-        }`}
+        className="fixed top-0 left-0 right-0 z-50 bg-transparent"
       >
         {showFull ? (
           <>
@@ -174,7 +178,7 @@ export function Navbar() {
         )}
       </motion.header>
 
-      {/* Menu overlay */}
+      {/* Menu overlay — full-screen split layout */}
       <motion.div
         initial={false}
         animate={mobileMenuOpen ? "open" : "closed"}
@@ -182,32 +186,68 @@ export function Navbar() {
           open: { opacity: 1, pointerEvents: "auto" as const },
           closed: { opacity: 0, pointerEvents: "none" as const },
         }}
-        className="fixed inset-0 z-40 bg-background overflow-y-auto pt-24 pb-12"
+        transition={{ duration: 0.3, ease: "easeInOut" }}
+        className="fixed inset-0 z-40 bg-background overflow-y-auto"
       >
-        <nav className="flex flex-col items-center gap-6 px-6">
-          {sectionLinks.map((link) => (
-            <Link
-              key={link.name}
-              href={link.href}
-              onClick={() => setMobileMenuOpen(false)}
-              className="hover:opacity-70 transition-opacity"
-            >
+        {/* Close button */}
+        <button
+          className="fixed top-6 right-4 z-50 p-2 text-foreground md:right-[4.5%]"
+          onClick={() => setMobileMenuOpen(false)}
+        >
+          <X size={28} />
+        </button>
+
+        <div className="flex flex-col md:flex-row min-h-screen">
+          {/* Left half — WebGL octahedron */}
+          <div className="relative w-full md:w-1/2 h-[45vh] md:h-screen shrink-0">
+            {mobileMenuOpen && (
+              <Suspense fallback={null}>
+                <FractalCityScene
+                  onNavigate={(route) => {
+                    setMobileMenuOpen(false);
+                    setLocation(route);
+                  }}
+                />
+              </Suspense>
+            )}
+          </div>
+
+          {/* Right half — logo, blurb, nav links */}
+          <div className="w-full md:w-1/2 flex flex-col justify-center px-8 py-10 md:px-12 md:py-16 gap-8">
+            {/* Logo */}
+            <Link href="/" onClick={() => setMobileMenuOpen(false)} className="block leading-[1.1] tracking-tighter">
               <span
-                style={{
-                  fontFamily: "'Jacquard 24', system-ui",
-                  fontSize: "28px",
-                  lineHeight: 1,
-                  color: link.color,
-                }}
+                className="block"
+                style={{ fontFamily: "'Jacquard 24', system-ui", fontSize: "54px" }}
               >
-                {link.name[0]}
+                Fractal
               </span>
-              <span className="font-serif" style={{ fontSize: "18px", textTransform: "none", fontStyle: "normal", fontWeight: 300 }}>
-                {link.name.slice(1)}
+              <span
+                className="font-serif block italic"
+                style={{ fontSize: "34px", textTransform: "none", fontWeight: 100 }}
+              >
+                Collective
               </span>
             </Link>
-          ))}
-        </nav>
+
+            {/* Blurb */}
+            <p
+              className="font-mono text-justify uppercase font-thin max-w-md"
+              style={{ fontSize: "11px", lineHeight: 1.5, letterSpacing: "0.01em" }}
+            >
+              {RIGHT_TEXT}
+            </p>
+
+            {/* Nav links */}
+            <nav className="flex flex-col gap-3">
+              {sectionLinks.map((link) => (
+                <div key={link.name} onClick={() => setMobileMenuOpen(false)}>
+                  <NavLink {...link} />
+                </div>
+              ))}
+            </nav>
+          </div>
+        </div>
       </motion.div>
     </>
   );

@@ -1,0 +1,10 @@
+{
+  "id": "task_FRAC65",
+  "short_code": "FRAC-65",
+  "title": "Mobile menu — full-screen split layout with WebGL model",
+  "description": "Redesign mobile menu as full-screen overlay with split layout. Left: interactive WebGL octahedron model (from OctahedronHero). Right: Fractal logo, blurb text ('we believe small groups who share context deeply & build agentic tools for each other can move dramatically faster than individuals working alone, so We embrace experimentation, joyful cyborgism & fun-first collaboration to solve problems together with friends.'), nav links with Jacquard first-letter styling and elegant palette colors. White/cream background. Reference: Monumental Labs style split menu.",
+  "status": "in_progress",
+  "priority": "high",
+  "created_at": "2026-04-07T22:55:00Z",
+  "updated_at": "2026-04-07T22:55:00Z"
+}
