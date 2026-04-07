@@ -14,6 +14,19 @@ function isDark(hex: string): boolean {
 }
 
 // ---------------------------------------------------------------------------
+// Fractal Elegant palette — paired bg + Jacquard 24 letter colors per house
+// ---------------------------------------------------------------------------
+
+const ELEGANT_PAIRS: Record<string, { bg: string; letter: string }> = {
+  neighborhood: { bg: "#889460", letter: "#4A5A30" },
+  events:       { bg: "#D4857A", letter: "#8B2A1E" },
+  campus:       { bg: "#2B5A48", letter: "#D4BA58" },
+  school:       { bg: "#C41E20", letter: "#F5E6D8" },
+  forum:        { bg: "#6E1830", letter: "#D4857A" },
+  lab:          { bg: "#E870A0", letter: "#6E1830" },
+};
+
+// ---------------------------------------------------------------------------
 // HouseBanner
 // ---------------------------------------------------------------------------
 
@@ -38,7 +51,10 @@ export function HouseBanner({
   className = "",
 }: HouseBannerProps) {
   const isGrid = variant === "grid";
-  const textColor = isDark(house.color) ? "#ffffff" : "#1a1a1a";
+  const pair = ELEGANT_PAIRS[house.id];
+  const bgColor = pair?.bg ?? house.color;
+  const letterColor = pair?.letter ?? (isDark(house.color) ? "#ffffff" : "#1a1a1a");
+  const textColor = isDark(bgColor) ? "#ffffff" : "#1a1a1a";
 
   return (
     <div className={`relative ${className}`}>
@@ -49,7 +65,7 @@ export function HouseBanner({
           ${isGrid ? "aspect-[1/3]" : "aspect-[3/4] max-w-2xl mx-auto"}
         `}
         style={{
-          backgroundColor: house.color,
+          backgroundColor: bgColor,
           clipPath:
             "polygon(0% 0%, 100% 0%, 100% 100%, 50% 85%, 0% 100%)",
           color: textColor,
@@ -61,21 +77,11 @@ export function HouseBanner({
             leading-none
             ${isGrid ? "text-6xl sm:text-7xl lg:text-8xl" : "text-[8rem] md:text-[10rem]"}
           `}
-          style={{ fontFamily: "'Jacquard 24', system-ui", opacity: 0.95 }}
+          style={{ fontFamily: "'Jacquard 24', system-ui", color: letterColor }}
           aria-hidden="true"
         >
           {(house.displayName ?? house.name).charAt(0)}
         </span>
-
-        {/* Name — use displayName when available */}
-        <h3
-          className={`
-            font-serif leading-tight px-2
-            ${isGrid ? "text-xs sm:text-sm lg:text-base mt-1" : "text-2xl md:text-3xl mt-2"}
-          `}
-        >
-          {house.displayName ?? house.name}
-        </h3>
 
         {/* Tagline */}
         <p

@@ -1,0 +1,13 @@
+{
+  "id": "task_FRAC55",
+  "short_code": "FRAC-55",
+  "title": "Apply Elegant palette color pairs to HouseBanner component",
+  "description": "Update HouseBanner to use paired colors from the Fractal Elegant palette. Each banner gets a bg color and a Jacquard 24 letter color. Remove house name h3, keep only the big letter and tagline. Remove subtitle from HouseBannerGrid.",
+  "status": "in_progress",
+  "priority": "medium",
+  "type": "task",
+  "created_at": "2026-04-06T00:00:00Z",
+  "updated_at": "2026-04-06T00:00:00Z",
+  "assigned_to": "agent:claude-opus-4",
+  "tags": ["ui", "palette"]
+}
