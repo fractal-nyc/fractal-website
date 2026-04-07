@@ -4,29 +4,29 @@ import { SectorHeader } from "@/components/layout/SectorHeader";
 export function LiberalArts() {
   return (
     <section id="new-liberal-arts" className="py-24 md:py-40 bg-background">
-      <div className="max-w-4xl mx-auto px-6 md:px-12 text-center">
+      <div className="max-w-5xl mx-auto px-6 md:px-12 text-center">
         <SectorHeader letter="N" name="New Liberal Arts" color="#1D3557" />
         <FadeIn>
-          <p className="text-lg text-foreground/70 leading-relaxed mb-16">
+          <p className="text-lg text-foreground/70 leading-relaxed mb-16 text-pretty">
             More information on the New Liberal Arts Launch coming June 2026
           </p>
         </FadeIn>
 
         <FadeIn delay={0.15}>
           <h3 className="text-2xl md:text-3xl font-serif mb-6">Fractal U</h3>
-          <p className="text-base md:text-lg text-foreground/70 leading-relaxed mb-6">
+          <p className="text-base md:text-lg text-foreground/70 leading-relaxed mb-6 text-pretty">
             Fractal University offers in-person, community sections of
             world-class courses, for fun. We have courses in AI, computer
             science, friendship + community, NYC government, cooking,
             mind-body sciences, and more.
           </p>
-          <p className="text-base md:text-lg text-foreground/70 leading-relaxed mb-6">
+          <p className="text-base md:text-lg text-foreground/70 leading-relaxed mb-6 text-pretty">
             We aim to democratize enjoyable, community education and public
             research culture by creating an easily replicable model for a
             decentralized university — and the economic, social, and creative
             opportunities they create.
           </p>
-          <p className="text-base md:text-lg text-foreground/70 leading-relaxed mb-8">
+          <p className="text-base md:text-lg text-foreground/70 leading-relaxed mb-8 text-pretty">
             The dream is 100s of writers, artists, and scientists and 1000s
             of great works to emerge from this program — but we are really in
             it just for the love of the game.

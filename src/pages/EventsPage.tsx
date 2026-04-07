@@ -7,11 +7,11 @@ export function EventsPage() {
   return (
     <main className="min-h-screen bg-background text-foreground selection:bg-foreground selection:text-background">
       <Navbar />
-      <section className="pt-32 pb-24 md:pt-40 md:pb-40 px-6 md:px-12 max-w-4xl mx-auto text-center">
+      <section className="pt-32 pb-24 md:pt-40 md:pb-40 px-6 md:px-12 max-w-5xl mx-auto text-center">
         <SectorHeader letter="E" name="Events" color="#E07A5F" />
 
         <FadeIn delay={0.1}>
-          <p className="text-lg md:text-xl leading-relaxed mb-10">
+          <p className="text-lg md:text-xl leading-relaxed mb-10 text-pretty">
             Public tech events are posted{" "}
             <a
               href="https://luma.com/nyc-tech"

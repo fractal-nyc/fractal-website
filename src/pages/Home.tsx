@@ -21,8 +21,8 @@ export function Home() {
 
       {/* Vision Quote */}
       <section className="bg-[#faf8f5] px-6 md:px-[8%] py-16 md:py-24">
-        <FadeIn className="max-w-2xl mx-auto text-center">
-          <blockquote className="font-serif text-lg md:text-xl lg:text-2xl leading-relaxed text-foreground/80 italic">
+        <FadeIn className="max-w-4xl mx-auto text-center">
+          <blockquote className="font-serif text-lg md:text-xl lg:text-2xl leading-relaxed text-foreground/80 italic text-pretty">
             <span className="not-italic font-semibold">&ldquo;Is there a vision?&rdquo;</span>{" "}
             Many of us want to help improve the creative and civic culture in NYC
             &mdash; housing, energy, art, community, flourishing &mdash; but some
@@ -39,7 +39,7 @@ export function Home() {
           </h2>
         </FadeIn>
 
-        <div className="max-w-3xl mx-auto space-y-10">
+        <div className="max-w-4xl mx-auto space-y-10">
           {/* Donate */}
           <FadeIn delay={0.1}>
             <p className="text-sm md:text-base leading-relaxed text-foreground/85">

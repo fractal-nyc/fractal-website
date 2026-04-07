@@ -9,7 +9,7 @@ export function NeighborhoodPage() {
       <Navbar />
       <div className="pt-32">
         <section className="py-16 md:py-24">
-          <div className="max-w-4xl mx-auto px-6 md:px-12 text-center">
+          <div className="max-w-5xl mx-auto px-6 md:px-12 text-center">
             <SectorHeader letter="N" name="Neighborhood" color="#8B7355" />
 
             <FadeIn delay={0.15}>
@@ -17,7 +17,7 @@ export function NeighborhoodPage() {
                 <p className="text-xs font-semibold uppercase tracking-wider text-foreground/70 mb-3">
                   Note
                 </p>
-                <p className="text-base leading-relaxed text-foreground/80">
+                <p className="text-base leading-relaxed text-foreground/80 text-pretty">
                   Fractal is a decentralized network of apartments rather than a
                   formal organization! So no one is in charge of sublets. The way
                   staying here works:

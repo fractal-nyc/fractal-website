@@ -200,7 +200,7 @@ export function StoryPage() {
           <div className="max-w-6xl mx-auto px-6 md:px-12">
             <SectorHeader letter="S" name="Story" color="#D4BA58" />
             <FadeIn>
-              <p className="text-lg md:text-xl text-foreground/80 font-light leading-relaxed max-w-4xl mx-auto text-center text-pretty mb-12">
+              <p className="text-lg md:text-xl text-foreground/80 font-light leading-relaxed max-w-5xl mx-auto text-center text-pretty mb-12">
                 Fractal was originally dreamed up by Andrew and Priya Rose. They
                 were later joined by many co-conspirators. If you&apos;re
                 interested in Fractal&apos;s story and where we see it going, you

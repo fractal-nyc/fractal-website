@@ -9,7 +9,7 @@ export function PoliticalClubPage() {
       <Navbar />
       <div className="pt-32">
         <section className="py-24 md:py-40">
-          <div className="max-w-4xl mx-auto px-6 md:px-12 text-center">
+          <div className="max-w-5xl mx-auto px-6 md:px-12 text-center">
             <SectorHeader letter="P" name="Political Club" color="#CC2936" />
             <FadeIn>
               <p className="text-lg md:text-xl leading-relaxed text-pretty">
