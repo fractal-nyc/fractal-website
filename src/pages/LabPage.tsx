@@ -1,5 +1,6 @@
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
+import { SectorHeader } from "@/components/layout/SectorHeader";
 import { FadeIn } from "@/components/ui/FadeIn";
 import { MandelbrotIcon } from "@/components/house/MandelbrotIcon";
 import { DocumentGrid } from "@/components/lab/DocumentGrid";
@@ -18,11 +19,7 @@ export function LabPage() {
         {/* Lab heading + description */}
         <section className="pb-16 md:pb-24">
           <div className="max-w-7xl mx-auto px-6 md:px-12">
-            <FadeIn>
-              <h1 className="text-sm font-semibold tracking-widest uppercase text-muted-foreground mb-8">
-                Lab
-              </h1>
-            </FadeIn>
+            <SectorHeader letter="L" name="Lab" color="#6B4C9A" />
             <FadeIn delay={0.2}>
               <div className="max-w-2xl">
                 <p className="text-lg font-light leading-relaxed text-muted-foreground whitespace-pre-line">

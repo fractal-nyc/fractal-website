@@ -1,5 +1,6 @@
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
+import { SectorHeader } from "@/components/layout/SectorHeader";
 import { OriginStory } from "@/components/sections/OriginStory";
 import { PhotoGallery } from "@/components/gallery/PhotoGallery";
 import { gallerySections } from "@/data/storyPhotos";
@@ -188,10 +189,8 @@ export function StoryPage() {
         {/* Talks & Podcasts Section */}
         <section className="py-16 md:py-24">
           <div className="max-w-6xl mx-auto px-6 md:px-12">
+            <SectorHeader letter="S" name="Story" color="#D4BA58" />
             <FadeIn>
-              <h2 className="text-xs font-semibold tracking-widest uppercase text-muted-foreground mb-6">
-                Story
-              </h2>
               <p className="text-lg md:text-xl text-foreground/80 font-light leading-relaxed max-w-3xl mb-12">
                 Fractal was originally dreamed up by Andrew and Priya Rose. They
                 were later joined by many co-conspirators. If you&apos;re
