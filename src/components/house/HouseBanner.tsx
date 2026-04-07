@@ -55,22 +55,23 @@ export function HouseBanner({
           color: textColor,
         }}
       >
-        {/* Subtitle */}
+        {/* First-letter monogram badge */}
         <span
           className={`
-            font-sans uppercase tracking-widest
-            ${isGrid ? "text-[10px] lg:text-xs mb-2" : "text-sm mb-4"}
+            leading-none
+            ${isGrid ? "text-6xl sm:text-7xl lg:text-8xl" : "text-[8rem] md:text-[10rem]"}
           `}
-          style={{ opacity: 0.8 }}
+          style={{ fontFamily: "'Jacquard 24', system-ui", opacity: 0.95 }}
+          aria-hidden="true"
         >
-          {house.subtitle}
+          {(house.displayName ?? house.name).charAt(0)}
         </span>
 
         {/* Name — use displayName when available */}
         <h3
           className={`
             font-serif leading-tight px-2
-            ${isGrid ? "text-base sm:text-lg lg:text-xl" : "text-4xl md:text-5xl"}
+            ${isGrid ? "text-xs sm:text-sm lg:text-base mt-1" : "text-2xl md:text-3xl mt-2"}
           `}
         >
           {house.displayName ?? house.name}
@@ -80,7 +81,7 @@ export function HouseBanner({
         <p
           className={`
             font-serif italic px-2
-            ${isGrid ? "text-xs sm:text-sm mt-1" : "text-lg mt-3"}
+            ${isGrid ? "text-[10px] sm:text-xs mt-1" : "text-lg mt-3"}
           `}
           style={{ opacity: 0.85 }}
         >
