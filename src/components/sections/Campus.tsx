@@ -2,8 +2,8 @@ import { FadeIn } from "@/components/ui/FadeIn";
 
 const campusProjects = [
   {
-    title: "Fractal Bootcamp & Tech Hub",
-    description: "A three month intensive software engineering bootcamp, paired with our co-working space and AI accelerator. A rigorous environment for builders who want to level up their skills and ship projects together.",
+    title: "Fractal Accelerator & Tech Hub",
+    description: "A three month intensive software engineering accelerator, paired with our co-working space and AI lab. A rigorous environment for builders who want to level up their skills and ship projects together.",
     image: `${import.meta.env.BASE_URL}images/fractal-tech-hub.png`
   },
   {
@@ -79,6 +79,23 @@ export function Campus() {
             </div>
           ))}
         </div>
+
+        <FadeIn>
+          <div className="mt-32 text-center border border-foreground/10 py-16 px-6 md:px-12">
+            <h3 className="text-2xl md:text-3xl font-serif mb-4">
+              Want to host an event at Fractal?
+            </h3>
+            <p className="text-lg text-foreground/70 font-light mb-8 max-w-md mx-auto">
+              We love bringing people together. Get in touch to book a space at Merlin&apos;s Place.
+            </p>
+            <a
+              href="mailto:#"
+              className="inline-block border border-foreground px-8 py-3 text-sm tracking-widest uppercase hover:bg-foreground hover:text-background transition-colors duration-300"
+            >
+              Email Merlin&apos;s Place
+            </a>
+          </div>
+        </FadeIn>
       </div>
     </section>
   );

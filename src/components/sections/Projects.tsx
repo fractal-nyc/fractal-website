@@ -3,8 +3,8 @@ import { FadeIn } from "@/components/ui/FadeIn";
 const projects = [
   {
     id: "01",
-    title: "Fractal Bootcamp & Tech Hub",
-    description: "A three month intensive software engineering bootcamp, paired with our co-working space and AI accelerator. A rigorous environment for builders who want to level up their skills and ship projects together.",
+    title: "Fractal Accelerator & Tech Hub",
+    description: "A three month intensive software engineering accelerator, paired with our co-working space and AI lab. A rigorous environment for builders who want to level up their skills and ship projects together.",
     image: `${import.meta.env.BASE_URL}images/fractal-tech-hub.png`
   },
   {
