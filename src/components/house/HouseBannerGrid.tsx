@@ -22,9 +22,6 @@ export function HouseBannerGrid({ className = "" }: HouseBannerGridProps) {
               <h2 className="text-4xl md:text-6xl font-serif">
                 Six Houses
               </h2>
-              <p className="text-muted-foreground mt-2 font-light text-lg">
-                The sectors of Fractal.
-              </p>
             </div>
           </div>
         </FadeIn>
