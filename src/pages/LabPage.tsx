@@ -21,7 +21,7 @@ export function LabPage() {
         {/* Lab heading + description */}
         <section className="pb-16 md:pb-24">
           <div className="max-w-7xl mx-auto px-6 md:px-12">
-            <SectorHeader letter="L" name="Lab" color="#6B4C9A" />
+            <SectorHeader letter="L" name="Lab" color="#E870A0" />
             <FadeIn delay={0.2}>
               <div className="max-w-5xl mx-auto text-center">
                 <PretextParagraph

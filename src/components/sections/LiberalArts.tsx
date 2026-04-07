@@ -7,7 +7,7 @@ export function LiberalArts() {
   return (
     <section id="new-liberal-arts" className="py-24 md:py-40 bg-background">
       <div className="max-w-5xl mx-auto px-6 md:px-12 text-center">
-        <SectorHeader letter="N" name="New Liberal Arts" color="#1D3557" />
+        <SectorHeader letter="N" name="New Liberal Arts" color="#C41E20" />
         <FadeIn>
           <PretextParagraph
             size={TEXT_SIZES.lg}

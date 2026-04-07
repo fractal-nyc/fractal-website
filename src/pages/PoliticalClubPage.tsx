@@ -10,7 +10,7 @@ export function PoliticalClubPage() {
       <div className="pt-32">
         <section className="py-24 md:py-40">
           <div className="max-w-5xl mx-auto px-6 md:px-12 text-center">
-            <SectorHeader letter="P" name="Political Club" color="#CC2936" />
+            <SectorHeader letter="P" name="Political Club" color="#6E1830" />
             <FadeIn>
               <p className="text-lg md:text-xl leading-relaxed text-pretty">
                 Learn about our current political club through Maximum New York{" "}

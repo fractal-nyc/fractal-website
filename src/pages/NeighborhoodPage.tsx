@@ -12,7 +12,7 @@ export function NeighborhoodPage() {
       <div className="pt-32">
         <section className="py-16 md:py-24">
           <div className="max-w-5xl mx-auto px-6 md:px-12 text-center">
-            <SectorHeader letter="N" name="Neighborhood" color="#8B7355" />
+            <SectorHeader letter="N" name="Neighborhood" color="#889460" />
 
             <FadeIn delay={0.15}>
               <div className="border border-foreground/20 rounded-md px-5 py-5 mb-10 bg-foreground/[0.03] text-left">

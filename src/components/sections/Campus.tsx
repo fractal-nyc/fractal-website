@@ -19,7 +19,7 @@ export function Campus() {
     <section id="campus" className="py-24 md:py-40 bg-background">
       <div className="max-w-7xl mx-auto px-6 md:px-12">
         <FadeIn>
-          <SectorHeader letter="C" name="Campus" color="#457B9D" />
+          <SectorHeader letter="C" name="Campus" color="#2B5A48" />
         </FadeIn>
 
         <FadeIn>
