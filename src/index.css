@@ -1,10 +1,10 @@
-@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Jacquard+24&family=JetBrains+Mono:wght@100;200;300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,100..900;1,9..144,100..900&family=Jacquard+24&family=JetBrains+Mono:wght@100;200;300;400;500;600;700&display=swap');
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
 
 @theme inline {
   --font-sans: 'JetBrains Mono', monospace;
-  --font-serif: 'Instrument Serif', serif;
+  --font-serif: 'Fraunces', serif;
   --font-mono: 'JetBrains Mono', monospace;
 
   --color-background: hsl(var(--background));
@@ -114,15 +114,22 @@
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.03'/%3E%3C/svg%3E");
   }
 
-  /* Instrument Serif and Jacquard 24 should NOT be uppercased */
+  /* Serif headings: neobrutalist Fraunces — uppercase italic */
   h1, h2, h3, h4, h5, h6 {
-    @apply font-serif font-normal;
-    letter-spacing: -0.02em;
-    text-transform: none;
+    @apply font-serif font-normal italic;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
   }
 
-  .font-serif, [style*="Instrument Serif"], [style*="Jacquard"] {
+  /* Fraunces body text inherits uppercase from body; Jacquard keeps none */
+  .font-serif {
+    text-transform: uppercase;
+    font-style: italic;
+  }
+
+  [style*="Jacquard"] {
     text-transform: none;
+    font-style: normal;
   }
 }
 

@@ -11,7 +11,7 @@ import type {
 export const FONTS = {
   body: "'JetBrains Mono'",
   mono: "'JetBrains Mono'",
-  serif: "'Instrument Serif'",
+  serif: "'Fraunces'",
   display: "'Jacquard 24'",
 } as const;
 
