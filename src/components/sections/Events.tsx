@@ -7,8 +7,8 @@ export function Events() {
         <FadeIn>
           <div className="mb-20 md:mb-32">
             <h2 className="text-sm font-semibold tracking-widest uppercase text-muted-foreground mb-4">Events</h2>
-            <p className="text-3xl md:text-5xl font-serif max-w-2xl leading-tight">
-              Come <span className="italic">hang out</span> with us.
+            <p className="text-3xl md:text-5xl font-serif max-w-2xl leading-tight normal-case">
+              Come <span className="italic normal-case">hang out</span> with us.
             </p>
           </div>
         </FadeIn>

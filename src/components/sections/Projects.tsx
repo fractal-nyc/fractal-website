@@ -28,8 +28,8 @@ export function Projects() {
         <FadeIn>
           <div className="mb-20 md:mb-32">
             <h2 className="text-sm font-semibold tracking-widest uppercase text-muted-foreground mb-4">Incubations</h2>
-            <p className="text-3xl md:text-5xl font-serif max-w-2xl leading-tight">
-              Three we're <span className="italic">especially proud</span> of.
+            <p className="text-3xl md:text-5xl font-serif max-w-2xl leading-tight normal-case">
+              Three we're <span className="italic normal-case">especially proud</span> of.
             </p>
           </div>
         </FadeIn>
@@ -46,7 +46,7 @@ export function Projects() {
                 <FadeIn direction={index % 2 === 0 ? "right" : "left"}>
                   <div className="flex flex-col gap-6">
                     <span className="font-serif text-6xl md:text-8xl text-muted/50">{project.id}</span>
-                    <h3 className="text-3xl md:text-4xl font-serif">{project.title}</h3>
+                    <h3 className="text-3xl md:text-4xl font-serif normal-case">{project.title}</h3>
                     <p className="text-lg text-foreground/70 leading-relaxed font-light">
                       {project.description}
                     </p>

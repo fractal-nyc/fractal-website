@@ -165,19 +165,19 @@ function TalkCard({ talk }: { talk: TalkItem }) {
       </div>
 
       {/* Title */}
-      <h3 className="font-serif text-lg md:text-xl leading-snug tracking-tight">
+      <h3 className="font-serif text-lg md:text-xl leading-snug tracking-tight normal-case">
         {talk.title}
       </h3>
 
       {/* Author + Year */}
-      <p className="text-sm text-muted-foreground mt-1">
+      <p className="text-sm text-foreground mt-1">
         {talk.author}, {talk.year}
       </p>
 
       {/* Description */}
       <PretextParagraph
         size={TEXT_SIZES.base}
-        className="text-muted-foreground mt-3"
+        className="text-foreground mt-3"
       >
         {talk.description}
       </PretextParagraph>
@@ -199,16 +199,21 @@ export function StoryPage() {
   return (
     <main className="min-h-screen text-foreground selection:bg-foreground selection:text-background" style={{ backgroundColor: "#D4BA58" }}>
       <Navbar />
-      <div className="pt-20">
+      <div>
         {/* Talks & Podcasts Section */}
-        <section className="py-16 md:py-24">
-          <div className="max-w-6xl mx-auto px-[4.5%]">
-            <SectorHeader letter="S" name="Story" color="#D4BA58" />
+        <section className="min-h-screen flex flex-col items-center justify-center py-16 md:py-24">
+          <div className="max-w-6xl mx-auto px-6 md:px-[4.5%]">
+            <SectorHeader letter="S" name="Story" color="#8A7A20" />
+            <FadeIn>
+              <p className="font-serif text-4xl md:text-6xl leading-[1.3] mb-12 text-center" style={{ fontWeight: 300, textTransform: "uppercase", fontStyle: "normal" }}>
+                From a Single Apartment to a Neighborhood Campus
+              </p>
+            </FadeIn>
             <FadeIn>
               <PretextParagraph
                 size={TEXT_SIZES.lg}
                 font={FONTS.body}
-                className="text-foreground/80 font-light max-w-5xl mx-auto text-center text-pretty mb-12"
+                className="text-foreground font-light max-w-5xl mx-auto text-center text-pretty mb-12"
               >
                 {"Fractal was originally dreamed up by Andrew and Priya Rose. They were later joined by many co-conspirators. If you're interested in Fractal's story and where we see it going, you might like the following talks and podcasts."}
               </PretextParagraph>
@@ -230,16 +235,16 @@ export function StoryPage() {
         <PhotoGallery sections={gallerySections} />
       </div>
       {/* How Can I Help / Get Involved */}
-      <section className="px-[4.5%] py-20 md:py-28">
+      <section className="px-6 md:px-[4.5%] py-20 md:py-28">
         <FadeIn>
-          <h2 className="font-serif text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight text-foreground mb-8 text-center uppercase">
+          <h2 className="font-serif text-2xl md:text-3xl lg:text-4xl font-light tracking-tight text-foreground mb-8 text-center normal-case">
             How Can I Help / Get Involved?
           </h2>
         </FadeIn>
 
         <div className="max-w-4xl mx-auto space-y-10">
           <FadeIn delay={0.1}>
-            <p className="text-sm md:text-base leading-relaxed text-foreground/85">
+            <p className="text-sm md:text-base leading-relaxed text-foreground">
               Glad you asked! One way to help is to{" "}
               <a
                 href="https://hcb.hackclub.com/donations/start/fractal"
@@ -255,12 +260,12 @@ export function StoryPage() {
           </FadeIn>
 
           <FadeIn delay={0.15}>
-            <p className="text-sm md:text-base leading-relaxed text-foreground/85 mb-4">
+            <p className="text-sm md:text-base leading-relaxed text-foreground mb-4">
               If you&rsquo;re in NYC, here is other help we seek:
             </p>
 
             <ul className="space-y-6">
-              <li className="text-sm md:text-base leading-relaxed text-foreground/80 pl-4 border-l-2 border-foreground/15">
+              <li className="text-sm md:text-base leading-relaxed text-foreground pl-4 border-l-2 border-foreground/30">
                 We receive hundreds of inbound housing requests per year and we
                 can&rsquo;t accommodate them all. We would love for someone to build
                 the equivalent of{" "}
@@ -276,14 +281,14 @@ export function StoryPage() {
                 build this, we are happy to give you guidance and help promote it.
               </li>
 
-              <li className="text-sm md:text-base leading-relaxed text-foreground/80 pl-4 border-l-2 border-foreground/15">
+              <li className="text-sm md:text-base leading-relaxed text-foreground pl-4 border-l-2 border-foreground/30">
                 We would love for someone to host FractalFest, and for someone to
                 host Fractal Prom. We think a good organizer could make a profit
                 from these events, and we are happy to promote it. You must already
                 be part of the Fractal community.
               </li>
 
-              <li className="text-sm md:text-base leading-relaxed text-foreground/80 pl-4 border-l-2 border-foreground/15">
+              <li className="text-sm md:text-base leading-relaxed text-foreground pl-4 border-l-2 border-foreground/30">
                 We currently have one economic engine within the community, Fractal
                 Bootcamp, which teaches software engineering. We would like someone
                 to teach a sales bootcamp which ultimately places students in high
@@ -293,19 +298,19 @@ export function StoryPage() {
                 development and marketing.
               </li>
 
-              <li className="text-sm md:text-base leading-relaxed text-foreground/80 pl-4 border-l-2 border-foreground/15">
+              <li className="text-sm md:text-base leading-relaxed text-foreground pl-4 border-l-2 border-foreground/30">
                 We are seeking someone to help us launch a startup accelerator
                 program. We have the talent, we have the space, we have the demand,
                 and we have a dozen founders who have already casually applied. We
                 need a talented leader who will drive the program with us.
               </li>
 
-              <li className="text-sm md:text-base leading-relaxed text-foreground/80 pl-4 border-l-2 border-foreground/15">
+              <li className="text-sm md:text-base leading-relaxed text-foreground pl-4 border-l-2 border-foreground/30">
                 We are looking for someone to build us a forum, it can be cloned
                 from the open sourced Less Wrong forum.
               </li>
 
-              <li className="text-sm md:text-base leading-relaxed text-foreground/80 pl-4 border-l-2 border-foreground/15">
+              <li className="text-sm md:text-base leading-relaxed text-foreground pl-4 border-l-2 border-foreground/30">
                 Some people within Fractal have the money and interest to co-buy
                 property in New York, but currently those most interested are busy
                 with other projects. If you&rsquo;re also considering co-buying, in
@@ -313,7 +318,7 @@ export function StoryPage() {
                 you to some excellent building-mates.
               </li>
 
-              <li className="text-sm md:text-base leading-relaxed text-foreground/80 pl-4 border-l-2 border-foreground/15">
+              <li className="text-sm md:text-base leading-relaxed text-foreground pl-4 border-l-2 border-foreground/30">
                 We would love to work with a broker who specializes in Williamsburg
                 south of the BQE, or the neighborhood near the Morgan L stop. In
                 the past many of our friends have moved to live near us, and we

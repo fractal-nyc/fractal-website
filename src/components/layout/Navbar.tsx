@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { motion, useScroll, useMotionValueEvent } from "framer-motion";
 import { Menu, X } from "lucide-react";
-import { Link } from "wouter";
+import { Link, useLocation } from "wouter";
 
 const sectionLinks = [
   { name: "Story", href: "/story", color: "#D4BA58" },
@@ -54,20 +54,29 @@ export function Navbar() {
   const { scrollY } = useScroll();
   const [hidden, setHidden] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [hasScrolledPast, setHasScrolledPast] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [location] = useLocation();
+  const isHome = location === "/" || location === "";
 
   useMotionValueEvent(scrollY, "change", (latest) => {
     const previous = scrollY.getPrevious() || 0;
     if (latest > previous && latest > 150) {
       setHidden(true);
+      setHasScrolledPast(true);
     } else {
       setHidden(false);
+    }
+    if (latest < 10) {
+      setHasScrolledPast(false);
     }
     setIsScrolled(latest > 50);
   });
 
   const leftLinks = sectionLinks.slice(0, 4);
   const rightLinks = sectionLinks.slice(4);
+
+  const showFull = isHome && !hasScrolledPast;
 
   return (
     <>
@@ -82,75 +91,90 @@ export function Navbar() {
           isScrolled ? "backdrop-blur-md border-b border-border/30" : "bg-transparent"
         }`}
       >
-        {/* Desktop */}
-        <div className="relative py-5 max-md:hidden" style={{ paddingLeft: "4.5%", paddingRight: "4.5%" }}>
-          <div className="grid grid-cols-[1fr_auto_1fr] items-end gap-6">
-            {/* Left side */}
-            <div className="flex flex-col gap-2">
-              <p
-                className="font-mono text-justify uppercase font-thin"
-                style={{ fontSize: "13px", lineHeight: 1.4, letterSpacing: "0.01em" }}
-              >
-                {LEFT_TEXT}
-              </p>
-              <nav className="flex items-baseline justify-between">
-                {leftLinks.map((link) => (
-                  <NavLink key={link.name} {...link} />
-                ))}
-              </nav>
+        {showFull ? (
+          <>
+            {/* Full desktop navbar */}
+            <div className="relative py-5 max-md:hidden" style={{ paddingLeft: "4.5%", paddingRight: "4.5%" }}>
+              <div className="grid grid-cols-[1fr_auto_1fr] items-end gap-6">
+                <div className="flex flex-col gap-2">
+                  <p
+                    className="font-mono text-justify uppercase font-thin"
+                    style={{ fontSize: "13px", lineHeight: 1.4, letterSpacing: "0.01em" }}
+                  >
+                    {LEFT_TEXT}
+                  </p>
+                  <nav className="flex items-baseline justify-between">
+                    {leftLinks.map((link) => (
+                      <NavLink key={link.name} {...link} />
+                    ))}
+                  </nav>
+                </div>
+
+                <Link href="/" className="text-center leading-[1.1] tracking-tighter">
+                  <span
+                    className="block"
+                    style={{ fontFamily: "'Jacquard 24', system-ui", fontSize: "82px" }}
+                  >
+                    Fractal
+                  </span>
+                  <span
+                    className="font-serif block italic"
+                    style={{ fontSize: "48px", textTransform: "none", fontWeight: 100 }}
+                  >
+                    Collective
+                  </span>
+                </Link>
+
+                <div className="flex flex-col gap-2">
+                  <p
+                    className="font-mono text-justify uppercase font-thin"
+                    style={{ fontSize: "13px", lineHeight: 1.4, letterSpacing: "0.01em" }}
+                  >
+                    {RIGHT_TEXT}
+                  </p>
+                  <nav className="flex items-baseline justify-between">
+                    {rightLinks.map((link) => (
+                      <NavLink key={link.name} {...link} />
+                    ))}
+                  </nav>
+                </div>
+              </div>
             </div>
 
-            {/* Center title */}
-            <Link href="/" className="text-center leading-[1.1] tracking-tighter">
-              <span
-                className="block"
-                style={{ fontFamily: "'Jacquard 24', system-ui", fontSize: "82px" }}
+            {/* Full mobile navbar */}
+            <div className="md:hidden px-6 h-20 flex items-center justify-between">
+              <Link href="/" className="tracking-tight">
+                <span className="text-2xl" style={{ fontFamily: "'Jacquard 24', system-ui" }}>
+                  Fractal
+                </span>{" "}
+                <span className="font-serif text-xl italic" style={{ textTransform: "none", fontWeight: 100 }}>Collective</span>
+              </Link>
+              <button
+                className="z-50 relative p-2 -mr-2 text-foreground"
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               >
+                {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+              </button>
+            </div>
+          </>
+        ) : (
+          <div className="h-20 flex items-center justify-between" style={{ paddingLeft: "4.5%", paddingRight: "4.5%" }}>
+            <Link href="/" className="tracking-tight">
+              <span className="text-2xl md:text-3xl" style={{ fontFamily: "'Jacquard 24', system-ui" }}>
                 Fractal
               </span>
-              <span
-                className="font-serif block italic"
-                style={{ fontSize: "48px" }}
-              >
-                Collective
-              </span>
             </Link>
-
-            {/* Right side */}
-            <div className="flex flex-col gap-2">
-              <p
-                className="font-mono text-justify uppercase font-thin"
-                style={{ fontSize: "13px", lineHeight: 1.4, letterSpacing: "0.01em" }}
-              >
-                {RIGHT_TEXT}
-              </p>
-              <nav className="flex items-baseline justify-between">
-                {rightLinks.map((link) => (
-                  <NavLink key={link.name} {...link} />
-                ))}
-              </nav>
-            </div>
+            <button
+              className="z-50 relative p-2 -mr-2"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            >
+              {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+            </button>
           </div>
-        </div>
-
-        {/* Mobile */}
-        <div className="md:hidden px-6 h-20 flex items-center justify-between">
-          <Link href="/" className="tracking-tight">
-            <span className="text-2xl" style={{ fontFamily: "'Jacquard 24', system-ui" }}>
-              Fractal
-            </span>{" "}
-            <span className="font-serif text-xl italic">Collective</span>
-          </Link>
-          <button
-            className="z-50 relative p-2 -mr-2 text-foreground"
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          >
-            {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
-        </div>
+        )}
       </motion.header>
 
-      {/* Mobile menu overlay */}
+      {/* Menu overlay */}
       <motion.div
         initial={false}
         animate={mobileMenuOpen ? "open" : "closed"}

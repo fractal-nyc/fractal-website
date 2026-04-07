@@ -14,8 +14,8 @@ export function Vision() {
 
       <div className="max-w-4xl mx-auto px-[4.5%] text-center relative z-10">
         <FadeIn>
-          <h2 className="font-serif text-4xl md:text-6xl lg:text-7xl leading-tight text-foreground">
-            "Is there a <span className="italic">vision?</span>"
+          <h2 className="font-serif text-4xl md:text-6xl lg:text-7xl leading-tight text-foreground normal-case">
+            "Is there a <span className="italic normal-case">vision?</span>"
           </h2>
         </FadeIn>
         
@@ -26,7 +26,7 @@ export function Vision() {
         </FadeIn>
 
         <FadeIn delay={0.4} className="mt-8">
-          <p className="text-lg md:text-2xl font-serif italic text-foreground/60">
+          <p className="text-lg md:text-2xl font-serif italic normal-case text-foreground/60">
             ...but some are just here to live a well-rounded life.
           </p>
         </FadeIn>
