@@ -48,7 +48,7 @@ export function LiberalArts() {
               Learn more here.
             </a>
           </p>
-          <p className="font-serif text-xl md:text-2xl text-foreground/70">
+          <p className="font-serif text-xl md:text-2xl text-foreground/70 mb-10">
             If you would like to offer a class as a TA or Instructor,{" "}
             <a
               href="https://airtable.com/appqj7FQhKgCdLnWM/shr23K8Sa62ptKc7Q"
@@ -60,6 +60,25 @@ export function LiberalArts() {
             </a>
             .
           </p>
+
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <a
+              href="https://fractaluniversity.substack.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-block border border-foreground px-8 py-3 text-sm tracking-widest uppercase hover:bg-foreground hover:text-background transition-colors duration-300"
+            >
+              Learn More
+            </a>
+            <a
+              href="https://airtable.com/appqj7FQhKgCdLnWM/shr23K8Sa62ptKc7Q"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-block border border-foreground px-8 py-3 text-sm tracking-widest uppercase hover:bg-foreground hover:text-background transition-colors duration-300"
+            >
+              Apply as Instructor
+            </a>
+          </div>
         </FadeIn>
       </div>
     </section>
