@@ -19,109 +19,36 @@ export function Home() {
       <Hero />
       <HouseBannerGrid />
 
-      {/* Vision Quote */}
-      <section className="bg-[#faf8f5] px-6 md:px-[8%] py-16 md:py-24">
-        <FadeIn className="max-w-4xl mx-auto text-center">
-          <blockquote className="font-serif text-lg md:text-xl lg:text-2xl leading-relaxed text-foreground/80 italic text-pretty">
-            <span className="not-italic font-semibold">&ldquo;Is there a vision?&rdquo;</span>{" "}
-            Many of us want to help improve the creative and civic culture in NYC
-            &mdash; housing, energy, art, community, flourishing &mdash; but some
-            are just here to live a well-rounded life.
-          </blockquote>
-        </FadeIn>
-      </section>
-
-      {/* How Can I Help / Get Involved */}
-      <section className="bg-[#faf8f5] px-6 md:px-[8%] pb-20 md:pb-28">
-        <FadeIn>
-          <h2 className="font-serif text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight text-foreground mb-8 text-center uppercase">
-            How Can I Help / Get Involved?
-          </h2>
-        </FadeIn>
-
-        <div className="max-w-4xl mx-auto space-y-10">
-          <FadeIn delay={0.1}>
-            <p className="text-sm md:text-base leading-relaxed text-foreground/85">
-              Glad you asked! One way to help is to{" "}
-              <a
-                href="https://hcb.hackclub.com/donations/start/fractal"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="underline underline-offset-2 hover:text-foreground transition-colors"
-              >
-                donate to Fractal
-              </a>{" "}
-              which helps fund our non-commercial activities like writing, giving
-              talks, and going on podcasts.
-            </p>
+      {/* Golden Age Protocol */}
+      <section className="bg-[#faf8f5] px-[4.5%] py-40 md:py-60">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16 items-start">
+          <FadeIn>
+            <h2
+              className="font-serif text-5xl md:text-7xl leading-[1.3]"
+              style={{ fontWeight: 300, textTransform: "uppercase", fontStyle: "normal" }}
+            >
+              A Golden<br />Age Protocol
+            </h2>
           </FadeIn>
-
           <FadeIn delay={0.15}>
-            <p className="text-sm md:text-base leading-relaxed text-foreground/85 mb-4">
-              If you&rsquo;re in NYC, here is other help we seek:
-            </p>
-
-            <ul className="space-y-6">
-              <li className="text-sm md:text-base leading-relaxed text-foreground/80 pl-4 border-l-2 border-foreground/15">
-                We receive hundreds of inbound housing requests per year and we
-                can&rsquo;t accommodate them all. We would love for someone to build
-                the equivalent of{" "}
-                <a
-                  href="https://www.directorysf.com/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="underline underline-offset-2 hover:text-foreground transition-colors"
-                >
-                  directorysf.com
-                </a>{" "}
-                but for New York City and our extended social scene. If you want to
-                build this, we are happy to give you guidance and help promote it.
-              </li>
-
-              <li className="text-sm md:text-base leading-relaxed text-foreground/80 pl-4 border-l-2 border-foreground/15">
-                We would love for someone to host FractalFest, and for someone to
-                host Fractal Prom. We think a good organizer could make a profit
-                from these events, and we are happy to promote it. You must already
-                be part of the Fractal community.
-              </li>
-
-              <li className="text-sm md:text-base leading-relaxed text-foreground/80 pl-4 border-l-2 border-foreground/15">
-                We currently have one economic engine within the community, Fractal
-                Bootcamp, which teaches software engineering. We would like someone
-                to teach a sales bootcamp which ultimately places students in high
-                paid sales roles. About you: you have a history of excelling at
-                tech sales. How we can help: we can provide space at Fractal Tech
-                for you to run your first cohort, and help with curriculum
-                development and marketing.
-              </li>
-
-              <li className="text-sm md:text-base leading-relaxed text-foreground/80 pl-4 border-l-2 border-foreground/15">
-                We are seeking someone to help us launch a startup accelerator
-                program. We have the talent, we have the space, we have the demand,
-                and we have a dozen founders who have already casually applied. We
-                need a talented leader who will drive the program with us.
-              </li>
-
-              <li className="text-sm md:text-base leading-relaxed text-foreground/80 pl-4 border-l-2 border-foreground/15">
-                We are looking for someone to build us a forum, it can be cloned
-                from the open sourced Less Wrong forum.
-              </li>
-
-              <li className="text-sm md:text-base leading-relaxed text-foreground/80 pl-4 border-l-2 border-foreground/15">
-                Some people within Fractal have the money and interest to co-buy
-                property in New York, but currently those most interested are busy
-                with other projects. If you&rsquo;re also considering co-buying, in
-                a position to do so, and willing to take the lead, we can introduce
-                you to some excellent building-mates.
-              </li>
-
-              <li className="text-sm md:text-base leading-relaxed text-foreground/80 pl-4 border-l-2 border-foreground/15">
-                We would love to work with a broker who specializes in Williamsburg
-                south of the BQE, or the neighborhood near the Morgan L stop. In
-                the past many of our friends have moved to live near us, and we
-                would like to continue to facilitate this.
-              </li>
-            </ul>
+            <div className="font-mono text-sm md:text-base leading-relaxed text-foreground/80 space-y-6 uppercase font-thin" style={{ fontStyle: "normal" }}>
+              <p>
+                From the Founding Fathers to Bell Labs, YCombinator to Renaissance
+                Florence, tight networks of collaborators have produced innovations
+                and institutions that we now take for granted.
+              </p>
+              <p>
+                Brian Eno gives these flowerings of collective genius a name:{" "}
+                <em>scenius</em>. Scenius tends to blossom under particular
+                conditions that we believe are replicable. Namely: close proximity
+                and a culture of lively collaboration.
+              </p>
+              <p>
+                Fractals are designed to replicate these conditions. Our greatest
+                hope is that this program will lead to sceniuses popping up all
+                over the world.
+              </p>
+            </div>
           </FadeIn>
         </div>
       </section>
