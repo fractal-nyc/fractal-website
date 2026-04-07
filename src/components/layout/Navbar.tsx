@@ -149,7 +149,7 @@ export function Navbar() {
             <div className="md:hidden px-6 pt-5 pb-3">
               {/* Top row: Fractal logo + blurb */}
               <div className="flex items-start gap-3">
-                <Link href="/" className="tracking-tighter shrink-0 leading-[0.9]">
+                <Link href="/" className="tracking-tighter shrink-0 leading-[0.9] text-center">
                   <span
                     className="block"
                     style={{ fontFamily: "'Jacquard 24', system-ui", fontSize: "42px" }}
@@ -226,12 +226,13 @@ export function Navbar() {
         transition={{ duration: 0.3, ease: "easeInOut" }}
         className="fixed inset-0 z-40 bg-background"
       >
-        {/* Close button */}
+        {/* Close button — aligned with hamburger position */}
         <button
-          className="fixed top-6 right-4 z-50 p-2 text-foreground"
+          className="fixed top-0 right-0 z-50 p-2 -mr-2 text-foreground h-20 flex items-center"
+          style={{ right: "4.5%" }}
           onClick={() => setMobileMenuOpen(false)}
         >
-          <X size={28} />
+          <X size={24} />
         </button>
 
         {/* Centered WebGL model */}

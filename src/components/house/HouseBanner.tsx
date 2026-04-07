@@ -28,8 +28,8 @@ const ELEGANT_PAIRS: Record<string, { bg: string; letter: string }> = {
   campus:       { bg: "#2B5A48", letter: "#1A3A2E" },
   // Fuschia pair: pink bg + deep pink letter
   lab:          { bg: "#E870A0", letter: "#C44878" },
-  // Burgundy pair: wine bg + brighter rose letter for contrast
-  forum:        { bg: "#6E1830", letter: "#C83858" },
+  // Burgundy pair: dusty rose bg + dark burgundy letter
+  forum:        { bg: "#C89898", letter: "#6E1830" },
 };
 
 // ---------------------------------------------------------------------------
