@@ -44,7 +44,14 @@ function buildAuthorNameMap(): Map<string, string> {
 
 export function useArchiveFilter(): ArchiveFilterState {
   const [query, setQuery] = useState("");
-  const [activeTags, setActiveTags] = useState<Set<string>>(new Set());
+  const [activeTags, setActiveTags] = useState<Set<string>>(() => {
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      const tag = params.get("tag");
+      if (tag && getAllTags().includes(tag)) return new Set([tag]);
+    }
+    return new Set();
+  });
 
   const allTags = useMemo(() => getAllTags(), []);
   const tagCounts = useMemo(() => getTagCounts(), []);
