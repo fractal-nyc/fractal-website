@@ -319,13 +319,16 @@ function NavNodeMesh({
 }) {
   const meshRef = useRef<THREE.Mesh>(null);
   const [hovered, setHovered] = useState(false);
+  const [revealed, setRevealed] = useState(false);
+  const revealTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
   const phase = useRef(Math.random() * Math.PI * 2);
+  const isTouchDevice = typeof window !== "undefined" && "ontouchstart" in window;
 
   useFrame((_, delta) => {
     if (meshRef.current) {
       phase.current += delta * 2;
       const pulse = 1 + Math.sin(phase.current) * 0.08;
-      const target = hovered ? 1.8 : 1.0;
+      const target = (hovered || revealed) ? 1.8 : 1.0;
       const s = meshRef.current.scale.x / pulse;
       meshRef.current.scale.setScalar((s + (target - s) * 0.15) * pulse);
     }
@@ -337,6 +340,14 @@ function NavNodeMesh({
       position={position}
       onClick={(e: ThreeEvent<MouseEvent>) => {
         e.stopPropagation();
+        // Touch devices: first tap reveals label, second tap navigates
+        if (isTouchDevice && !revealed) {
+          setRevealed(true);
+          // Auto-hide after 3 seconds
+          if (revealTimeout.current) clearTimeout(revealTimeout.current);
+          revealTimeout.current = setTimeout(() => setRevealed(false), 3000);
+          return;
+        }
         onNavigate(node.route);
       }}
       onPointerOver={(e: ThreeEvent<PointerEvent>) => {
@@ -353,9 +364,9 @@ function NavNodeMesh({
       <meshStandardMaterial
         color={node.color}
         emissive={node.color}
-        emissiveIntensity={hovered ? 2.0 : 1.0}
+        emissiveIntensity={(hovered || revealed) ? 2.0 : 1.0}
       />
-      {hovered && (
+      {(hovered || revealed) && (
         <Html center distanceFactor={8} style={{ pointerEvents: "none" }}>
           <div style={tooltipStyle(node.color)}>{node.label}</div>
         </Html>
