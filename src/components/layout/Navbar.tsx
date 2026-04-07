@@ -156,6 +156,12 @@ export function Navbar() {
                   >
                     Fractal
                   </span>
+                  <span
+                    className="font-serif block italic"
+                    style={{ fontSize: "24px", textTransform: "none", fontWeight: 100 }}
+                  >
+                    Collective
+                  </span>
                 </Link>
                 <p
                   className="font-mono uppercase font-thin text-justify flex-1"
@@ -177,13 +183,15 @@ export function Navbar() {
                     <span
                       style={{
                         fontFamily: "'Jacquard 24', system-ui",
-                        fontSize: "20px",
+                        fontSize: "28px",
                         lineHeight: 1,
                       }}
                     >
-                      {link.name.length > 5
-                        ? link.name.split(" ").map(w => w[0]).join("")
-                        : link.name[0]}
+                      {link.name === "New Liberal Arts"
+                        ? "LA"
+                        : link.name === "Political Club"
+                          ? "PC"
+                          : link.name[0]}
                     </span>
                   </Link>
                 ))}
