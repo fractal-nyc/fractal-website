@@ -7,7 +7,7 @@ import { TEXT_SIZES } from "@/lib/pretext";
 
 export function PeoplePage() {
   return (
-    <main className="min-h-screen bg-background text-foreground selection:bg-foreground selection:text-background">
+    <main className="min-h-screen text-foreground selection:bg-foreground selection:text-background" style={{ backgroundColor: "#C49040" }}>
       <Navbar />
       <div className="pt-32">
         <section className="py-12 md:py-20">

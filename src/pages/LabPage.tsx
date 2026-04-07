@@ -15,7 +15,7 @@ export function LabPage() {
   const filter = useArchiveFilter();
 
   return (
-    <main className="min-h-screen bg-background text-foreground selection:bg-foreground selection:text-background">
+    <main className="min-h-screen text-foreground selection:bg-foreground selection:text-background" style={{ backgroundColor: "#E870A0" }}>
       <Navbar />
       <div className="pt-32">
         {/* Lab heading + description */}

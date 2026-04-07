@@ -5,7 +5,7 @@ import { FadeIn } from "@/components/ui/FadeIn";
 
 export function PoliticalClubPage() {
   return (
-    <main className="min-h-screen bg-background text-foreground selection:bg-foreground selection:text-background">
+    <main className="min-h-screen text-white selection:bg-white selection:text-[#6E1830]" style={{ backgroundColor: "#6E1830" }}>
       <Navbar />
       <div className="pt-32">
         <section className="py-24 md:py-40">
