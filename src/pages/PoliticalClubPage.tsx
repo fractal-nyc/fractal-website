@@ -12,7 +12,7 @@ export function PoliticalClubPage() {
           <div className="max-w-5xl mx-auto px-6 md:px-12 text-center">
             <SectorHeader letter="P" name="Political Club" color="#6E1830" />
             <FadeIn>
-              <p className="font-serif text-2xl md:text-3xl leading-relaxed text-pretty">
+              <p className="font-serif text-2xl md:text-3xl leading-relaxed text-pretty mb-10">
                 Learn about our current political club through Maximum New York{" "}
                 <a
                   href="https://www.maximumnewyork.com/"
@@ -24,6 +24,14 @@ export function PoliticalClubPage() {
                 </a>
                 .
               </p>
+              <a
+                href="https://www.maximumnewyork.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-block border border-foreground px-8 py-3 text-sm tracking-widest uppercase hover:bg-foreground hover:text-background transition-colors duration-300"
+              >
+                Maximum New York
+              </a>
             </FadeIn>
           </div>
         </section>

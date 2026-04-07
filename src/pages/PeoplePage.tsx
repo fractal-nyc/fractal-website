@@ -25,6 +25,14 @@ export function PeoplePage() {
                   </a>{" "}
                   and introduce yourself.
                 </p>
+                <a
+                  href="https://discord.com/invite/vugp6Nza"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-block bg-foreground text-background px-8 py-3 text-sm font-semibold tracking-widest uppercase hover:opacity-80 transition-opacity mb-8"
+                >
+                  Join Discord
+                </a>
                 <PretextParagraph
                   size={TEXT_SIZES.lg}
                   className="font-light text-muted-foreground"
