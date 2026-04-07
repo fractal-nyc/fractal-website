@@ -5,6 +5,8 @@ import { OriginStory } from "@/components/sections/OriginStory";
 import { PhotoGallery } from "@/components/gallery/PhotoGallery";
 import { gallerySections } from "@/data/storyPhotos";
 import { FadeIn } from "@/components/ui/FadeIn";
+import { PretextParagraph } from "@/components/pretext/PretextParagraph";
+import { TEXT_SIZES, FONTS } from "@/lib/pretext";
 import { ArrowUpRight, Megaphone, Mic, Newspaper } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
@@ -173,9 +175,12 @@ function TalkCard({ talk }: { talk: TalkItem }) {
       </p>
 
       {/* Description */}
-      <p className="text-sm text-muted-foreground mt-3 leading-relaxed">
+      <PretextParagraph
+        size={TEXT_SIZES.base}
+        className="text-muted-foreground mt-3"
+      >
         {talk.description}
-      </p>
+      </PretextParagraph>
 
       {/* Accent bar at bottom */}
       <div
@@ -200,12 +205,13 @@ export function StoryPage() {
           <div className="max-w-6xl mx-auto px-6 md:px-12">
             <SectorHeader letter="S" name="Story" color="#D4BA58" />
             <FadeIn>
-              <p className="text-lg md:text-xl text-foreground/80 font-light leading-relaxed max-w-5xl mx-auto text-center text-pretty mb-12">
-                Fractal was originally dreamed up by Andrew and Priya Rose. They
-                were later joined by many co-conspirators. If you&apos;re
-                interested in Fractal&apos;s story and where we see it going, you
-                might like the following talks and podcasts.
-              </p>
+              <PretextParagraph
+                size={TEXT_SIZES.lg}
+                font={FONTS.body}
+                className="text-foreground/80 font-light max-w-5xl mx-auto text-center text-pretty mb-12"
+              >
+                {"Fractal was originally dreamed up by Andrew and Priya Rose. They were later joined by many co-conspirators. If you're interested in Fractal's story and where we see it going, you might like the following talks and podcasts."}
+              </PretextParagraph>
             </FadeIn>
 
             {/* Talk cards grid */}

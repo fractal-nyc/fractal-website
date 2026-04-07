@@ -2,6 +2,8 @@ import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { SectorHeader } from "@/components/layout/SectorHeader";
 import { FadeIn } from "@/components/ui/FadeIn";
+import { PretextParagraph } from "@/components/pretext/PretextParagraph";
+import { TEXT_SIZES } from "@/lib/pretext";
 
 export function PeoplePage() {
   return (
@@ -23,10 +25,12 @@ export function PeoplePage() {
                   </a>{" "}
                   and introduce yourself.
                 </p>
-                <p className="text-lg font-light leading-relaxed text-muted-foreground">
-                  Look forward to the Fractal Network Portal available to
-                  Fractal Members soon...
-                </p>
+                <PretextParagraph
+                  size={TEXT_SIZES.lg}
+                  className="font-light text-muted-foreground"
+                >
+                  {"Look forward to the Fractal Network Portal available to Fractal Members soon..."}
+                </PretextParagraph>
               </div>
             </FadeIn>
           </div>

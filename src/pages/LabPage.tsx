@@ -7,6 +7,8 @@ import { DocumentGrid } from "@/components/lab/DocumentGrid";
 import { ArchiveToolbar } from "@/components/lab/ArchiveToolbar";
 import { useArchiveFilter } from "@/hooks/use-archive-filter";
 import { getHouseBySlug } from "@/data/houses";
+import { PretextParagraph } from "@/components/pretext/PretextParagraph";
+import { TEXT_SIZES } from "@/lib/pretext";
 
 export function LabPage() {
   const house = getHouseBySlug("lab")!;
@@ -22,9 +24,12 @@ export function LabPage() {
             <SectorHeader letter="L" name="Lab" color="#6B4C9A" />
             <FadeIn delay={0.2}>
               <div className="max-w-5xl mx-auto text-center">
-                <p className="text-lg font-light leading-relaxed text-muted-foreground whitespace-pre-line text-pretty">
+                <PretextParagraph
+                  size={TEXT_SIZES.lg}
+                  className="font-light text-muted-foreground text-pretty"
+                >
                   {house.description}
-                </p>
+                </PretextParagraph>
               </div>
             </FadeIn>
           </div>
@@ -51,10 +56,12 @@ export function LabPage() {
                 <p className="text-3xl md:text-4xl font-serif leading-tight">
                   The archive
                 </p>
-                <p className="text-muted-foreground mt-3 font-light text-base max-w-xl">
-                  Essays, publications, and podcasts from the minds behind
-                  Fractal Labs.
-                </p>
+                <PretextParagraph
+                  size={TEXT_SIZES.base}
+                  className="text-muted-foreground mt-3 font-light max-w-xl"
+                >
+                  {"Essays, publications, and podcasts from the minds behind Fractal Labs."}
+                </PretextParagraph>
               </div>
             </FadeIn>
 
