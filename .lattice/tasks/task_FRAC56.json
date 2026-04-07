@@ -1,0 +1,13 @@
+{
+  "id": "task_FRAC56",
+  "short_code": "FRAC-56",
+  "title": "Fix house banner color pairs in ELEGANT_PAIRS mapping",
+  "description": "Fix incorrect color pairings in ELEGANT_PAIRS mapping in HouseBanner.tsx. The forum and lab entries use colors from wrong palette pairs. Events letter color needs updating to deeper coral-red.",
+  "status": "in_progress",
+  "priority": "medium",
+  "type": "bug",
+  "created_at": "2026-04-06T00:00:00Z",
+  "updated_at": "2026-04-06T00:00:00Z",
+  "assigned_to": "agent:claude-opus-4-impl",
+  "tags": ["ui", "palette"]
+}
