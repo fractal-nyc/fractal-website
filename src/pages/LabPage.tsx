@@ -24,8 +24,8 @@ export function LabPage() {
               </h1>
             </FadeIn>
             <FadeIn delay={0.2}>
-              <div className="max-w-2xl">
-                <p className="text-lg font-light leading-relaxed text-muted-foreground whitespace-pre-line">
+              <div className="max-w-4xl mx-auto text-center">
+                <p className="text-lg font-light leading-relaxed text-muted-foreground whitespace-pre-line text-pretty">
                   {house.description}
                 </p>
               </div>

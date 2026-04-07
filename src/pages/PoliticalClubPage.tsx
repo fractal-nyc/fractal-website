@@ -8,10 +8,10 @@ export function PoliticalClubPage() {
       <Navbar />
       <div className="pt-32">
         <section className="py-24 md:py-40">
-          <div className="max-w-7xl mx-auto px-6 md:px-12">
+          <div className="max-w-4xl mx-auto px-6 md:px-12 text-center">
             <FadeIn>
               <h2 className="text-sm font-semibold tracking-widest uppercase text-muted-foreground mb-4">Political Club</h2>
-              <p className="text-lg md:text-xl max-w-2xl leading-relaxed">
+              <p className="text-lg md:text-xl leading-relaxed text-pretty">
                 Learn about our current political club through Maximum New York{" "}
                 <a
                   href="https://www.maximumnewyork.com/"
