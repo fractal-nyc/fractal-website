@@ -14,15 +14,16 @@ interface HouseBannerGridProps {
 export function HouseBannerGrid({ className = "" }: HouseBannerGridProps) {
   return (
     <section className={`py-10 md:py-16 bg-background ${className}`}>
-      <div className="max-w-7xl mx-auto px-6 md:px-12">
+      <div className="px-[4.5%]">
         {/* Section heading */}
         <FadeIn>
-          <div className="mb-8 md:mb-10 flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-border pb-6">
-            <div>
-              <h2 className="text-4xl md:text-6xl font-serif">
-                Six Houses
+          <div className="mb-8 md:mb-10 text-center border-b border-border pb-6">
+              <h2
+                className="text-5xl md:text-7xl font-serif"
+                style={{ fontWeight: 300, textTransform: "uppercase", fontStyle: "normal", letterSpacing: "0.15em" }}
+              >
+                How Do I Get Involved
               </h2>
-            </div>
           </div>
         </FadeIn>
 

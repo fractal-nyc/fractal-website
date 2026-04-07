@@ -17,7 +17,7 @@ const directoryItems = [
 export function Directory() {
   return (
     <section id="directory" className="py-24 md:py-40 bg-background">
-      <div className="max-w-7xl mx-auto px-6 md:px-12">
+      <div className="max-w-7xl mx-auto px-[4.5%]">
         <FadeIn>
           <div className="mb-16 md:mb-24 flex flex-col md:flex-row md:items-end justify-between gap-8 border-b border-border pb-12">
             <div>

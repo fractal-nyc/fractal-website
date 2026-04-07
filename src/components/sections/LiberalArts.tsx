@@ -6,7 +6,7 @@ import { TEXT_SIZES } from "@/lib/pretext";
 export function LiberalArts() {
   return (
     <section id="new-liberal-arts" className="py-24 md:py-40" style={{ backgroundColor: "#C41E20", color: "#fff" }}>
-      <div className="max-w-5xl mx-auto px-6 md:px-12 text-center">
+      <div className="max-w-5xl mx-auto px-[4.5%] text-center">
         <SectorHeader letter="N" name="New Liberal Arts" color="#C41E20" />
         <FadeIn>
           <PretextParagraph

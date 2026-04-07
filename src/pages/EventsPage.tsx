@@ -7,7 +7,7 @@ export function EventsPage() {
   return (
     <main className="min-h-screen text-foreground selection:bg-foreground selection:text-background" style={{ backgroundColor: "#D4857A" }}>
       <Navbar />
-      <section className="pt-32 pb-24 md:pt-40 md:pb-40 px-6 md:px-12 max-w-5xl mx-auto text-center">
+      <section className="pt-32 pb-24 md:pt-40 md:pb-40 px-[4.5%] max-w-5xl mx-auto text-center">
         <SectorHeader letter="E" name="Events" color="#D4857A" />
 
         <FadeIn delay={0.1}>

@@ -17,7 +17,7 @@ const campusProjects = [
 export function Campus() {
   return (
     <section id="campus" className="py-24 md:py-40" style={{ backgroundColor: "#2B5A48", color: "#fff" }}>
-      <div className="max-w-7xl mx-auto px-6 md:px-12">
+      <div className="max-w-7xl mx-auto px-[4.5%]">
         <FadeIn>
           <SectorHeader letter="C" name="Campus" color="#2B5A48" />
         </FadeIn>

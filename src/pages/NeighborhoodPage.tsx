@@ -11,7 +11,7 @@ export function NeighborhoodPage() {
       <Navbar />
       <div className="pt-32">
         <section className="py-16 md:py-24">
-          <div className="max-w-5xl mx-auto px-6 md:px-12 text-center">
+          <div className="max-w-5xl mx-auto px-[4.5%] text-center">
             <SectorHeader letter="N" name="Neighborhood" color="#889460" />
 
             <FadeIn delay={0.15}>

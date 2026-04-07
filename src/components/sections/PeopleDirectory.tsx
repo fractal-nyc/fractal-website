@@ -16,7 +16,7 @@ interface PeopleDirectoryProps {
 export function PeopleDirectory({ className = "" }: PeopleDirectoryProps) {
   return (
     <section className={`py-10 md:py-16 bg-background ${className}`}>
-      <div className="max-w-7xl mx-auto px-6 md:px-12">
+      <div className="max-w-7xl mx-auto px-[4.5%]">
         {/* Section heading */}
         <FadeIn>
           <div className="mb-8 md:mb-10 flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-border pb-6">

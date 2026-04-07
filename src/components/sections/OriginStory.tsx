@@ -8,7 +8,7 @@ export function OriginStory() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-0 items-center">
 
         {/* Text — constrained to the content width on the left */}
-        <div className="order-2 lg:order-1 px-6 md:px-12 lg:pl-[max(2rem,calc((100vw-80rem)/2+3rem))] lg:pr-12">
+        <div className="order-2 lg:order-1 px-[4.5%] lg:pl-[max(2rem,calc((100vw-80rem)/2+3rem))] lg:pr-12">
           <FadeIn direction="right">
             <h2 className="text-4xl md:text-6xl font-serif mb-8 leading-tight">
               From a single apartment to a <span className="italic opacity-70">neighborhood campus.</span>

@@ -20,7 +20,7 @@ export function LabPage() {
       <div className="pt-32">
         {/* Lab heading + description */}
         <section className="pb-16 md:pb-24">
-          <div className="max-w-7xl mx-auto px-6 md:px-12">
+          <div className="max-w-7xl mx-auto px-[4.5%]">
             <SectorHeader letter="L" name="Lab" color="#E870A0" />
             <FadeIn delay={0.2}>
               <div className="max-w-5xl mx-auto text-center">
@@ -37,7 +37,7 @@ export function LabPage() {
 
         {/* Research & Writing archive */}
         <section className="py-16 md:py-24">
-          <div className="relative max-w-7xl mx-auto px-6 md:px-12">
+          <div className="relative max-w-7xl mx-auto px-[4.5%]">
             {/* Mandelbrot watermark — desktop */}
             <div className="hidden md:block absolute right-8 top-0 pointer-events-none select-none" aria-hidden="true">
               <MandelbrotIcon size={320} opacity={0.04} />

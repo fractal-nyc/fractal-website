@@ -12,7 +12,7 @@ export function Vision() {
         />
       </div>
 
-      <div className="max-w-4xl mx-auto px-6 md:px-12 text-center relative z-10">
+      <div className="max-w-4xl mx-auto px-[4.5%] text-center relative z-10">
         <FadeIn>
           <h2 className="font-serif text-4xl md:text-6xl lg:text-7xl leading-tight text-foreground">
             "Is there a <span className="italic">vision?</span>"

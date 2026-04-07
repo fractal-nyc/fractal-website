@@ -9,7 +9,7 @@ export function Footer() {
     <footer>
       {/* Bottom footer */}
       <div className="border-t border-border bg-background py-16 md:py-24">
-        <div className="max-w-7xl mx-auto px-6 md:px-12 flex flex-col md:flex-row justify-between items-start md:items-end gap-12">
+        <div className="max-w-7xl mx-auto px-[4.5%] flex flex-col md:flex-row justify-between items-start md:items-end gap-12">
           <div className="flex flex-col gap-3 max-w-sm">
             <p className="text-muted-foreground text-sm leading-relaxed">
               If you&rsquo;re in NYC and would like to introduce yourself, join our{" "}

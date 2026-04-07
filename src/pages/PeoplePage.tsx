@@ -11,7 +11,7 @@ export function PeoplePage() {
       <Navbar />
       <div className="pt-32">
         <section className="py-12 md:py-20">
-          <div className="max-w-7xl mx-auto px-6 md:px-12">
+          <div className="max-w-7xl mx-auto px-[4.5%]">
             <SectorHeader letter="P" name="People" color="#C49040" />
             <FadeIn delay={0.2}>
               <div className="max-w-5xl mx-auto text-center">
