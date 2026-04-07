@@ -1,7 +1,6 @@
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { FadeIn } from "@/components/ui/FadeIn";
-import { HouseBanner } from "@/components/house/HouseBanner";
 import { MandelbrotIcon } from "@/components/house/MandelbrotIcon";
 import { DocumentGrid } from "@/components/lab/DocumentGrid";
 import { ArchiveToolbar } from "@/components/lab/ArchiveToolbar";
@@ -16,20 +15,16 @@ export function LabPage() {
     <main className="min-h-screen bg-background text-foreground selection:bg-foreground selection:text-background">
       <Navbar />
       <div className="pt-32">
-        {/* House banner */}
-        <section className="py-12 md:py-20">
-          <div className="max-w-7xl mx-auto px-6 md:px-12">
-            <FadeIn>
-              <HouseBanner house={house} variant="full" />
-            </FadeIn>
-          </div>
-        </section>
-
-        {/* Lab description */}
+        {/* Lab heading + description */}
         <section className="pb-16 md:pb-24">
           <div className="max-w-7xl mx-auto px-6 md:px-12">
+            <FadeIn>
+              <h1 className="text-sm font-semibold tracking-widest uppercase text-muted-foreground mb-8">
+                Lab
+              </h1>
+            </FadeIn>
             <FadeIn delay={0.2}>
-              <div className="max-w-2xl mx-auto">
+              <div className="max-w-2xl">
                 <p className="text-lg font-light leading-relaxed text-muted-foreground whitespace-pre-line">
                   {house.description}
                 </p>
