@@ -42,10 +42,10 @@ export function Campus() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-24 items-center">
           <FadeIn>
             <div>
-              <p className="text-3xl md:text-5xl font-serif leading-tight mb-8">
+              <p className="text-2xl md:text-3xl font-serif leading-tight mb-8">
                 A neighborhood <span className="italic">campus</span> woven into the city.
               </p>
-              <div className="space-y-6 text-lg text-foreground/70 font-light leading-relaxed">
+              <div className="space-y-6 text-sm text-foreground/70 font-light leading-relaxed">
                 <p>
                   Living near each other has helped us coordinate and incubate a bunch of fun projects. What started as a single apartment has grown into a decentralized campus spread across the neighborhood.
                 </p>
@@ -77,8 +77,8 @@ export function Campus() {
               <div className={index % 2 !== 0 ? "md:col-start-2" : ""}>
                 <FadeIn direction={index % 2 === 0 ? "right" : "left"}>
                   <div className="flex flex-col gap-6">
-                    <h3 className="text-3xl md:text-4xl font-serif">{project.title}</h3>
-                    <p className="text-lg text-foreground/70 leading-relaxed font-light">
+                    <h3 className="text-xl md:text-2xl font-serif">{project.title}</h3>
+                    <p className="text-sm text-foreground/70 leading-relaxed font-light">
                       {project.description}
                     </p>
                   </div>
