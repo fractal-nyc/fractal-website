@@ -101,34 +101,6 @@ export function Footer() {
               </ul>
             </FadeIn>
 
-            <FadeIn delay={0.2}>
-              <div className="pt-6 space-y-4">
-                <p className="text-muted-foreground text-sm leading-relaxed text-pretty">
-                  If you&rsquo;re in NYC and would like to introduce yourself, join our{" "}
-                  <a
-                    href={DISCORD_LINK}
-                    className="text-foreground underline underline-offset-4 decoration-foreground/30 hover:decoration-foreground/60 transition-colors"
-                  >
-                    Discord
-                  </a>{" "}
-                  and post in{" "}
-                  <span className="font-medium text-foreground/80">#intros</span>.
-                </p>
-                <p className="text-muted-foreground text-sm leading-relaxed text-pretty">
-                  If you&rsquo;d like to learn more about Fractal and prefer a
-                  one-on-one conversation,{" "}
-                  <a
-                    href={CALENDAR_LINK}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-foreground underline underline-offset-4 decoration-foreground/30 hover:decoration-foreground/60 transition-colors"
-                  >
-                    schedule a virtual chat with Ian
-                  </a>
-                  .
-                </p>
-              </div>
-            </FadeIn>
           </div>
         </div>
       </div>
@@ -143,8 +115,31 @@ export function Footer() {
             </p>
           </div>
 
-          <div className="flex flex-col md:text-right gap-2">
-            <p className="font-medium text-sm">New York City</p>
+          <div className="flex flex-col md:text-right gap-3">
+            <p className="text-muted-foreground text-sm leading-relaxed">
+              If you&rsquo;re in NYC and would like to introduce yourself, join our{" "}
+              <a
+                href={DISCORD_LINK}
+                className="text-foreground underline underline-offset-4 decoration-foreground/30 hover:decoration-foreground/60 transition-colors"
+              >
+                Discord
+              </a>{" "}
+              and post in{" "}
+              <span className="font-medium text-foreground/80">#intros</span>.
+            </p>
+            <p className="text-muted-foreground text-sm leading-relaxed">
+              Prefer a one-on-one conversation?{" "}
+              <a
+                href={CALENDAR_LINK}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-foreground underline underline-offset-4 decoration-foreground/30 hover:decoration-foreground/60 transition-colors"
+              >
+                Schedule a virtual chat with Ian
+              </a>
+              .
+            </p>
+            <p className="font-medium text-sm mt-4">New York City</p>
             <a href="mailto:hello@fractalnyc.com" className="text-muted-foreground text-sm hover:text-foreground transition-colors">
               hello@fractalnyc.com
             </a>
