@@ -1,4 +1,5 @@
 import { FadeIn } from "@/components/ui/FadeIn";
+import { SectorHeader } from "@/components/layout/SectorHeader";
 
 const campusProjects = [
   {
@@ -20,7 +21,7 @@ export function Campus() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-24 items-center">
           <FadeIn>
             <div>
-              <h2 className="text-sm font-semibold tracking-widest uppercase text-muted-foreground mb-4">The Campus</h2>
+              <SectorHeader letter="C" name="Campus" color="#457B9D" />
               <p className="text-3xl md:text-5xl font-serif leading-tight mb-8">
                 A neighborhood <span className="italic">campus</span> woven into the city.
               </p>

@@ -1,5 +1,6 @@
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
+import { SectorHeader } from "@/components/layout/SectorHeader";
 import { FadeIn } from "@/components/ui/FadeIn";
 
 export function EventsPage() {
@@ -7,11 +8,7 @@ export function EventsPage() {
     <main className="min-h-screen bg-background text-foreground selection:bg-foreground selection:text-background">
       <Navbar />
       <section className="pt-32 pb-24 md:pt-40 md:pb-40 px-6 md:px-12 max-w-4xl mx-auto text-center">
-        <FadeIn>
-          <h1 className="text-sm font-semibold tracking-widest uppercase text-muted-foreground mb-8">
-            Events
-          </h1>
-        </FadeIn>
+        <SectorHeader letter="E" name="Events" color="#E07A5F" />
 
         <FadeIn delay={0.1}>
           <p className="text-lg md:text-xl leading-relaxed mb-10">

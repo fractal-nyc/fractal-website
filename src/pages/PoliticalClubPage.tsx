@@ -1,5 +1,6 @@
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
+import { SectorHeader } from "@/components/layout/SectorHeader";
 import { FadeIn } from "@/components/ui/FadeIn";
 
 export function PoliticalClubPage() {
@@ -9,8 +10,8 @@ export function PoliticalClubPage() {
       <div className="pt-32">
         <section className="py-24 md:py-40">
           <div className="max-w-4xl mx-auto px-6 md:px-12 text-center">
+            <SectorHeader letter="P" name="Political Club" color="#CC2936" />
             <FadeIn>
-              <h2 className="text-sm font-semibold tracking-widest uppercase text-muted-foreground mb-4">Political Club</h2>
               <p className="text-lg md:text-xl leading-relaxed text-pretty">
                 Learn about our current political club through Maximum New York{" "}
                 <a

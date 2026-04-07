@@ -1,0 +1,29 @@
+{
+  "assigned_to": null,
+  "branch_links": [],
+  "comment_count": 0,
+  "complexity": null,
+  "created_at": "2026-04-06T18:00:00Z",
+  "created_by": "agent:claude-opus-4-orchestrator",
+  "custom_fields": {},
+  "description": "Restyle HouseBanner grid cards. Changes: (1) Use Jacquard 24 font for a large first-letter badge instead of Instrument Serif for the name. (2) Make banner background colors match the sector color from houses.ts for both Fractal Elegant and Fractal Bright palettes. (3) Remove the subtitle text above the title. (4) Keep the tagline questions but change Campus tagline to \"Want to host?\".",
+  "done_at": null,
+  "evidence_refs": [],
+  "id": "task_FRAC49",
+  "last_event_id": null,
+  "last_status_changed_at": "2026-04-06T18:00:00Z",
+  "priority": "high",
+  "relationships_out": [],
+  "reopened_count": 0,
+  "schema_version": 1,
+  "short_id": "FRAC-49",
+  "status": "backlog",
+  "tags": [
+    "mvp",
+    "wayfinding"
+  ],
+  "title": "House banners: Jacquard 24 drop-cap, sector colors, remove subtitle",
+  "type": "task",
+  "updated_at": "2026-04-06T18:00:00Z",
+  "urgency": null
+}

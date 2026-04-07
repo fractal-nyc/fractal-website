@@ -1,0 +1,29 @@
+{
+  "assigned_to": null,
+  "branch_links": [],
+  "comment_count": 0,
+  "complexity": null,
+  "created_at": "2026-04-06T18:00:00Z",
+  "created_by": "agent:claude-opus-4-orchestrator",
+  "custom_fields": {},
+  "description": "Rewrite Political Club page. Replace \"Coming soon\" with: \"Political Club\" heading, then \"learn about our current political club through Maximum New York here\" with link to https://www.maximumnewyork.com/. Simple and direct.",
+  "done_at": null,
+  "evidence_refs": [],
+  "id": "task_FRAC47",
+  "last_event_id": null,
+  "last_status_changed_at": "2026-04-06T18:00:00Z",
+  "priority": "high",
+  "relationships_out": [],
+  "reopened_count": 0,
+  "schema_version": 1,
+  "short_id": "FRAC-47",
+  "status": "backlog",
+  "tags": [
+    "mvp",
+    "wayfinding"
+  ],
+  "title": "Political Club page: Maximum New York link",
+  "type": "task",
+  "updated_at": "2026-04-06T18:00:00Z",
+  "urgency": null
+}

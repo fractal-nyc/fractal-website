@@ -1,5 +1,6 @@
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
+import { SectorHeader } from "@/components/layout/SectorHeader";
 import { FadeIn } from "@/components/ui/FadeIn";
 
 export function PeoplePage() {
@@ -9,9 +10,7 @@ export function PeoplePage() {
       <div className="pt-32">
         <section className="py-12 md:py-20">
           <div className="max-w-7xl mx-auto px-6 md:px-12">
-            <FadeIn>
-              <h1 className="text-4xl md:text-5xl font-serif mb-8">People</h1>
-            </FadeIn>
+            <SectorHeader letter="P" name="People" color="#C49040" />
             <FadeIn delay={0.2}>
               <div className="max-w-4xl mx-auto text-center">
                 <p className="text-lg font-light leading-relaxed text-muted-foreground mb-6">

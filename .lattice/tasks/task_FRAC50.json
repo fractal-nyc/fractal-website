@@ -1,0 +1,29 @@
+{
+  "assigned_to": null,
+  "branch_links": [],
+  "comment_count": 0,
+  "complexity": null,
+  "created_at": "2026-04-06T18:00:00Z",
+  "created_by": "agent:claude-opus-4-orchestrator",
+  "custom_fields": {},
+  "description": "Add a styled footer CTA section to every page (update the shared Footer component or add a new section above it).\n\nContent:\n\"If you're in NYC and would like to introduce yourself, join our Discord and post in #intros.\"\n(Discord link: placeholder # for now \u2014 will be updated with real invite)\n\n\"If you'd like to learn more about Fractal and prefer a one-on-one conversation, schedule a virtual chat with Ian.\"\nIan scheduling link: https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ0JUlLukwG9ny_ji86woEKDTE2qWsePnoAz9Ao3Rl4SBssPVd_56rmYcnbb4oO6dIlPiqybWrSo\n\nStyle should match the site aesthetic \u2014 warm, not heavy. A clear wayfinding nudge at the bottom of every page. Mobile-first.",
+  "done_at": null,
+  "evidence_refs": [],
+  "id": "task_FRAC50",
+  "last_event_id": null,
+  "last_status_changed_at": "2026-04-06T18:00:00Z",
+  "priority": "high",
+  "relationships_out": [],
+  "reopened_count": 0,
+  "schema_version": 1,
+  "short_id": "FRAC-50",
+  "status": "backlog",
+  "tags": [
+    "mvp",
+    "wayfinding"
+  ],
+  "title": "Global footer CTA: Discord #intros + schedule chat with Ian on every page",
+  "type": "task",
+  "updated_at": "2026-04-06T18:00:00Z",
+  "urgency": null
+}

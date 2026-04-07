@@ -1,5 +1,6 @@
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
+import { SectorHeader } from "@/components/layout/SectorHeader";
 import { FadeIn } from "@/components/ui/FadeIn";
 
 export function NeighborhoodPage() {
@@ -9,11 +10,7 @@ export function NeighborhoodPage() {
       <div className="pt-32">
         <section className="py-16 md:py-24">
           <div className="max-w-4xl mx-auto px-6 md:px-12 text-center">
-            <FadeIn>
-              <h1 className="text-sm font-semibold uppercase tracking-widest text-foreground mb-10">
-                Neighborhood
-              </h1>
-            </FadeIn>
+            <SectorHeader letter="N" name="Neighborhood" color="#8B7355" />
 
             <FadeIn delay={0.15}>
               <div className="border border-foreground/20 rounded-md px-5 py-5 mb-10 bg-foreground/[0.03] text-left">

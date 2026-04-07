@@ -1,13 +1,12 @@
 import { FadeIn } from "@/components/ui/FadeIn";
+import { SectorHeader } from "@/components/layout/SectorHeader";
 
 export function LiberalArts() {
   return (
     <section id="new-liberal-arts" className="py-24 md:py-40 bg-background">
       <div className="max-w-4xl mx-auto px-6 md:px-12 text-center">
+        <SectorHeader letter="N" name="New Liberal Arts" color="#1D3557" />
         <FadeIn>
-          <h2 className="text-3xl md:text-5xl font-serif mb-6">
-            New Liberal Arts
-          </h2>
           <p className="text-lg text-foreground/70 leading-relaxed mb-16">
             More information on the New Liberal Arts Launch coming June 2026
           </p>
