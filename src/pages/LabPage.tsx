@@ -21,7 +21,7 @@ export function LabPage() {
           <div className="max-w-7xl mx-auto px-6 md:px-12">
             <SectorHeader letter="L" name="Lab" color="#6B4C9A" />
             <FadeIn delay={0.2}>
-              <div className="max-w-4xl mx-auto text-center">
+              <div className="max-w-5xl mx-auto text-center">
                 <p className="text-lg font-light leading-relaxed text-muted-foreground whitespace-pre-line text-pretty">
                   {house.description}
                 </p>

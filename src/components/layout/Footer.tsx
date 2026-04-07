@@ -9,7 +9,7 @@ export function Footer() {
     <footer>
       {/* CTA Section */}
       <div className="border-t border-border/40 bg-background">
-        <div className="max-w-2xl mx-auto px-6 py-16 md:py-24 md:px-12">
+        <div className="max-w-4xl mx-auto px-6 py-16 md:py-24 md:px-12">
           <FadeIn>
             <h3 className="font-serif text-2xl md:text-3xl mb-8 text-foreground/90">
               Get involved
@@ -18,7 +18,7 @@ export function Footer() {
 
           <div className="space-y-6">
             <FadeIn delay={0.1}>
-              <p className="text-muted-foreground text-sm leading-relaxed">
+              <p className="text-muted-foreground text-sm leading-relaxed text-pretty">
                 If you're in NYC and would like to introduce yourself, join our{" "}
                 <a
                   href={DISCORD_LINK}
@@ -32,7 +32,7 @@ export function Footer() {
             </FadeIn>
 
             <FadeIn delay={0.2}>
-              <p className="text-muted-foreground text-sm leading-relaxed">
+              <p className="text-muted-foreground text-sm leading-relaxed text-pretty">
                 If you'd like to learn more about Fractal and prefer a
                 one-on-one conversation,{" "}
                 <a
