@@ -1,5 +1,7 @@
 import { Suspense, lazy, useCallback, useState, useRef, useEffect } from "react";
 import { useLocation } from "wouter";
+import { useGlobalSearch, type SearchResult } from "@/hooks/use-global-search";
+import { Search, User, FileText, MapPin, Hash, ArrowUpRight, LayoutGrid } from "lucide-react";
 
 const FractalCityScene = lazy(() =>
   import("@/components/three/FractalCityScene").then((m) => ({
@@ -7,17 +9,13 @@ const FractalCityScene = lazy(() =>
   }))
 );
 
-const SEARCH_PAGES = [
-  { name: "Story", href: "/story" },
-  { name: "Campus", href: "/campus" },
-  { name: "Neighborhood", href: "/neighborhood" },
-  { name: "Events", href: "/events" },
-  { name: "New Liberal Arts", href: "/new-liberal-arts" },
-  { name: "Political Club", href: "/political-club" },
-  { name: "Lab", href: "/lab" },
-  { name: "People", href: "/people" },
-  { name: "The Protocol", href: "/the-protocol" },
-];
+const TYPE_ICONS: Record<string, typeof Search> = {
+  page: LayoutGrid,
+  person: User,
+  document: FileText,
+  house: MapPin,
+  topic: Hash,
+};
 
 export function Hero() {
   const [, setLocation] = useLocation();
@@ -27,22 +25,16 @@ export function Hero() {
     [setLocation]
   );
 
-  const [query, setQuery] = useState("");
+  const { query, setQuery, groups, flatResults, clear } = useGlobalSearch();
   const [isOpen, setIsOpen] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const filtered = query
-    ? SEARCH_PAGES.filter((p) =>
-        p.name.toLowerCase().includes(query.toLowerCase())
-      )
-    : SEARCH_PAGES;
-
-  // Reset active index when filtered results change
+  // Reset active index when results change
   useEffect(() => {
     setActiveIndex(0);
-  }, [filtered.length]);
+  }, [flatResults.length]);
 
   // Close on outside click
   useEffect(() => {
@@ -58,10 +50,14 @@ export function Hero() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  function navigateTo(href: string) {
+  function navigateTo(result: SearchResult) {
     setIsOpen(false);
-    setQuery("");
-    handleNavigate(href);
+    clear();
+    if (result.external) {
+      window.open(result.href, "_blank", "noopener");
+    } else {
+      handleNavigate(result.href);
+    }
   }
 
   function handleKeyDown(e: React.KeyboardEvent) {
@@ -70,20 +66,25 @@ export function Hero() {
       inputRef.current?.blur();
       return;
     }
-    if (!isOpen) return;
+    if (!isOpen || flatResults.length === 0) return;
     if (e.key === "ArrowDown") {
       e.preventDefault();
-      setActiveIndex((i) => (i + 1) % filtered.length);
+      setActiveIndex((i) => (i + 1) % flatResults.length);
     } else if (e.key === "ArrowUp") {
       e.preventDefault();
-      setActiveIndex((i) => (i - 1 + filtered.length) % filtered.length);
+      setActiveIndex((i) => (i - 1 + flatResults.length) % flatResults.length);
     } else if (e.key === "Enter") {
       e.preventDefault();
-      if (filtered[activeIndex]) {
-        navigateTo(filtered[activeIndex].href);
+      if (flatResults[activeIndex]) {
+        navigateTo(flatResults[activeIndex]);
       }
     }
   }
+
+  // Build the grouped dropdown
+  let globalIdx = 0;
+  const hasResults = query.trim().length > 0 && flatResults.length > 0;
+  const noResults = query.trim().length > 1 && flatResults.length === 0;
 
   return (
     <section className="relative min-h-screen flex items-center justify-center pt-20 overflow-hidden bg-[#faf8f5]">
@@ -93,55 +94,85 @@ export function Hero() {
 
       {/* Search bar */}
       <div
-        className="absolute bottom-12 left-1/2 -translate-x-1/2 z-10"
+        className="absolute bottom-12 left-1/2 -translate-x-1/2 z-10 w-[calc(100%-2rem)] max-w-sm"
         ref={containerRef}
       >
         <div className="relative">
-          <input
-            ref={inputRef}
-            type="text"
-            value={query}
-            onChange={(e) => {
-              setQuery(e.target.value);
-              setIsOpen(true);
-            }}
-            onFocus={() => setIsOpen(true)}
-            onKeyDown={handleKeyDown}
-            placeholder="Explore Fractal..."
-            className="font-mono text-sm tracking-widest uppercase text-foreground/60 border border-foreground/20 rounded-md bg-transparent placeholder:text-foreground/40 outline-none transition-all duration-200 focus:border-foreground/40 focus:text-foreground/80"
-            style={{
-              width: isOpen ? "320px" : "280px",
-              height: "30px",
-              padding: "2px 8px",
-            }}
-          />
+          <div className="relative">
+            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-foreground/40" />
+            <input
+              ref={inputRef}
+              type="text"
+              value={query}
+              onChange={(e) => {
+                setQuery(e.target.value);
+                setIsOpen(true);
+              }}
+              onFocus={() => setIsOpen(true)}
+              onKeyDown={handleKeyDown}
+              placeholder="Explore Fractal..."
+              className="w-full font-mono text-sm tracking-widest uppercase text-foreground/60 border border-foreground/20 rounded-md bg-[#faf8f5]/90 backdrop-blur-sm placeholder:text-foreground/40 outline-none transition-all duration-200 focus:border-foreground/40 focus:text-foreground/80 h-[30px] pl-8 pr-3"
+            />
+          </div>
 
           {/* Dropdown */}
-          {isOpen && filtered.length > 0 && (
-            <ul
-              className="absolute bottom-full left-0 mb-1 w-full bg-[#faf8f5] border border-foreground/20 rounded-md overflow-hidden shadow-sm"
+          {isOpen && (hasResults || noResults) && (
+            <div
+              className="absolute bottom-full left-0 mb-1 w-full bg-[#faf8f5]/95 backdrop-blur-sm border border-foreground/20 rounded-md overflow-hidden shadow-lg max-h-[60vh] overflow-y-auto"
               role="listbox"
             >
-              {filtered.map((page, i) => (
-                <li
-                  key={page.href}
-                  role="option"
-                  aria-selected={i === activeIndex}
-                  className={`font-mono text-sm tracking-widest uppercase cursor-pointer px-3 py-2 transition-colors ${
-                    i === activeIndex
-                      ? "bg-foreground/10 text-foreground"
-                      : "text-foreground/60 hover:bg-foreground/5"
-                  }`}
-                  onMouseEnter={() => setActiveIndex(i)}
-                  onMouseDown={(e) => {
-                    e.preventDefault();
-                    navigateTo(page.href);
-                  }}
-                >
-                  {page.name}
-                </li>
-              ))}
-            </ul>
+              {noResults && (
+                <div className="px-3 py-3 text-sm text-foreground/40 font-mono tracking-wider uppercase text-center">
+                  No results
+                </div>
+              )}
+
+              {groups.map((group) => {
+                const items = group.results.map((result) => {
+                  const idx = globalIdx++;
+                  const Icon = TYPE_ICONS[result.type] ?? Search;
+                  return (
+                    <li
+                      key={`${result.type}-${result.href}-${result.title}`}
+                      role="option"
+                      aria-selected={idx === activeIndex}
+                      className={`flex items-start gap-2.5 cursor-pointer px-3 py-2 transition-colors ${
+                        idx === activeIndex
+                          ? "bg-foreground/10 text-foreground"
+                          : "text-foreground/60 hover:bg-foreground/5"
+                      }`}
+                      onMouseEnter={() => setActiveIndex(idx)}
+                      onMouseDown={(e) => {
+                        e.preventDefault();
+                        navigateTo(result);
+                      }}
+                    >
+                      <Icon className="h-3.5 w-3.5 mt-0.5 shrink-0 opacity-60" />
+                      <div className="min-w-0 flex-1">
+                        <div className="font-mono text-sm tracking-wider uppercase truncate flex items-center gap-1">
+                          {result.title}
+                          {result.external && (
+                            <ArrowUpRight className="h-3 w-3 opacity-40 shrink-0" />
+                          )}
+                        </div>
+                        <div className="text-xs text-foreground/40 truncate mt-0.5">
+                          {result.subtitle}
+                        </div>
+                      </div>
+                    </li>
+                  );
+                });
+
+                return (
+                  <div key={group.type}>
+                    <div className="px-3 pt-2 pb-1 text-[10px] font-mono tracking-[0.2em] uppercase text-foreground/30">
+                      {group.label}
+                    </div>
+                    <ul>{items}</ul>
+                  </div>
+                );
+              })}
+            </div>
           )}
         </div>
       </div>
