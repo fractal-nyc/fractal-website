@@ -16,55 +16,60 @@ const campusProjects = [
 
 export function Campus() {
   return (
-    <section id="campus" className="py-24 md:py-40" style={{ backgroundColor: "#2B5A48", color: "#fff" }}>
-      <div className="max-w-7xl mx-auto px-[4.5%]">
+    <section id="campus" style={{ backgroundColor: "#2B5A48", color: "#fff" }}>
+      {/* Hero — centered in viewport */}
+      <div className="min-h-screen flex flex-col items-center justify-center w-full">
+        <div className="px-6 md:px-[4.5%] w-full">
         <FadeIn>
-          <SectorHeader letter="C" name="Campus" color="#2B5A48" />
+          <SectorHeader letter="C" name="Campus" color="#1A3A2E" />
         </FadeIn>
 
         <FadeIn>
-          <div className="text-center mb-16">
-            <p className="font-serif text-2xl md:text-3xl text-foreground/80 mb-4">
-              Want to host an event at Fractal?
+          <div className="text-center">
+            <p className="font-serif text-4xl md:text-6xl leading-[1.3] text-white mb-4 text-center" style={{ fontWeight: 300, textTransform: "uppercase", fontStyle: "normal" }}>
+              Host or Build with Us at Our Physical Campus with Artists, Builders, and Scientists
             </p>
-            <p className="font-serif text-lg text-foreground/60 mb-6">
-              We love bringing people together. Get in touch to book a space at Merlin's Place.
+            <p className="font-serif text-lg text-white/80 mb-8 normal-case">
+              Get in touch to book a space at Merlin's Place or cowork at Fractal Tech Hub.
             </p>
-            <a
-              href="mailto:events@merlins.place"
-              className="inline-block border border-foreground px-8 py-3 text-sm tracking-widest uppercase hover:bg-foreground hover:text-background transition-colors duration-300"
-            >
-              Email Merlin's Place
-            </a>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <a
+                href="mailto:events@merlins.place"
+                className="block border border-foreground px-8 py-3 text-sm tracking-widest uppercase hover:bg-foreground hover:text-background transition-colors duration-300 text-center"
+              >
+                Email Merlin's Place
+              </a>
+              <a
+                href="https://fractalbootcamp.com/fractal-tech-hub"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block border border-foreground px-8 py-3 text-sm tracking-widest uppercase hover:bg-foreground hover:text-background transition-colors duration-300 text-center"
+              >
+                Fractal Tech Hub
+              </a>
+            </div>
           </div>
         </FadeIn>
-
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-24 items-center">
-          <FadeIn>
-            <div>
-              <p className="text-2xl md:text-3xl font-serif leading-tight mb-8">
-                A neighborhood <span className="italic">campus</span> woven into the city.
-              </p>
-              <div className="space-y-6 text-sm text-foreground/70 font-light leading-relaxed">
-                <p>
-                  Living near each other has helped us coordinate and incubate a bunch of fun projects. What started as a single apartment has grown into a decentralized campus spread across the neighborhood.
-                </p>
-                <p>
-                  Shared spaces, co-working rooms, classrooms in living rooms, and community gathering spots — all within walking distance of each other in NYC.
-                </p>
-              </div>
-            </div>
-          </FadeIn>
-          <FadeIn delay={0.2}>
-            <div className="aspect-[4/3] overflow-hidden bg-muted relative group">
-              <img
-                src={`${import.meta.env.BASE_URL}images/hero-bg.png`}
-                alt="Fractal community gathering"
-                className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
-              />
-            </div>
-          </FadeIn>
         </div>
+      </div>
+
+      {/* Content below the fold */}
+      <div className="max-w-7xl mx-auto px-6 md:px-[4.5%] pb-24 md:pb-40">
+        <FadeIn>
+          <div>
+            <p className="text-2xl md:text-3xl font-serif leading-tight mb-8 normal-case">
+              A <span className="italic normal-case">campus</span> woven into the city.
+            </p>
+            <div className="space-y-6 text-sm text-white/90 font-light leading-relaxed max-w-3xl">
+              <p>
+                Living near each other has helped us coordinate and incubate a bunch of fun projects. What started as a single apartment has grown into a decentralized campus spread across the neighborhood.
+              </p>
+              <p>
+                Shared spaces, co-working rooms, classrooms in living rooms, and community gathering spots — all within walking distance of each other in NYC.
+              </p>
+            </div>
+          </div>
+        </FadeIn>
 
         <div className="space-y-32 mt-32">
           {campusProjects.map((project, index) => (
@@ -77,8 +82,8 @@ export function Campus() {
               <div className={index % 2 !== 0 ? "md:col-start-2" : ""}>
                 <FadeIn direction={index % 2 === 0 ? "right" : "left"}>
                   <div className="flex flex-col gap-6">
-                    <h3 className="text-xl md:text-2xl font-serif">{project.title}</h3>
-                    <p className="text-sm text-foreground/70 leading-relaxed font-light">
+                    <h3 className="text-2xl md:text-3xl font-serif normal-case">{project.title}</h3>
+                    <p className="text-sm text-white/90 leading-relaxed font-light">
                       {project.description}
                     </p>
                   </div>

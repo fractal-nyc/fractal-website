@@ -92,7 +92,7 @@ export function DocumentBadge({ document, className = "" }: DocumentBadgeProps) 
       {/* Title */}
       <h3
         className={`
-          font-serif leading-snug tracking-tight
+          font-serif leading-snug tracking-tight normal-case
           ${isFeatured ? "text-xl md:text-2xl" : "text-lg md:text-xl"}
         `}
       >

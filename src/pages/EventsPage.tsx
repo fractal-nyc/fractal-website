@@ -7,62 +7,51 @@ export function EventsPage() {
   return (
     <main className="min-h-screen text-foreground selection:bg-foreground selection:text-background" style={{ backgroundColor: "#D4857A" }}>
       <Navbar />
-      <section className="pt-32 pb-24 md:pt-40 md:pb-40 px-[4.5%] max-w-5xl mx-auto text-center">
-        <SectorHeader letter="E" name="Events" color="#D4857A" />
+      <div className="min-h-screen flex flex-col items-center justify-center w-full">
+        <section className="w-full px-6 md:px-[4.5%] text-center">
+          <SectorHeader letter="E" name="Events" color="#C13B2A" />
 
-        <FadeIn delay={0.1}>
-          <p className="font-serif text-2xl md:text-3xl leading-relaxed mb-6 text-pretty">
-            Public tech events are posted{" "}
+          <FadeIn delay={0.1}>
+            <p className="font-serif text-4xl md:text-6xl leading-[1.3] mb-6 text-center" style={{ fontWeight: 300, textTransform: "uppercase", fontStyle: "normal" }}>
+              Host Our Next Event
+            </p>
+            <a
+              href="mailto:events@merlins.place"
+              className="block border border-foreground px-8 py-3 text-sm tracking-widest uppercase hover:bg-foreground hover:text-background transition-colors duration-300 text-center mb-12"
+            >
+              Email Merlin's Place
+            </a>
+          </FadeIn>
+
+          <FadeIn delay={0.2}>
+            <p className="font-serif text-4xl md:text-6xl leading-[1.3] mb-6 text-center" style={{ fontWeight: 300, textTransform: "uppercase", fontStyle: "normal" }}>
+              Join Tech Events
+            </p>
             <a
               href="https://luma.com/nyc-tech"
               target="_blank"
               rel="noopener noreferrer"
-              className="underline underline-offset-4 hover:text-muted-foreground transition-colors"
+              className="block border border-foreground px-8 py-3 text-sm tracking-widest uppercase hover:bg-foreground hover:text-background transition-colors duration-300 text-center mb-12"
             >
-              here
+              Luma Calendar
             </a>
-            .
-          </p>
-          <a
-            href="https://luma.com/nyc-tech"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-block border border-foreground px-8 py-3 text-sm tracking-widest uppercase hover:bg-foreground hover:text-background transition-colors duration-300 mb-10"
-          >
-            Events Calendar
-          </a>
-        </FadeIn>
+          </FadeIn>
 
-        <FadeIn delay={0.2}>
-          <a
-            href="https://discord.com/invite/vugp6Nza"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-block bg-foreground text-background px-8 py-3 text-sm font-semibold tracking-widest uppercase hover:opacity-80 transition-opacity mb-10"
-          >
-            Join Discord — Apply Here
-          </a>
-        </FadeIn>
-
-        <FadeIn delay={0.3}>
-          <p className="font-serif text-2xl md:text-3xl leading-relaxed mb-6">
-            Want to host an event at Fractal? Email{" "}
+          <FadeIn delay={0.3}>
+            <p className="font-serif text-4xl md:text-6xl leading-[1.3] mb-6 text-center" style={{ fontWeight: 300, textTransform: "uppercase", fontStyle: "normal" }}>
+              Stay in the Loop
+            </p>
             <a
-              href="mailto:events@merlins.place"
-              className="underline underline-offset-4 hover:text-muted-foreground transition-colors"
+              href="https://discord.com/invite/vugp6Nza"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block border border-foreground px-8 py-3 text-sm tracking-widest uppercase hover:bg-foreground hover:text-background transition-colors duration-300 text-center"
             >
-              Merlin's Place
+              Join Discord
             </a>
-            !
-          </p>
-          <a
-            href="mailto:events@merlins.place"
-            className="inline-block border border-foreground px-8 py-3 text-sm tracking-widest uppercase hover:bg-foreground hover:text-background transition-colors duration-300"
-          >
-            Email Merlin's Place
-          </a>
-        </FadeIn>
-      </section>
+          </FadeIn>
+        </section>
+      </div>
       <Footer />
     </main>
   );

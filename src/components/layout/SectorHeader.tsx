@@ -16,7 +16,7 @@ export function SectorHeader({ letter, name, color }: SectorHeaderProps) {
         >
           {letter}
         </span>
-        <span className="text-sm font-semibold tracking-widest uppercase text-muted-foreground">
+        <span className="text-sm font-semibold tracking-widest uppercase" style={{ color }}>
           {name}
         </span>
       </div>

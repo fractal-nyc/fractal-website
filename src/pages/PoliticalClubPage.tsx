@@ -7,28 +7,19 @@ export function PoliticalClubPage() {
   return (
     <main className="min-h-screen text-white selection:bg-white selection:text-[#6E1830]" style={{ backgroundColor: "#6E1830" }}>
       <Navbar />
-      <div className="pt-32">
-        <section className="py-24 md:py-40">
-          <div className="max-w-5xl mx-auto px-[4.5%] text-center">
-            <SectorHeader letter="P" name="Political Club" color="#6E1830" />
+      <div className="min-h-screen flex items-center justify-center w-full">
+        <section className="w-full">
+          <div className="px-6 md:px-[4.5%] text-center">
+            <SectorHeader letter="P" name="Political Club" color="#C83858" />
             <FadeIn>
-              <p className="font-serif text-2xl md:text-3xl leading-relaxed text-pretty mb-10">
-                Learn about our current political club through Maximum New York{" "}
-                <a
-                  href="https://www.maximumnewyork.com/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="underline underline-offset-4 hover:text-muted-foreground transition-colors"
-                >
-                  here
-                </a>
-                .
+              <p className="font-serif text-4xl md:text-6xl leading-[1.3] text-center mb-10" style={{ fontWeight: 300, textTransform: "uppercase", fontStyle: "normal" }}>
+                Maximum New York — A New Civics School
               </p>
               <a
                 href="https://www.maximumnewyork.com/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-block border border-foreground px-8 py-3 text-sm tracking-widest uppercase hover:bg-foreground hover:text-background transition-colors duration-300"
+                className="block border border-foreground px-8 py-3 text-sm tracking-widest uppercase hover:bg-foreground hover:text-background transition-colors duration-300 text-center"
               >
                 Maximum New York
               </a>

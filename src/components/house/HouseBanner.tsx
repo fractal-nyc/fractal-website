@@ -20,12 +20,12 @@ function isDark(hex: string): boolean {
 const ELEGANT_PAIRS: Record<string, { bg: string; letter: string }> = {
   // Peach pair: light peach bg + deep coral letter
   events:       { bg: "#D4857A", letter: "#C13B2A" },
-  // Red pair: bright red bg + cream letter for contrast
-  school:       { bg: "#C41E20", letter: "#F5E6D8" },
+  // Red pair: bright red bg + dark red letter
+  school:       { bg: "#C41E20", letter: "#8B1A1A" },
   // Light green pair: olive bg + dark olive letter
   neighborhood: { bg: "#889460", letter: "#4A5A30" },
-  // Dark green pair: forest bg + gold letter for contrast
-  campus:       { bg: "#2B5A48", letter: "#D4BA58" },
+  // Dark green pair: forest bg + darker forest letter
+  campus:       { bg: "#2B5A48", letter: "#1A3A2E" },
   // Fuschia pair: pink bg + deep pink letter
   lab:          { bg: "#E870A0", letter: "#C44878" },
   // Burgundy pair: wine bg + brighter rose letter for contrast
@@ -92,7 +92,7 @@ export function HouseBanner({
         {/* Tagline */}
         <p
           className={`
-            font-serif italic px-2
+            font-serif italic px-2 normal-case
             ${isGrid ? "text-[10px] sm:text-xs mt-1" : "text-lg mt-3"}
           `}
           style={{ opacity: 0.85 }}

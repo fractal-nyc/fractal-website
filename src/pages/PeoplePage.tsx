@@ -9,33 +9,26 @@ export function PeoplePage() {
   return (
     <main className="min-h-screen text-foreground selection:bg-foreground selection:text-background" style={{ backgroundColor: "#C49040" }}>
       <Navbar />
-      <div className="pt-32">
-        <section className="py-12 md:py-20">
-          <div className="max-w-7xl mx-auto px-[4.5%]">
-            <SectorHeader letter="P" name="People" color="#C49040" />
+      <div className="min-h-screen flex items-center justify-center w-full">
+        <section className="w-full">
+          <div className="px-6 md:px-[4.5%]">
+            <SectorHeader letter="P" name="People" color="#B65D19" />
             <FadeIn delay={0.2}>
-              <div className="max-w-5xl mx-auto text-center">
-                <p className="font-serif text-2xl md:text-3xl leading-relaxed text-muted-foreground mb-6 text-pretty">
-                  To learn more about who is in Fractal join the Discord{" "}
-                  <a
-                    href="https://discord.com/invite/vugp6Nza"
-                    className="underline underline-offset-4 text-foreground hover:opacity-70 transition-opacity"
-                  >
-                    here
-                  </a>{" "}
-                  and introduce yourself.
+              <div className="text-center">
+                <p className="font-serif text-4xl md:text-6xl leading-[1.3] text-white mb-6 text-center" style={{ fontWeight: 300, textTransform: "uppercase", fontStyle: "normal" }}>
+                  A Fractal Is a Friendship Infrastructure
                 </p>
                 <a
                   href="https://discord.com/invite/vugp6Nza"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-block bg-foreground text-background px-8 py-3 text-sm font-semibold tracking-widest uppercase hover:opacity-80 transition-opacity mb-8"
+                  className="block border border-foreground px-8 py-3 text-sm tracking-widest uppercase hover:bg-foreground hover:text-background transition-colors duration-300 text-center mb-8"
                 >
                   Join Discord
                 </a>
                 <PretextParagraph
                   size={TEXT_SIZES.lg}
-                  className="font-light text-muted-foreground"
+                  className="font-light text-white"
                 >
                   {"Look forward to the Fractal Network Portal available to Fractal Members soon..."}
                 </PretextParagraph>

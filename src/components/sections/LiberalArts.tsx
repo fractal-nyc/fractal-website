@@ -5,79 +5,64 @@ import { TEXT_SIZES } from "@/lib/pretext";
 
 export function LiberalArts() {
   return (
-    <section id="new-liberal-arts" className="py-24 md:py-40" style={{ backgroundColor: "#C41E20", color: "#fff" }}>
-      <div className="max-w-5xl mx-auto px-[4.5%] text-center">
+    <section id="new-liberal-arts" className="min-h-screen flex flex-col items-center justify-center py-24" style={{ backgroundColor: "#8B1A1A", color: "#fff" }}>
+      <div className="w-full px-6 md:px-[4.5%] text-center">
         <SectorHeader letter="N" name="New Liberal Arts" color="#C41E20" />
+        <FadeIn>
+          <p className="font-serif text-4xl md:text-6xl leading-[1.3] mb-6 text-center" style={{ fontWeight: 300, textTransform: "uppercase", fontStyle: "normal" }}>
+            Tech, Entrepreneurship, Rhetoric, Civics
+          </p>
+        </FadeIn>
         <FadeIn>
           <PretextParagraph
             size={TEXT_SIZES.lg}
-            className="text-foreground/70 mb-16"
+            className="text-white/90 mb-16"
           >
             {"More information on the New Liberal Arts Launch coming June 2026"}
           </PretextParagraph>
         </FadeIn>
 
         <FadeIn delay={0.15}>
-          <h3 className="text-2xl md:text-3xl font-serif mb-6">Fractal U</h3>
-          <PretextParagraph
-            size={TEXT_SIZES.lg}
-            className="text-foreground/70 mb-6"
-          >
-            {"Fractal University offers in-person, community sections of world-class courses, for fun. We have courses in AI, computer science, friendship + community, NYC government, cooking, mind-body sciences, and more."}
-          </PretextParagraph>
-          <PretextParagraph
-            size={TEXT_SIZES.lg}
-            className="text-foreground/70 mb-6"
-          >
-            {"We aim to democratize enjoyable, community education and public research culture by creating an easily replicable model for a decentralized university \u2014 and the economic, social, and creative opportunities they create."}
-          </PretextParagraph>
-          <PretextParagraph
-            size={TEXT_SIZES.lg}
-            className="text-foreground/70 mb-8"
-          >
-            {"The dream is 100s of writers, artists, and scientists and 1000s of great works to emerge from this program \u2014 but we are really in it just for the love of the game."}
-          </PretextParagraph>
+          <div className="text-left max-w-3xl">
+            <h3 className="text-2xl md:text-3xl font-serif mb-6 normal-case">Fractal U</h3>
+            <PretextParagraph
+              size={TEXT_SIZES.lg}
+              className="text-white/90 mb-8"
+            >
+              {"Fractal University offers in-person, community sections of world-class courses, for fun. We have courses in AI, computer science, friendship + community, NYC government, cooking, mind-body sciences, and more."}
+            </PretextParagraph>
 
-          <p className="font-serif text-xl md:text-2xl mb-4">
-            <a
-              href="https://fractaluniversity.substack.com/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="underline underline-offset-4 hover:text-foreground/70 transition-colors"
-            >
-              Learn more here.
-            </a>
-          </p>
-          <p className="font-serif text-xl md:text-2xl text-foreground/70 mb-10">
-            If you would like to offer a class as a TA or Instructor,{" "}
-            <a
-              href="https://airtable.com/appqj7FQhKgCdLnWM/shr23K8Sa62ptKc7Q"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="underline underline-offset-4 text-foreground hover:text-foreground/70 transition-colors"
-            >
-              apply here
-            </a>
-            .
-          </p>
+            <div className="flex flex-col sm:flex-row gap-4 mb-10">
+              <a
+                href="https://fractaluniversity.substack.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block border border-foreground px-8 py-3 text-sm tracking-widest uppercase hover:bg-foreground hover:text-background transition-colors duration-300 text-center"
+              >
+                Learn More
+              </a>
+              <a
+                href="https://airtable.com/appqj7FQhKgCdLnWM/shr23K8Sa62ptKc7Q"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block border border-foreground px-8 py-3 text-sm tracking-widest uppercase hover:bg-foreground hover:text-background transition-colors duration-300 text-center"
+              >
+                Apply as Instructor
+              </a>
+            </div>
 
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <a
-              href="https://fractaluniversity.substack.com/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-block border border-foreground px-8 py-3 text-sm tracking-widest uppercase hover:bg-foreground hover:text-background transition-colors duration-300"
+            <PretextParagraph
+              size={TEXT_SIZES.lg}
+              className="text-white/90 mb-6"
             >
-              Learn More
-            </a>
-            <a
-              href="https://airtable.com/appqj7FQhKgCdLnWM/shr23K8Sa62ptKc7Q"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-block border border-foreground px-8 py-3 text-sm tracking-widest uppercase hover:bg-foreground hover:text-background transition-colors duration-300"
+              {"We aim to democratize enjoyable, community education and public research culture by creating an easily replicable model for a decentralized university \u2014 and the economic, social, and creative opportunities they create."}
+            </PretextParagraph>
+            <PretextParagraph
+              size={TEXT_SIZES.lg}
+              className="text-white/90"
             >
-              Apply as Instructor
-            </a>
+              {"The dream is 100s of writers, artists, and scientists and 1000s of great works to emerge from this program \u2014 but we are really in it just for the love of the game."}
+            </PretextParagraph>
           </div>
         </FadeIn>
       </div>
