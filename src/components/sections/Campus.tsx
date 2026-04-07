@@ -18,10 +18,30 @@ export function Campus() {
   return (
     <section id="campus" className="py-24 md:py-40 bg-background">
       <div className="max-w-7xl mx-auto px-6 md:px-12">
+        <FadeIn>
+          <SectorHeader letter="C" name="Campus" color="#457B9D" />
+        </FadeIn>
+
+        <FadeIn>
+          <div className="text-center mb-16">
+            <p className="text-lg md:text-xl font-light text-foreground/80 mb-4">
+              Want to host an event at Fractal?
+            </p>
+            <p className="text-base text-foreground/60 mb-6">
+              We love bringing people together. Get in touch to book a space at Merlin's Place.
+            </p>
+            <a
+              href="mailto:events@merlins.place"
+              className="inline-block border border-foreground px-8 py-3 text-sm tracking-widest uppercase hover:bg-foreground hover:text-background transition-colors duration-300"
+            >
+              Email Merlin's Place
+            </a>
+          </div>
+        </FadeIn>
+
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-24 items-center">
           <FadeIn>
             <div>
-              <SectorHeader letter="C" name="Campus" color="#457B9D" />
               <p className="text-3xl md:text-5xl font-serif leading-tight mb-8">
                 A neighborhood <span className="italic">campus</span> woven into the city.
               </p>
@@ -81,22 +101,6 @@ export function Campus() {
           ))}
         </div>
 
-        <FadeIn>
-          <div className="mt-32 text-center border border-foreground/10 py-16 px-6 md:px-12">
-            <h3 className="text-2xl md:text-3xl font-serif mb-4">
-              Want to host an event at Fractal?
-            </h3>
-            <p className="text-lg text-foreground/70 font-light mb-8 max-w-md mx-auto">
-              We love bringing people together. Get in touch to book a space at Merlin&apos;s Place.
-            </p>
-            <a
-              href="mailto:events@merlins.place"
-              className="inline-block border border-foreground px-8 py-3 text-sm tracking-widest uppercase hover:bg-foreground hover:text-background transition-colors duration-300"
-            >
-              Email Merlin&apos;s Place
-            </a>
-          </div>
-        </FadeIn>
       </div>
     </section>
   );
