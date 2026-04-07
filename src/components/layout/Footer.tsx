@@ -1,6 +1,6 @@
 import { FadeIn } from "@/components/ui/FadeIn";
 
-const DISCORD_LINK = "#";
+const DISCORD_LINK = "https://discord.com/invite/vugp6Nza";
 const CALENDAR_LINK =
   "https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ0JUlLukwG9ny_ji86woEKDTE2qWsePnoAz9Ao3Rl4SBssPVd_56rmYcnbb4oO6dIlPiqybWrSo";
 

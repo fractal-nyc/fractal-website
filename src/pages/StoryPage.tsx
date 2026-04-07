@@ -42,7 +42,7 @@ const TALKS: TalkItem[] = [
     year: 2025,
     description:
       "A template for a civil society you can build with your friends",
-    url: "#",
+    url: "https://youtube.com/watch?v=JWLRizY6G-0",
     category: "talk",
   },
   {
@@ -75,7 +75,7 @@ const TALKS: TalkItem[] = [
     author: "Priya Rose",
     year: 2023,
     description: "Or for a more personal telling, watch...",
-    url: "#",
+    url: "https://www.youtube.com/watch?v=gEB-kkNM5L8",
     category: "talk",
   },
   {

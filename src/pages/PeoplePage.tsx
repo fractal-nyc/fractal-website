@@ -17,7 +17,7 @@ export function PeoplePage() {
                 <p className="text-lg font-light leading-relaxed text-muted-foreground mb-6">
                   To learn more about who is in Fractal join the Discord{" "}
                   <a
-                    href="#"
+                    href="https://discord.com/invite/vugp6Nza"
                     className="underline underline-offset-4 text-foreground hover:opacity-70 transition-opacity"
                   >
                     here

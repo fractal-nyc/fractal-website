@@ -89,7 +89,7 @@ export function Campus() {
               We love bringing people together. Get in touch to book a space at Merlin&apos;s Place.
             </p>
             <a
-              href="mailto:#"
+              href="mailto:events@merlins.place"
               className="inline-block border border-foreground px-8 py-3 text-sm tracking-widest uppercase hover:bg-foreground hover:text-background transition-colors duration-300"
             >
               Email Merlin&apos;s Place

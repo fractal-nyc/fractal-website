@@ -30,7 +30,9 @@ export function EventsPage() {
 
         <FadeIn delay={0.2}>
           <a
-            href="#"
+            href="https://discord.com/invite/vugp6Nza"
+            target="_blank"
+            rel="noopener noreferrer"
             className="inline-block bg-foreground text-background px-6 py-3 text-sm font-semibold tracking-widest uppercase hover:opacity-80 transition-opacity mb-10"
           >
             Join Discord — Apply Here
@@ -41,7 +43,7 @@ export function EventsPage() {
           <p className="text-lg md:text-xl leading-relaxed">
             Want to host an event at Fractal? Email{" "}
             <a
-              href="mailto:#"
+              href="mailto:events@merlins.place"
               className="underline underline-offset-4 hover:text-muted-foreground transition-colors"
             >
               Merlin's Place
