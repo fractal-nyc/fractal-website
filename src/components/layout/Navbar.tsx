@@ -37,8 +37,11 @@ function NavLink({ name, href, color }: { name: string; href: string; color: str
       <span
         className="font-serif"
         style={{
-          fontSize: "28px",
+          fontSize: "22px",
           lineHeight: 1,
+          textTransform: "none",
+          fontStyle: "normal",
+          fontWeight: 300,
         }}
       >
         {rest}
@@ -86,7 +89,7 @@ export function Navbar() {
             <div className="flex flex-col gap-2">
               <p
                 className="font-mono text-justify uppercase font-thin"
-                style={{ fontSize: "14px", lineHeight: 1.4 }}
+                style={{ fontSize: "13px", lineHeight: 1.4, letterSpacing: "0.01em" }}
               >
                 {LEFT_TEXT}
               </p>
@@ -117,7 +120,7 @@ export function Navbar() {
             <div className="flex flex-col gap-2">
               <p
                 className="font-mono text-justify uppercase font-thin"
-                style={{ fontSize: "14px", lineHeight: 1.4 }}
+                style={{ fontSize: "13px", lineHeight: 1.4, letterSpacing: "0.01em" }}
               >
                 {RIGHT_TEXT}
               </p>
@@ -175,7 +178,7 @@ export function Navbar() {
               >
                 {link.name[0]}
               </span>
-              <span className="font-serif" style={{ fontSize: "22px" }}>
+              <span className="font-serif" style={{ fontSize: "18px", textTransform: "none", fontStyle: "normal", fontWeight: 300 }}>
                 {link.name.slice(1)}
               </span>
             </Link>
