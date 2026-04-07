@@ -51,10 +51,11 @@
     "FRAC-49": "task_FRAC49",
     "FRAC-50": "task_FRAC50",
     "FRAC-51": "task_FRAC51",
-    "FRAC-52": "task_FRAC52"
+    "FRAC-52": "task_FRAC52",
+    "FRAC-59": "task_FRAC59"
   },
   "next_seqs": {
-    "FRAC": 53
+    "FRAC": 60
   },
   "schema_version": 2
 }
