@@ -18,12 +18,18 @@ function isDark(hex: string): boolean {
 // ---------------------------------------------------------------------------
 
 const ELEGANT_PAIRS: Record<string, { bg: string; letter: string }> = {
-  neighborhood: { bg: "#889460", letter: "#4A5A30" },
-  events:       { bg: "#D4857A", letter: "#8B2A1E" },
-  campus:       { bg: "#2B5A48", letter: "#D4BA58" },
+  // Peach pair: light peach bg + deep coral letter
+  events:       { bg: "#D4857A", letter: "#C13B2A" },
+  // Red pair: bright red bg + cream letter for contrast
   school:       { bg: "#C41E20", letter: "#F5E6D8" },
-  forum:        { bg: "#6E1830", letter: "#D4857A" },
-  lab:          { bg: "#E870A0", letter: "#6E1830" },
+  // Light green pair: olive bg + dark olive letter
+  neighborhood: { bg: "#889460", letter: "#4A5A30" },
+  // Dark green pair: forest bg + gold letter for contrast
+  campus:       { bg: "#2B5A48", letter: "#D4BA58" },
+  // Fuschia pair: pink bg + deep pink letter
+  lab:          { bg: "#E870A0", letter: "#C44878" },
+  // Burgundy pair: wine bg + brighter rose letter for contrast
+  forum:        { bg: "#6E1830", letter: "#C83858" },
 };
 
 // ---------------------------------------------------------------------------
