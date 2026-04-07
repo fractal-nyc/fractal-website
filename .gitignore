@@ -21,6 +21,9 @@ Thumbs.db
 # Netlify
 .netlify
 
+# Claude Code worktrees
+.claude/worktrees/
+
 # Replit (legacy)
 .cache/
 .local/
