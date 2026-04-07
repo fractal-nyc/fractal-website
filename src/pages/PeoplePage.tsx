@@ -13,7 +13,7 @@ export function PeoplePage() {
               <h1 className="text-4xl md:text-5xl font-serif mb-8">People</h1>
             </FadeIn>
             <FadeIn delay={0.2}>
-              <div className="max-w-2xl">
+              <div className="max-w-4xl mx-auto text-center">
                 <p className="text-lg font-light leading-relaxed text-muted-foreground mb-6">
                   To learn more about who is in Fractal join the Discord{" "}
                   <a

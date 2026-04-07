@@ -39,7 +39,7 @@ export function Home() {
           </h2>
         </FadeIn>
 
-        <div className="max-w-2xl mx-auto space-y-10">
+        <div className="max-w-3xl mx-auto space-y-10">
           {/* Donate */}
           <FadeIn delay={0.1}>
             <p className="text-sm md:text-base leading-relaxed text-foreground/85">

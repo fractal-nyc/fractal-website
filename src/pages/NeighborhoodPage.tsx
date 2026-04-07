@@ -8,7 +8,7 @@ export function NeighborhoodPage() {
       <Navbar />
       <div className="pt-32">
         <section className="py-16 md:py-24">
-          <div className="max-w-2xl mx-auto px-6 md:px-12">
+          <div className="max-w-4xl mx-auto px-6 md:px-12 text-center">
             <FadeIn>
               <h1 className="text-sm font-semibold uppercase tracking-widest text-foreground mb-10">
                 Neighborhood
@@ -16,7 +16,7 @@ export function NeighborhoodPage() {
             </FadeIn>
 
             <FadeIn delay={0.15}>
-              <div className="border border-foreground/20 rounded-md px-5 py-5 mb-10 bg-foreground/[0.03]">
+              <div className="border border-foreground/20 rounded-md px-5 py-5 mb-10 bg-foreground/[0.03] text-left">
                 <p className="text-xs font-semibold uppercase tracking-wider text-foreground/70 mb-3">
                   Note
                 </p>
@@ -48,7 +48,7 @@ export function NeighborhoodPage() {
                   href="https://airtable.com/appDkSh1TsmjHzacK/shrbrfFHeMTcSJ9dd"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-block border border-foreground/30 rounded-md px-5 py-3 text-sm font-medium uppercase tracking-wider text-foreground hover:bg-foreground hover:text-background transition-colors"
+                  className="inline-block border border-foreground px-8 py-3 text-sm tracking-widest uppercase hover:bg-foreground hover:text-background transition-colors duration-300"
                 >
                   Visitor Form
                 </a>

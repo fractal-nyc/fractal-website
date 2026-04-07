@@ -95,6 +95,15 @@ const TALKS: TalkItem[] = [
     url: "https://prigoose.substack.com/p/i-gave-a-1000-person-conference-talk",
     category: "talk",
   },
+  {
+    title: "Christine's Guide to TPOT",
+    author: "Christine",
+    year: 2024,
+    description:
+      "Fractal originally emerged from an online scene of friendly ambitious nerds. If you'd like to have fun online and make friends, read Christine's guide.",
+    url: "https://docs.google.com/document/d/1Bd3PfKDL9pOM7YoxGbRBwO_qOWh6B7u5170Xw8VyK6s/edit",
+    category: "article",
+  },
 ];
 
 // ---------------------------------------------------------------------------
@@ -192,7 +201,7 @@ export function StoryPage() {
               <h2 className="text-xs font-semibold tracking-widest uppercase text-muted-foreground mb-6">
                 Story
               </h2>
-              <p className="text-lg md:text-xl text-foreground/80 font-light leading-relaxed max-w-3xl mb-12">
+              <p className="text-lg md:text-xl text-foreground/80 font-light leading-relaxed max-w-4xl mx-auto text-center text-pretty mb-12">
                 Fractal was originally dreamed up by Andrew and Priya Rose. They
                 were later joined by many co-conspirators. If you&apos;re
                 interested in Fractal&apos;s story and where we see it going, you
@@ -209,23 +218,6 @@ export function StoryPage() {
               ))}
             </div>
 
-            {/* Outro */}
-            <FadeIn delay={0.3}>
-              <p className="text-base md:text-lg text-foreground/70 font-light leading-relaxed max-w-3xl mt-12">
-                Fractal originally emerged from an online scene of friendly
-                ambitious nerds. If you&apos;d like to have fun online and make
-                friends, read{" "}
-                <a
-                  href="https://docs.google.com/document/d/1Bd3PfKDL9pOM7YoxGbRBwO_qOWh6B7u5170Xw8VyK6s/edit"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="underline underline-offset-4 decoration-foreground/30 hover:decoration-foreground/60 transition-colors"
-                >
-                  Christine&apos;s Guide to TPOT
-                </a>
-                .
-              </p>
-            </FadeIn>
           </div>
         </section>
 

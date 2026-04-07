@@ -3,7 +3,7 @@ import { FadeIn } from "@/components/ui/FadeIn";
 export function LiberalArts() {
   return (
     <section id="new-liberal-arts" className="py-24 md:py-40 bg-background">
-      <div className="max-w-3xl mx-auto px-6 md:px-12">
+      <div className="max-w-4xl mx-auto px-6 md:px-12 text-center">
         <FadeIn>
           <h2 className="text-3xl md:text-5xl font-serif mb-6">
             New Liberal Arts
