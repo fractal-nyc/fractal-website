@@ -33,6 +33,17 @@ const ELEGANT_PAIRS: Record<string, { bg: string; letter: string }> = {
 };
 
 // ---------------------------------------------------------------------------
+// Duochrome background images — only 4 of 6 houses have images
+// ---------------------------------------------------------------------------
+
+const BANNER_IMAGES: Record<string, string> = {
+  lab:          "/images/banners/lab.jpeg",
+  forum:        "/images/banners/political-club.jpeg",
+  neighborhood: "/images/banners/neighborhood.jpeg",
+  school:       "/images/banners/new-liberal-arts.png",
+};
+
+// ---------------------------------------------------------------------------
 // HouseBanner
 // ---------------------------------------------------------------------------
 
@@ -61,13 +72,14 @@ export function HouseBanner({
   const bgColor = pair?.bg ?? house.color;
   const letterColor = pair?.letter ?? (isDark(house.color) ? "#ffffff" : "#1a1a1a");
   const textColor = isDark(bgColor) ? "#ffffff" : "#1a1a1a";
+  const bannerImage = BANNER_IMAGES[house.id];
 
   return (
     <div className={`relative ${className}`}>
       {/* Clipped banner content */}
       <div
         className={`
-          relative flex flex-col items-center justify-center text-center
+          relative flex flex-col items-center justify-center text-center overflow-hidden
           ${isGrid ? "aspect-[1/3]" : "aspect-[3/4] max-w-2xl mx-auto"}
         `}
         style={{
@@ -77,10 +89,27 @@ export function HouseBanner({
           color: textColor,
         }}
       >
+        {/* Background image (only for houses that have one) */}
+        {bannerImage && (
+          <>
+            <img
+              src={bannerImage}
+              alt=""
+              aria-hidden="true"
+              className="absolute inset-0 h-full w-full object-cover object-center"
+            />
+            {/* Semi-transparent overlay to keep text readable */}
+            <div
+              className="absolute inset-0"
+              style={{ backgroundColor: bgColor, opacity: 0.45 }}
+            />
+          </>
+        )}
+
         {/* First-letter monogram badge */}
         <span
           className={`
-            leading-none
+            relative z-10 leading-none
             ${isGrid ? "text-6xl sm:text-7xl lg:text-8xl" : "text-[8rem] md:text-[10rem]"}
           `}
           style={{ fontFamily: "'Jacquard 24', system-ui", color: letterColor }}
@@ -92,7 +121,7 @@ export function HouseBanner({
         {/* Tagline */}
         <p
           className={`
-            font-serif italic px-2 normal-case
+            relative z-10 font-serif italic px-2 normal-case
             ${isGrid ? "text-[10px] sm:text-xs mt-1" : "text-lg mt-3"}
           `}
           style={{ opacity: 0.85 }}
