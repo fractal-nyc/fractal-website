@@ -207,7 +207,7 @@ export const HOUSES: House[] = [
     slug: "campus",
     route: "/campus",
     color: "#457B9D",
-    tagline: "Want to show up?",
+    tagline: "Want to host?",
     description:
       "111 Conselyea St, Floor 2, Brooklyn, NY 11211 — right at the L/G train intersection in Williamsburg. 4,200 square feet of interior space plus a 5,000-square-foot rooftop. Original factory wood, industrial character, the kind of building that still has its bones. About 48 co-working members call it home base.\n\nThe Campus is the physical anchor for everything Fractal does. Classes, hackathons, demo days, study groups, Sunday coworking, community brunches — it all happens here. Joe runs full-time ops keeping the space alive. The rooftop turns into an event venue when the weather cooperates.\n\nThis isn't a WeWork. It's a clubhouse for people building the future, and it feels like one — messy whiteboards, half-finished projects on tables, the smell of coffee at 9 AM and pizza at midnight. If you want a desk and a community, become a member.",
     leaders: ["andrew", "liam"],
