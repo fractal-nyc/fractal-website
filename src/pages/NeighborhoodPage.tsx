@@ -7,7 +7,7 @@ import { TEXT_SIZES } from "@/lib/pretext";
 
 export function NeighborhoodPage() {
   return (
-    <main className="min-h-screen bg-background text-foreground selection:bg-foreground selection:text-background">
+    <main className="min-h-screen text-foreground selection:bg-foreground selection:text-background" style={{ backgroundColor: "#889460" }}>
       <Navbar />
       <div className="pt-32">
         <section className="py-16 md:py-24">

@@ -197,7 +197,7 @@ function TalkCard({ talk }: { talk: TalkItem }) {
 
 export function StoryPage() {
   return (
-    <main className="min-h-screen bg-background text-foreground selection:bg-foreground selection:text-background">
+    <main className="min-h-screen text-foreground selection:bg-foreground selection:text-background" style={{ backgroundColor: "#D4BA58" }}>
       <Navbar />
       <div className="pt-20">
         {/* Talks & Podcasts Section */}
