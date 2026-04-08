@@ -12,7 +12,7 @@ export function PeoplePage() {
     <main className="relative min-h-screen text-foreground selection:bg-foreground selection:text-background" style={{ backgroundColor: "#C49040" }}>
       <FractalPattern color="#B65D19" />
       <Navbar />
-      <div className="min-h-screen flex flex-col items-center justify-center w-full">
+      <div className="min-h-screen flex flex-col items-center justify-start pt-16 md:pt-24 w-full">
         <section className="w-full">
           <div className="px-6 md:px-[4.5%]">
             <SectorHeader letter="P" name="People" color="#B65D19" />

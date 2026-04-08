@@ -203,7 +203,7 @@ export function StoryPage() {
       <Navbar />
       <div>
         {/* Talks & Podcasts Section */}
-        <section className="min-h-screen flex flex-col items-center justify-center py-16 md:py-24">
+        <section className="min-h-screen flex flex-col items-center justify-start pt-16 md:pt-24 pb-16 md:pb-24">
           <div className="max-w-6xl mx-auto px-6 md:px-[4.5%]">
             <SectorHeader letter="S" name="Story" color="#8A7A20" />
             <FadeIn>
