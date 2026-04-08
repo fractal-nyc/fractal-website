@@ -100,19 +100,6 @@ describe("Footer", () => {
   });
 
   // ═════════════════════════════════════════════════════════════════════
-  // Ian scheduling link
-  // ═════════════════════════════════════════════════════════════════════
-
-  describe("Ian scheduling link", () => {
-    it("should contain a link to schedule a chat with Ian", () => {
-      render(<Footer />);
-      const scheduleLink = screen.getByText("Schedule a virtual chat with Ian");
-      expect(scheduleLink.closest("a")).toBeTruthy();
-      expect(scheduleLink.closest("a")!.getAttribute("href")).toContain("calendar.google.com");
-    });
-  });
-
-  // ═════════════════════════════════════════════════════════════════════
   // Visual styling — black background, white text
   // ═════════════════════════════════════════════════════════════════════
 

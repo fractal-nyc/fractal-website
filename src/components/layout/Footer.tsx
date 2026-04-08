@@ -1,8 +1,6 @@
 import { MandelbrotIcon } from "@/components/house/MandelbrotIcon";
 
 const DISCORD_LINK = "https://discord.com/invite/vugp6Nza";
-const CALENDAR_LINK =
-  "https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ0JUlLukwG9ny_ji86woEKDTE2qWsePnoAz9Ao3Rl4SBssPVd_56rmYcnbb4oO6dIlPiqybWrSo";
 
 export function Footer() {
   return (
@@ -18,7 +16,7 @@ export function Footer() {
         </div>
 
         <div className="max-w-3xl mx-auto px-6 text-center">
-          <p className="text-sm md:text-base leading-relaxed mb-6">
+          <p className="text-sm md:text-base leading-relaxed mb-10">
             If you&rsquo;re in NYC and would like to introduce yourself, join
             our{" "}
             <a
@@ -31,18 +29,6 @@ export function Footer() {
             </a>{" "}
             and post in{" "}
             <span className="font-medium">#intros</span>.
-          </p>
-          <p className="text-sm md:text-base leading-relaxed mb-10">
-            Prefer a one-on-one conversation?{" "}
-            <a
-              href={CALENDAR_LINK}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="underline underline-offset-4 decoration-background/40 hover:decoration-background/80 transition-colors"
-            >
-              Schedule a virtual chat with Ian
-            </a>
-            .
           </p>
 
           <div className="flex flex-col items-center gap-2">
