@@ -20,10 +20,18 @@ const sectionLinks = [
   { name: "People", href: "/people", color: "#C49040" },
 ];
 
-// Inner-page navbar shows a reduced set — Campus, Neighborhood, Events, and Lab
-// are removed here. The home page navbar and the full-screen overlay menu still
-// expose all eight sections.
-const innerPageHiddenLinks = new Set(["Campus", "Neighborhood", "Events", "Lab"]);
+// Inner-page navbar hides all eight section links. The home page navbar and the
+// full-screen overlay menu still expose all eight sections.
+const innerPageHiddenLinks = new Set([
+  "Story",
+  "Campus",
+  "Neighborhood",
+  "Events",
+  "New Liberal Arts",
+  "Political Club",
+  "Lab",
+  "People",
+]);
 const innerPageSectionLinks = sectionLinks.filter(
   (link) => !innerPageHiddenLinks.has(link.name)
 );
