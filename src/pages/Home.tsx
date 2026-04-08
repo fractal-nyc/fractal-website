@@ -33,13 +33,56 @@ export function Home() {
           <FadeIn delay={0.15}>
             <div className="font-mono text-sm md:text-base leading-relaxed text-foreground/80 space-y-6 uppercase font-thin" style={{ fontStyle: "normal" }}>
               <p>
-                From the Founding Fathers to Bell Labs, YCombinator to Renaissance
-                Florence, tight networks of collaborators have produced innovations
+                From the{" "}
+                <a
+                  href="https://en.wikipedia.org/wiki/Founding_Fathers_of_the_United_States#Historical_founders"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="underline underline-offset-2 hover:text-foreground transition-colors"
+                >
+                  Founding Fathers
+                </a>{" "}
+                to{" "}
+                <a
+                  href="https://en.wikipedia.org/wiki/Bell_Labs"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="underline underline-offset-2 hover:text-foreground transition-colors"
+                >
+                  Bell Labs
+                </a>
+                ,{" "}
+                <a
+                  href="https://www.ycombinator.com/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="underline underline-offset-2 hover:text-foreground transition-colors"
+                >
+                  YCombinator
+                </a>{" "}
+                to{" "}
+                <a
+                  href="https://en.wikipedia.org/wiki/History_of_Florence#Role_in_art,_literature,_music_and_science"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="underline underline-offset-2 hover:text-foreground transition-colors"
+                >
+                  Renaissance Florence
+                </a>
+                , tight networks of collaborators have produced innovations
                 and institutions that we now take for granted.
               </p>
               <p>
                 Brian Eno gives these flowerings of collective genius a name:{" "}
-                <em>scenius</em>. Scenius tends to blossom under particular
+                <a
+                  href="https://kk.org/thetechnium/scenius-or-comm/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="underline underline-offset-2 hover:text-foreground transition-colors"
+                >
+                  <em>scenius</em>
+                </a>
+                . Scenius tends to blossom under particular
                 conditions that we believe are replicable. Namely: close proximity
                 and a culture of lively collaboration.
               </p>
