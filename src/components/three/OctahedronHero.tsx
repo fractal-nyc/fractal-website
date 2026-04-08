@@ -15,12 +15,12 @@ interface NavNode {
 }
 
 const OUTER_NAV_NODES: NavNode[] = [
-  { label: "Co-Living",        route: "/neighborhood",     color: "#889460", vertexIndex: 3 },
+  { label: "Neighborhood",     route: "/neighborhood",     color: "#889460", vertexIndex: 3 },
   { label: "Events",           route: "/events",           color: "#D4857A", vertexIndex: 2 },
   { label: "Campus",           route: "/campus",           color: "#2B5A48", vertexIndex: 0 },
   { label: "New Liberal Arts", route: "/new-liberal-arts", color: "#C41E20", vertexIndex: 1 },
   { label: "Political Club",   route: "/political-club",   color: "#6E1830", vertexIndex: 4 },
-  { label: "Lab",              route: "/lab",              color: "#E870A0", vertexIndex: 5 },
+  { label: "The Lab",          route: "/lab",              color: "#E870A0", vertexIndex: 5 },
 ];
 
 // ---------------------------------------------------------------------------
@@ -386,8 +386,10 @@ function tooltipStyle(borderColor: string): React.CSSProperties {
     borderRadius: 6,
     padding: "4px 10px",
     fontSize: 12,
-    fontFamily: "var(--font-body, system-ui)",
-    fontWeight: 500,
+    fontFamily: "'JetBrains Mono', monospace",
+    fontWeight: 300,
+    textTransform: "uppercase",
+    letterSpacing: "0.08em",
     whiteSpace: "nowrap",
     color: "#1a1a1a",
     transform: "translateY(-28px)",
