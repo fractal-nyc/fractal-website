@@ -123,14 +123,13 @@ function useScrollingTextTexture(color: string) {
 
   const texture = useMemo(() => {
     const canvas = document.createElement("canvas");
-    canvas.width = 1024;
-    canvas.height = 32;
+    canvas.width = 2048;
+    canvas.height = 64;
     const ctx = canvas.getContext("2d")!;
 
-    // Draw repeating text
-    ctx.fillStyle = "transparent";
+    // Draw repeating text — bold for legibility on thin tubes
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.font = "16px 'JetBrains Mono', monospace";
+    ctx.font = "bold 28px 'JetBrains Mono', monospace";
     ctx.fillStyle = color;
     ctx.textBaseline = "middle";
 
@@ -145,6 +144,9 @@ function useScrollingTextTexture(color: string) {
     tex.wrapS = THREE.RepeatWrapping;
     tex.wrapT = THREE.ClampToEdgeWrapping;
     tex.repeat.set(1, 1);
+    tex.minFilter = THREE.LinearFilter;
+    tex.magFilter = THREE.LinearFilter;
+    tex.anisotropy = 4;
 
     canvasRef.current = canvas;
     textureRef.current = tex;
@@ -174,7 +176,7 @@ function StreamingEdge({
 }) {
   const tubeGeo = useMemo(() => {
     const curve = new THREE.LineCurve3(start, end);
-    return new THREE.TubeGeometry(curve, 1, 0.015, 4, false);
+    return new THREE.TubeGeometry(curve, 1, 0.028, 6, false);
   }, [start, end]);
 
   return (
@@ -449,17 +451,17 @@ export function FractalObject({
       </mesh>
 
       {/* Streaming text along outer octahedron edges */}
-      <StreamingEdgeSet verts={outerVerts} color="#c4a265" opacity={0.7} />
+      <StreamingEdgeSet verts={outerVerts} color="#e0c880" opacity={0.85} />
 
       {/* Streaming text along inner octahedron edges */}
-      <StreamingEdgeSet verts={innerVerts} color="#cc9955" opacity={0.5} />
+      <StreamingEdgeSet verts={innerVerts} color="#ddb866" opacity={0.7} />
 
       {/* Streaming text along cross-connections */}
       <StreamingCrossConnections
         outerVerts={outerVerts}
         innerVerts={innerVerts}
-        color="#c4a265"
-        opacity={0.55}
+        color="#e0c880"
+        opacity={0.65}
       />
 
       {/* Center octahedron with hero image */}
