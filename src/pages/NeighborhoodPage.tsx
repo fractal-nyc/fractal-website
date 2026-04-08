@@ -4,10 +4,12 @@ import { SectorHeader } from "@/components/layout/SectorHeader";
 import { FadeIn } from "@/components/ui/FadeIn";
 import { PretextParagraph } from "@/components/pretext/PretextParagraph";
 import { TEXT_SIZES } from "@/lib/pretext";
+import { FractalPattern } from "@/components/ui/FractalPattern";
 
 export function NeighborhoodPage() {
   return (
-    <main className="min-h-screen text-foreground selection:bg-foreground selection:text-background" style={{ backgroundColor: "#889460" }}>
+    <main className="relative min-h-screen text-foreground selection:bg-foreground selection:text-background" style={{ backgroundColor: "#889460" }}>
+      <FractalPattern color="#4A5A30" />
       <Navbar />
       <div className="min-h-screen flex items-center justify-center w-full">
         <section className="w-full">
