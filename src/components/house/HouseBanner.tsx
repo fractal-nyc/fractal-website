@@ -20,8 +20,8 @@ function isDark(hex: string): boolean {
 const ELEGANT_PAIRS: Record<string, { bg: string; letter: string }> = {
   // Peach pair: light peach bg + deep coral letter
   events:       { bg: "#D4857A", letter: "#C13B2A" },
-  // Red pair: bright red bg + dark red letter
-  school:       { bg: "#C41E20", letter: "#8B1A1A" },
+  // Red pair: bright red bg + vivid red letter (bright for readability over image)
+  school:       { bg: "#C41E20", letter: "#E63636" },
   // Light green pair: olive bg + dark olive letter
   neighborhood: { bg: "#889460", letter: "#4A5A30" },
   // Dark green pair: forest bg + darker forest letter
@@ -42,6 +42,16 @@ const BANNER_IMAGES: Record<string, string> = {
   neighborhood: "/images/banners/neighborhood.jpeg",
   school:       "/images/banners/new-liberal-arts.png",
 };
+
+// ---------------------------------------------------------------------------
+// Per-banner overlay opacity — lower = lighter overlay, more image shows through
+// ---------------------------------------------------------------------------
+
+const OVERLAY_OPACITY: Record<string, number> = {
+  school: 0.30,   // Liberal Arts: lighter so red letters stay readable
+};
+
+const DEFAULT_OVERLAY_OPACITY = 0.45;
 
 // ---------------------------------------------------------------------------
 // HouseBanner
@@ -101,7 +111,7 @@ export function HouseBanner({
             {/* Semi-transparent overlay to keep text readable */}
             <div
               className="absolute inset-0"
-              style={{ backgroundColor: bgColor, opacity: 0.45 }}
+              style={{ backgroundColor: bgColor, opacity: OVERLAY_OPACITY[house.id] ?? DEFAULT_OVERLAY_OPACITY }}
             />
           </>
         )}
