@@ -10,7 +10,7 @@ export function PoliticalClubPage() {
     <main className="relative min-h-screen text-white selection:bg-white selection:text-[#6E1830]" style={{ backgroundColor: "#6E1830" }}>
       <FractalPattern color="#C83858" />
       <Navbar />
-      <div className="min-h-screen flex flex-col items-center justify-center w-full">
+      <div className="min-h-screen flex flex-col items-center justify-start pt-16 md:pt-24 w-full">
         <section className="w-full">
           <div className="px-6 md:px-[4.5%] text-center">
             <SectorHeader letter="P" name="Political Club" color="#C83858" />

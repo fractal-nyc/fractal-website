@@ -19,7 +19,7 @@ export function LabPage() {
       <Navbar />
       <div>
         {/* Lab heading + description */}
-        <section className="min-h-screen flex flex-col items-center justify-center w-full">
+        <section className="min-h-screen flex flex-col items-center justify-start pt-16 md:pt-24 w-full">
           <div className="px-6 md:px-[4.5%] w-full">
             <SectorHeader letter="L" name="Lab" color="#C44878" />
             <FadeIn delay={0.1}>

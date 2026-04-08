@@ -12,7 +12,7 @@ export function NeighborhoodPage() {
     <main className="relative min-h-screen text-foreground selection:bg-foreground selection:text-background" style={{ backgroundColor: "#889460" }}>
       <FractalPattern color="#4A5A30" />
       <Navbar />
-      <div className="min-h-screen flex flex-col items-center justify-center w-full">
+      <div className="min-h-screen flex flex-col items-center justify-start pt-16 md:pt-24 w-full">
         <section className="w-full">
           <div className="px-6 md:px-[4.5%] text-center">
             <SectorHeader letter="N" name="Neighborhood" color="#4A5A30" />

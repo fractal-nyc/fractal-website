@@ -19,7 +19,7 @@ export function Campus() {
   return (
     <section id="campus" style={{ backgroundColor: "#2B5A48", color: "#fff" }}>
       {/* Hero — centered in viewport */}
-      <div className="min-h-screen flex flex-col items-center justify-center w-full">
+      <div className="min-h-screen flex flex-col items-center justify-start pt-16 md:pt-24 w-full">
         <div className="px-6 md:px-[4.5%] w-full">
         <FadeIn>
           <SectorHeader letter="C" name="Campus" color="#1A3A2E" />
