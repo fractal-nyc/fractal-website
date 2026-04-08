@@ -144,12 +144,12 @@ export function HouseBanner({
         </p>
       </div>
 
-      {/* Mandelbrot icon — outside clip, centered at the V-notch tip */}
+      {/* Mandelbrot icon — outside clip, bottom-aligned with V-notch tip */}
       <div
-        className="absolute left-1/2 -translate-x-1/2"
-        style={{ bottom: "15%" }}
+        className="absolute left-1/2"
+        style={{ bottom: "15%", transform: "translateX(-50%) translateY(50%)" }}
       >
-        <MandelbrotIcon size={isGrid ? 24 : 36} opacity={0.2} />
+        <MandelbrotIcon size={isGrid ? 24 : 36} color={letterColor} opacity={0.85} />
       </div>
     </div>
   );
