@@ -6,7 +6,7 @@ import { FractalPattern } from "@/components/ui/FractalPattern";
 
 export function PoliticalClubPage() {
   return (
-    <main className="min-h-screen text-white selection:bg-white selection:text-[#6E1830]" style={{ backgroundColor: "#6E1830" }}>
+    <main className="relative min-h-screen text-white selection:bg-white selection:text-[#6E1830]" style={{ backgroundColor: "#6E1830" }}>
       <FractalPattern color="#C83858" />
       <Navbar />
       <div className="min-h-screen flex items-center justify-center w-full">

@@ -20,11 +20,11 @@ interface FractalPatternProps {
 
 export function FractalPattern({
   color,
-  opacity = 0.045,
+  opacity = 0.15,
 }: FractalPatternProps) {
   return (
     <div
-      className="pointer-events-none fixed inset-0 z-0"
+      className="pointer-events-none absolute inset-0 z-0"
       aria-hidden="true"
       style={{ opacity }}
     >

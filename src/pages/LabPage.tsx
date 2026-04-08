@@ -14,7 +14,7 @@ export function LabPage() {
   const filter = useArchiveFilter();
 
   return (
-    <main className="min-h-screen text-foreground selection:bg-foreground selection:text-background" style={{ backgroundColor: "#E870A0" }}>
+    <main className="relative min-h-screen text-foreground selection:bg-foreground selection:text-background" style={{ backgroundColor: "#E870A0" }}>
       <FractalPattern color="#C44878" />
       <Navbar />
       <div>

@@ -6,7 +6,7 @@ import { FractalPattern } from "@/components/ui/FractalPattern";
 
 export function EventsPage() {
   return (
-    <main className="min-h-screen text-foreground selection:bg-foreground selection:text-background" style={{ backgroundColor: "#D4857A" }}>
+    <main className="relative min-h-screen text-foreground selection:bg-foreground selection:text-background" style={{ backgroundColor: "#D4857A" }}>
       <FractalPattern color="#C13B2A" />
       <Navbar />
       <div className="min-h-screen flex flex-col items-center justify-center w-full">

@@ -8,7 +8,7 @@ import { FractalPattern } from "@/components/ui/FractalPattern";
 
 export function PeoplePage() {
   return (
-    <main className="min-h-screen text-foreground selection:bg-foreground selection:text-background" style={{ backgroundColor: "#C49040" }}>
+    <main className="relative min-h-screen text-foreground selection:bg-foreground selection:text-background" style={{ backgroundColor: "#C49040" }}>
       <FractalPattern color="#B65D19" />
       <Navbar />
       <div className="min-h-screen flex items-center justify-center w-full">
