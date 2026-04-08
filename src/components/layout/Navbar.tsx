@@ -158,14 +158,14 @@ export function Navbar() {
                   </span>
                   <span
                     className="font-serif block italic"
-                    style={{ fontSize: "24px", textTransform: "none", fontWeight: 100 }}
+                    style={{ fontSize: "27px", textTransform: "none", fontWeight: 100 }}
                   >
                     Collective
                   </span>
                 </Link>
                 <p
                   className="font-mono uppercase font-thin text-justify flex-1"
-                  style={{ fontSize: "8px", lineHeight: 1.35, letterSpacing: "0.01em" }}
+                  style={{ fontSize: "8px", lineHeight: 1.35, letterSpacing: "0.01em", paddingTop: "8px" }}
                 >
                   {RIGHT_TEXT}
                 </p>
