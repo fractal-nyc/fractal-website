@@ -1,6 +1,7 @@
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
 import * as THREE from "three";
+import { TOUCH } from "three";
 // Hero geometry variants — swap the import to try different shapes
 // import { FractalObject } from "./FractalObject";       // Icosahedron (original)
 // import { FractalObject } from "./MetatronCube";        // Nested hexahedra (Metatron's Cube)
@@ -27,7 +28,7 @@ export function FractalCityScene({ onNavigate }: { onNavigate: (route: string) =
         camera={{ position: [0, 0.8, 8], fov: 50, near: 0.1, far: 100 }}
         dpr={[1, 2]}
         gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
-        style={{ background: "transparent", touchAction: "none" }}
+        style={{ background: "transparent", touchAction: "pan-y" }}
         onCreated={({ gl }) => {
           gl.toneMapping = THREE.NoToneMapping;
           gl.setClearColor(0x000000, 0);
@@ -40,6 +41,7 @@ export function FractalCityScene({ onNavigate }: { onNavigate: (route: string) =
           enablePan={false}
           rotateSpeed={0.5}
           target={[0, 0.35, 0]}
+          touches={{ ONE: TOUCH.NONE, TWO: TOUCH.DOLLY_ROTATE }}
         />
       </Canvas>
     </div>
