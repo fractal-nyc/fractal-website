@@ -34,7 +34,7 @@ export function ArchiveSearch({ value, onChange }: ArchiveSearchProps) {
         type="search"
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        placeholder="Search titles, authors, topics..."
+        placeholder="SEARCH TITLES, AUTHORS, TOPICS..."
         aria-label="Search the archive"
         className="
           w-full h-11 pl-10 pr-10
