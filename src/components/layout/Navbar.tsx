@@ -198,7 +198,93 @@ export function Navbar() {
               </nav>
             </div>
           </>
+        ) : !isHome ? (
+          /* Inner page branded header — scaled-down hero treatment */
+          <>
+            {/* Desktop inner page header */}
+            <div className="max-md:hidden py-4" style={{ paddingLeft: "4.5%", paddingRight: "4.5%" }}>
+              <div className="flex items-end justify-between">
+                <Link href="/" className="text-center leading-[1.1] tracking-tighter">
+                  <span
+                    className="block"
+                    style={{ fontFamily: "'Jacquard 24', system-ui", fontSize: "50px" }}
+                  >
+                    Fractal
+                  </span>
+                  <span
+                    className="font-serif block italic"
+                    style={{ fontSize: "30px", textTransform: "none", fontWeight: 100 }}
+                  >
+                    Collective
+                  </span>
+                </Link>
+                <nav className="flex items-baseline gap-5">
+                  {sectionLinks.map((link) => (
+                    <NavLink key={link.name} {...link} />
+                  ))}
+                </nav>
+                <button
+                  className="z-50 relative p-2 -mr-2"
+                  onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                >
+                  {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+                </button>
+              </div>
+            </div>
+
+            {/* Mobile inner page header */}
+            <div className="md:hidden px-6 pt-4 pb-3">
+              <div className="flex items-center justify-between">
+                <Link href="/" className="tracking-tighter leading-[0.9] text-center">
+                  <span
+                    className="block"
+                    style={{ fontFamily: "'Jacquard 24', system-ui", fontSize: "36px" }}
+                  >
+                    Fractal
+                  </span>
+                  <span
+                    className="font-serif block italic"
+                    style={{ fontSize: "22px", textTransform: "none", fontWeight: 100 }}
+                  >
+                    Collective
+                  </span>
+                </Link>
+                <button
+                  className="z-50 relative p-2 -mr-2"
+                  onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                >
+                  {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+                </button>
+              </div>
+              {/* Nav letters row */}
+              <nav className="flex items-baseline justify-between mt-2">
+                {sectionLinks.map((link) => (
+                  <Link
+                    key={link.name}
+                    href={link.href}
+                    className="hover:opacity-70 transition-opacity"
+                    style={{ color: link.color }}
+                  >
+                    <span
+                      style={{
+                        fontFamily: "'Jacquard 24', system-ui",
+                        fontSize: "24px",
+                        lineHeight: 1,
+                      }}
+                    >
+                      {link.name === "New Liberal Arts"
+                        ? "LA"
+                        : link.name === "Political Club"
+                          ? "PC"
+                          : link.name[0]}
+                    </span>
+                  </Link>
+                ))}
+              </nav>
+            </div>
+          </>
         ) : (
+          /* Home page scrolled — compact bar */
           <div className="h-20 flex items-center justify-between" style={{ paddingLeft: "4.5%", paddingRight: "4.5%" }}>
             <Link href="/" className="tracking-tight">
               <span className="text-2xl md:text-3xl" style={{ fontFamily: "'Jacquard 24', system-ui" }}>
