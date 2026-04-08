@@ -20,6 +20,14 @@ const sectionLinks = [
   { name: "People", href: "/people", color: "#C49040" },
 ];
 
+// Inner-page navbar shows a reduced set — Campus, Neighborhood, Events, and Lab
+// are removed here. The home page navbar and the full-screen overlay menu still
+// expose all eight sections.
+const innerPageHiddenLinks = new Set(["Campus", "Neighborhood", "Events", "Lab"]);
+const innerPageSectionLinks = sectionLinks.filter(
+  (link) => !innerPageHiddenLinks.has(link.name)
+);
+
 const LEFT_TEXT =
   "In 2021, our small group of friends decided to live, learn, & build together. It started as just a single apartment with weekly dinners where people gave 5-minute talks & grew into A neighborhood & campus. now we are building A GOLDEN AGE PROTOCOL.";
 
@@ -219,7 +227,7 @@ export function Navbar() {
                   </span>
                 </Link>
                 <nav className="flex items-baseline gap-5">
-                  {sectionLinks.map((link) => (
+                  {innerPageSectionLinks.map((link) => (
                     <Link
                       key={link.name}
                       href={link.href}
