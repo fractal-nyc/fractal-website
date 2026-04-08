@@ -5,6 +5,7 @@ import { OriginStory } from "@/components/sections/OriginStory";
 import { PhotoGallery } from "@/components/gallery/PhotoGallery";
 import { gallerySections } from "@/data/storyPhotos";
 import { FadeIn } from "@/components/ui/FadeIn";
+import { FractalPattern } from "@/components/ui/FractalPattern";
 import { PretextParagraph } from "@/components/pretext/PretextParagraph";
 import { TEXT_SIZES, FONTS } from "@/lib/pretext";
 import { ArrowUpRight, Megaphone, Mic, Newspaper } from "lucide-react";
@@ -198,6 +199,7 @@ function TalkCard({ talk }: { talk: TalkItem }) {
 export function StoryPage() {
   return (
     <main className="min-h-screen text-foreground selection:bg-foreground selection:text-background" style={{ backgroundColor: "#D4BA58" }}>
+      <FractalPattern color="#8A7A20" />
       <Navbar />
       <div>
         {/* Talks & Podcasts Section */}

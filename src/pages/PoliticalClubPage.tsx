@@ -2,10 +2,12 @@ import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { SectorHeader } from "@/components/layout/SectorHeader";
 import { FadeIn } from "@/components/ui/FadeIn";
+import { FractalPattern } from "@/components/ui/FractalPattern";
 
 export function PoliticalClubPage() {
   return (
     <main className="min-h-screen text-white selection:bg-white selection:text-[#6E1830]" style={{ backgroundColor: "#6E1830" }}>
+      <FractalPattern color="#C83858" />
       <Navbar />
       <div className="min-h-screen flex items-center justify-center w-full">
         <section className="w-full">
