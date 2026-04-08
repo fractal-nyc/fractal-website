@@ -268,39 +268,21 @@ export function Navbar() {
                   {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
                 </button>
               </div>
-              {/* Nav links row */}
-              <nav className="flex flex-wrap items-baseline gap-x-3 gap-y-1 mt-2">
-                {sectionLinks.map((link) => (
-                  <Link
-                    key={link.name}
-                    href={link.href}
-                    className="hover:opacity-70 transition-opacity font-serif"
-                    style={{
-                      color: link.color,
-                      fontSize: "14px",
-                      fontWeight: 300,
-                      fontStyle: "normal",
-                    }}
-                  >
-                    {link.name}
-                  </Link>
-                ))}
-              </nav>
             </div>
           </>
         ) : (
-          /* Home page scrolled — compact bar */
-          <div className="h-20 flex items-center justify-between" style={{ paddingLeft: "4.5%", paddingRight: "4.5%" }}>
+          /* Home page scrolled — compact bar, same branding size as full navbar */
+          <div className="py-4 flex items-center justify-between" style={{ paddingLeft: "4.5%", paddingRight: "4.5%" }}>
             <Link href="/" className="tracking-tighter leading-[0.9] text-center">
               <span
                 className="block"
-                style={{ fontFamily: "'Jacquard 24', system-ui", fontSize: "32px" }}
+                style={{ fontFamily: "'Jacquard 24', system-ui", fontSize: "clamp(42px, 8vw, 82px)" }}
               >
                 Fractal
               </span>
               <span
                 className="font-serif block italic"
-                style={{ fontSize: "19px", textTransform: "none", fontWeight: 100 }}
+                style={{ fontSize: "clamp(27px, 5vw, 48px)", textTransform: "none", fontWeight: 100 }}
               >
                 Collective
               </span>

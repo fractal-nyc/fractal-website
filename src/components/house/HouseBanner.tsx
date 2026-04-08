@@ -147,7 +147,7 @@ export function HouseBanner({
       {/* Mandelbrot icon — outside clip, bottom-aligned with V-notch tip */}
       <div
         className="absolute left-1/2"
-        style={{ bottom: "15%", transform: "translateX(-50%) translateY(50%)" }}
+        style={{ bottom: "0%", transform: "translateX(-50%) translateY(50%)" }}
       >
         <MandelbrotIcon size={isGrid ? 24 : 36} color={letterColor} opacity={0.85} />
       </div>
