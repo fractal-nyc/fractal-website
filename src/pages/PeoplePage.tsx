@@ -25,7 +25,7 @@ export function PeoplePage() {
                   href="https://discord.com/invite/vugp6Nza"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="block border border-foreground/20 rounded-md px-8 py-5 text-sm tracking-widest uppercase bg-foreground/[0.03] hover:bg-foreground/10 transition-colors duration-300 text-center relative overflow-hidden mb-8"
+                  className="inline-block max-w-xs w-full border border-foreground/20 rounded-md px-8 py-5 text-sm tracking-widest uppercase bg-foreground/[0.03] hover:bg-foreground/10 transition-colors duration-300 text-center relative overflow-hidden mb-8"
                 >
                   <CornerDecorations size="xs" />
                   Join Discord
