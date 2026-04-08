@@ -1,8 +1,9 @@
 import { FadeIn } from "@/components/ui/FadeIn";
+import { MandelbrotCorners } from "@/components/ui/MandelbrotCorners";
 
 export function Events() {
   return (
-    <section id="events" className="py-24 md:py-40 bg-background">
+    <MandelbrotCorners as="section" size="lg" opacity={0.08} className="py-24 md:py-40 bg-background" id="events">
       <div className="max-w-7xl mx-auto px-[4.5%]">
         <FadeIn>
           <div className="mb-20 md:mb-32">
@@ -30,6 +31,6 @@ export function Events() {
           </a>
         </FadeIn>
       </div>
-    </section>
+    </MandelbrotCorners>
   );
 }

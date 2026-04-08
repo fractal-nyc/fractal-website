@@ -1,8 +1,9 @@
 import { FadeIn } from "@/components/ui/FadeIn";
+import { MandelbrotCorners } from "@/components/ui/MandelbrotCorners";
 
 export function Vision() {
   return (
-    <section id="vision" className="py-32 md:py-48 bg-muted relative overflow-hidden">
+    <MandelbrotCorners as="section" size="lg" opacity={0.1} className="py-32 md:py-48 bg-muted overflow-hidden" id="vision">
       {/* Texture overlay */}
       <div className="absolute inset-0 mix-blend-overlay opacity-30 pointer-events-none">
         <img 
@@ -31,6 +32,6 @@ export function Vision() {
           </p>
         </FadeIn>
       </div>
-    </section>
+    </MandelbrotCorners>
   );
 }

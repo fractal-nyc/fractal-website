@@ -1,6 +1,7 @@
 import { HOUSES } from "@/data/houses";
 import { HouseBanner } from "./HouseBanner";
 import { FadeIn } from "@/components/ui/FadeIn";
+import { MandelbrotCorners } from "@/components/ui/MandelbrotCorners";
 import { Link } from "wouter";
 
 interface HouseBannerGridProps {
@@ -13,7 +14,7 @@ interface HouseBannerGridProps {
  */
 export function HouseBannerGrid({ className = "" }: HouseBannerGridProps) {
   return (
-    <section className={`py-10 md:py-16 bg-background ${className}`}>
+    <MandelbrotCorners as="section" size="lg" opacity={0.08} className={`py-10 md:py-16 bg-background ${className}`}>
       <div className="px-[4.5%]">
         {/* Section heading */}
         <FadeIn>
@@ -41,6 +42,6 @@ export function HouseBannerGrid({ className = "" }: HouseBannerGridProps) {
           ))}
         </div>
       </div>
-    </section>
+    </MandelbrotCorners>
   );
 }

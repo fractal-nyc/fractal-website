@@ -1,8 +1,9 @@
 import { FadeIn } from "@/components/ui/FadeIn";
+import { MandelbrotCorners } from "@/components/ui/MandelbrotCorners";
 
 export function OriginStory() {
   return (
-    <section id="story" className="py-24 md:py-40 overflow-hidden">
+    <MandelbrotCorners as="section" size="lg" opacity={0.08} className="py-24 md:py-40 overflow-hidden" id="story">
       <div className="max-w-5xl mx-auto px-[4.5%]">
         <FadeIn>
           <div className="space-y-6 text-lg md:text-xl font-light">
@@ -15,6 +16,6 @@ export function OriginStory() {
           </div>
         </FadeIn>
       </div>
-    </section>
+    </MandelbrotCorners>
   );
 }
