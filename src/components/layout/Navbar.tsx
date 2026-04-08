@@ -286,9 +286,18 @@ export function Navbar() {
         ) : (
           /* Home page scrolled — compact bar */
           <div className="h-20 flex items-center justify-between" style={{ paddingLeft: "4.5%", paddingRight: "4.5%" }}>
-            <Link href="/" className="tracking-tight">
-              <span className="text-2xl md:text-3xl" style={{ fontFamily: "'Jacquard 24', system-ui" }}>
+            <Link href="/" className="tracking-tighter leading-[0.9] text-center">
+              <span
+                className="block"
+                style={{ fontFamily: "'Jacquard 24', system-ui", fontSize: "32px" }}
+              >
                 Fractal
+              </span>
+              <span
+                className="font-serif block italic"
+                style={{ fontSize: "19px", textTransform: "none", fontWeight: 100 }}
+              >
+                Collective
               </span>
             </Link>
             <button
