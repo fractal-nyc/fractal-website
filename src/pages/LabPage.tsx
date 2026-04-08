@@ -46,12 +46,12 @@ export function LabPage() {
 
             <FadeIn delay={0.3}>
               <div className="mb-12 md:mb-16 border-b border-border pb-8">
-                <h2 className="flex items-center gap-2 text-sm font-semibold tracking-widest font-mono text-white mb-3">
+                <h2 className="flex items-center gap-2 text-sm font-thin not-italic tracking-widest font-mono text-white mb-3">
                   Research + Writing
                   <MandelbrotIcon size={18} opacity={0.35} />
                 </h2>
                 <p className="text-3xl md:text-4xl font-serif leading-tight normal-case">
-                  The Fact Files
+                  The Records
                 </p>
                 <PretextParagraph
                   size={TEXT_SIZES.base}
