@@ -220,7 +220,19 @@ export function Navbar() {
                 </Link>
                 <nav className="flex items-baseline gap-5">
                   {sectionLinks.map((link) => (
-                    <NavLink key={link.name} {...link} />
+                    <Link
+                      key={link.name}
+                      href={link.href}
+                      className="hover:opacity-70 transition-opacity font-serif"
+                      style={{
+                        color: link.color,
+                        fontSize: "18px",
+                        fontWeight: 300,
+                        fontStyle: "normal",
+                      }}
+                    >
+                      {link.name}
+                    </Link>
                   ))}
                 </nav>
                 <button
@@ -256,28 +268,21 @@ export function Navbar() {
                   {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
                 </button>
               </div>
-              {/* Nav letters row */}
-              <nav className="flex items-baseline justify-between mt-2">
+              {/* Nav links row */}
+              <nav className="flex flex-wrap items-baseline gap-x-3 gap-y-1 mt-2">
                 {sectionLinks.map((link) => (
                   <Link
                     key={link.name}
                     href={link.href}
-                    className="hover:opacity-70 transition-opacity"
-                    style={{ color: link.color }}
+                    className="hover:opacity-70 transition-opacity font-serif"
+                    style={{
+                      color: link.color,
+                      fontSize: "14px",
+                      fontWeight: 300,
+                      fontStyle: "normal",
+                    }}
                   >
-                    <span
-                      style={{
-                        fontFamily: "'Jacquard 24', system-ui",
-                        fontSize: "24px",
-                        lineHeight: 1,
-                      }}
-                    >
-                      {link.name === "New Liberal Arts"
-                        ? "LA"
-                        : link.name === "Political Club"
-                          ? "PC"
-                          : link.name[0]}
-                    </span>
+                    {link.name}
                   </Link>
                 ))}
               </nav>
