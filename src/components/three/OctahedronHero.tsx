@@ -271,28 +271,30 @@ const FACE_BANNER_IMAGES: Record<string, string> = {
   school:       "/images/banners/new-liberal-arts.png",
 };
 
-// Section colors (all 6 sections)
+// Section colors — all 8 sections matching navbar colors
 const FACE_SECTION_COLORS: Record<string, string> = {
+  story:        "#D4BA58",
+  campus:       "#2B5A48",
   neighborhood: "#889460",
   events:       "#D4857A",
-  campus:       "#2B5A48",
   school:       "#C41E20",
   forum:        "#6E1830",
   lab:          "#E870A0",
+  people:       "#C49040",
 };
 
-// Map octahedron face index → section key (8 faces, 6 sections + 2 extras)
+// Map octahedron face index → section key (8 faces, 8 unique sections)
 // Octahedron faces (detail=0) are ordered by the geometry's index buffer.
 // Face indices 0-7 correspond to the 8 triangular faces.
 const FACE_SECTION_MAP: (string | null)[] = [
-  "campus",        // face 0
-  "school",        // face 1
+  "story",         // face 0
+  "campus",        // face 1
   "neighborhood",  // face 2
   "events",        // face 3
-  "lab",           // face 4
+  "school",        // face 4
   "forum",         // face 5
-  "campus",        // face 6 — repeat (darker forest green)
-  "events",        // face 7 — repeat (coral/peach)
+  "lab",           // face 6
+  "people",        // face 7
 ];
 
 /**
