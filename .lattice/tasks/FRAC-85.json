@@ -1,0 +1,16 @@
+{
+  "created_at": "2026-04-07T20:00:02.000Z",
+  "created_by": "human:jannar18",
+  "description": "The large spawn-in letters on Story (S), Campus (C), and New Liberal Arts (N) pages all appear at a great, consistent height. Other individual pages are inconsistent \u2014 some letters spawn too high, too low, or at different sizes. Make every individual page's SectorHeader letter match the height/positioning of Story, Campus, and Liberal Arts. Reference: src/components/layout/SectorHeader.tsx and each section component. No Navbar.tsx changes \u2014 safe to run in parallel with FRAC-83/84.",
+  "done_at": "2026-04-08T15:12:19Z",
+  "id": "FRAC-85",
+  "last_event_id": "ev_01KNPTDHKQ6BC7BK1VQN83H8NR",
+  "last_status_changed_at": "2026-04-08T15:12:19Z",
+  "priority": "high",
+  "reopened_count": 0,
+  "short_id": "FRAC-96",
+  "status": "done",
+  "title": "SectorHeader height consistency across all individual pages",
+  "type": "task",
+  "updated_at": "2026-04-08T15:12:19Z"
+}

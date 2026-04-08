@@ -3,7 +3,7 @@
   "short_code": "FRAC-56",
   "title": "Fix house banner color pairs in ELEGANT_PAIRS mapping",
   "description": "Fix incorrect color pairings in ELEGANT_PAIRS mapping in HouseBanner.tsx. The forum and lab entries use colors from wrong palette pairs. Events letter color needs updating to deeper coral-red.",
-  "status": "in_progress",
+  "status": "done",
   "priority": "medium",
   "type": "bug",
   "created_at": "2026-04-06T00:00:00Z",

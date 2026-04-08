@@ -7,11 +7,11 @@
   "created_by": "agent:claude-opus-4-orchestrator",
   "custom_fields": {},
   "description": null,
-  "done_at": null,
+  "done_at": "2026-04-08T16:20:25Z",
   "evidence_refs": [],
   "id": "task_01KN29ZQSB12TV7YW4893XCNNW",
-  "last_event_id": "ev_01KN2A78AFAWYFTTNRAMDB9V6D",
-  "last_status_changed_at": "2026-03-31T16:00:21Z",
+  "last_event_id": "ev_01KNPYA88F434TCQ2WFAF7THP6",
+  "last_status_changed_at": "2026-04-08T16:20:25Z",
   "priority": "medium",
   "relationships_out": [
     {
@@ -25,10 +25,10 @@
   "reopened_count": 0,
   "schema_version": 1,
   "short_id": "FRAC-34",
-  "status": "backlog",
+  "status": "done",
   "tags": null,
   "title": "Protocol page \u2014 manifesto + Fractal OS links",
   "type": "task",
-  "updated_at": "2026-03-31T16:04:27Z",
+  "updated_at": "2026-04-08T16:20:25Z",
   "urgency": null
 }

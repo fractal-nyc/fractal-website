@@ -10,8 +10,8 @@
   "done_at": null,
   "evidence_refs": [],
   "id": "task_01KN29ZQEDG429F27CXSFWNNE2",
-  "last_event_id": "ev_01KN2A780HZ943MC3S02QSQQZR",
-  "last_status_changed_at": "2026-03-31T16:00:20Z",
+  "last_event_id": "ev_01KNPYA85GXPNR76R958AADTAE",
+  "last_status_changed_at": "2026-04-08T16:20:25Z",
   "priority": "medium",
   "relationships_out": [
     {
@@ -25,10 +25,10 @@
   "reopened_count": 0,
   "schema_version": 1,
   "short_id": "FRAC-33",
-  "status": "backlog",
+  "status": "cancelled",
   "tags": null,
   "title": "Story page \u2014 timeline",
   "type": "task",
-  "updated_at": "2026-03-31T16:04:27Z",
+  "updated_at": "2026-04-08T16:20:25Z",
   "urgency": null
 }

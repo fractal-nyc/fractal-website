@@ -1,0 +1,24 @@
+{
+  "branch_links": [
+    {
+      "branch": "frac-93-octahedron-animation",
+      "linked_at": "2026-04-08T15:36:18Z",
+      "linked_by": "agent:claude-opus-4-impl",
+      "repo": null
+    }
+  ],
+  "comment_count": 2,
+  "created_at": "2026-04-07T19:28:44.506Z",
+  "created_by": "human:jannar18",
+  "description": "Create a scroll-pinned animation between the Hero 3D octahedron and the HouseBannerGrid. As the user scrolls: simplified octahedron \u2192 unfolded net \u2192 separated triangles \u2192 align with banners. Then reverse: triangles reform \u2192 net rotates 90\u00b0 \u2192 reveals F logomark \u2192 full fractal logo. The existing 3D octahedron must not be modified.",
+  "id": "FRAC-1",
+  "last_event_id": "ev_01KNPZK4QZY4G93FHFC2PEQP7R",
+  "last_status_changed_at": "2026-04-08T15:36:15Z",
+  "priority": "high",
+  "reopened_count": 0,
+  "short_id": "FRAC-93",
+  "status": "review",
+  "title": "Scroll-driven octahedron unfolding animation on homepage hero",
+  "type": "task",
+  "updated_at": "2026-04-08T16:42:45Z"
+}

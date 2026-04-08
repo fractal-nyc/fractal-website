@@ -1,0 +1,2 @@
+{"actor":"agent:claude-opus-4-orchestrator","data":{"short_id":"FRAC-104"},"id":"ev_01KNPT2B3TB9JJF5PF2HDH61GX","schema_version":1,"task_id":"FRAC-68","ts":"2026-04-08T15:06:12Z","type":"task_short_id_assigned"}
+{"actor":"agent:claude-opus-4-orchestrator","data":{"force":true,"from":"backlog","reason":"User confirmed complete; backfilling Lattice status","to":"done"},"id":"ev_01KNPT6Z8AEC1TJ1S6N2FJGDPX","provenance":{"reason":"User confirmed complete; backfilling Lattice status"},"schema_version":1,"task_id":"FRAC-68","ts":"2026-04-08T15:08:44Z","type":"status_changed"}

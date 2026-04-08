@@ -1,10 +1,14 @@
 {
-  "id": "task_FRAC75",
-  "short_code": "FRAC-75",
-  "title": "Neighborhood page - shrink note, show visitor form on initial view",
-  "description": "The note container on the Neighborhood page is too tall and pushes the visitor form CTA below the fold on 375px mobile viewports. Shrink the note by making all text the same smaller size, reduce padding/spacing so the 'Want to visit? Fill out this form.' section and Visitor Form button are visible on initial page load without scrolling.",
-  "status": "in_progress",
-  "priority": "high",
   "created_at": "2026-04-08T01:50:00Z",
-  "updated_at": "2026-04-08T01:50:00Z"
+  "description": "The note container on the Neighborhood page is too tall and pushes the visitor form CTA below the fold on 375px mobile viewports. Shrink the note by making all text the same smaller size, reduce padding/spacing so the 'Want to visit? Fill out this form.' section and Visitor Form button are visible on initial page load without scrolling.",
+  "done_at": "2026-04-08T16:23:33Z",
+  "id": "task_FRAC75",
+  "last_event_id": "ev_01KNPYFZT855E2JNQCW81KH8A6",
+  "last_status_changed_at": "2026-04-08T16:23:33Z",
+  "priority": "high",
+  "reopened_count": 0,
+  "short_code": "FRAC-75",
+  "status": "done",
+  "title": "Neighborhood page - shrink note, show visitor form on initial view",
+  "updated_at": "2026-04-08T16:23:33Z"
 }

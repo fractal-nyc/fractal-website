@@ -1,0 +1,16 @@
+{
+  "created_at": "2026-04-07T20:00:03.000Z",
+  "created_by": "human:jannar18",
+  "description": "Not all buttons are treated the same \u2014 some are contained to a certain size while others spread to fill their container. All buttons should be contained/constrained to a consistent max-width rather than stretching. Audit all button usages across pages and ensure they use consistent sizing. File: src/components/ui/button.tsx and button usages across section components. No overlap with Navbar or Footer files \u2014 safe to run in parallel.",
+  "done_at": "2026-04-08T15:07:45Z",
+  "id": "FRAC-86",
+  "last_event_id": "ev_01KNPT55TJ1KB7Y39AADMQPP36",
+  "last_status_changed_at": "2026-04-08T15:07:45Z",
+  "priority": "medium",
+  "reopened_count": 0,
+  "short_id": "FRAC-97",
+  "status": "done",
+  "title": "Button containment: consistent sizing, no spreading",
+  "type": "task",
+  "updated_at": "2026-04-08T15:07:45Z"
+}

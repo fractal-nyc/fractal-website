@@ -1,0 +1,16 @@
+{
+  "task_id": "FRAC-74",
+  "type": "created",
+  "actor": "human:jannar18",
+  "timestamp": "2026-04-08T01:46:58.000Z",
+  "data": {
+    "id": "FRAC-74",
+    "title": "Container corner Mandelbrot decorations at 45 degrees",
+    "description": "Small Mandelbrot PNGs at 45 degrees in each corner of containers, tops facing inward. Scale to container size. Possibly apply to buttons too.",
+    "type": "task",
+    "status": "backlog",
+    "priority": "high",
+    "created_at": "2026-04-08T01:46:58.000Z",
+    "created_by": "human:jannar18"
+  }
+}

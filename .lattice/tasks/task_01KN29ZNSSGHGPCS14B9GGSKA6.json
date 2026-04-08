@@ -7,11 +7,11 @@
   "created_by": "agent:claude-opus-4-orchestrator",
   "custom_fields": {},
   "description": null,
-  "done_at": null,
+  "done_at": "2026-04-08T16:20:20Z",
   "evidence_refs": [],
   "id": "task_01KN29ZNSSGHGPCS14B9GGSKA6",
-  "last_event_id": "ev_01KN2A4RA5WKHPZ66ZSZ72QFKQ",
-  "last_status_changed_at": "2026-03-31T16:00:19Z",
+  "last_event_id": "ev_01KNPYA2MB6F5QM9DCHCCDEY5W",
+  "last_status_changed_at": "2026-04-08T16:20:20Z",
   "priority": "medium",
   "relationships_out": [
     {
@@ -32,10 +32,10 @@
   "reopened_count": 0,
   "schema_version": 1,
   "short_id": "FRAC-29",
-  "status": "backlog",
+  "status": "done",
   "tags": null,
   "title": "House page template component",
   "type": "task",
-  "updated_at": "2026-03-31T16:03:05Z",
+  "updated_at": "2026-04-08T16:20:20Z",
   "urgency": null
 }

@@ -7,23 +7,23 @@
   "created_by": "agent:claude-opus-4-orchestrator",
   "custom_fields": {},
   "description": "Rewrite Story page for wayfinding MVP.\n\nSTRUCTURE (top to bottom):\n1. STORY heading\n2. Intro: \"Fractal was originally dreamed up by Andrew and Priya Rose. They were later joined by many co-conspirators. If you're interested in Fractal's story and where we see it going, you might like the following talks and podcasts.\"\n3. Talk/podcast cards styled like DocumentBadge from Lab page (see src/components/lab/DocumentBadge.tsx). Each card: title, speaker, year, description snippet, link.\n\nTALKS LIST (with URLs from lab-documents.ts data):\n- Fooming the Fractal (Tyler Alterman, 2025) \u2014 \"A template for a civil society you can build with your friends\" \u2014 URL TBD (placeholder # for now)\n- Take Some Responsibility! (Andrew Rose, 2025) \u2014 \"Andrew gets into the weeds of community building\" \u2014 https://www.everand.com/podcast/874410520/Take-Some-Responsibility-w-Andrew-Rose-Fractal-NYC-Richard-D-Bartlett\n- Hundreds of neighbors share this communal living room (Ulysses Chuang, 2025) \u2014 \"On how Merlin's Place started, and how you can turn your living room into a third space\" \u2014 https://supernuclear.substack.com/p/case-study-merlins-place\n- Scaling Coliving and Slouching Towards Utopia (Priya Rose, 2024) \u2014 \"On how Fractal started, and where it's going.\" \u2014 https://open.spotify.com/episode/17rMg7X6JafICSrxkFaCAH\n- Or for a more personal telling, watch The Origin Story of Fractal (Priya Rose, 2023) \u2014 URL TBD (placeholder # for now)\n- Friends, Community, Isolation & Fearlessness (Andrew Rose, 2023) \u2014 \"How many friends do you look in the eyes per day?\" \u2014 https://podcasters.spotify.com/pod/show/a-o-o/episodes/019---Andrew-Rose-on-Friends--Community--Isolation---Fearlessness-e24vb4n\n- The Network State Conference (Andrew and Priya Rose, 2023) \u2014 \"Building a neighborhood is a coordination problem, not a money problem.\" \u2014 https://prigoose.substack.com/p/i-gave-a-1000-person-conference-talk\n\n4. Below the cards: \"Fractal originally emerged from an online scene of friendly ambitious nerds. If you'd like to have fun online and make friends, read Christine's Guide to TPOT.\" \u2014 https://docs.google.com/document/d/1Bd3PfKDL9pOM7YoxGbRBwO_qOWh6B7u5170Xw8VyK6s/edit\n\n5. Keep the OriginStory section below the talks.\n6. REMOVE the Vision section.\n7. Keep the photo gallery at the bottom.",
-  "done_at": null,
+  "done_at": "2026-04-08T16:20:29Z",
   "evidence_refs": [],
   "id": "task_FRAC43",
-  "last_event_id": null,
-  "last_status_changed_at": "2026-04-06T18:00:00Z",
+  "last_event_id": "ev_01KNPYAB8ZRD981142G4A4A80Y",
+  "last_status_changed_at": "2026-04-08T16:20:29Z",
   "priority": "high",
   "relationships_out": [],
   "reopened_count": 0,
   "schema_version": 1,
   "short_id": "FRAC-43",
-  "status": "backlog",
+  "status": "done",
   "tags": [
     "mvp",
     "wayfinding"
   ],
   "title": "Story page: talks/podcasts links above gallery in DocumentBadge style",
   "type": "task",
-  "updated_at": "2026-04-06T18:00:00Z",
+  "updated_at": "2026-04-08T16:20:29Z",
   "urgency": null
 }
