@@ -19,12 +19,9 @@ export function LabPage() {
       <Navbar />
       <div>
         {/* Lab heading + description */}
-        <section className="min-h-[80vh] flex flex-col items-center justify-center w-full">
+        <section className="min-h-screen flex flex-col items-center justify-center w-full">
           <div className="px-6 md:px-[4.5%] w-full">
             <SectorHeader letter="L" name="Lab" color="#C44878" />
-            <p className="text-center text-lg md:text-xl font-mono font-light tracking-widest uppercase -mt-4 mb-4" style={{ color: "#C44878" }}>
-              the lab
-            </p>
             <FadeIn delay={0.1}>
               <div className="text-center">
                 <p className="font-serif text-4xl md:text-6xl leading-[1.3] mb-6 text-center" style={{ fontWeight: 300, textTransform: "uppercase", fontStyle: "normal" }}>
