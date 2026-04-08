@@ -8,7 +8,15 @@ export function Footer() {
   return (
     <footer className="relative overflow-hidden">
       {/* CTA section — black background, white text, centered */}
-      <div className="border-t border-border bg-foreground text-background py-12 md:py-20">
+      <div className="relative border-t border-border bg-foreground text-background py-12 md:py-20 overflow-hidden">
+        {/* Mandelbrot top corners — CTA section */}
+        <div className="absolute top-4 left-4 opacity-20 pointer-events-none rotate-[135deg]">
+          <MandelbrotIcon size={24} color="currentColor" className="text-background" />
+        </div>
+        <div className="absolute top-4 right-4 opacity-20 pointer-events-none rotate-[225deg]">
+          <MandelbrotIcon size={24} color="currentColor" className="text-background" />
+        </div>
+
         <div className="max-w-3xl mx-auto px-6 text-center">
           <p className="text-sm md:text-base leading-relaxed mb-6">
             If you&rsquo;re in NYC and would like to introduce yourself, join
@@ -75,7 +83,7 @@ export function Footer() {
         <div className="relative z-10 flex flex-col items-center gap-4 text-center px-6">
           {/* Fractal — camelCase, italic */}
           <div
-            className="select-none italic"
+            className="select-none"
             style={{
               fontFamily: "'Jacquard 24', system-ui",
               fontSize: "clamp(64px, 15vw, 160px)",
