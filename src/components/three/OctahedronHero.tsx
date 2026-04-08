@@ -279,30 +279,37 @@ function CenterOctahedron({
   });
 
   return (
-    <mesh
-      ref={meshRef}
-      onClick={(e: ThreeEvent<MouseEvent>) => {
-        e.stopPropagation();
-        onNavigate("/the-protocol");
-      }}
-      onPointerOver={(e: ThreeEvent<PointerEvent>) => {
-        e.stopPropagation();
-        setHovered(true);
-        document.body.style.cursor = "pointer";
-      }}
-      onPointerOut={() => {
-        setHovered(false);
-        document.body.style.cursor = "auto";
-      }}
-    >
-      <octahedronGeometry args={[1, 0]} />
-      <meshBasicMaterial map={texture} color="#ffffff" />
-      {hovered && (
-        <Html center distanceFactor={8} style={{ pointerEvents: "none" }}>
-          <div style={tooltipStyle("#1a1a1a")}>The Protocol</div>
-        </Html>
-      )}
-    </mesh>
+    <group>
+      {/* Visible center octahedron */}
+      <mesh ref={meshRef}>
+        <octahedronGeometry args={[1, 0]} />
+        <meshBasicMaterial map={texture} color="#ffffff" />
+        {hovered && (
+          <Html center distanceFactor={8} style={{ pointerEvents: "none" }}>
+            <div style={tooltipStyle("#1a1a1a")}>The Protocol</div>
+          </Html>
+        )}
+      </mesh>
+      {/* Invisible enlarged hit target for easier tapping on mobile */}
+      <mesh
+        onClick={(e: ThreeEvent<MouseEvent>) => {
+          e.stopPropagation();
+          onNavigate("/the-protocol");
+        }}
+        onPointerOver={(e: ThreeEvent<PointerEvent>) => {
+          e.stopPropagation();
+          setHovered(true);
+          document.body.style.cursor = "pointer";
+        }}
+        onPointerOut={() => {
+          setHovered(false);
+          document.body.style.cursor = "auto";
+        }}
+      >
+        <sphereGeometry args={[1.15, 16, 16]} />
+        <meshBasicMaterial visible={false} />
+      </mesh>
+    </group>
   );
 }
 
@@ -337,51 +344,57 @@ function NavNodeMesh({
   });
 
   return (
-    <mesh
-      ref={meshRef}
-      position={position}
-      onClick={(e: ThreeEvent<MouseEvent>) => {
-        e.stopPropagation();
-        // Touch devices: first tap reveals label, second tap navigates
-        if (isTouchDevice && !revealed) {
-          setRevealed(true);
-          // Auto-hide after 3 seconds
-          if (revealTimeout.current) clearTimeout(revealTimeout.current);
-          revealTimeout.current = setTimeout(() => setRevealed(false), 3000);
-          return;
-        }
-        onNavigate(node.route);
-      }}
-      onPointerOver={(e: ThreeEvent<PointerEvent>) => {
-        e.stopPropagation();
-        setHovered(true);
-        document.body.style.cursor = "pointer";
-      }}
-      onPointerOut={() => {
-        setHovered(false);
-        document.body.style.cursor = "auto";
-      }}
-    >
-      <sphereGeometry args={[0.08, 16, 16]} />
-      <meshStandardMaterial
-        color={node.color}
-        emissive={node.color}
-        emissiveIntensity={(hovered || revealed) ? 2.0 : 1.0}
-      />
-      {(hovered || revealed) && (
-        <Html center distanceFactor={8} style={{ pointerEvents: "auto" }}>
-          <div
-            style={{ ...tooltipStyle(node.color), cursor: "pointer" }}
-            onClick={(e) => {
-              e.stopPropagation();
-              onNavigate(node.route);
-            }}
-          >
-            {node.label}
-          </div>
-        </Html>
-      )}
-    </mesh>
+    <group position={position}>
+      {/* Visible node sphere */}
+      <mesh ref={meshRef}>
+        <sphereGeometry args={[0.08, 16, 16]} />
+        <meshStandardMaterial
+          color={node.color}
+          emissive={node.color}
+          emissiveIntensity={(hovered || revealed) ? 2.0 : 1.0}
+        />
+        {(hovered || revealed) && (
+          <Html center distanceFactor={8} style={{ pointerEvents: "auto" }}>
+            <div
+              style={{ ...tooltipStyle(node.color), cursor: "pointer" }}
+              onClick={(e) => {
+                e.stopPropagation();
+                onNavigate(node.route);
+              }}
+            >
+              {node.label}
+            </div>
+          </Html>
+        )}
+      </mesh>
+      {/* Invisible enlarged hit target for easier tapping on mobile */}
+      <mesh
+        onClick={(e: ThreeEvent<MouseEvent>) => {
+          e.stopPropagation();
+          // Touch devices: first tap reveals label, second tap navigates
+          if (isTouchDevice && !revealed) {
+            setRevealed(true);
+            // Auto-hide after 3 seconds
+            if (revealTimeout.current) clearTimeout(revealTimeout.current);
+            revealTimeout.current = setTimeout(() => setRevealed(false), 3000);
+            return;
+          }
+          onNavigate(node.route);
+        }}
+        onPointerOver={(e: ThreeEvent<PointerEvent>) => {
+          e.stopPropagation();
+          setHovered(true);
+          document.body.style.cursor = "pointer";
+        }}
+        onPointerOut={() => {
+          setHovered(false);
+          document.body.style.cursor = "auto";
+        }}
+      >
+        <sphereGeometry args={[0.3, 8, 8]} />
+        <meshBasicMaterial visible={false} />
+      </mesh>
+    </group>
   );
 }
 

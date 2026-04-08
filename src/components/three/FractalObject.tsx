@@ -159,43 +159,49 @@ function NavNodeMesh({
   });
 
   return (
-    <mesh
-      ref={meshRef}
-      position={position}
-      onClick={(e: ThreeEvent<MouseEvent>) => {
-        e.stopPropagation();
-        onNavigate(node.route);
-      }}
-      onPointerOver={(e: ThreeEvent<PointerEvent>) => {
-        e.stopPropagation();
-        setHovered(true);
-        document.body.style.cursor = "pointer";
-      }}
-      onPointerOut={() => {
-        setHovered(false);
-        document.body.style.cursor = "auto";
-      }}
-    >
-      <sphereGeometry args={[0.06, 16, 16]} />
-      <meshStandardMaterial
-        color={node.color}
-        emissive={node.color}
-        emissiveIntensity={hovered ? 3.0 : 1.5}
-      />
-      {hovered && (
-        <Html center distanceFactor={8} style={{ pointerEvents: "auto" }}>
-          <div
-            style={{ ...tooltipStyle(node.color), cursor: "pointer" }}
-            onClick={(e) => {
-              e.stopPropagation();
-              onNavigate(node.route);
-            }}
-          >
-            {node.label}
-          </div>
-        </Html>
-      )}
-    </mesh>
+    <group position={position}>
+      {/* Visible node sphere */}
+      <mesh ref={meshRef}>
+        <sphereGeometry args={[0.06, 16, 16]} />
+        <meshStandardMaterial
+          color={node.color}
+          emissive={node.color}
+          emissiveIntensity={hovered ? 3.0 : 1.5}
+        />
+        {hovered && (
+          <Html center distanceFactor={8} style={{ pointerEvents: "auto" }}>
+            <div
+              style={{ ...tooltipStyle(node.color), cursor: "pointer" }}
+              onClick={(e) => {
+                e.stopPropagation();
+                onNavigate(node.route);
+              }}
+            >
+              {node.label}
+            </div>
+          </Html>
+        )}
+      </mesh>
+      {/* Invisible enlarged hit target for easier tapping on mobile */}
+      <mesh
+        onClick={(e: ThreeEvent<MouseEvent>) => {
+          e.stopPropagation();
+          onNavigate(node.route);
+        }}
+        onPointerOver={(e: ThreeEvent<PointerEvent>) => {
+          e.stopPropagation();
+          setHovered(true);
+          document.body.style.cursor = "pointer";
+        }}
+        onPointerOut={() => {
+          setHovered(false);
+          document.body.style.cursor = "auto";
+        }}
+      >
+        <sphereGeometry args={[0.25, 8, 8]} />
+        <meshBasicMaterial visible={false} />
+      </mesh>
+    </group>
   );
 }
 
