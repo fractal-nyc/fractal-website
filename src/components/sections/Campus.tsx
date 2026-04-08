@@ -36,7 +36,7 @@ export function Campus() {
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <a
                 href="mailto:events@merlins.place"
-                className="block border border-foreground/20 rounded-md px-8 py-5 text-sm tracking-widest uppercase bg-foreground/[0.03] hover:bg-foreground/10 transition-colors duration-300 text-center relative overflow-hidden"
+                className="inline-block max-w-xs w-full border border-foreground/20 rounded-md px-8 py-5 text-sm tracking-widest uppercase bg-foreground/[0.03] hover:bg-foreground/10 transition-colors duration-300 text-center relative overflow-hidden"
               >
                 <CornerDecorations size="xs" />
                 Email Merlin's Place
@@ -45,7 +45,7 @@ export function Campus() {
                 href="https://fractalbootcamp.com/fractal-tech-hub"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="block border border-foreground/20 rounded-md px-8 py-5 text-sm tracking-widest uppercase bg-foreground/[0.03] hover:bg-foreground/10 transition-colors duration-300 text-center relative overflow-hidden"
+                className="inline-block max-w-xs w-full border border-foreground/20 rounded-md px-8 py-5 text-sm tracking-widest uppercase bg-foreground/[0.03] hover:bg-foreground/10 transition-colors duration-300 text-center relative overflow-hidden"
               >
                 <CornerDecorations size="xs" />
                 Fractal Tech Hub
