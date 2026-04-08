@@ -24,7 +24,7 @@ export function NeighborhoodPage() {
             </FadeIn>
 
             <FadeIn delay={0.15}>
-              <MandelbrotCorners size="sm" opacity={0.15} className="border border-foreground/20 rounded-md px-4 py-3 md:px-5 md:py-5 mb-5 md:mb-10 bg-foreground/[0.03] text-left">
+              <MandelbrotCorners size="sm" opacity={0.15} className="border border-foreground/20 rounded-md px-4 py-3 md:px-5 md:py-5 mb-5 md:mb-10 bg-foreground/[0.03] text-left max-w-xl mx-auto">
                 <p className="text-[10px] md:text-xs font-semibold uppercase tracking-wider text-white mb-2 md:mb-3">
                   Note
                 </p>
@@ -34,17 +34,19 @@ export function NeighborhoodPage() {
                 >
                   {"Fractal is a decentralized network of apartments rather than a formal organization! So no one is in charge of sublets. The way staying here works:"}
                 </PretextParagraph>
-                <ol className="list-decimal list-inside mt-2 md:mt-3 space-y-1 md:space-y-2 text-xs md:text-base leading-relaxed text-white">
-                  <li>You fill out one of the forms below.</li>
-                  <li>
-                    An automatic message sends your info to leaseholders.
-                  </li>
-                  <li>
-                    If a leaseholder has a room free, they can contact you. If
-                    you don't get a reply, this typically just means that no one
-                    has a room free.
-                  </li>
-                </ol>
+                <div className="flex justify-center mt-2 md:mt-3">
+                  <ol className="list-decimal list-inside space-y-1 md:space-y-2 text-xs md:text-sm leading-relaxed text-white text-left">
+                    <li>You fill out one of the forms below.</li>
+                    <li>
+                      An automatic message sends your info to leaseholders.
+                    </li>
+                    <li>
+                      If a leaseholder has a room free, they can contact you. If
+                      you don't get a reply, this typically just means that no one
+                      has a room free.
+                    </li>
+                  </ol>
+                </div>
               </MandelbrotCorners>
             </FadeIn>
 
