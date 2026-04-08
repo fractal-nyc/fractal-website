@@ -23,7 +23,7 @@ const projects = [
 
 export function Projects() {
   return (
-    <section id="projects" className="py-24 md:py-40 bg-background relative">
+    <section className="py-24 md:py-40 bg-background" id="projects">
       <div className="max-w-7xl mx-auto px-[4.5%]">
         <FadeIn>
           <div className="mb-20 md:mb-32">
@@ -56,14 +56,14 @@ export function Projects() {
               
               <div className={index % 2 !== 0 ? "md:col-start-1 md:row-start-1" : ""}>
                 <FadeIn direction={index % 2 === 0 ? "left" : "right"} delay={0.2}>
-                  <div className="aspect-[4/5] md:aspect-square overflow-hidden bg-muted relative group">
-                    <img 
-                      src={project.image}
-                      alt={project.title}
-                      className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
-                    />
-                    <div className="absolute inset-4 border border-background/30 pointer-events-none z-10 hidden md:block opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                  </div>
+                    <div className="aspect-[4/5] md:aspect-square overflow-hidden bg-muted relative group">
+                      <img
+                        src={project.image}
+                        alt={project.title}
+                        className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
+                      />
+                      <div className="absolute inset-4 border border-background/30 pointer-events-none z-10 hidden md:block opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                    </div>
                 </FadeIn>
               </div>
             </div>

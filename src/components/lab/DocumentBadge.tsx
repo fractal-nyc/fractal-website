@@ -1,6 +1,7 @@
 import type { LabDocument, DocumentCategory } from "@/data/lab-documents";
 import type { LucideIcon } from "lucide-react";
 import { PEOPLE } from "@/data/houses";
+import { MandelbrotCorners } from "@/components/ui/MandelbrotCorners";
 import {
   ArrowUpRight,
   BookOpen,
@@ -49,6 +50,7 @@ export function DocumentBadge({ document, className = "" }: DocumentBadgeProps) 
   const isFeatured = document.featured;
 
   return (
+    <MandelbrotCorners size="xs" opacity={0.12}>
     <a
       href={document.url}
       target="_blank"
@@ -115,5 +117,6 @@ export function DocumentBadge({ document, className = "" }: DocumentBadgeProps) 
         style={{ backgroundColor: LAB_COLOR }}
       />
     </a>
+    </MandelbrotCorners>
   );
 }

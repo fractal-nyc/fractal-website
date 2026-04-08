@@ -2,7 +2,7 @@ import { FadeIn } from "@/components/ui/FadeIn";
 
 export function Events() {
   return (
-    <section id="events" className="py-24 md:py-40 bg-background">
+    <section className="py-24 md:py-40 bg-background" id="events">
       <div className="max-w-7xl mx-auto px-[4.5%]">
         <FadeIn>
           <div className="mb-20 md:mb-32">

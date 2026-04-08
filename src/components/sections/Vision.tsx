@@ -2,7 +2,7 @@ import { FadeIn } from "@/components/ui/FadeIn";
 
 export function Vision() {
   return (
-    <section id="vision" className="py-32 md:py-48 bg-muted relative overflow-hidden">
+    <section className="py-32 md:py-48 bg-muted overflow-hidden relative" id="vision">
       {/* Texture overlay */}
       <div className="absolute inset-0 mix-blend-overlay opacity-30 pointer-events-none">
         <img 
