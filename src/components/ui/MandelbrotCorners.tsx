@@ -17,10 +17,10 @@ interface MandelbrotCornersProps {
 }
 
 const sizeMap: Record<CornerSize, { icon: number; inset: string }> = {
-  xs: { icon: 8, inset: "-1px" },
-  sm: { icon: 12, inset: "-2px" },
-  md: { icon: 18, inset: "-4px" },
-  lg: { icon: 24, inset: "-6px" },
+  xs: { icon: 20, inset: "4px" },
+  sm: { icon: 30, inset: "6px" },
+  md: { icon: 45, inset: "8px" },
+  lg: { icon: 60, inset: "10px" },
 };
 
 /**
@@ -51,6 +51,32 @@ const corners = [
  *     ...content...
  *   </MandelbrotCorners>
  */
+/**
+ * Standalone corner decorations — drop inside any `relative` container.
+ */
+export function CornerDecorations({ size = "sm", opacity = 0.15 }: { size?: CornerSize; opacity?: number }) {
+  const { icon, inset } = sizeMap[size];
+  return (
+    <>
+      {corners.map((corner, i) => (
+        <span
+          key={i}
+          className={cn("absolute pointer-events-none z-10", corner.position, corner.rotate)}
+          style={{
+            marginTop: corner.position.includes("top") ? inset : undefined,
+            marginBottom: corner.position.includes("bottom") ? inset : undefined,
+            marginLeft: corner.position.includes("left") ? inset : undefined,
+            marginRight: corner.position.includes("right") ? inset : undefined,
+          }}
+          aria-hidden="true"
+        >
+          <MandelbrotIcon size={icon} opacity={opacity} />
+        </span>
+      ))}
+    </>
+  );
+}
+
 export function MandelbrotCorners({
   children,
   size = "sm",

@@ -3,7 +3,6 @@ import { Hero } from "@/components/sections/Hero";
 import { HouseBannerGrid } from "@/components/house/HouseBannerGrid";
 import { Footer } from "@/components/layout/Footer";
 import { FadeIn } from "@/components/ui/FadeIn";
-import { MandelbrotCorners } from "@/components/ui/MandelbrotCorners";
 import { useEffect } from "react";
 
 export function Home() {
@@ -21,7 +20,7 @@ export function Home() {
       <HouseBannerGrid />
 
       {/* Golden Age Protocol */}
-      <MandelbrotCorners as="section" size="lg" opacity={0.1} className="bg-[#faf8f5] px-[4.5%] py-40 md:py-60">
+      <section className="bg-[#faf8f5] px-[4.5%] py-40 md:py-60">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16 items-start">
           <FadeIn>
             <h2
@@ -52,7 +51,7 @@ export function Home() {
             </div>
           </FadeIn>
         </div>
-      </MandelbrotCorners>
+      </section>
 
       <Footer />
     </main>

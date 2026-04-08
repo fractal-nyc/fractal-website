@@ -5,6 +5,7 @@ import { FadeIn } from "@/components/ui/FadeIn";
 import { PretextParagraph } from "@/components/pretext/PretextParagraph";
 import { TEXT_SIZES } from "@/lib/pretext";
 import { FractalPattern } from "@/components/ui/FractalPattern";
+import { MandelbrotCorners, CornerDecorations } from "@/components/ui/MandelbrotCorners";
 
 export function NeighborhoodPage() {
   return (
@@ -23,7 +24,7 @@ export function NeighborhoodPage() {
             </FadeIn>
 
             <FadeIn delay={0.15}>
-              <div className="border border-foreground/20 rounded-md px-4 py-3 md:px-5 md:py-5 mb-5 md:mb-10 bg-foreground/[0.03] text-left">
+              <MandelbrotCorners size="sm" opacity={0.15} className="border border-foreground/20 rounded-md px-4 py-3 md:px-5 md:py-5 mb-5 md:mb-10 bg-foreground/[0.03] text-left">
                 <p className="text-[10px] md:text-xs font-semibold uppercase tracking-wider text-white mb-2 md:mb-3">
                   Note
                 </p>
@@ -44,7 +45,7 @@ export function NeighborhoodPage() {
                     has a room free.
                   </li>
                 </ol>
-              </div>
+              </MandelbrotCorners>
             </FadeIn>
 
             <FadeIn delay={0.3}>
@@ -59,8 +60,9 @@ export function NeighborhoodPage() {
                   href="https://airtable.com/appDkSh1TsmjHzacK/shrbrfFHeMTcSJ9dd"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="block border border-foreground/20 rounded-md px-8 py-3 text-sm tracking-widest uppercase bg-foreground/[0.03] hover:bg-foreground/10 transition-colors duration-300 text-center"
+                  className="block border border-foreground/20 rounded-md px-8 py-5 text-sm tracking-widest uppercase bg-foreground/[0.03] hover:bg-foreground/10 transition-colors duration-300 text-center relative overflow-hidden"
                 >
+                  <CornerDecorations size="xs" />
                   Visitor Form
                 </a>
               </div>

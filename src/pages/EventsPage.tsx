@@ -3,6 +3,7 @@ import { Footer } from "@/components/layout/Footer";
 import { SectorHeader } from "@/components/layout/SectorHeader";
 import { FadeIn } from "@/components/ui/FadeIn";
 import { FractalPattern } from "@/components/ui/FractalPattern";
+import { CornerDecorations } from "@/components/ui/MandelbrotCorners";
 
 export function EventsPage() {
   return (
@@ -19,8 +20,9 @@ export function EventsPage() {
             </p>
             <a
               href="mailto:events@merlins.place"
-              className="block border border-foreground/20 rounded-md px-8 py-3 text-sm tracking-widest uppercase bg-foreground/[0.03] hover:bg-foreground/10 transition-colors duration-300 text-center mb-12"
+              className="block border border-foreground/20 rounded-md px-8 py-5 text-sm tracking-widest uppercase bg-foreground/[0.03] hover:bg-foreground/10 transition-colors duration-300 text-center relative overflow-hidden mb-12"
             >
+              <CornerDecorations size="xs" />
               Email Merlin's Place
             </a>
           </FadeIn>
@@ -33,8 +35,9 @@ export function EventsPage() {
               href="https://luma.com/nyc-tech"
               target="_blank"
               rel="noopener noreferrer"
-              className="block border border-foreground/20 rounded-md px-8 py-3 text-sm tracking-widest uppercase bg-foreground/[0.03] hover:bg-foreground/10 transition-colors duration-300 text-center mb-12"
+              className="block border border-foreground/20 rounded-md px-8 py-5 text-sm tracking-widest uppercase bg-foreground/[0.03] hover:bg-foreground/10 transition-colors duration-300 text-center relative overflow-hidden mb-12"
             >
+              <CornerDecorations size="xs" />
               Luma Calendar
             </a>
           </FadeIn>
@@ -47,8 +50,9 @@ export function EventsPage() {
               href="https://discord.com/invite/vugp6Nza"
               target="_blank"
               rel="noopener noreferrer"
-              className="block border border-foreground/20 rounded-md px-8 py-3 text-sm tracking-widest uppercase bg-foreground/[0.03] hover:bg-foreground/10 transition-colors duration-300 text-center"
+              className="block border border-foreground/20 rounded-md px-8 py-5 text-sm tracking-widest uppercase bg-foreground/[0.03] hover:bg-foreground/10 transition-colors duration-300 text-center relative overflow-hidden"
             >
+              <CornerDecorations size="xs" />
               Join Discord
             </a>
           </FadeIn>

@@ -1,5 +1,4 @@
 import { FadeIn } from "@/components/ui/FadeIn";
-import { MandelbrotCorners } from "@/components/ui/MandelbrotCorners";
 
 const projects = [
   {
@@ -24,7 +23,7 @@ const projects = [
 
 export function Projects() {
   return (
-    <MandelbrotCorners as="section" size="lg" opacity={0.08} className="py-24 md:py-40 bg-background" id="projects">
+    <section className="py-24 md:py-40 bg-background" id="projects">
       <div className="max-w-7xl mx-auto px-[4.5%]">
         <FadeIn>
           <div className="mb-20 md:mb-32">
@@ -57,7 +56,6 @@ export function Projects() {
               
               <div className={index % 2 !== 0 ? "md:col-start-1 md:row-start-1" : ""}>
                 <FadeIn direction={index % 2 === 0 ? "left" : "right"} delay={0.2}>
-                  <MandelbrotCorners size="md" opacity={0.2}>
                     <div className="aspect-[4/5] md:aspect-square overflow-hidden bg-muted relative group">
                       <img
                         src={project.image}
@@ -66,13 +64,12 @@ export function Projects() {
                       />
                       <div className="absolute inset-4 border border-background/30 pointer-events-none z-10 hidden md:block opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                     </div>
-                  </MandelbrotCorners>
                 </FadeIn>
               </div>
             </div>
           ))}
         </div>
       </div>
-    </MandelbrotCorners>
+    </section>
   );
 }

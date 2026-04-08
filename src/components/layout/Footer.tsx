@@ -52,17 +52,17 @@ export function Footer() {
           <MandelbrotIcon size={280} color="currentColor" opacity={0.06} className="text-background" />
         </div>
 
-        {/* Mandelbrot corner accents */}
-        <div className="absolute top-4 left-4 opacity-20 pointer-events-none">
+        {/* Mandelbrot corner accents — rotated 45° with tops facing inward */}
+        <div className="absolute top-4 left-4 opacity-20 pointer-events-none rotate-[135deg]">
           <MandelbrotIcon size={24} color="currentColor" className="text-background" />
         </div>
-        <div className="absolute top-4 right-4 opacity-20 pointer-events-none">
+        <div className="absolute top-4 right-4 opacity-20 pointer-events-none rotate-[225deg]">
           <MandelbrotIcon size={24} color="currentColor" className="text-background" />
         </div>
-        <div className="absolute bottom-4 left-4 opacity-20 pointer-events-none">
+        <div className="absolute bottom-4 left-4 opacity-20 pointer-events-none rotate-[45deg]">
           <MandelbrotIcon size={24} color="currentColor" className="text-background" />
         </div>
-        <div className="absolute bottom-4 right-4 opacity-20 pointer-events-none">
+        <div className="absolute bottom-4 right-4 opacity-20 pointer-events-none rotate-[315deg]">
           <MandelbrotIcon size={24} color="currentColor" className="text-background" />
         </div>
 
