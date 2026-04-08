@@ -18,24 +18,21 @@ export function NeighborhoodPage() {
             <SectorHeader letter="N" name="Neighborhood" color="#4A5A30" />
 
             <FadeIn>
-              <p className="font-serif text-2xl md:text-6xl leading-[1.3] mb-5 md:mb-10 text-center" style={{ fontWeight: 300, textTransform: "uppercase", fontStyle: "normal" }}>
+              <p className="font-serif text-xl md:text-6xl leading-[1.3] mb-3 md:mb-10 text-center" style={{ fontWeight: 300, textTransform: "uppercase", fontStyle: "normal" }}>
                 Live Near 100 Friends & Peers
               </p>
             </FadeIn>
 
             <FadeIn delay={0.15}>
-              <MandelbrotCorners size="sm" opacity={0.15} className="border border-foreground/20 rounded-md px-4 py-3 md:px-5 md:py-5 mb-5 md:mb-10 bg-foreground/[0.03] text-left max-w-xl mx-auto">
-                <p className="text-[10px] md:text-xs font-semibold uppercase tracking-wider text-white mb-2 md:mb-3">
+              <MandelbrotCorners size="sm" opacity={0.15} className="border border-foreground/20 rounded-md px-3 py-2.5 md:px-5 md:py-5 mb-3 md:mb-10 bg-foreground/[0.03] text-left max-w-xl mx-auto">
+                <p className="text-xs font-semibold uppercase tracking-wider text-white mb-2 md:mb-3">
                   Note
                 </p>
-                <PretextParagraph
-                  size={TEXT_SIZES.sm}
-                  className="text-white"
-                >
-                  {"Fractal is a decentralized network of apartments rather than a formal organization! So no one is in charge of sublets. The way staying here works:"}
-                </PretextParagraph>
-                <div className="flex justify-center mt-2 md:mt-3">
-                  <ol className="list-decimal list-inside space-y-1 md:space-y-2 text-xs md:text-sm leading-relaxed text-white text-left">
+                <p className="text-xs leading-relaxed text-white">
+                  Fractal is a decentralized network of apartments rather than a formal organization! So no one is in charge of sublets. The way staying here works:
+                </p>
+                <div className="flex justify-center mt-1.5 md:mt-3">
+                  <ol className="list-decimal list-inside space-y-1 md:space-y-2 text-xs leading-relaxed text-white text-left">
                     <li>You fill out one of the forms below.</li>
                     <li>
                       An automatic message sends your info to leaseholders.
@@ -50,7 +47,7 @@ export function NeighborhoodPage() {
               </MandelbrotCorners>
             </FadeIn>
 
-            <FadeIn delay={0.3}>
+            <FadeIn delay={0.15}>
               <div>
                 <PretextParagraph
                   size={TEXT_SIZES.sm}
@@ -62,7 +59,7 @@ export function NeighborhoodPage() {
                   href="https://airtable.com/appDkSh1TsmjHzacK/shrbrfFHeMTcSJ9dd"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-block max-w-xs w-full border border-foreground/20 rounded-md px-8 py-5 text-sm tracking-widest uppercase bg-foreground/[0.03] hover:bg-foreground/10 transition-colors duration-300 text-center relative overflow-hidden"
+                  className="inline-block max-w-xs w-full border border-foreground/20 rounded-md px-8 py-4 md:py-5 text-sm tracking-widest uppercase bg-foreground/[0.03] hover:bg-foreground/10 transition-colors duration-300 text-center relative overflow-hidden"
                 >
                   <CornerDecorations size="xs" />
                   Visitor Form
