@@ -306,10 +306,11 @@ function usePerFaceOctahedronGeometry(radius: number) {
   return useMemo(() => {
     const base = new THREE.OctahedronGeometry(radius, 0);
 
-    // OctahedronGeometry with detail=0 uses an index buffer.
-    // Convert to non-indexed so each face has its own vertices.
-    const nonIndexed = base.toNonIndexed();
-    base.dispose();
+    // Ensure non-indexed so each face has its own vertices.
+    // (Newer THREE versions return non-indexed OctahedronGeometry at detail=0,
+    // so toNonIndexed() would warn — guard against that.)
+    const nonIndexed = base.index !== null ? base.toNonIndexed() : base;
+    if (nonIndexed !== base) base.dispose();
 
     const posAttr = nonIndexed.getAttribute("position");
     const vertexCount = posAttr.count; // 24 vertices (8 faces * 3)
