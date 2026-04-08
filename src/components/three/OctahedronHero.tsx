@@ -259,16 +259,144 @@ function StreamingCrossConnections({
 // Clickable center octahedron → /the-protocol
 // ---------------------------------------------------------------------------
 
+// ---------------------------------------------------------------------------
+// Per-face section definitions for the center octahedron
+// ---------------------------------------------------------------------------
+
+// Banner images (4 of 6 sections have images)
+const FACE_BANNER_IMAGES: Record<string, string> = {
+  lab:          "/images/banners/lab.jpeg",
+  forum:        "/images/banners/political-club.jpeg",
+  neighborhood: "/images/banners/neighborhood.jpeg",
+  school:       "/images/banners/new-liberal-arts.png",
+};
+
+// Section colors (all 6 sections)
+const FACE_SECTION_COLORS: Record<string, string> = {
+  neighborhood: "#889460",
+  events:       "#D4857A",
+  campus:       "#2B5A48",
+  school:       "#C41E20",
+  forum:        "#6E1830",
+  lab:          "#E870A0",
+};
+
+// Map octahedron face index → section key (8 faces, 6 sections + 2 extras)
+// Octahedron faces (detail=0) are ordered by the geometry's index buffer.
+// Face indices 0-7 correspond to the 8 triangular faces.
+const FACE_SECTION_MAP: (string | null)[] = [
+  "campus",        // face 0
+  "school",        // face 1
+  "neighborhood",  // face 2
+  "events",        // face 3
+  "lab",           // face 4
+  "forum",         // face 5
+  "campus",        // face 6 — repeat (darker forest green)
+  "events",        // face 7 — repeat (coral/peach)
+];
+
+/**
+ * Build an OctahedronBufferGeometry with per-face material groups and UVs.
+ * Each of the 8 faces gets its own material group so we can assign
+ * different materials (textured or solid color) to each.
+ */
+function usePerFaceOctahedronGeometry(radius: number) {
+  return useMemo(() => {
+    const base = new THREE.OctahedronGeometry(radius, 0);
+
+    // OctahedronGeometry with detail=0 uses an index buffer.
+    // Convert to non-indexed so each face has its own vertices.
+    const nonIndexed = base.toNonIndexed();
+    base.dispose();
+
+    const posAttr = nonIndexed.getAttribute("position");
+    const vertexCount = posAttr.count; // 24 vertices (8 faces * 3)
+    const faceCount = vertexCount / 3; // 8
+
+    // Assign material groups: each face (3 vertices) gets its own group
+    nonIndexed.clearGroups();
+    for (let i = 0; i < faceCount; i++) {
+      nonIndexed.addGroup(i * 3, 3, i);
+    }
+
+    // Compute UVs for each face — map each triangle to fill the full texture
+    // Using a simple equilateral-like mapping: v0→(0.5,1), v1→(0,0), v2→(1,0)
+    const uvs = new Float32Array(vertexCount * 2);
+    for (let f = 0; f < faceCount; f++) {
+      const base2 = f * 3 * 2;
+      // vertex 0 of triangle → top center
+      uvs[base2 + 0] = 0.5;
+      uvs[base2 + 1] = 1.0;
+      // vertex 1 → bottom left
+      uvs[base2 + 2] = 0.0;
+      uvs[base2 + 3] = 0.0;
+      // vertex 2 → bottom right
+      uvs[base2 + 4] = 1.0;
+      uvs[base2 + 5] = 0.0;
+    }
+    nonIndexed.setAttribute("uv", new THREE.BufferAttribute(uvs, 2));
+
+    return nonIndexed;
+  }, [radius]);
+}
+
+/**
+ * Build the array of 8 materials (one per face) — textured where a banner
+ * image exists, solid-color otherwise.
+ */
+function usePerFaceMaterials() {
+  // Load all 4 banner textures
+  const labTex = useLoader(THREE.TextureLoader, FACE_BANNER_IMAGES.lab);
+  const forumTex = useLoader(THREE.TextureLoader, FACE_BANNER_IMAGES.forum);
+  const neighborhoodTex = useLoader(THREE.TextureLoader, FACE_BANNER_IMAGES.neighborhood);
+  const schoolTex = useLoader(THREE.TextureLoader, FACE_BANNER_IMAGES.school);
+
+  const textureMap: Record<string, THREE.Texture> = useMemo(
+    () => ({
+      lab: labTex,
+      forum: forumTex,
+      neighborhood: neighborhoodTex,
+      school: schoolTex,
+    }),
+    [labTex, forumTex, neighborhoodTex, schoolTex],
+  );
+
+  return useMemo(() => {
+    return FACE_SECTION_MAP.map((sectionKey) => {
+      if (!sectionKey) {
+        return new THREE.MeshBasicMaterial({ color: "#c4a265" });
+      }
+
+      const tex = textureMap[sectionKey];
+      const color = FACE_SECTION_COLORS[sectionKey] ?? "#c4a265";
+
+      if (tex) {
+        // Textured face — show the banner image
+        return new THREE.MeshBasicMaterial({
+          map: tex,
+          color: "#ffffff",
+          side: THREE.FrontSide,
+        });
+      }
+
+      // Solid color face for sections without a banner image
+      return new THREE.MeshBasicMaterial({
+        color,
+        side: THREE.FrontSide,
+      });
+    });
+  }, [textureMap]);
+}
+
 function CenterOctahedron({
-  imagePath,
   onNavigate,
 }: {
-  imagePath: string;
   onNavigate: (route: string) => void;
 }) {
-  const texture = useLoader(THREE.TextureLoader, imagePath);
   const [hovered, setHovered] = useState(false);
   const meshRef = useRef<THREE.Mesh>(null);
+  const geometry = usePerFaceOctahedronGeometry(1);
+  const materials = usePerFaceMaterials();
 
   useFrame(() => {
     if (meshRef.current) {
@@ -280,10 +408,8 @@ function CenterOctahedron({
 
   return (
     <group>
-      {/* Visible center octahedron */}
-      <mesh ref={meshRef}>
-        <octahedronGeometry args={[1, 0]} />
-        <meshBasicMaterial map={texture} color="#ffffff" />
+      {/* Visible center octahedron with per-face textures */}
+      <mesh ref={meshRef} geometry={geometry} material={materials}>
         {hovered && (
           <Html center distanceFactor={8} style={{ pointerEvents: "none" }}>
             <div style={tooltipStyle("#1a1a1a")}>The Protocol</div>
@@ -424,10 +550,10 @@ function tooltipStyle(borderColor: string): React.CSSProperties {
 // ---------------------------------------------------------------------------
 
 export function FractalObject({
-  imagePath,
+  imagePath: _imagePath,
   onNavigate,
 }: {
-  imagePath: string;
+  imagePath?: string;
   onNavigate: (route: string) => void;
 }) {
   const groupRef = useRef<THREE.Group>(null);
@@ -485,8 +611,8 @@ export function FractalObject({
         opacity={0.65}
       />
 
-      {/* Center octahedron with hero image */}
-      <CenterOctahedron imagePath={imagePath} onNavigate={onNavigate} />
+      {/* Center octahedron with per-face section textures */}
+      <CenterOctahedron onNavigate={onNavigate} />
 
       {/* 6 house nav nodes on outer octahedron vertices */}
       {OUTER_NAV_NODES.map((node) => (
