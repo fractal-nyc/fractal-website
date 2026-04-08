@@ -33,7 +33,7 @@ export function Campus() {
             <p className="font-serif text-lg text-white/80 mb-8 normal-case">
               Get in touch to book a space at Merlin's Place or cowork at Fractal Tech Hub.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
               <a
                 href="mailto:events@merlins.place"
                 className="inline-block max-w-xs w-full border border-foreground/20 rounded-md px-8 py-5 text-sm tracking-widest uppercase bg-foreground/[0.03] hover:bg-foreground/10 transition-colors duration-300 text-center relative overflow-hidden"

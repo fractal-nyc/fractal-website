@@ -33,7 +33,7 @@ export function LiberalArts() {
               {"Fractal University offers in-person, community sections of world-class courses, for fun. We have courses in AI, computer science, friendship + community, NYC government, cooking, mind-body sciences, and more."}
             </PretextParagraph>
 
-            <div className="flex flex-col sm:flex-row gap-4 mb-10">
+            <div className="flex flex-col sm:flex-row gap-4 mb-10 justify-center items-center">
               <a
                 href="https://fractaluniversity.substack.com/"
                 target="_blank"

@@ -10,7 +10,7 @@ export function EventsPage() {
     <main className="relative min-h-screen text-foreground selection:bg-foreground selection:text-background" style={{ backgroundColor: "#D4857A" }}>
       <FractalPattern color="#C13B2A" />
       <Navbar />
-      <div className="min-h-screen flex flex-col items-center justify-start pt-16 md:pt-24 w-full">
+      <div className="min-h-screen flex flex-col items-center justify-start pt-16 md:pt-24 pb-32 md:pb-48 w-full">
         <section className="w-full px-6 md:px-[4.5%] text-center">
           <SectorHeader letter="E" name="Events" color="#C13B2A" />
 

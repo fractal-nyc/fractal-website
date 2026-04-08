@@ -225,7 +225,6 @@ export function Navbar() {
                       href={link.href}
                       className="hover:opacity-70 transition-opacity font-serif"
                       style={{
-                        color: link.color,
                         fontSize: "18px",
                         fontWeight: 300,
                         fontStyle: "normal",
