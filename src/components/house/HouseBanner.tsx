@@ -115,7 +115,11 @@ export function HouseBanner({
           style={{ fontFamily: "'Jacquard 24', system-ui", color: letterColor }}
           aria-hidden="true"
         >
-          {(house.displayName ?? house.name).charAt(0)}
+          {house.id === "school"
+            ? "LA"
+            : house.id === "forum"
+              ? "PC"
+              : (house.displayName ?? house.name).charAt(0)}
         </span>
 
         {/* Tagline */}

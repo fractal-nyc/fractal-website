@@ -36,12 +36,12 @@ interface NavNode {
 // — these four cluster with the selected ones; skipping them gives the best spread.
 const NAV_NODES: NavNode[] = [
   { label: "Our Story",         route: "/story",            color: "#E07A5F", vertexIndex: 2  }, // top-left
-  { label: "Co-Living",         route: "/neighborhood",     color: "#8B7355", vertexIndex: 4  }, // upper-back
+  { label: "Neighborhood",      route: "/neighborhood",     color: "#8B7355", vertexIndex: 4  }, // upper-back
   { label: "Events",            route: "/events",           color: "#E07A5F", vertexIndex: 1  }, // upper-front
   { label: "Campus",            route: "/campus",           color: "#457B9D", vertexIndex: 6  }, // equator right-front
   { label: "New Liberal Arts",  route: "/new-liberal-arts", color: "#1D3557", vertexIndex: 5  }, // equator left-back
   { label: "Political Club",    route: "/political-club",   color: "#CC2936", vertexIndex: 10 }, // equator right-back
-  { label: "Lab",               route: "/lab",              color: "#6B4C9A", vertexIndex: 9  }, // lower-back
+  { label: "The Lab",           route: "/lab",              color: "#6B4C9A", vertexIndex: 9  }, // lower-back
   { label: "People",            route: "/people",           color: "#457B9D", vertexIndex: 8  }, // bottom-left
 ];
 
@@ -221,8 +221,10 @@ function tooltipStyle(borderColor: string): React.CSSProperties {
     borderRadius: 6,
     padding: "4px 10px",
     fontSize: 12,
-    fontFamily: "var(--font-body, system-ui)",
-    fontWeight: 500,
+    fontFamily: "'JetBrains Mono', monospace",
+    fontWeight: 300,
+    textTransform: "uppercase",
+    letterSpacing: "0.08em",
     whiteSpace: "nowrap",
     color: "#1a1a1a",
     transform: "translateY(-28px)",
