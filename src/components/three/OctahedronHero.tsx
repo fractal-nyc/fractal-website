@@ -369,8 +369,16 @@ function NavNodeMesh({
         emissiveIntensity={(hovered || revealed) ? 2.0 : 1.0}
       />
       {(hovered || revealed) && (
-        <Html center distanceFactor={8} style={{ pointerEvents: "none" }}>
-          <div style={tooltipStyle(node.color)}>{node.label}</div>
+        <Html center distanceFactor={8} style={{ pointerEvents: "auto" }}>
+          <div
+            style={{ ...tooltipStyle(node.color), cursor: "pointer" }}
+            onClick={(e) => {
+              e.stopPropagation();
+              onNavigate(node.route);
+            }}
+          >
+            {node.label}
+          </div>
         </Html>
       )}
     </mesh>
