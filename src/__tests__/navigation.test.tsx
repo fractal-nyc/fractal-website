@@ -134,12 +134,14 @@ describe("Home page navbar (full state)", () => {
   });
 
   it("should render mobile nav with abbreviated labels for long section names", () => {
-    // Mobile full navbar shows abbreviated: LA for New Liberal Arts, PC for Political Club
+    // Mobile full navbar shows abbreviated: LA for New Liberal Arts, PC for Political Club.
+    // Desktop NavLink also renders "PC" as the decorative first-letter span for Political
+    // Club (FRAC-126), so we scope the abbreviation lookups to the mobile section to
+    // assert only the mobile navbar rendering.
     const mobileSection = document.querySelector(".md\\:hidden");
     expect(mobileSection).toBeTruthy();
-    // Check for LA and PC abbreviations
-    expect(screen.getByText("LA")).toBeTruthy();
-    expect(screen.getByText("PC")).toBeTruthy();
+    expect(mobileSection!.textContent).toContain("LA");
+    expect(mobileSection!.textContent).toContain("PC");
   });
 });
 
