@@ -508,7 +508,13 @@ function CenterOctahedron({
           </Html>
         )}
       </mesh>
-      {/* Invisible enlarged hit target for easier tapping on mobile (FRAC-79) */}
+      {/* Invisible hit target — uses an octahedron geometry that matches the
+          visible model shape exactly (FRAC-144 fix). Previously this was a
+          sphere of radius 1.15 (FRAC-79's enlargement) which extended well
+          beyond the visible octahedron and intercepted taps that should
+          have hit the surrounding nav nodes. Matching the visible shape
+          (radius 1, same as the rendered octahedron) means the center is
+          tappable wherever it's drawn but doesn't dominate empty space. */}
       <mesh
         {...tapHandlers}
         onPointerOver={(e: ThreeEvent<PointerEvent>) => {
@@ -521,7 +527,7 @@ function CenterOctahedron({
           document.body.style.cursor = "auto";
         }}
       >
-        <sphereGeometry args={[1.15, 16, 16]} />
+        <octahedronGeometry args={[1, 0]} />
         <meshBasicMaterial visible={false} />
       </mesh>
     </group>
@@ -546,8 +552,27 @@ function NavNodeMesh({
   const [revealed, setRevealed] = useState(false);
   const revealedRef = useRef(false);
   const revealTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
+  // FRAC-144: 100ms grace timer for hide so the cursor can transition from
+  // mesh -> popup without flashing. Cleared on any pointer-enter (mesh or
+  // popup), set on any pointer-leave.
+  const hoverHideTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const phase = useRef(Math.random() * Math.PI * 2);
   const isTouchDevice = typeof window !== "undefined" && "ontouchstart" in window;
+
+  const cancelHoverHide = () => {
+    if (hoverHideTimer.current) {
+      clearTimeout(hoverHideTimer.current);
+      hoverHideTimer.current = null;
+    }
+  };
+
+  const scheduleHoverHide = () => {
+    cancelHoverHide();
+    hoverHideTimer.current = setTimeout(() => {
+      setHovered(false);
+      document.body.style.cursor = "auto";
+    }, 100);
+  };
 
   useFrame((_, delta) => {
     if (meshRef.current) {
@@ -591,8 +616,24 @@ function NavNodeMesh({
           emissiveIntensity={(hovered || revealed) ? 2.0 : 1.0}
         />
         {(hovered || revealed) && (
-          <Html center distanceFactor={8} style={{ pointerEvents: "none" }}>
-            <div style={tooltipStyle(node.color)}>
+          <Html center distanceFactor={8} style={{ pointerEvents: "auto" }}>
+            <div
+              style={{ ...tooltipStyle(node.color), cursor: "pointer" }}
+              onPointerEnter={() => {
+                // Cursor moved from mesh into the popup — keep it visible.
+                cancelHoverHide();
+                setHovered(true);
+              }}
+              onPointerLeave={() => {
+                // Cursor left the popup. Schedule hide; will be cancelled if
+                // the cursor returns to the mesh or the popup within 100ms.
+                scheduleHoverHide();
+              }}
+              onClick={(e) => {
+                e.stopPropagation();
+                onNavigate(node.route);
+              }}
+            >
               {node.label}
             </div>
           </Html>
@@ -603,12 +644,13 @@ function NavNodeMesh({
         {...tapHandlers}
         onPointerOver={(e: ThreeEvent<PointerEvent>) => {
           e.stopPropagation();
+          cancelHoverHide();
           setHovered(true);
           document.body.style.cursor = "pointer";
         }}
         onPointerOut={() => {
-          setHovered(false);
-          document.body.style.cursor = "auto";
+          // Schedule hide via grace timer (cancelled if popup is entered).
+          scheduleHoverHide();
         }}
       >
         <sphereGeometry args={[0.3, 8, 8]} />
