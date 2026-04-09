@@ -82,7 +82,7 @@ export function FractalCityScene({ onNavigate }: { onNavigate: (route: string) =
         <div
           ref={eventSourceRef}
           className="pointer-events-auto"
-          style={{ width: "min(80vmin, 500px)", aspectRatio: "3 / 4", touchAction: "pan-y" }}
+          style={{ width: "min(90vmin, 550px)", aspectRatio: "3 / 4", touchAction: "pan-y" }}
         />
       </div>
     </>
