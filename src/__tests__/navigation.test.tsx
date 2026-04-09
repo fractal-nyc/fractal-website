@@ -100,6 +100,19 @@ describe("Inner page navbar", () => {
     expect(button).toBeTruthy();
   });
 
+  it("should not render a duplicate close button inside the menu overlay (double-X regression)", () => {
+    // The menu overlay previously rendered its own fixed X close button in
+    // addition to the navbar header's toggle button. Because the navbar header
+    // sits above the overlay at z-50 and already switches its icon to X when
+    // the menu is open, the overlay's extra close button produced two X's
+    // visible simultaneously. The overlay must contain only the 8 section
+    // nav buttons — no additional close button.
+    const overlay = document.querySelector(".fixed.inset-0.z-40");
+    expect(overlay).toBeTruthy();
+    const buttons = overlay!.querySelectorAll("button");
+    expect(buttons.length).toBe(8);
+  });
+
   it("should render mobile nav links on inner pages", () => {
     // Mobile inner page header has a nav with flex-wrap links
     const mobileNav = document.querySelector(".md\\:hidden nav");
