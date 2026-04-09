@@ -508,7 +508,13 @@ function CenterOctahedron({
           </Html>
         )}
       </mesh>
-      {/* Invisible enlarged hit target for easier tapping on mobile (FRAC-79) */}
+      {/* Invisible hit target — uses an octahedron geometry that matches the
+          visible model shape exactly (FRAC-144 fix). Previously this was a
+          sphere of radius 1.15 (FRAC-79's enlargement) which extended well
+          beyond the visible octahedron and intercepted taps that should
+          have hit the surrounding nav nodes. Matching the visible shape
+          (radius 1, same as the rendered octahedron) means the center is
+          tappable wherever it's drawn but doesn't dominate empty space. */}
       <mesh
         {...tapHandlers}
         onPointerOver={(e: ThreeEvent<PointerEvent>) => {
@@ -521,7 +527,7 @@ function CenterOctahedron({
           document.body.style.cursor = "auto";
         }}
       >
-        <sphereGeometry args={[1.15, 16, 16]} />
+        <octahedronGeometry args={[1, 0]} />
         <meshBasicMaterial visible={false} />
       </mesh>
     </group>
