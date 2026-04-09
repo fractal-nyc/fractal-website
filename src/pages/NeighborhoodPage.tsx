@@ -11,6 +11,7 @@ export function NeighborhoodPage() {
   return (
     <main className="relative min-h-screen text-foreground selection:bg-foreground selection:text-background" style={{ backgroundColor: "#889460" }}>
       <FractalPattern color="#4A5A30" />
+      <div className="relative z-10">
       <Navbar />
       <div className="min-h-screen flex flex-col items-center justify-start pt-16 md:pt-24 pb-32 md:pb-48 w-full">
         <section className="w-full">
@@ -70,6 +71,7 @@ export function NeighborhoodPage() {
         </section>
       </div>
       <Footer />
+      </div>
     </main>
   );
 }

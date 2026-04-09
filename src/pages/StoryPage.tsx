@@ -200,6 +200,7 @@ export function StoryPage() {
   return (
     <main className="relative min-h-screen text-foreground selection:bg-foreground selection:text-background" style={{ backgroundColor: "#D4BA58" }}>
       <FractalPattern color="#8A7A20" />
+      <div className="relative z-10">
       <Navbar />
       <div>
         {/* Talks & Podcasts Section */}
@@ -332,6 +333,7 @@ export function StoryPage() {
       </section>
 
       <Footer />
+      </div>
     </main>
   );
 }
