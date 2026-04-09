@@ -96,7 +96,7 @@ describe("SectorHeader", () => {
       const { container } = render(
         <SectorHeader letter="S" name="Story" color="#8A7A20" />,
       );
-      const letterSpan = container.querySelector("span.block");
+      const letterSpan = container.querySelector<HTMLElement>("span.block");
       expect(letterSpan).toBeTruthy();
       expect(letterSpan!.style.fontFamily).toContain("Jacquard");
     });

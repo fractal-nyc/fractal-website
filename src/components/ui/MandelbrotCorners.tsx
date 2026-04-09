@@ -85,9 +85,12 @@ export function MandelbrotCorners({
   as: Comp = "div",
 }: MandelbrotCornersProps) {
   const { icon, inset } = sizeMap[size];
+  // Cast to a component type that accepts className + children so the
+  // polymorphic `as` prop doesn't narrow JSX children to `never`.
+  const Tag = Comp as React.ElementType<React.HTMLAttributes<HTMLElement>>;
 
   return (
-    <Comp className={cn("relative", className)}>
+    <Tag className={cn("relative", className)}>
       {children}
       {corners.map((corner, i) => (
         <span
@@ -108,6 +111,6 @@ export function MandelbrotCorners({
           <MandelbrotIcon size={icon} opacity={opacity} />
         </span>
       ))}
-    </Comp>
+    </Tag>
   );
 }
