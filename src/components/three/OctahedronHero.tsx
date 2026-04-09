@@ -4,6 +4,77 @@ import { Html } from "@react-three/drei";
 import * as THREE from "three";
 
 // ---------------------------------------------------------------------------
+// FRAC-124: Tap-vs-drag discriminator
+// ---------------------------------------------------------------------------
+// Rationale: FRAC-79 introduced enlarged invisible hit meshes that wrap the
+// center octahedron (r=1.15) and each nav node (r=0.3). Those meshes carried
+// `onClick` handlers. R3F v9 auto-calls `setPointerCapture` on the canvas DOM
+// element on `pointerdown` whenever a ray hit lands on a mesh with pointer
+// handlers. On iOS Safari, a captured pointer cancels the pending
+// `touch-action: pan-y` scroll for that finger — so vertical swipes over the
+// hero area stop scrolling the page (regression of FRAC-109).
+//
+// Fix: replace `onClick` with `onPointerDown`/`onPointerUp` and only fire the
+// tap callback if the pointer moved less than TAP_MOVE_PX and the press took
+// less than TAP_MAX_MS. On pointerdown we do NOT stopPropagation or call
+// setPointerCapture, so the browser's native scroll starts normally. If the
+// user actually drags (scrolls), pointerup arrives far from pointerdown and
+// the tap is ignored. If they genuinely tap, the callback fires.
+
+export const TAP_MOVE_PX = 10;
+export const TAP_MAX_MS = 350;
+
+export interface TapState {
+  x: number;
+  y: number;
+  t: number;
+}
+
+/**
+ * Pure classifier: given a pointer-down position/time and a pointer-up
+ * position/time, decide whether the gesture was a tap (small movement, short
+ * duration) rather than a swipe. Exported for unit tests.
+ */
+export function isTap(down: TapState, upX: number, upY: number, upT: number): boolean {
+  const dx = upX - down.x;
+  const dy = upY - down.y;
+  const dt = upT - down.t;
+  return Math.hypot(dx, dy) < TAP_MOVE_PX && dt < TAP_MAX_MS;
+}
+
+/**
+ * React hook: returns onPointerDown/onPointerUp handlers for an R3F mesh
+ * that fire `onTap` only when the gesture is a tap rather than a swipe.
+ *
+ * Critically, onPointerDown does NOT stopPropagation and does NOT call
+ * setPointerCapture — so iOS Safari's native `touch-action: pan-y` scroll
+ * starts immediately when a finger presses the canvas. Only on a confirmed
+ * tap at pointerup do we stopPropagation and fire the callback.
+ */
+export function useTapHandlers(onTap: () => void) {
+  const downRef = useRef<TapState | null>(null);
+  return {
+    onPointerDown: (e: ThreeEvent<PointerEvent>) => {
+      downRef.current = {
+        x: e.nativeEvent.clientX,
+        y: e.nativeEvent.clientY,
+        t: performance.now(),
+      };
+      // Do NOT stopPropagation / setPointerCapture — let native scroll start.
+    },
+    onPointerUp: (e: ThreeEvent<PointerEvent>) => {
+      const d = downRef.current;
+      downRef.current = null;
+      if (!d) return;
+      if (isTap(d, e.nativeEvent.clientX, e.nativeEvent.clientY, performance.now())) {
+        e.stopPropagation();
+        onTap();
+      }
+    },
+  };
+}
+
+// ---------------------------------------------------------------------------
 // Nav node definitions — 6 houses on octahedron vertices
 // ---------------------------------------------------------------------------
 
@@ -409,6 +480,12 @@ function CenterOctahedron({
     }
   });
 
+  // FRAC-124: Use tap-vs-drag discriminator instead of onClick so vertical
+  // swipes over the hero pass through to the page scroll.
+  const tapHandlers = useTapHandlers(() => {
+    onNavigate("/the-protocol");
+  });
+
   return (
     <group>
       {/* Visible center octahedron with per-face textures */}
@@ -419,12 +496,9 @@ function CenterOctahedron({
           </Html>
         )}
       </mesh>
-      {/* Invisible enlarged hit target for easier tapping on mobile */}
+      {/* Invisible enlarged hit target for easier tapping on mobile (FRAC-79) */}
       <mesh
-        onClick={(e: ThreeEvent<MouseEvent>) => {
-          e.stopPropagation();
-          onNavigate("/the-protocol");
-        }}
+        {...tapHandlers}
         onPointerOver={(e: ThreeEvent<PointerEvent>) => {
           e.stopPropagation();
           setHovered(true);
@@ -458,6 +532,7 @@ function NavNodeMesh({
   const meshRef = useRef<THREE.Mesh>(null);
   const [hovered, setHovered] = useState(false);
   const [revealed, setRevealed] = useState(false);
+  const revealedRef = useRef(false);
   const revealTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
   const phase = useRef(Math.random() * Math.PI * 2);
   const isTouchDevice = typeof window !== "undefined" && "ontouchstart" in window;
@@ -470,6 +545,27 @@ function NavNodeMesh({
       const s = meshRef.current.scale.x / pulse;
       meshRef.current.scale.setScalar((s + (target - s) * 0.15) * pulse);
     }
+  });
+
+  // FRAC-124: Use tap-vs-drag discriminator instead of onClick. The
+  // reveal-then-tap touch-device behavior from FRAC-79 is preserved — it
+  // simply runs inside the confirmed-tap callback now. We read reveal state
+  // from a ref rather than the closure-captured `revealed` so that a single
+  // stable handler object sees the latest value.
+  const tapHandlers = useTapHandlers(() => {
+    // Touch devices: first tap reveals label, second tap navigates
+    if (isTouchDevice && !revealedRef.current) {
+      revealedRef.current = true;
+      setRevealed(true);
+      // Auto-hide after 3 seconds
+      if (revealTimeout.current) clearTimeout(revealTimeout.current);
+      revealTimeout.current = setTimeout(() => {
+        revealedRef.current = false;
+        setRevealed(false);
+      }, 3000);
+      return;
+    }
+    onNavigate(node.route);
   });
 
   return (
@@ -496,20 +592,9 @@ function NavNodeMesh({
           </Html>
         )}
       </mesh>
-      {/* Invisible enlarged hit target for easier tapping on mobile */}
+      {/* Invisible enlarged hit target for easier tapping on mobile (FRAC-79) */}
       <mesh
-        onClick={(e: ThreeEvent<MouseEvent>) => {
-          e.stopPropagation();
-          // Touch devices: first tap reveals label, second tap navigates
-          if (isTouchDevice && !revealed) {
-            setRevealed(true);
-            // Auto-hide after 3 seconds
-            if (revealTimeout.current) clearTimeout(revealTimeout.current);
-            revealTimeout.current = setTimeout(() => setRevealed(false), 3000);
-            return;
-          }
-          onNavigate(node.route);
-        }}
+        {...tapHandlers}
         onPointerOver={(e: ThreeEvent<PointerEvent>) => {
           e.stopPropagation();
           setHovered(true);

@@ -32,6 +32,12 @@ export function FractalCityScene({ onNavigate }: { onNavigate: (route: string) =
         onCreated={({ gl }) => {
           gl.toneMapping = THREE.NoToneMapping;
           gl.setClearColor(0x000000, 0);
+          // FRAC-124: Belt-and-suspenders — apply touchAction directly to the
+          // canvas element. R3F sets touchAction on its wrapper div, but when
+          // a pointer is captured on the canvas (e.g. by onClick hit meshes),
+          // iOS Safari consults the canvas element's own touch-action, not
+          // the parent's — so the hint needs to live on both.
+          gl.domElement.style.touchAction = "pan-y";
         }}
       >
         <SceneLighting />
