@@ -31,6 +31,13 @@ function HeroPoster({
   fading: boolean;
   onTransitionEnd: () => void;
 }) {
+  // FRAC-150: remove the static boot poster (rendered directly in index.html
+  // body before React mounts) once React's HeroPoster has committed to the
+  // DOM. Both imgs are at identical positions so the swap is invisible.
+  useEffect(() => {
+    document.getElementById("boot-hero-poster")?.remove();
+  }, []);
+
   return (
     <div
       className={`absolute inset-0 z-[3] flex items-center justify-center pointer-events-none transition-opacity duration-300 motion-reduce:duration-0 ${fading ? "opacity-0" : "opacity-100"}`}
