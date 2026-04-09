@@ -1,13 +1,7 @@
-import { useState, Suspense, lazy } from "react";
+import { useState } from "react";
 import { motion, useScroll, useMotionValueEvent } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import { Link, useLocation } from "wouter";
-
-const FractalCityScene = lazy(() =>
-  import("@/components/three/FractalCityScene").then((m) => ({
-    default: m.FractalCityScene,
-  }))
-);
 
 const sectionLinks = [
   { name: "Story", href: "/story", color: "#D4BA58" },
@@ -313,7 +307,7 @@ export function Navbar() {
         )}
       </motion.header>
 
-      {/* Menu overlay — WebGL model only, full screen */}
+      {/* Menu overlay — vertical list of section pages */}
       <motion.div
         initial={false}
         animate={mobileMenuOpen ? "open" : "closed"}
@@ -322,30 +316,59 @@ export function Navbar() {
           closed: { opacity: 0, pointerEvents: "none" as const },
         }}
         transition={{ duration: 0.3, ease: "easeInOut" }}
-        className="fixed inset-0 z-40 bg-background"
+        className="fixed inset-0 z-40 bg-background overflow-y-auto"
       >
         {/* Close button — aligned with hamburger position */}
         <button
           className="fixed top-0 right-0 z-50 p-2 -mr-2 text-foreground h-20 flex items-center"
           style={{ right: "4.5%" }}
           onClick={() => setMobileMenuOpen(false)}
+          aria-label="Close menu"
         >
           <X size={24} />
         </button>
 
-        {/* Centered WebGL model */}
-        <div className="relative w-full h-full">
-          {mobileMenuOpen && (
-            <Suspense fallback={null}>
-              <FractalCityScene
-                onNavigate={(route) => {
+        {/* Section page list */}
+        <nav className="flex flex-col w-full pt-24 pb-8 px-6 max-w-md mx-auto">
+          {sectionLinks.map((link) => {
+            const letter =
+              link.name === "New Liberal Arts"
+                ? "LA"
+                : link.name === "Political Club"
+                  ? "PC"
+                  : link.name[0];
+            return (
+              <button
+                key={link.name}
+                type="button"
+                onClick={() => {
+                  setLocation(link.href);
                   setMobileMenuOpen(false);
-                  setLocation(route);
                 }}
-              />
-            </Suspense>
-          )}
-        </div>
+                className="flex items-center gap-5 min-h-[56px] py-3 border-b border-foreground/10 hover:bg-foreground/5 transition-colors text-left"
+                style={{ borderLeft: `3px solid ${link.color}`, paddingLeft: "16px" }}
+              >
+                <span
+                  style={{
+                    fontFamily: "'Jacquard 24', system-ui",
+                    fontSize: "36px",
+                    lineHeight: 1,
+                    color: link.color,
+                    minWidth: "44px",
+                  }}
+                >
+                  {letter}
+                </span>
+                <span
+                  className="font-mono uppercase tracking-wider text-foreground"
+                  style={{ fontSize: "14px", letterSpacing: "0.08em" }}
+                >
+                  {link.name}
+                </span>
+              </button>
+            );
+          })}
+        </nav>
       </motion.div>
     </>
   );
