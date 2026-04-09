@@ -11,6 +11,7 @@ export function PeoplePage() {
   return (
     <main className="relative min-h-screen text-foreground selection:bg-foreground selection:text-background" style={{ backgroundColor: "#C49040" }}>
       <FractalPattern color="#B65D19" />
+      <div className="relative z-10">
       <Navbar />
       <div className="min-h-screen flex flex-col items-center justify-start pt-16 md:pt-24 pb-32 md:pb-48 w-full">
         <section className="w-full">
@@ -42,6 +43,7 @@ export function PeoplePage() {
         </section>
       </div>
       <Footer />
+      </div>
     </main>
   );
 }

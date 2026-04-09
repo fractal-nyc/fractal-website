@@ -9,6 +9,7 @@ export function PoliticalClubPage() {
   return (
     <main className="relative min-h-screen text-white selection:bg-white selection:text-[#6E1830]" style={{ backgroundColor: "#6E1830" }}>
       <FractalPattern color="#C83858" />
+      <div className="relative z-10">
       <Navbar />
       <div className="min-h-screen flex flex-col items-center justify-start pt-16 md:pt-24 pb-32 md:pb-48 w-full">
         <section className="w-full">
@@ -32,6 +33,7 @@ export function PoliticalClubPage() {
         </section>
       </div>
       <Footer />
+      </div>
     </main>
   );
 }

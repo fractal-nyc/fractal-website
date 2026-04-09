@@ -5,11 +5,13 @@ import { FractalPattern } from "@/components/ui/FractalPattern";
 
 export function LiberalArtsPage() {
   return (
-    <main className="relative min-h-screen text-white selection:bg-white selection:text-[#8B1A1A]" style={{ backgroundColor: "#8B1A1A" }}>
-      <FractalPattern color="#E63636" />
-      <Navbar />
-      <LiberalArts />
-      <Footer />
+    <main className="relative min-h-screen text-white selection:bg-white selection:text-[#5C1010]" style={{ backgroundColor: "#5C1010" }}>
+      <FractalPattern color="#B52828" />
+      <div className="relative z-10">
+        <Navbar />
+        <LiberalArts />
+        <Footer />
+      </div>
     </main>
   );
 }
