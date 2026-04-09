@@ -70,14 +70,19 @@ export function FractalCityScene({ onNavigate }: { onNavigate: (route: string) =
 
       {/* Centered hit-target box. Only this region catches touches/clicks for
           the model. Everything else in the hero (above, below, sides) falls
-          through to the body and scrolls. */}
+          through to the body and scrolls.
+          The box is *taller than wide* (aspect 3:4) because the outer
+          octahedron's top/bottom vertices project to the vertical extremes
+          of the model's screen footprint and a square box was clipping them
+          right at the edge. The extra vertical room gives those top/bottom
+          nav nodes some tap forgiveness. */}
       <div
-        className="absolute inset-x-0 top-20 bottom-24 z-[2] flex items-center justify-center pointer-events-none"
+        className="absolute inset-x-0 top-16 bottom-20 z-[2] flex items-center justify-center pointer-events-none"
       >
         <div
           ref={eventSourceRef}
           className="pointer-events-auto"
-          style={{ width: "min(80vmin, 500px)", aspectRatio: "1 / 1", touchAction: "pan-y" }}
+          style={{ width: "min(80vmin, 500px)", aspectRatio: "3 / 4", touchAction: "pan-y" }}
         />
       </div>
     </>
