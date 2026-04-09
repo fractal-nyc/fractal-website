@@ -263,12 +263,16 @@ function StreamingCrossConnections({
 // Per-face section definitions for the center octahedron
 // ---------------------------------------------------------------------------
 
-// Banner images (4 of 6 sections have images)
+// Banner images — all 8 sections have images
 const FACE_BANNER_IMAGES: Record<string, string> = {
-  lab:          "/images/banners/lab.jpeg",
-  forum:        "/images/banners/political-club.jpeg",
+  story:        "/images/banners/story.jpeg",
+  campus:       "/images/banners/campus.jpeg",
   neighborhood: "/images/banners/neighborhood.jpeg",
-  school:       "/images/banners/new-liberal-arts.png",
+  events:       "/images/banners/events.jpeg",
+  school:       "/images/banners/new-liberal-arts.jpeg",
+  forum:        "/images/banners/political-club.jpeg",
+  lab:          "/images/banners/lab.jpeg",
+  people:       "/images/banners/people.jpeg",
 };
 
 // Section colors — all 8 sections matching navbar colors
@@ -348,20 +352,28 @@ function usePerFaceOctahedronGeometry(radius: number) {
  * image exists, solid-color otherwise.
  */
 function usePerFaceMaterials() {
-  // Load all 4 banner textures
-  const labTex = useLoader(THREE.TextureLoader, FACE_BANNER_IMAGES.lab);
-  const forumTex = useLoader(THREE.TextureLoader, FACE_BANNER_IMAGES.forum);
+  // Load all 8 banner textures
+  const storyTex = useLoader(THREE.TextureLoader, FACE_BANNER_IMAGES.story);
+  const campusTex = useLoader(THREE.TextureLoader, FACE_BANNER_IMAGES.campus);
   const neighborhoodTex = useLoader(THREE.TextureLoader, FACE_BANNER_IMAGES.neighborhood);
+  const eventsTex = useLoader(THREE.TextureLoader, FACE_BANNER_IMAGES.events);
   const schoolTex = useLoader(THREE.TextureLoader, FACE_BANNER_IMAGES.school);
+  const forumTex = useLoader(THREE.TextureLoader, FACE_BANNER_IMAGES.forum);
+  const labTex = useLoader(THREE.TextureLoader, FACE_BANNER_IMAGES.lab);
+  const peopleTex = useLoader(THREE.TextureLoader, FACE_BANNER_IMAGES.people);
 
   const textureMap: Record<string, THREE.Texture> = useMemo(
     () => ({
-      lab: labTex,
-      forum: forumTex,
+      story: storyTex,
+      campus: campusTex,
       neighborhood: neighborhoodTex,
+      events: eventsTex,
       school: schoolTex,
+      forum: forumTex,
+      lab: labTex,
+      people: peopleTex,
     }),
-    [labTex, forumTex, neighborhoodTex, schoolTex],
+    [storyTex, campusTex, neighborhoodTex, eventsTex, schoolTex, forumTex, labTex, peopleTex],
   );
 
   return useMemo(() => {
