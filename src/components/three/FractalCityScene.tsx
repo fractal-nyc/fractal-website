@@ -47,7 +47,7 @@ export function FractalCityScene({ onNavigate }: { onNavigate: (route: string) =
           enablePan={false}
           rotateSpeed={0.5}
           target={[0, 0.35, 0]}
-          touches={{ ONE: TOUCH.NONE, TWO: TOUCH.DOLLY_ROTATE }}
+          touches={{ ONE: TOUCH.ROTATE, TWO: TOUCH.DOLLY_ROTATE }}
         />
       </Canvas>
     </div>
