@@ -1,3 +1,4 @@
+import { useRef } from "react";
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
 import * as THREE from "three";
@@ -22,35 +23,36 @@ function SceneLighting() {
 export function FractalCityScene({ onNavigate }: { onNavigate: (route: string) => void }) {
   const imagePath = `${import.meta.env.BASE_URL}images/fractal-university.png`;
 
-  // FRAC-144: Wrap the Canvas in a centered box that does NOT fill the hero.
-  // The outer positioning layer uses pointer-events-none so touches in the
-  // gutters (above/below/left/right of the box) fall through to the hero
-  // section and let the browser scroll. The inner box re-enables pointer
-  // events just over the canvas itself, where OrbitControls + mesh hit
-  // handlers live. This restores scroll passthrough on the navbar area and
-  // the sides/corners of the hero without sacrificing model interactivity.
+  // FRAC-144: Use react-three-fiber's eventSource prop to decouple the
+  // canvas's visual size from its event-capture region.
+  //
+  // - Canvas itself is FULL-BLEED so the 3D model renders at full size.
+  // - When `eventSource` is set, R3F automatically applies
+  //   `pointer-events: none` to the canvas wrapper, so touches on the
+  //   canvas pass through to whatever is below it.
+  // - R3F listens for pointer events on the eventSourceRef element
+  //   instead — a smaller centered div positioned over the model's
+  //   visible area. Touches inside that div are dispatched to mesh hit
+  //   handlers; touches outside fall through and scroll the page.
+  // - OrbitControls receives the same div as its `domElement` so the
+  //   user-driven one-finger orbit (FRAC-143) keeps working inside the
+  //   centered area.
+  const eventSourceRef = useRef<HTMLDivElement>(null);
+
   return (
-    <div
-      className="absolute inset-x-0 top-20 bottom-24 flex items-center justify-center z-[1] pointer-events-none"
-    >
-      <div
-        className="pointer-events-auto aspect-square w-full"
-        style={{ maxWidth: "min(90vw, 600px)" }}
-      >
+    <>
+      {/* Full-bleed visual canvas. eventSource decouples hit-testing from this. */}
+      <div className="absolute inset-0 z-[1]">
         <Canvas
           camera={{ position: [0, 0.8, 8], fov: 50, near: 0.1, far: 100 }}
           dpr={[1, 2]}
           gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
-          style={{ background: "transparent", touchAction: "pan-y" }}
+          eventSource={eventSourceRef as React.RefObject<HTMLElement>}
+          eventPrefix="client"
+          style={{ background: "transparent" }}
           onCreated={({ gl }) => {
             gl.toneMapping = THREE.NoToneMapping;
             gl.setClearColor(0x000000, 0);
-            // FRAC-124: Belt-and-suspenders — apply touchAction directly to the
-            // canvas element. R3F sets touchAction on its wrapper div, but when
-            // a pointer is captured on the canvas (e.g. by onClick hit meshes),
-            // iOS Safari consults the canvas element's own touch-action, not
-            // the parent's — so the hint needs to live on both.
-            gl.domElement.style.touchAction = "pan-y";
           }}
         >
           <SceneLighting />
@@ -61,9 +63,23 @@ export function FractalCityScene({ onNavigate }: { onNavigate: (route: string) =
             rotateSpeed={0.5}
             target={[0, 0.35, 0]}
             touches={{ ONE: TOUCH.ROTATE, TWO: TOUCH.DOLLY_ROTATE }}
+            domElement={eventSourceRef.current ?? undefined}
           />
         </Canvas>
       </div>
-    </div>
+
+      {/* Centered hit-target box. Only this region catches touches/clicks for
+          the model. Everything else in the hero (above, below, sides) falls
+          through to the body and scrolls. */}
+      <div
+        className="absolute inset-x-0 top-20 bottom-24 z-[2] flex items-center justify-center pointer-events-none"
+      >
+        <div
+          ref={eventSourceRef}
+          className="pointer-events-auto"
+          style={{ width: "min(80vmin, 500px)", aspectRatio: "1 / 1", touchAction: "pan-y" }}
+        />
+      </div>
+    </>
   );
 }
