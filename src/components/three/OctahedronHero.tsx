@@ -1,5 +1,5 @@
-import { useRef, useMemo, useState } from "react";
-import { useFrame, useLoader, ThreeEvent } from "@react-three/fiber";
+import { useRef, useMemo, useState, useEffect } from "react";
+import { useFrame, ThreeEvent } from "@react-three/fiber";
 import { Html } from "@react-three/drei";
 import * as THREE from "three";
 
@@ -420,32 +420,56 @@ function usePerFaceOctahedronGeometry(radius: number) {
 
 /**
  * Build the array of 8 materials (one per face) — textured where a banner
- * image exists, solid-color otherwise.
+ * image has loaded, solid-color placeholder otherwise.
+ *
+ * FRAC-127 Cycle 2: this hook used to call `useLoader(THREE.TextureLoader, ...)`
+ * for all 8 banners. That suspends until every texture downloads, and
+ * react-three-fiber's <Canvas> delays the FIRST WebGL frame flush until
+ * every suspending child resolves — regardless of nested <Suspense>
+ * boundaries inside the Canvas tree (empirically confirmed in Cycle 1,
+ * PR #100). On Slow 3G that means ~50s of blank canvas before ANY part of
+ * the scene (wireframes, edges, nav nodes, streaming text) renders.
+ *
+ * The fix: bypass React Suspense entirely. Use `THREE.TextureLoader.loadAsync()`
+ * inside `useEffect`, store resolved textures in `useState`, and build the
+ * materials array every render — solid-color `MeshBasicMaterial` for keys
+ * without a texture yet, textured `MeshBasicMaterial` once the texture
+ * arrives. The center octahedron now renders in frame 0 with placeholder
+ * colored faces, and upgrades to textured faces in a subsequent paint when
+ * each JPEG/PNG finishes downloading.
  */
 function usePerFaceMaterials() {
-  // Load all 8 banner textures
-  const storyTex = useLoader(THREE.TextureLoader, FACE_BANNER_IMAGES.story);
-  const campusTex = useLoader(THREE.TextureLoader, FACE_BANNER_IMAGES.campus);
-  const neighborhoodTex = useLoader(THREE.TextureLoader, FACE_BANNER_IMAGES.neighborhood);
-  const eventsTex = useLoader(THREE.TextureLoader, FACE_BANNER_IMAGES.events);
-  const schoolTex = useLoader(THREE.TextureLoader, FACE_BANNER_IMAGES.school);
-  const forumTex = useLoader(THREE.TextureLoader, FACE_BANNER_IMAGES.forum);
-  const labTex = useLoader(THREE.TextureLoader, FACE_BANNER_IMAGES.lab);
-  const peopleTex = useLoader(THREE.TextureLoader, FACE_BANNER_IMAGES.people);
+  const [textures, setTextures] = useState<Record<string, THREE.Texture>>({});
 
-  const textureMap: Record<string, THREE.Texture> = useMemo(
-    () => ({
-      story: storyTex,
-      campus: campusTex,
-      neighborhood: neighborhoodTex,
-      events: eventsTex,
-      school: schoolTex,
-      forum: forumTex,
-      lab: labTex,
-      people: peopleTex,
-    }),
-    [storyTex, campusTex, neighborhoodTex, eventsTex, schoolTex, forumTex, labTex, peopleTex],
-  );
+  useEffect(() => {
+    let cancelled = false;
+    const loader = new THREE.TextureLoader();
+
+    // Load each banner independently — a slow one shouldn't hold back faster
+    // ones. Each resolution triggers a state update that upgrades the single
+    // corresponding face from solid-color placeholder to textured.
+    for (const [key, path] of Object.entries(FACE_BANNER_IMAGES)) {
+      loader
+        .loadAsync(path)
+        .then((tex) => {
+          if (cancelled) {
+            tex.dispose();
+            return;
+          }
+          setTextures((prev) => ({ ...prev, [key]: tex }));
+        })
+        .catch((err) => {
+          // Swallow individual texture failures — the face stays in its
+          // solid-color placeholder state, which is a graceful degradation.
+          // eslint-disable-next-line no-console
+          console.warn(`[OctahedronHero] Failed to load banner ${path}:`, err);
+        });
+    }
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   return useMemo(() => {
     return FACE_SECTION_MAP.map((sectionKey) => {
@@ -453,11 +477,11 @@ function usePerFaceMaterials() {
         return new THREE.MeshBasicMaterial({ color: "#c4a265" });
       }
 
-      const tex = textureMap[sectionKey];
+      const tex = textures[sectionKey];
       const color = FACE_SECTION_COLORS[sectionKey] ?? "#c4a265";
 
       if (tex) {
-        // Textured face — show the banner image
+        // Textured face — show the banner image once it has loaded.
         return new THREE.MeshBasicMaterial({
           map: tex,
           color: "#ffffff",
@@ -465,13 +489,14 @@ function usePerFaceMaterials() {
         });
       }
 
-      // Solid color face for sections without a banner image
+      // Solid-color placeholder face — rendered in frame 0 while the banner
+      // texture is still downloading (or permanently, if the load failed).
       return new THREE.MeshBasicMaterial({
         color,
         side: THREE.FrontSide,
       });
     });
-  }, [textureMap]);
+  }, [textures]);
 }
 
 function CenterOctahedron({
