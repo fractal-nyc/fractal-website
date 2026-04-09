@@ -33,7 +33,7 @@ export function HouseBannerGrid({ className = "" }: HouseBannerGridProps) {
             <FadeIn key={house.id} delay={index * 0.08}>
               <Link
                 href={house.route}
-                className="block transition-transform duration-300 hover:scale-[1.02] hover:shadow-lg rounded-sm"
+                className="block transition-transform duration-300 hover:scale-[1.02] hover:[filter:drop-shadow(0_8px_12px_rgb(0_0_0/0.15))] rounded-sm"
               >
                 <HouseBanner house={house} variant="grid" />
               </Link>
