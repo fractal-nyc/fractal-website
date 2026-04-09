@@ -40,7 +40,9 @@ const BANNER_IMAGES: Record<string, string> = {
   lab:          "/images/banners/lab.jpeg",
   forum:        "/images/banners/political-club.jpeg",
   neighborhood: "/images/banners/neighborhood.jpeg",
-  school:       "/images/banners/new-liberal-arts.png",
+  school:       "/images/banners/new-liberal-arts.jpeg",
+  campus:       "/images/banners/campus.jpeg",
+  events:       "/images/banners/events.jpeg",
 };
 
 // ---------------------------------------------------------------------------
