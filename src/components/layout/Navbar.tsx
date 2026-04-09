@@ -318,16 +318,6 @@ export function Navbar() {
         transition={{ duration: 0.3, ease: "easeInOut" }}
         className="fixed inset-0 z-40 bg-background overflow-y-auto"
       >
-        {/* Close button — aligned with hamburger position */}
-        <button
-          className="fixed top-0 right-0 z-50 p-2 -mr-2 text-foreground h-20 flex items-center"
-          style={{ right: "4.5%" }}
-          onClick={() => setMobileMenuOpen(false)}
-          aria-label="Close menu"
-        >
-          <X size={24} />
-        </button>
-
         {/* Section page list */}
         <nav className="flex flex-col w-full pt-24 pb-8 px-6 max-w-md mx-auto">
           {sectionLinks.map((link) => {
