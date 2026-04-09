@@ -43,8 +43,9 @@ const RIGHT_TEXT =
   "we believe small groups who share context deeply & build agentic tools for each other can move dramatically faster than individuals working alone, so We embrace experimentation, joyful cyborgism & fun-first collaboration to solve problems together with friends.";
 
 function NavLink({ name, href, color }: { name: string; href: string; color: string }) {
-  const first = name[0];
-  const rest = name.slice(1);
+  const isPoliticalClub = name === "Political Club";
+  const first = isPoliticalClub ? "PC" : name[0];
+  const rest = isPoliticalClub ? "olitical Club" : name.slice(1);
   return (
     <Link href={href} className="hover:opacity-70 transition-opacity" style={{ color }}>
       <span
