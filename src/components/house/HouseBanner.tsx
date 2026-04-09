@@ -56,6 +56,20 @@ const OVERLAY_OPACITY: Record<string, number> = {
 const DEFAULT_OVERLAY_OPACITY = 0.45;
 
 // ---------------------------------------------------------------------------
+// Monogram letters per house — explicit map so displayName changes don't
+// silently break the banner letter (FRAC-139).
+// ---------------------------------------------------------------------------
+
+const HOUSE_LETTERS: Record<string, string> = {
+  neighborhood: "N",
+  events: "E",
+  campus: "C",
+  school: "LA",
+  forum: "PC",
+  lab: "L",
+};
+
+// ---------------------------------------------------------------------------
 // HouseBanner
 // ---------------------------------------------------------------------------
 
@@ -127,11 +141,7 @@ export function HouseBanner({
           style={{ fontFamily: "'Jacquard 24', system-ui", color: letterColor }}
           aria-hidden="true"
         >
-          {house.id === "school"
-            ? "LA"
-            : house.id === "forum"
-              ? "PC"
-              : (house.displayName ?? house.name).charAt(0)}
+          {HOUSE_LETTERS[house.id] ?? (house.displayName ?? house.name).charAt(0)}
         </span>
 
         {/* Tagline */}
