@@ -148,9 +148,10 @@ describe("Home page navbar (full state)", () => {
 
   it("should render mobile nav with abbreviated labels for long section names", () => {
     // Mobile full navbar shows abbreviated: LA for New Liberal Arts, PC for Political Club.
-    // Desktop NavLink also renders "PC" as the decorative first-letter span for Political
-    // Club (FRAC-126), so we scope the abbreviation lookups to the mobile section to
-    // assert only the mobile navbar rendering.
+    // Desktop NavLink (FRAC-160) renders the full multi-word name with a Jacquard cap
+    // on each word's first letter, so desktop textContent reads "Political Club" /
+    // "New Liberal Arts" and does not contain the "PC"/"LA" substrings. We still scope
+    // the abbreviation lookups to the mobile section for clarity.
     const mobileSection = document.querySelector(".md\\:hidden");
     expect(mobileSection).toBeTruthy();
     expect(mobileSection!.textContent).toContain("LA");
