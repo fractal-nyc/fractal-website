@@ -152,6 +152,11 @@ describe("Home page navbar (full state)", () => {
     // Mobile + tablet full navbar shows abbreviated: LA for New Liberal Arts,
     // PC for Political Club. FRAC-158 raised the mobile-stack breakpoint from
     // md to lg so the mobile layout now covers viewports up to 1023px.
+    // Desktop NavLink (FRAC-160) renders the full multi-word name with a
+    // Jacquard cap on each word's first letter, so desktop textContent reads
+    // "Political Club" / "New Liberal Arts" and does not contain the
+    // "PC"/"LA" substrings — we scope the abbreviation lookups to the mobile
+    // section for clarity.
     const mobileSection = document.querySelector(".lg\\:hidden");
     expect(mobileSection).toBeTruthy();
     expect(mobileSection!.textContent).toContain("LA");

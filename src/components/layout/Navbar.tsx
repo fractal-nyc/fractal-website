@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { Fragment, useState } from "react";
 import { motion, useScroll, useMotionValueEvent } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import { Link, useLocation } from "wouter";
@@ -38,52 +38,52 @@ const RIGHT_TEXT =
   "we believe small groups who share context deeply & build agentic tools for each other can move dramatically faster than individuals working alone, so We embrace experimentation, joyful cyborgism & fun-first collaboration to solve problems together with friends.";
 
 function NavLink({ name, href, color }: { name: string; href: string; color: string }) {
-  const isPoliticalClub = name === "Political Club";
-  if (isPoliticalClub) {
-    return (
-      <Link
-        href={href}
-        className="hover:opacity-70 transition-opacity"
-        style={{ color }}
-        aria-label="Political Club"
-      >
-        <span
-          style={{
-            fontFamily: "'Jacquard 24', system-ui",
-            fontSize: "38px",
-            lineHeight: 1,
-          }}
-        >
-          PC
-        </span>
-      </Link>
-    );
-  }
-  const first = name[0];
-  const rest = name.slice(1);
+  // Render each word's leading cap in Jacquard 24 (38px) and the remainder in
+  // light serif (22px). Multi-word labels like "New Liberal Arts" and
+  // "Political Club" therefore get a Jacquard cap on every word's first
+  // letter; single-word labels are unchanged.
+  const words = name.split(" ");
   return (
     <Link href={href} className="hover:opacity-70 transition-opacity" style={{ color }}>
-      <span
-        style={{
-          fontFamily: "'Jacquard 24', system-ui",
-          fontSize: "38px",
-          lineHeight: 1,
-        }}
-      >
-        {first}
-      </span>
-      <span
-        className="font-serif"
-        style={{
-          fontSize: "22px",
-          lineHeight: 1,
-          textTransform: "none",
-          fontStyle: "normal",
-          fontWeight: 300,
-        }}
-      >
-        {rest}
-      </span>
+      {words.map((word, i) => (
+        <Fragment key={i}>
+          {i > 0 && (
+            <span
+              className="font-serif"
+              style={{
+                fontSize: "22px",
+                lineHeight: 1,
+                textTransform: "none",
+                fontStyle: "normal",
+                fontWeight: 300,
+              }}
+            >
+              {"\u00A0"}
+            </span>
+          )}
+          <span
+            style={{
+              fontFamily: "'Jacquard 24', system-ui",
+              fontSize: "38px",
+              lineHeight: 1,
+            }}
+          >
+            {word[0]}
+          </span>
+          <span
+            className="font-serif"
+            style={{
+              fontSize: "22px",
+              lineHeight: 1,
+              textTransform: "none",
+              fontStyle: "normal",
+              fontWeight: 300,
+            }}
+          >
+            {word.slice(1)}
+          </span>
+        </Fragment>
+      ))}
     </Link>
   );
 }
