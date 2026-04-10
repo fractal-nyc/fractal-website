@@ -22,10 +22,8 @@ function SceneLighting() {
 
 export function FractalCityScene({
   onNavigate,
-  onReady,
 }: {
   onNavigate: (route: string) => void;
-  onReady?: () => void;
 }) {
   const imagePath = `${import.meta.env.BASE_URL}images/fractal-university.png`;
 
@@ -59,17 +57,6 @@ export function FractalCityScene({
           onCreated={({ gl }) => {
             gl.toneMapping = THREE.NoToneMapping;
             gl.setClearColor(0x000000, 0);
-            // FRAC-145: signal Hero to fade the static poster.
-            // onCreated fires when the WebGL context is initialized, but
-            // the first frame may not have flushed yet. Wait two rAF
-            // ticks: one for r3f's first useFrame loop to run, one more
-            // to ensure the GPU has presented the resulting frame to the
-            // compositor.
-            if (onReady) {
-              requestAnimationFrame(() => {
-                requestAnimationFrame(onReady);
-              });
-            }
           }}
         >
           <SceneLighting />
