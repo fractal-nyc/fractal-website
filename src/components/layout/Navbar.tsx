@@ -38,8 +38,28 @@ const RIGHT_TEXT =
 
 function NavLink({ name, href, color }: { name: string; href: string; color: string }) {
   const isPoliticalClub = name === "Political Club";
-  const first = isPoliticalClub ? "PC" : name[0];
-  const rest = isPoliticalClub ? "olitical Club" : name.slice(1);
+  if (isPoliticalClub) {
+    return (
+      <Link
+        href={href}
+        className="hover:opacity-70 transition-opacity"
+        style={{ color }}
+        aria-label="Political Club"
+      >
+        <span
+          style={{
+            fontFamily: "'Jacquard 24', system-ui",
+            fontSize: "38px",
+            lineHeight: 1,
+          }}
+        >
+          PC
+        </span>
+      </Link>
+    );
+  }
+  const first = name[0];
+  const rest = name.slice(1);
   return (
     <Link href={href} className="hover:opacity-70 transition-opacity" style={{ color }}>
       <span
