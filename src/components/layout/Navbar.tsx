@@ -2,6 +2,7 @@ import { useState } from "react";
 import { motion, useScroll, useMotionValueEvent } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import { Link, useLocation } from "wouter";
+import { JustifiedParagraph } from "@/components/typeset/JustifiedParagraph";
 
 const sectionLinks = [
   { name: "Story", href: "/story", color: "#D4BA58" },
@@ -128,16 +129,20 @@ export function Navbar() {
       >
         {showFull ? (
           <>
-            {/* Full desktop navbar */}
-            <div className="relative py-5 max-md:hidden" style={{ paddingLeft: "4.5%", paddingRight: "4.5%" }}>
+            {/* Full desktop navbar — shown at >= 1024px (lg). The 3-col grid
+                cannot fit smaller widths without overflow, so tablets get the
+                mobile layout below until lg. */}
+            <div className="relative py-5 max-lg:hidden" style={{ paddingLeft: "4.5%", paddingRight: "4.5%" }}>
               <div className="grid grid-cols-[1fr_auto_1fr] items-end gap-6">
-                <div className="flex flex-col gap-2">
-                  <p
-                    className="font-mono text-justify uppercase font-thin"
-                    style={{ fontSize: "13px", lineHeight: 1.4, letterSpacing: "0.01em" }}
-                  >
-                    {LEFT_TEXT}
-                  </p>
+                <div className="flex flex-col gap-2 min-w-0">
+                  <JustifiedParagraph
+                    text={LEFT_TEXT}
+                    fontFamily="'JetBrains Mono'"
+                    fontSize={13}
+                    lineHeight={18}
+                    uppercase
+                    className="font-thin"
+                  />
                   <nav className="flex items-baseline justify-between">
                     {leftLinks.map((link) => (
                       <NavLink key={link.name} {...link} />
@@ -145,7 +150,7 @@ export function Navbar() {
                   </nav>
                 </div>
 
-                <Link href="/" className="text-center leading-[1.1] tracking-tighter">
+                <Link href="/" className="text-center leading-[1.1] tracking-tighter min-w-0">
                   <span
                     className="block"
                     style={{ fontFamily: "'Jacquard 24', system-ui", fontSize: "82px" }}
@@ -160,13 +165,15 @@ export function Navbar() {
                   </span>
                 </Link>
 
-                <div className="flex flex-col gap-2">
-                  <p
-                    className="font-mono text-justify uppercase font-thin"
-                    style={{ fontSize: "13px", lineHeight: 1.4, letterSpacing: "0.01em" }}
-                  >
-                    {RIGHT_TEXT}
-                  </p>
+                <div className="flex flex-col gap-2 min-w-0">
+                  <JustifiedParagraph
+                    text={RIGHT_TEXT}
+                    fontFamily="'JetBrains Mono'"
+                    fontSize={13}
+                    lineHeight={18}
+                    uppercase
+                    className="font-thin"
+                  />
                   <nav className="flex items-baseline justify-between">
                     {rightLinks.map((link) => (
                       <NavLink key={link.name} {...link} />
@@ -176,8 +183,8 @@ export function Navbar() {
               </div>
             </div>
 
-            {/* Full mobile navbar */}
-            <div className="md:hidden px-6 pt-5 pb-3">
+            {/* Mobile + tablet navbar — shown at < 1024px (lg). */}
+            <div className="lg:hidden px-6 pt-5 pb-3">
               {/* Top row: Fractal logo + blurb */}
               <div className="flex items-start gap-3">
                 <Link href="/" className="tracking-tighter shrink-0 leading-[0.9] text-center">

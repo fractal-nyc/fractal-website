@@ -141,17 +141,18 @@ describe("Home page navbar (full state)", () => {
   });
 
   it("should render section links with decorative first letters (NavLink component)", () => {
-    // On home full state, desktop nav uses NavLink with Jacquard first letter
-    const desktopNav = document.querySelector(".max-md\\:hidden");
+    // On home full state, desktop nav uses NavLink with Jacquard first letter.
+    // FRAC-158 raised the desktop hero breakpoint from md to lg so the 3-col
+    // grid only renders at >= 1024px where it has room to fit.
+    const desktopNav = document.querySelector(".max-lg\\:hidden");
     expect(desktopNav).toBeTruthy();
   });
 
   it("should render mobile nav with abbreviated labels for long section names", () => {
-    // Mobile full navbar shows abbreviated: LA for New Liberal Arts, PC for Political Club.
-    // Desktop NavLink also renders "PC" as the decorative first-letter span for Political
-    // Club (FRAC-126), so we scope the abbreviation lookups to the mobile section to
-    // assert only the mobile navbar rendering.
-    const mobileSection = document.querySelector(".md\\:hidden");
+    // Mobile + tablet full navbar shows abbreviated: LA for New Liberal Arts,
+    // PC for Political Club. FRAC-158 raised the mobile-stack breakpoint from
+    // md to lg so the mobile layout now covers viewports up to 1023px.
+    const mobileSection = document.querySelector(".lg\\:hidden");
     expect(mobileSection).toBeTruthy();
     expect(mobileSection!.textContent).toContain("LA");
     expect(mobileSection!.textContent).toContain("PC");
