@@ -6,7 +6,7 @@ import { CornerDecorations } from "@/components/ui/MandelbrotCorners";
 
 export function LiberalArts() {
   return (
-    <section id="new-liberal-arts" className="flex flex-col items-center pt-16 pb-24 md:pt-24 overflow-x-hidden" style={{ backgroundColor: "#8B1A1A", color: "#fff" }}>
+    <section id="new-liberal-arts" className="flex flex-col items-center pt-16 pb-24 md:pt-24 overflow-x-hidden" style={{ color: "#fff" }}>
       <div className="w-full px-6 md:px-[4.5%] text-center">
         <SectorHeader letter="LA" name="New Liberal Arts" color="#C41E20" />
         <FadeIn>

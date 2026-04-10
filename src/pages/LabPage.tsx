@@ -16,6 +16,7 @@ export function LabPage() {
   return (
     <main className="relative min-h-screen text-foreground selection:bg-foreground selection:text-background" style={{ backgroundColor: "#E870A0" }}>
       <FractalPattern color="#C44878" />
+      <div className="relative z-10">
       <Navbar />
       <div>
         {/* Lab heading + description */}
@@ -75,6 +76,7 @@ export function LabPage() {
         </section>
       </div>
       <Footer />
+      </div>
     </main>
   );
 }
