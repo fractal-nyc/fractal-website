@@ -4,19 +4,11 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
     <title>Fractal NYC</title>
-    <link rel="preload" as="image" href="/images/hero-poster.jpg" fetchpriority="high">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   </head>
   <body>
     <div id="root"></div>
-    <!-- FRAC-150: boot poster rendered before React mounts. HeroPoster's useEffect removes this on mount. -->
-    <img
-      id="boot-hero-poster"
-      src="/images/hero-poster.jpg"
-      alt=""
-      style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; margin: auto; width: min(90vmin, 550px); aspect-ratio: 1 / 1; object-fit: contain; z-index: 3; pointer-events: none;"
-    >
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

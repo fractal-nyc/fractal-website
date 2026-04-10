@@ -17,45 +17,6 @@ const TYPE_ICONS: Record<string, typeof Search> = {
   topic: Hash,
 };
 
-// FRAC-145: Static octahedron poster shown during Suspense + WebGL warm-up.
-// Owned by Hero state (posterMounted + posterFading), NOT by Suspense's
-// `fallback` prop — Suspense resolves at chunk-parse time, several frames
-// before WebGL paints, so fading on Suspense resolution would flash an
-// empty Canvas. Instead, Hero triggers the fade when FractalCityScene
-// signals `onReady` (after a double-rAF chain) and unmounts on
-// `transitionend` so the opacity transition can actually play.
-function HeroPoster({
-  fading,
-  onTransitionEnd,
-}: {
-  fading: boolean;
-  onTransitionEnd: () => void;
-}) {
-  // FRAC-150: remove the static boot poster (rendered directly in index.html
-  // body before React mounts) once React's HeroPoster has committed to the
-  // DOM. Both imgs are at identical positions so the swap is invisible.
-  useEffect(() => {
-    document.getElementById("boot-hero-poster")?.remove();
-  }, []);
-
-  return (
-    <div
-      className={`absolute inset-0 z-[3] flex items-center justify-center pointer-events-none transition-opacity duration-300 motion-reduce:duration-0 ${fading ? "opacity-0" : "opacity-100"}`}
-      aria-hidden="true"
-      data-poster-state={fading ? "fading" : "visible"}
-      onTransitionEnd={onTransitionEnd}
-    >
-      <img
-        src={`${import.meta.env.BASE_URL}images/hero-poster.jpg`}
-        alt=""
-        className="object-contain"
-        style={{ width: "min(90vmin, 550px)", aspectRatio: "1 / 1" }}
-        draggable={false}
-      />
-    </div>
-  );
-}
-
 export function Hero() {
   const [, setLocation] = useLocation();
 
@@ -63,21 +24,6 @@ export function Hero() {
     (route: string) => setLocation(route),
     [setLocation]
   );
-
-  // FRAC-145: Poster lifecycle. Two states because a single `posterVisible`
-  // boolean would unmount the DOM node before the opacity transition could
-  // play — mount must persist *through* the fade, then unmount after
-  // `transitionend`.
-  const [posterMounted, setPosterMounted] = useState(true);
-  const [posterFading, setPosterFading] = useState(false);
-
-  const handleSceneReady = useCallback(() => {
-    setPosterFading(true);
-  }, []);
-
-  const handlePosterTransitionEnd = useCallback(() => {
-    setPosterMounted(false);
-  }, []);
 
   const { query, setQuery, groups, flatResults, clear } = useGlobalSearch();
   const [isOpen, setIsOpen] = useState(false);
@@ -143,11 +89,8 @@ export function Hero() {
   return (
     <section className="relative min-h-screen flex items-center justify-center pt-20 overflow-hidden bg-[#faf8f5]">
       <Suspense fallback={null}>
-        <FractalCityScene onNavigate={handleNavigate} onReady={handleSceneReady} />
+        <FractalCityScene onNavigate={handleNavigate} />
       </Suspense>
-      {posterMounted && (
-        <HeroPoster fading={posterFading} onTransitionEnd={handlePosterTransitionEnd} />
-      )}
 
       {/* Search bar */}
       <div
