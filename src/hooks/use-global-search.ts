@@ -28,7 +28,7 @@ const PAGES = [
   { name: "Events", href: "/events", keywords: ["hackathon", "ai hacks", "singularity conference", "luma", "sidequest"] },
   { name: "Education", href: "/new-liberal-arts", keywords: ["new liberal arts", "liberal arts", "school", "fractal u", "fractal university", "accelerator", "courses", "classes"] },
   { name: "Political Club", href: "/political-club", keywords: ["maximum new york", "maximum nyc", "civic", "government", "forum", "manhattan institute"] },
-  { name: "Writing", href: "/lab", keywords: ["lab", "research", "publishing", "fractal labs"] },
+  { name: "Publications", href: "/lab", keywords: ["lab", "research", "writing", "publishing", "fractal labs"] },
   { name: "People", href: "/people", keywords: ["team", "members", "network", "who"] },
   { name: "The Protocol", href: "/the-protocol", keywords: ["golden age", "golden age protocol", "strategy"] },
 ];
@@ -69,11 +69,11 @@ const CONCEPT_ALIASES: { term: string; results: SearchResult[] }[] = [
   },
   {
     term: "lab",
-    results: [{ type: "page", title: "Writing", subtitle: "The Lab", href: "/lab" }],
+    results: [{ type: "page", title: "Publications", subtitle: "The Lab", href: "/lab" }],
   },
   {
     term: "research",
-    results: [{ type: "page", title: "Writing", subtitle: "Research + Writing", href: "/lab" }],
+    results: [{ type: "page", title: "Publications", subtitle: "Research + Writing", href: "/lab" }],
   },
   {
     term: "maximum new york",
@@ -93,7 +93,7 @@ const CONCEPT_ALIASES: { term: string; results: SearchResult[] }[] = [
   },
   {
     term: "cooperation machine",
-    results: [{ type: "page", title: "Writing", subtitle: "Ivan's Cooperation Machine", href: "/lab" }],
+    results: [{ type: "page", title: "Publications", subtitle: "Ivan's Cooperation Machine", href: "/lab" }],
   },
   {
     term: "merlin",

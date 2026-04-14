@@ -18,7 +18,7 @@ const sections = [
   { letter: "E", name: "Events", color: "#C13B2A" },
   { letter: "E", name: "Education", color: "#C41E20" },
   { letter: "PC", name: "Political Club", color: "#C83858" },
-  { letter: "W", name: "Writing", color: "#C44878" },
+  { letter: "P", name: "Publications", color: "#C44878" },
   { letter: "P", name: "People", color: "#B65D19" },
 ] as const;
 

@@ -44,7 +44,7 @@ describe("Inner page navbar", () => {
       "Events",
       "Education",
       "Political Club",
-      "Writing",
+      "Publications",
       "People",
     ];
 

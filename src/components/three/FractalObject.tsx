@@ -41,7 +41,7 @@ const NAV_NODES: NavNode[] = [
   { label: "Campus",            route: "/campus",           color: "#457B9D", vertexIndex: 6  }, // equator right-front
   { label: "Education",         route: "/new-liberal-arts", color: "#1D3557", vertexIndex: 5  }, // equator left-back
   { label: "Political Club",    route: "/political-club",   color: "#CC2936", vertexIndex: 10 }, // equator right-back
-  { label: "Writing",           route: "/lab",              color: "#6B4C9A", vertexIndex: 9  }, // lower-back
+  { label: "Publications",           route: "/lab",              color: "#6B4C9A", vertexIndex: 9  }, // lower-back
   { label: "People",            route: "/people",           color: "#457B9D", vertexIndex: 8  }, // bottom-left
 ];
 

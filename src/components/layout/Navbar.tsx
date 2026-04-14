@@ -11,7 +11,7 @@ const sectionLinks = [
   { name: "Events", href: "/events", color: "#D4857A" },
   { name: "Education", href: "/new-liberal-arts", color: "#C41E20" },
   { name: "Political Club", href: "/political-club", color: "#6E1830" },
-  { name: "Writing", href: "/lab", color: "#E870A0" },
+  { name: "Publications", href: "/lab", color: "#E870A0" },
   { name: "People", href: "/people", color: "#C49040" },
 ];
 
@@ -24,7 +24,7 @@ const innerPageHiddenLinks = new Set([
   "Events",
   "Education",
   "Political Club",
-  "Writing",
+  "Publications",
   "People",
 ]);
 const innerPageSectionLinks = sectionLinks.filter(

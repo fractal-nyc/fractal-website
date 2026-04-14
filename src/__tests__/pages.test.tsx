@@ -116,7 +116,7 @@ describe("Route paths match expected URLs", () => {
     { path: "/events", label: "Events" },
     { path: "/new-liberal-arts", label: "Education" },
     { path: "/political-club", label: "Political Club" },
-    { path: "/lab", label: "Writing" },
+    { path: "/lab", label: "Publications" },
     { path: "/people", label: "People" },
   ];
 

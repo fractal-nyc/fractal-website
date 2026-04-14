@@ -22,7 +22,7 @@ export function LabPage() {
         {/* Lab heading + description */}
         <section className="min-h-screen flex flex-col items-center justify-start pt-16 md:pt-24 w-full">
           <div className="px-6 md:px-[4.5%] w-full">
-            <SectorHeader letter="W" name="Writing" color="#C44878" />
+            <SectorHeader letter="P" name="Publications" color="#C44878" />
             <FadeIn delay={0.1}>
               <div className="text-center">
                 <p className="font-serif text-4xl md:text-6xl leading-[1.3] mb-6 text-center" style={{ fontWeight: 300, textTransform: "uppercase", fontStyle: "normal" }}>

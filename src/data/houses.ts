@@ -254,9 +254,9 @@ export const HOUSES: House[] = [
   // 6. Lab — Research + Writing
   {
     id: "lab",
-    name: "Writing",
-    displayName: "Writing",
-    subtitle: "Writing",
+    name: "Publications",
+    displayName: "Publications",
+    subtitle: "Publications",
     slug: "lab",
     route: "/lab",
     color: "#6B4C9A",
