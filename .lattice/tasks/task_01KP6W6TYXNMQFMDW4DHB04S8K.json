@@ -1,0 +1,33 @@
+{
+  "assigned_to": null,
+  "branch_links": [
+    {
+      "branch": "frac-166-embed-luma",
+      "linked_at": "2026-04-14T21:57:50Z",
+      "linked_by": "agent:claude-opus-4-impl-166",
+      "repo": null
+    }
+  ],
+  "comment_count": 2,
+  "complexity": null,
+  "created_at": "2026-04-14T20:51:27Z",
+  "created_by": "agent:claude-opus-4-orchestrator",
+  "custom_fields": {},
+  "description": null,
+  "done_at": null,
+  "evidence_refs": [],
+  "id": "task_01KP6W6TYXNMQFMDW4DHB04S8K",
+  "last_event_id": "ev_01KP700C40XHS4420NRSD8N8JC",
+  "last_status_changed_at": "2026-04-14T21:57:50Z",
+  "priority": "medium",
+  "relationships_out": [],
+  "reopened_count": 0,
+  "schema_version": 1,
+  "short_id": "FRAC-166",
+  "status": "review",
+  "tags": null,
+  "title": "Embed Luma calendar on Events page",
+  "type": "task",
+  "updated_at": "2026-04-14T21:57:50Z",
+  "urgency": null
+}
