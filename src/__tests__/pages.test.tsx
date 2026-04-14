@@ -25,18 +25,12 @@ vi.mock("@/components/lab/DocumentGrid", () => ({
   DocumentGrid: () => <div data-testid="document-grid-mock" />,
 }));
 
-vi.mock("@/components/lab/ArchiveToolbar", () => ({
-  ArchiveToolbar: () => <div data-testid="archive-toolbar-mock" />,
-}));
-
-vi.mock("@/hooks/use-archive-filter", () => ({
-  useArchiveFilter: () => ({ isFiltering: false, filtered: [] }),
-}));
-
 // ═══════════════════════════════════════════════════════════════════════════
 // Import pages after mocks
 // ═══════════════════════════════════════════════════════════════════════════
 
+import { Home } from "@/pages/Home";
+import { HouseBannerGrid } from "@/components/house/HouseBannerGrid";
 import { StoryPage } from "@/pages/StoryPage";
 import { CampusPage } from "@/pages/CampusPage";
 import { NeighborhoodPage } from "@/pages/NeighborhoodPage";
@@ -108,15 +102,42 @@ describe("Page rendering", () => {
 // Route path mapping — verify the App routes match expected URL structure
 // ═══════════════════════════════════════════════════════════════════════════
 
+// ═══════════════════════════════════════════════════════════════════════════
+// FRAC-161 — hidden surfaces
+// ═══════════════════════════════════════════════════════════════════════════
+
+describe("FRAC-161 visibility filters", () => {
+  it("HouseBannerGrid should NOT render Political Club", () => {
+    const { container } = render(<HouseBannerGrid />);
+    expect(container.textContent).not.toContain("Political Club");
+    // Banner uses "PC" as the monogram for the forum house; it should be absent.
+    expect(container.textContent).not.toContain("PC");
+  });
+
+  it("Home page should NOT render the 'How Do I Get Involved' banner grid heading", () => {
+    const { hook } = memoryLocation({ path: "/", static: true });
+    const { container } = render(
+      <QueryClientProvider client={queryClient}>
+        <TooltipProvider>
+          <WouterRouter hook={hook}>
+            <Home />
+          </WouterRouter>
+        </TooltipProvider>
+      </QueryClientProvider>,
+    );
+    expect(container.textContent).not.toContain("How Do I Get Involved");
+  });
+});
+
 describe("Route paths match expected URLs", () => {
   const expectedRoutes = [
     { path: "/story", label: "Story" },
     { path: "/campus", label: "Campus" },
-    { path: "/neighborhood", label: "Neighborhood" },
+    { path: "/neighborhood", label: "Visit" },
     { path: "/events", label: "Events" },
-    { path: "/new-liberal-arts", label: "New Liberal Arts" },
+    { path: "/new-liberal-arts", label: "Education" },
     { path: "/political-club", label: "Political Club" },
-    { path: "/lab", label: "Lab" },
+    { path: "/lab", label: "Publications" },
     { path: "/people", label: "People" },
   ];
 

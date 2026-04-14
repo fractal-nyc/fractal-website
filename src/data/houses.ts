@@ -169,9 +169,9 @@ export const HOUSES: House[] = [
   // 1. Co-Living — The Neighborhood
   {
     id: "neighborhood",
-    name: "The Neighborhood",
-    displayName: "Co-Living",
-    subtitle: "Co-Living",
+    name: "Visit",
+    displayName: "Visit",
+    subtitle: "Visit",
     slug: "neighborhood",
     route: "/neighborhood",
     color: "#8B7355",
@@ -222,9 +222,9 @@ export const HOUSES: House[] = [
   // 4. New Liberal Arts — The School
   {
     id: "school",
-    name: "The School",
-    displayName: "New Liberal Arts",
-    subtitle: "New Liberal Arts",
+    name: "Education",
+    displayName: "Education",
+    subtitle: "Education",
     slug: "new-liberal-arts",
     route: "/new-liberal-arts",
     color: "#1D3557",
@@ -254,8 +254,9 @@ export const HOUSES: House[] = [
   // 6. Lab — Research + Writing
   {
     id: "lab",
-    name: "The Lab",
-    subtitle: "Research + Writing",
+    name: "Publications",
+    displayName: "Publications",
+    subtitle: "Publications",
     slug: "lab",
     route: "/lab",
     color: "#6B4C9A",
@@ -270,6 +271,18 @@ export const HOUSES: House[] = [
 // ---------------------------------------------------------------------------
 // Helper functions
 // ---------------------------------------------------------------------------
+
+// ---------------------------------------------------------------------------
+// Visibility filters (FRAC-161)
+// ---------------------------------------------------------------------------
+// The Political Club house is hidden from nav / banner grid without removing
+// the underlying data entry or route. To restore, remove the id from this set.
+export const HIDDEN_HOUSE_IDS = new Set<string>(["forum"]);
+
+/** Houses visible in the nav/banner UI. Direct routes to hidden houses still work. */
+export const VISIBLE_HOUSES: House[] = HOUSES.filter(
+  (h) => !HIDDEN_HOUSE_IDS.has(h.id),
+);
 
 /** Look up a house by its URL slug. */
 export function getHouseBySlug(slug: string): House | undefined {

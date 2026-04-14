@@ -83,10 +83,12 @@ export function useArchiveFilter(): ArchiveFilterState {
     const q = query.trim().toLowerCase();
     if (q.length > 0) {
       results = results.filter((doc) => {
-        const authorName = authorNames.get(doc.author) ?? doc.author;
+        const authorMatches = doc.authors.some((id) =>
+          (authorNames.get(id) ?? id).includes(q),
+        );
         return (
           doc.title.toLowerCase().includes(q) ||
-          authorName.includes(q) ||
+          authorMatches ||
           doc.description.toLowerCase().includes(q)
         );
       });
