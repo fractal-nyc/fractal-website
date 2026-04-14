@@ -1,6 +1,5 @@
-import type { LabDocument, DocumentCategory } from "@/data/lab-documents";
+import { formatAuthors, type LabDocument, type DocumentCategory } from "@/data/lab-documents";
 import type { LucideIcon } from "lucide-react";
-import { PEOPLE } from "@/data/houses";
 import { MandelbrotCorners } from "@/components/ui/MandelbrotCorners";
 import {
   ArrowUpRight,
@@ -45,8 +44,7 @@ interface DocumentBadgeProps {
 export function DocumentBadge({ document, className = "" }: DocumentBadgeProps) {
   const { icon: CategoryIcon, label: categoryLabel } =
     CATEGORY_META[document.category];
-  const person = PEOPLE.find((p) => p.id === document.author);
-  const authorName = person?.name ?? document.author;
+  const authorName = formatAuthors(document.authors);
   const isFeatured = document.featured;
 
   return (

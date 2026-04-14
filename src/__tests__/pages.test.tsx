@@ -104,11 +104,11 @@ describe("Route paths match expected URLs", () => {
   const expectedRoutes = [
     { path: "/story", label: "Story" },
     { path: "/campus", label: "Campus" },
-    { path: "/neighborhood", label: "Neighborhood" },
+    { path: "/neighborhood", label: "Visit" },
     { path: "/events", label: "Events" },
-    { path: "/new-liberal-arts", label: "New Liberal Arts" },
+    { path: "/new-liberal-arts", label: "Education" },
     { path: "/political-club", label: "Political Club" },
-    { path: "/lab", label: "Lab" },
+    { path: "/lab", label: "Publications" },
     { path: "/people", label: "People" },
   ];
 
