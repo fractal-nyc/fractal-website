@@ -32,14 +32,30 @@ export function EventsPage() {
             <p className="font-serif text-4xl md:text-6xl leading-[1.3] mb-6 text-center" style={{ fontWeight: 300, textTransform: "uppercase", fontStyle: "normal" }}>
               Join Tech Events
             </p>
+            {/*
+              Luma embed: slug-based URL `https://lu.ma/embed/calendar/nyc-tech/events`.
+              If Luma ever rejects this path, replace with the canonical calendar-UUID
+              embed URL from luma.com/nyc-tech > Manage > Embed.
+            */}
+            <div className="relative w-full max-w-5xl mx-auto rounded-md overflow-hidden border border-foreground/20 bg-foreground/[0.03] h-[80vh] min-h-[600px] md:h-[850px] mb-6">
+              <CornerDecorations size="xs" />
+              <iframe
+                src="https://lu.ma/embed/calendar/nyc-tech/events"
+                title="Fractal Tech NYC Events Calendar"
+                className="w-full h-full"
+                style={{ border: "none" }}
+                allowFullScreen
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+              />
+            </div>
             <a
               href="https://luma.com/nyc-tech"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-block max-w-xs w-full border border-foreground/20 rounded-md px-8 py-5 text-sm tracking-widest uppercase bg-foreground/[0.03] hover:bg-foreground/10 transition-colors duration-300 text-center relative overflow-hidden mb-12"
+              className="inline-block mb-12 text-xs tracking-widest uppercase opacity-70 hover:opacity-100 transition-opacity duration-300"
             >
-              <CornerDecorations size="xs" />
-              Luma Calendar
+              Open calendar in new tab →
             </a>
           </FadeIn>
 
