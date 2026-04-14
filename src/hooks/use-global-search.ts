@@ -24,11 +24,11 @@ export interface SearchResult {
 const PAGES = [
   { name: "Story", href: "/story", keywords: ["origin", "history", "founding", "about"] },
   { name: "Campus", href: "/campus", keywords: ["111 conselyea", "williamsburg", "coworking", "space", "rooftop"] },
-  { name: "Neighborhood", href: "/neighborhood", keywords: ["coliving", "co-living", "brooklyn", "mckibbin", "housing"] },
+  { name: "Visit", href: "/neighborhood", keywords: ["neighborhood", "coliving", "co-living", "brooklyn", "mckibbin", "housing"] },
   { name: "Events", href: "/events", keywords: ["hackathon", "ai hacks", "singularity conference", "luma", "sidequest"] },
-  { name: "New Liberal Arts", href: "/new-liberal-arts", keywords: ["fractal u", "fractal university", "school", "education", "accelerator", "courses", "classes"] },
+  { name: "Education", href: "/new-liberal-arts", keywords: ["new liberal arts", "liberal arts", "school", "fractal u", "fractal university", "accelerator", "courses", "classes"] },
   { name: "Political Club", href: "/political-club", keywords: ["maximum new york", "maximum nyc", "civic", "government", "forum", "manhattan institute"] },
-  { name: "Lab", href: "/lab", keywords: ["research", "writing", "publishing", "fractal labs"] },
+  { name: "Publications", href: "/lab", keywords: ["lab", "research", "writing", "publishing", "fractal labs"] },
   { name: "People", href: "/people", keywords: ["team", "members", "network", "who"] },
   { name: "The Protocol", href: "/the-protocol", keywords: ["golden age", "golden age protocol", "strategy"] },
 ];
@@ -37,11 +37,43 @@ const PAGES = [
 const CONCEPT_ALIASES: { term: string; results: SearchResult[] }[] = [
   {
     term: "fractal u",
-    results: [{ type: "page", title: "New Liberal Arts", subtitle: "Fractal University", href: "/new-liberal-arts" }],
+    results: [{ type: "page", title: "Education", subtitle: "Fractal University", href: "/new-liberal-arts" }],
   },
   {
     term: "fractal university",
-    results: [{ type: "page", title: "New Liberal Arts", subtitle: "Fractal University", href: "/new-liberal-arts" }],
+    results: [{ type: "page", title: "Education", subtitle: "Fractal University", href: "/new-liberal-arts" }],
+  },
+  {
+    term: "new liberal arts",
+    results: [{ type: "page", title: "Education", subtitle: "New Liberal Arts", href: "/new-liberal-arts" }],
+  },
+  {
+    term: "liberal arts",
+    results: [{ type: "page", title: "Education", subtitle: "New Liberal Arts", href: "/new-liberal-arts" }],
+  },
+  {
+    term: "school",
+    results: [{ type: "page", title: "Education", subtitle: "The School", href: "/new-liberal-arts" }],
+  },
+  {
+    term: "neighborhood",
+    results: [{ type: "page", title: "Visit", subtitle: "The Neighborhood", href: "/neighborhood" }],
+  },
+  {
+    term: "co-living",
+    results: [{ type: "page", title: "Visit", subtitle: "Co-Living", href: "/neighborhood" }],
+  },
+  {
+    term: "coliving",
+    results: [{ type: "page", title: "Visit", subtitle: "Co-Living", href: "/neighborhood" }],
+  },
+  {
+    term: "lab",
+    results: [{ type: "page", title: "Publications", subtitle: "The Lab", href: "/lab" }],
+  },
+  {
+    term: "research",
+    results: [{ type: "page", title: "Publications", subtitle: "Research + Writing", href: "/lab" }],
   },
   {
     term: "maximum new york",
@@ -61,11 +93,11 @@ const CONCEPT_ALIASES: { term: string; results: SearchResult[] }[] = [
   },
   {
     term: "cooperation machine",
-    results: [{ type: "page", title: "The Lab", subtitle: "Ivan's Cooperation Machine", href: "/lab" }],
+    results: [{ type: "page", title: "Publications", subtitle: "Ivan's Cooperation Machine", href: "/lab" }],
   },
   {
     term: "merlin",
-    results: [{ type: "page", title: "Neighborhood", subtitle: "Merlin's Place", href: "/neighborhood" }],
+    results: [{ type: "page", title: "Visit", subtitle: "Merlin's Place", href: "/neighborhood" }],
   },
 ];
 

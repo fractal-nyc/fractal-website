@@ -4,12 +4,12 @@ import { Link } from "wouter";
 
 const directoryItems = [
   { title: "The Protocol", href: "/the-protocol" },
-  { title: "Neighborhood", href: "/neighborhood" },
-  { title: "New Liberal Arts", href: "/new-liberal-arts" },
+  { title: "Visit", href: "/neighborhood" },
+  { title: "Education", href: "/new-liberal-arts" },
   { title: "A Campus", href: "/campus" },
   { title: "Events", href: "/events" },
   { title: "Political Club", href: "/political-club" },
-  { title: "Lab", href: "/lab" },
+  { title: "Publications", href: "/lab" },
   { title: "Story", href: "/story" },
 
 ];
