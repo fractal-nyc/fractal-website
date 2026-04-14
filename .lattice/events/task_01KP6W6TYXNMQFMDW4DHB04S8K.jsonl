@@ -6,3 +6,4 @@
 {"actor":"agent:claude-opus-4-orchestrator","data":{"from":"planned","to":"in_progress"},"id":"ev_01KP6ZN3YEC3K2QRJP68YXAMPY","schema_version":1,"task_id":"task_01KP6W6TYXNMQFMDW4DHB04S8K","ts":"2026-04-14T21:51:41Z","type":"status_changed"}
 {"actor":"agent:claude-opus-4-impl-166","data":{"from":"in_progress","to":"review"},"id":"ev_01KP700C1KJ3S5R74VT9W10P54","schema_version":1,"task_id":"task_01KP6W6TYXNMQFMDW4DHB04S8K","ts":"2026-04-14T21:57:50Z","type":"status_changed"}
 {"actor":"agent:claude-opus-4-impl-166","data":{"branch":"frac-166-embed-luma"},"id":"ev_01KP700C40XHS4420NRSD8N8JC","schema_version":1,"task_id":"task_01KP6W6TYXNMQFMDW4DHB04S8K","ts":"2026-04-14T21:57:50Z","type":"branch_linked"}
+{"actor":"agent:claude-opus-4-orchestrator","data":{"from":"review","to":"done"},"id":"ev_01KP7425GSPS39GVYDSJ2WGPZE","schema_version":1,"task_id":"task_01KP6W6TYXNMQFMDW4DHB04S8K","ts":"2026-04-14T23:08:43Z","type":"status_changed"}

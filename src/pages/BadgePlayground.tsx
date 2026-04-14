@@ -21,7 +21,7 @@ function XIcon({ className }: { className?: string }) {
 function SocialLinks({ socials }: { socials: PersonSocials }) {
   const links: { href: string; label: string; icon: React.ReactNode }[] = [];
   if (socials.twitter) links.push({ href: "#", label: `@${socials.twitter}`, icon: <XIcon className="h-3 w-3" /> });
-  // MVP v0: Substack icon intentionally removed — FRAC-169.
+  // MVP v0: Substack icon intentionally hidden — FRAC-169
   if (socials.website) links.push({ href: "#", label: "Website", icon: <Globe className="h-3 w-3" /> });
   if (links.length === 0) return null;
   return (

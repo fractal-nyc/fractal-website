@@ -53,7 +53,7 @@ function SocialLinks({ socials }: { socials: PersonSocials }) {
       icon: <XIcon className="h-3 w-3" />,
     });
   }
-  // MVP v0: Substack icon intentionally removed — FRAC-169.
+  // MVP v0: Substack icon intentionally hidden — FRAC-169
   if (socials.website) {
     links.push({
       href: socials.website,

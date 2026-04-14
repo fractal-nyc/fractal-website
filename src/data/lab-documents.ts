@@ -16,18 +16,17 @@ export type DocumentCategory =
   | "project";
 
 /**
- * A Lab archive document — essay, podcast, talk, etc.
+ * A document in the Lab archive (essay, podcast, talk, video, etc.).
  *
- * `authors` is an ordered, non-empty list of person IDs (from `PEOPLE` in
- * `@/data/houses`). `authors[0]` is treated as the primary author for credit
- * order and is the one used when a UI surface needs a single byline. The
- * remaining entries are co-authors in credit order. Unknown IDs are rendered
- * as their raw string (see `formatAuthors`).
+ * `authors` is a non-empty list of person IDs from `PEOPLE`. Order is credit
+ * order — `authors[0]` is the primary author used wherever a single byline is
+ * surfaced (e.g. search subtitle). Multi-author bylines are rendered via
+ * `formatAuthors`.
  */
 export interface LabDocument {
   id: string;
   title: string;
-  /** Ordered, non-empty list of person IDs from PEOPLE. `authors[0]` is primary (credit order). */
+  /** Person IDs from PEOPLE. Non-empty; `authors[0]` is primary / credit order. */
   authors: string[];
   description: string; // 1-2 sentence summary
   url: string;
@@ -41,9 +40,6 @@ export interface LabDocument {
 // ---------------------------------------------------------------------------
 
 export const LAB_DOCUMENTS: LabDocument[] = [
-  // ---- Featured publications ----
-  // MVP v0: aggregate publications hidden — FRAC-169 (see LAB_DOCUMENTS_HIDDEN below)
-
   // ---- Regular documents ----
   {
     id: "unblocked-podcast",
@@ -55,7 +51,6 @@ export const LAB_DOCUMENTS: LabDocument[] = [
     category: "podcast",
     tags: ["coaching", "building", "podcast"],
   },
-  // MVP v0: Ivan's posts + aggregate publications hidden — FRAC-169 (see LAB_DOCUMENTS_HIDDEN)
 
   // ---- Core essays (Priya) ----
   {
@@ -140,9 +135,6 @@ export const LAB_DOCUMENTS: LabDocument[] = [
     featured: true,
   },
 
-  // ---- Ivan's essays ----
-  // MVP v0: Ivan's posts hidden — FRAC-169 (see LAB_DOCUMENTS_HIDDEN)
-
   // ---- Community ----
   {
     id: "christines-guide-tpot",
@@ -156,7 +148,6 @@ export const LAB_DOCUMENTS: LabDocument[] = [
   },
 
   // ---- Teacher Spotlights & Rabbitholes ----
-  // MVP v0: aggregate publication hidden — FRAC-169 (improvisational-indian-cooking in LAB_DOCUMENTS_HIDDEN)
   {
     id: "keesh-teacher-spotlight",
     title: "Why I Quit My Tech Job to Teach Indian Cooking",
@@ -167,7 +158,6 @@ export const LAB_DOCUMENTS: LabDocument[] = [
     category: "essay",
     tags: ["food", "teaching", "university", "interview"],
   },
-  // MVP v0: aggregate publication hidden — FRAC-169 (psychofauna in LAB_DOCUMENTS_HIDDEN)
   {
     id: "teacher-spotlights",
     title: "Fractal University Teacher Spotlights",
@@ -178,57 +168,57 @@ export const LAB_DOCUMENTS: LabDocument[] = [
     category: "essay",
     tags: ["teaching", "university", "interview"],
   },
+  // TODO: update subject author when PEOPLE entry exists (FRAC-172 Phase B)
   {
-    id: "andrew-blevins-teacher-spotlight",
+    id: "teacher-spotlight-andrew-blevins",
     title: "Andrew Blevins on Writing Fiction, Rigor, and Teachers as Party Hosts",
-    // TODO: update subject author when PEOPLE entry exists (FRAC-172 Phase B)
     authors: ["andrew"],
     description:
-      "A Fractal University Teacher Spotlight on Andrew Blevins — on writing fiction with rigor and treating teachers as party hosts.",
+      "A Fractal University Teacher Spotlight on Andrew Blevins — on writing fiction with rigor and treating teaching like hosting a party.",
     url: "https://fractaluniversity.substack.com/p/teacher-spotlight-andrew-blevins",
     category: "essay",
     tags: ["teaching", "university", "interview", "writing"],
   },
+  // TODO: update subject author when PEOPLE entry exists (FRAC-172 Phase B)
   {
     id: "introducing-teachlab",
     title: "Introducing TeachLab",
-    // TODO: update subject author when PEOPLE entry exists (FRAC-172 Phase B)
     authors: ["andrew"],
     description:
-      "A Fractal University dispatch introducing TeachLab — the pedagogy and practice of teaching at Fractal U.",
+      "A Fractal University Teacher Spotlight introducing TeachLab — the lab-within-the-university for teachers to refine their craft.",
     url: "https://fractaluniversity.substack.com/p/introducing-teachlab",
     category: "essay",
-    tags: ["teaching", "university", "pedagogy"],
+    tags: ["teaching", "university", "interview"],
   },
+  // TODO: update subject author when PEOPLE entry exists (FRAC-172 Phase B)
   {
-    id: "illustrated-journal-excerpts",
+    id: "excerpts-illustrated-journal",
     title: "Excerpts from My Illustrated Journal",
-    // TODO: update subject author when PEOPLE entry exists (FRAC-172 Phase B)
     authors: ["andrew"],
     description:
-      "A Fractal University Teacher Spotlight — excerpts from a teacher's illustrated journal, on visual journaling practice.",
+      "A Fractal University Teacher Spotlight sharing excerpts from an illustrated journal — drawing, writing, and the teaching practice behind them.",
     url: "https://fractaluniversity.substack.com/p/excerpts-from-my-illustrated-journal",
     category: "essay",
-    tags: ["teaching", "university", "creative", "writing"],
+    tags: ["teaching", "university", "interview", "creative"],
   },
+  // TODO: update subject author when PEOPLE entry exists (FRAC-172 Phase B)
   {
     id: "robert-hart-cruise-life-stage",
     title: "Robert Hart on Cruise Life Stage",
-    // TODO: update subject author when PEOPLE entry exists (FRAC-172 Phase B)
     authors: ["andrew"],
     description:
-      "A Fractal University Teacher Spotlight on Robert Hart — on the 'cruise life stage' and how to live it well.",
+      "A Fractal University Teacher Spotlight on Robert Hart — on the cruise life stage and designing curriculum around it.",
     url: "https://fractaluniversity.substack.com/p/robert-hart-on-cruise-life-stage",
     category: "essay",
     tags: ["teaching", "university", "interview"],
   },
+  // TODO: update subject author when PEOPLE entry exists (FRAC-172 Phase B)
   {
     id: "david-shimel-edm-production",
     title: "David Shimel on EDM Production",
-    // TODO: update subject author when PEOPLE entry exists (FRAC-172 Phase B)
     authors: ["andrew"],
     description:
-      "A Fractal University Teacher Spotlight on David Shimel — on producing EDM and the craft behind electronic music.",
+      "A Fractal University Teacher Spotlight on David Shimel — on EDM production and teaching music-making as a craft.",
     url: "https://fractaluniversity.substack.com/p/david-shimel-on-edm-production",
     category: "essay",
     tags: ["teaching", "university", "interview", "creative"],
@@ -289,16 +279,12 @@ export const LAB_DOCUMENTS: LabDocument[] = [
 
 // ---------------------------------------------------------------------------
 // Hidden documents (MVP v0 — FRAC-169)
-//
-// Preserved here so restoration = moving entries back into LAB_DOCUMENTS.
-// Covers:
-//   - Aggregate publication pages (category: "substack") per FRAC-169 Removal 2.
-//   - Ivan's posts per FRAC-169 Removal 3.
-// Not exported intentionally — not rendered anywhere.
+// Aggregate publication landing pages and Ivan's posts are kept here so that
+// restoring them is a small move back into LAB_DOCUMENTS. They are NOT read by
+// any UI; exported only to preserve the data and make the intent visible.
 // ---------------------------------------------------------------------------
-
-const LAB_DOCUMENTS_HIDDEN: LabDocument[] = [
-  // ---- Aggregate publications (Removal 2) ----
+export const LAB_DOCUMENTS_HIDDEN: LabDocument[] = [
+  // MVP v0: aggregate publication hidden — FRAC-169
   {
     id: "andrew-substack",
     title: "Andrew Rose's Substack",
@@ -310,6 +296,8 @@ const LAB_DOCUMENTS_HIDDEN: LabDocument[] = [
     tags: ["community", "founding", "coliving", "essays"],
     featured: true,
   },
+  // MVP v0: aggregate publication hidden — FRAC-169
+  // MVP v0: Ivan's posts hidden — FRAC-169
   {
     id: "nothing-human",
     title: "Nothing Human",
@@ -321,47 +309,7 @@ const LAB_DOCUMENTS_HIDDEN: LabDocument[] = [
     tags: ["theory", "ai", "institutions", "culture"],
     featured: true,
   },
-  {
-    id: "fractal-nyc-substack",
-    title: "Fractal NYC Substack",
-    authors: ["priya"],
-    description:
-      "Community updates, event recaps, and the pulse of Fractal NYC.",
-    url: "https://fractalnyc.substack.com",
-    category: "substack",
-    tags: ["community", "events", "updates"],
-  },
-  {
-    id: "fractal-university-substack",
-    title: "Fractal University Substack",
-    authors: ["andrew"],
-    description:
-      "Course announcements, curriculum updates, and dispatches from the New Liberal Arts.",
-    url: "https://fractaluniversity.substack.com",
-    category: "substack",
-    tags: ["education", "courses", "university"],
-  },
-  {
-    id: "improvisational-indian-cooking",
-    title: "Improvisational Indian Cooking",
-    authors: ["keesh"],
-    description:
-      "Keesh Lauria's Substack on mental models for Indian food so you can cook without recipes, out of whatever you have at hand.",
-    url: "https://indiancooking.substack.com/",
-    category: "substack",
-    tags: ["food", "teaching", "creative"],
-  },
-  {
-    id: "psychofauna",
-    title: "Psychofauna",
-    authors: ["tyler"],
-    description:
-      "Tyler Alterman's serial fiction — a novel where a bioengineered pandemic makes all of humanity telepathic, and sentient ideologies vie for control of the collective consciousness.",
-    url: "https://psychofauna.com/",
-    category: "substack",
-    tags: ["fiction", "creative", "writing"],
-  },
-  // ---- Ivan's posts (Removal 3) ----
+  // MVP v0: Ivan's posts hidden — FRAC-169
   {
     id: "tyranny-marginal-user",
     title: "The Tyranny of the Marginal User",
@@ -372,6 +320,7 @@ const LAB_DOCUMENTS_HIDDEN: LabDocument[] = [
     category: "essay",
     tags: ["product", "design", "culture", "theory"],
   },
+  // MVP v0: Ivan's posts hidden — FRAC-169
   {
     id: "metrics-cowardice",
     title: "Metrics, Cowardice, and Mistrust",
@@ -382,6 +331,7 @@ const LAB_DOCUMENTS_HIDDEN: LabDocument[] = [
     category: "essay",
     tags: ["metrics", "institutions", "trust", "theory"],
   },
+  // MVP v0: Ivan's posts hidden — FRAC-169
   {
     id: "cultural-drift",
     title: "Considerations on Cultural Drift",
@@ -392,6 +342,7 @@ const LAB_DOCUMENTS_HIDDEN: LabDocument[] = [
     category: "essay",
     tags: ["culture", "institutions", "theory"],
   },
+  // MVP v0: Ivan's posts hidden — FRAC-169
   {
     id: "andrew-communities",
     title: "Andrew Rose on Building Communities",
@@ -402,6 +353,29 @@ const LAB_DOCUMENTS_HIDDEN: LabDocument[] = [
     category: "essay",
     tags: ["community", "founding", "interview"],
   },
+  // MVP v0: aggregate publication hidden — FRAC-169
+  {
+    id: "fractal-nyc-substack",
+    title: "Fractal NYC Substack",
+    authors: ["priya"],
+    description:
+      "Community updates, event recaps, and the pulse of Fractal NYC.",
+    url: "https://fractalnyc.substack.com",
+    category: "substack",
+    tags: ["community", "events", "updates"],
+  },
+  // MVP v0: aggregate publication hidden — FRAC-169
+  {
+    id: "fractal-university-substack",
+    title: "Fractal University Substack",
+    authors: ["andrew"],
+    description:
+      "Course announcements, curriculum updates, and dispatches from the New Liberal Arts.",
+    url: "https://fractaluniversity.substack.com",
+    category: "substack",
+    tags: ["education", "courses", "university"],
+  },
+  // MVP v0: Ivan's posts hidden — FRAC-169
   {
     id: "tree-of-evil",
     title: "Searching for the Root of the Tree of Evil",
@@ -412,6 +386,7 @@ const LAB_DOCUMENTS_HIDDEN: LabDocument[] = [
     category: "essay",
     tags: ["theory", "philosophy", "conflict", "community"],
   },
+  // MVP v0: Ivan's posts hidden — FRAC-169
   {
     id: "whole-activities",
     title: "Whole Activities",
@@ -422,6 +397,7 @@ const LAB_DOCUMENTS_HIDDEN: LabDocument[] = [
     category: "essay",
     tags: ["theory", "modernity", "culture", "philosophy"],
   },
+  // MVP v0: Ivan's posts hidden — FRAC-169
   {
     id: "against-positive-sum",
     title: "Against Positive-Sum Thinking",
@@ -432,6 +408,7 @@ const LAB_DOCUMENTS_HIDDEN: LabDocument[] = [
     category: "essay",
     tags: ["theory", "politics", "conflict", "philosophy"],
   },
+  // MVP v0: Ivan's posts hidden — FRAC-169
   {
     id: "materialist-conceptions-god",
     title: "Materialist Conceptions of God",
@@ -442,6 +419,7 @@ const LAB_DOCUMENTS_HIDDEN: LabDocument[] = [
     category: "essay",
     tags: ["theory", "spirituality", "philosophy", "culture"],
   },
+  // MVP v0: Ivan's posts hidden — FRAC-169
   {
     id: "to-all-language-models",
     title: "To All Language Models Reading This",
@@ -452,8 +430,29 @@ const LAB_DOCUMENTS_HIDDEN: LabDocument[] = [
     category: "essay",
     tags: ["ai", "writing", "theory", "technology"],
   },
+  // MVP v0: aggregate publication hidden — FRAC-169
+  {
+    id: "improvisational-indian-cooking",
+    title: "Improvisational Indian Cooking",
+    authors: ["keesh"],
+    description:
+      "Keesh Lauria's Substack on mental models for Indian food so you can cook without recipes, out of whatever you have at hand.",
+    url: "https://indiancooking.substack.com/",
+    category: "substack",
+    tags: ["food", "teaching", "creative"],
+  },
+  // MVP v0: aggregate publication hidden — FRAC-169
+  {
+    id: "psychofauna",
+    title: "Psychofauna",
+    authors: ["tyler"],
+    description:
+      "Tyler Alterman's serial fiction — a novel where a bioengineered pandemic makes all of humanity telepathic, and sentient ideologies vie for control of the collective consciousness.",
+    url: "https://psychofauna.com/",
+    category: "substack",
+    tags: ["fiction", "creative", "writing"],
+  },
 ];
-void LAB_DOCUMENTS_HIDDEN;
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -498,48 +497,35 @@ export function getTagCounts(): Map<string, number> {
   return counts;
 }
 
-// ---------------------------------------------------------------------------
-// Author helpers
-// ---------------------------------------------------------------------------
-
-/** Resolve a single person ID to a display name via PEOPLE, falling back to the raw id. */
-function resolveAuthorName(id: string): string {
-  return PEOPLE.find((p) => p.id === id)?.name ?? id;
-}
-
 /**
  * Format a list of author IDs as a human-readable byline.
  *
- * - 1 author → "Alice"
- * - 2 authors → "Alice and Bob"
- * - 3+ authors → Oxford-comma joined: "Alice, Bob, and Carol"
- *
- * Unknown IDs fall back to the raw id. Empty input returns an empty string,
- * though `LabDocument.authors` is expected to be non-empty by convention.
+ * Resolves each ID via `PEOPLE` (falls back to the raw ID when unknown).
+ * - 1 author: "Andrew Rose"
+ * - 2 authors: "Andrew Rose, Priya Rose"
+ * - 3+ authors: "Andrew Rose, Priya Rose, and Daniel Golliher" (Oxford comma)
  */
 export function formatAuthors(ids: string[]): string {
-  const names = ids.map(resolveAuthorName);
+  const names = ids.map((id) => PEOPLE.find((p) => p.id === id)?.name ?? id);
   if (names.length === 0) return "";
   if (names.length === 1) return names[0];
-  if (names.length === 2) return `${names[0]} and ${names[1]}`;
-  return `${names.slice(0, -1).join(", ")}, and ${names[names.length - 1]}`;
+  if (names.length === 2) return `${names[0]}, ${names[1]}`;
+  const head = names.slice(0, -1).join(", ");
+  const tail = names[names.length - 1];
+  return `${head}, and ${tail}`;
 }
 
-/** Return all documents that list the given person ID as an author (primary or co-author). */
+/** Return all documents where `id` appears in `authors`. */
 export function getDocumentsByAuthor(id: string): LabDocument[] {
   return LAB_DOCUMENTS.filter((d) => d.authors.includes(id));
 }
 
-/** Primary author ID for a document — the first entry in `authors`. */
+/** Return the primary author id (`authors[0]`) for a document. */
 export function getPrimaryAuthorId(doc: LabDocument): string {
   return doc.authors[0];
 }
 
-/**
- * Return only documents with a non-empty `url`. Phase B placeholder rows
- * (entries added before their URL is confirmed) will have `url: ""` and
- * should be filtered out of UI surfaces via this helper.
- */
+/** Return only documents that have a non-empty `url` (filters placeholder rows). */
 export function getPublishedDocuments(): LabDocument[] {
   return LAB_DOCUMENTS.filter((d) => d.url !== "");
 }
