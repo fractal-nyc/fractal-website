@@ -16,7 +16,7 @@ export function NeighborhoodPage() {
       <div className="min-h-screen flex flex-col items-center justify-start pt-16 md:pt-24 pb-32 md:pb-48 w-full">
         <section className="w-full">
           <div className="px-6 md:px-[4.5%] text-center">
-            <SectorHeader letter="N" name="Neighborhood" color="#4A5A30" />
+            <SectorHeader letter="V" name="Visit" color="#4A5A30" />
 
             <FadeIn>
               <p className="font-serif text-xl md:text-6xl leading-[1.3] mb-3 md:mb-10 text-center" style={{ fontWeight: 300, textTransform: "uppercase", fontStyle: "normal" }}>

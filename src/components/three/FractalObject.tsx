@@ -36,12 +36,12 @@ interface NavNode {
 // — these four cluster with the selected ones; skipping them gives the best spread.
 const NAV_NODES: NavNode[] = [
   { label: "Our Story",         route: "/story",            color: "#E07A5F", vertexIndex: 2  }, // top-left
-  { label: "Neighborhood",      route: "/neighborhood",     color: "#8B7355", vertexIndex: 4  }, // upper-back
+  { label: "Visit",             route: "/neighborhood",     color: "#8B7355", vertexIndex: 4  }, // upper-back
   { label: "Events",            route: "/events",           color: "#E07A5F", vertexIndex: 1  }, // upper-front
   { label: "Campus",            route: "/campus",           color: "#457B9D", vertexIndex: 6  }, // equator right-front
-  { label: "New Liberal Arts",  route: "/new-liberal-arts", color: "#1D3557", vertexIndex: 5  }, // equator left-back
+  { label: "Education",         route: "/new-liberal-arts", color: "#1D3557", vertexIndex: 5  }, // equator left-back
   { label: "Political Club",    route: "/political-club",   color: "#CC2936", vertexIndex: 10 }, // equator right-back
-  { label: "The Lab",           route: "/lab",              color: "#6B4C9A", vertexIndex: 9  }, // lower-back
+  { label: "Writing",           route: "/lab",              color: "#6B4C9A", vertexIndex: 9  }, // lower-back
   { label: "People",            route: "/people",           color: "#457B9D", vertexIndex: 8  }, // bottom-left
 ];
 

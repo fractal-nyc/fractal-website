@@ -40,11 +40,11 @@ describe("Inner page navbar", () => {
     const expectedSections = [
       "Story",
       "Campus",
-      "Neighborhood",
+      "Visit",
       "Events",
-      "New Liberal Arts",
+      "Education",
       "Political Club",
-      "Lab",
+      "Writing",
       "People",
     ];
 
@@ -77,11 +77,11 @@ describe("Inner page navbar", () => {
     const expectedRoutes: Record<string, string> = {
       Story: "/story",
       Campus: "/campus",
-      Neighborhood: "/neighborhood",
+      Visit: "/neighborhood",
       Events: "/events",
-      "New Liberal Arts": "/new-liberal-arts",
+      Education: "/new-liberal-arts",
       "Political Club": "/political-club",
-      Lab: "/lab",
+      Writing: "/lab",
       People: "/people",
     };
 
@@ -149,12 +149,12 @@ describe("Home page navbar (full state)", () => {
   });
 
   it("should render mobile nav with abbreviated labels for long section names", () => {
-    // Mobile + tablet full navbar shows abbreviated: LA for New Liberal Arts,
+    // Mobile + tablet full navbar shows abbreviated: E for Events and Education,
     // PC for Political Club. FRAC-158 raised the mobile-stack breakpoint from
     // md to lg so the mobile layout now covers viewports up to 1023px.
     const mobileSection = document.querySelector(".lg\\:hidden");
     expect(mobileSection).toBeTruthy();
-    expect(mobileSection!.textContent).toContain("LA");
+    expect(mobileSection!.textContent).toContain("E");
     expect(mobileSection!.textContent).toContain("PC");
   });
 });

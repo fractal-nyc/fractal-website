@@ -86,12 +86,12 @@ interface NavNode {
 }
 
 const OUTER_NAV_NODES: NavNode[] = [
-  { label: "Neighborhood",     route: "/neighborhood",     color: "#889460", vertexIndex: 3 },
+  { label: "Visit",            route: "/neighborhood",     color: "#889460", vertexIndex: 3 },
   { label: "Events",           route: "/events",           color: "#D4857A", vertexIndex: 2 },
   { label: "Campus",           route: "/campus",           color: "#2B5A48", vertexIndex: 0 },
-  { label: "New Liberal Arts", route: "/new-liberal-arts", color: "#C41E20", vertexIndex: 1 },
+  { label: "Education",        route: "/new-liberal-arts", color: "#C41E20", vertexIndex: 1 },
   { label: "Political Club",   route: "/political-club",   color: "#6E1830", vertexIndex: 4 },
-  { label: "The Lab",          route: "/lab",              color: "#E870A0", vertexIndex: 5 },
+  { label: "Writing",          route: "/lab",              color: "#E870A0", vertexIndex: 5 },
 ];
 
 // ---------------------------------------------------------------------------

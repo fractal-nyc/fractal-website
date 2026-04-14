@@ -169,9 +169,9 @@ export const HOUSES: House[] = [
   // 1. Co-Living — The Neighborhood
   {
     id: "neighborhood",
-    name: "The Neighborhood",
-    displayName: "Co-Living",
-    subtitle: "Co-Living",
+    name: "Visit",
+    displayName: "Visit",
+    subtitle: "Visit",
     slug: "neighborhood",
     route: "/neighborhood",
     color: "#8B7355",
@@ -222,9 +222,9 @@ export const HOUSES: House[] = [
   // 4. New Liberal Arts — The School
   {
     id: "school",
-    name: "The School",
-    displayName: "New Liberal Arts",
-    subtitle: "New Liberal Arts",
+    name: "Education",
+    displayName: "Education",
+    subtitle: "Education",
     slug: "new-liberal-arts",
     route: "/new-liberal-arts",
     color: "#1D3557",
@@ -254,8 +254,9 @@ export const HOUSES: House[] = [
   // 6. Lab — Research + Writing
   {
     id: "lab",
-    name: "The Lab",
-    subtitle: "Research + Writing",
+    name: "Writing",
+    displayName: "Writing",
+    subtitle: "Writing",
     slug: "lab",
     route: "/lab",
     color: "#6B4C9A",
