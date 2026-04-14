@@ -1,7 +1,7 @@
 import type { Person, PersonSocials } from "@/data/houses";
 import { HOUSES } from "@/data/houses";
 import { MandelbrotIcon } from "@/components/house/MandelbrotIcon";
-import { Newspaper, Globe } from "lucide-react";
+import { Globe } from "lucide-react";
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -53,13 +53,7 @@ function SocialLinks({ socials }: { socials: PersonSocials }) {
       icon: <XIcon className="h-3 w-3" />,
     });
   }
-  if (socials.substack) {
-    links.push({
-      href: socials.substack,
-      label: "Substack",
-      icon: <Newspaper className="h-3 w-3" />,
-    });
-  }
+  // MVP v0: Substack icon intentionally removed — FRAC-169.
   if (socials.website) {
     links.push({
       href: socials.website,
