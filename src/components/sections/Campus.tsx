@@ -3,7 +3,78 @@ import { SectorHeader } from "@/components/layout/SectorHeader";
 import { CornerDecorations } from "@/components/ui/MandelbrotCorners";
 
 const LUMA_URL = "https://luma.com/nyc-tech";
+const LUMA_EVENTS_URL = "https://lu.ma/nyc-tech";
 const FRACTAL_U_URL = "https://fractaluniversity.substack.com/";
+const FLOWGLAD_MEMBERSHIP_URL =
+  "https://app.flowglad.com/price/vrnt_G3G0SI2sWu0cdE0GBVxKE/purchase";
+const FLOWGLAD_DAYPASS_URL =
+  "https://app.flowglad.com/price/vrnt_19pxxXOzdUd3xiBVilFYB/purchase";
+const GOOGLE_MAPS_URL =
+  "https://www.google.com/maps/place/111+Conselyea+St,+Brooklyn,+NY+11211/";
+const PAMPAM_URL = "https://www.pampam.city/p/3hItQdj7pnuUtEkU4p7I";
+const ACCELERATOR_URL = "/";
+const MERLINS_URL = "https://merlins.place/";
+const FRACTAL_BOOTCAMP_URL = "https://fractalbootcamp.com/";
+const STRIPE_BILLING_URL = "https://billing.stripe.com/p/login/7sI8zddAWdabfYc144";
+const CONTACT_ANDREW_MAILTO = "mailto:ajroberts0417@gmail.com";
+const HELLO_FRACTAL_MAILTO = "mailto:hello@fractaltech.xyz";
+
+const inlineLinkClass =
+  "underline decoration-white/40 hover:decoration-white transition-colors";
+
+function InlineLink({
+  href,
+  children,
+  external = true,
+}: {
+  href: string;
+  children: React.ReactNode;
+  external?: boolean;
+}) {
+  const externalProps = external
+    ? { target: "_blank" as const, rel: "noopener noreferrer" }
+    : {};
+  return (
+    <a href={href} {...externalProps} className={inlineLinkClass}>
+      {children}
+    </a>
+  );
+}
+
+const teamBios = [
+  {
+    name: "Andrew Rose",
+    role: "Co-Founder",
+    links: [
+      { label: "twitter", href: "https://twitter.com/__drewface" },
+      { label: "github", href: "https://github.com/ajroberts0417" },
+    ],
+    previously: (
+      <>
+        Founder of{" "}
+        <InlineLink href="https://www.producthunt.com/products/qrono">Qrono</InlineLink>,
+        founding engineer at{" "}
+        <InlineLink href="https://culdesac.com/">Culdesac</InlineLink>, and Interim Head of
+        School at{" "}
+        <InlineLink href="https://www.guidepostmontessori.com/schools/museum-mile-new-york-ny">
+          Guidepost Montessori at Museum Mile
+        </InlineLink>
+        .
+      </>
+    ),
+  },
+  {
+    name: "Jake Zegil",
+    role: "Co-Founder",
+    links: [{ label: "github", href: "https://github.com/jakezegil" }],
+    previously: (
+      <>
+        Founding Engineer, Director of Engineering at{" "}
+        <InlineLink href="https://tenet.com/">Tenet</InlineLink>.
+      </>
+    ),
+  },
+];
 
 const amenities = [
   "24/7 hot desk access",
@@ -111,7 +182,9 @@ export function Campus() {
                 Fractal Campus
               </p>
               <p className="font-serif text-lg md:text-xl text-white/80 mb-8 normal-case">
-                111 Conselyea St, Brooklyn, NY
+                <InlineLink href={GOOGLE_MAPS_URL}>
+                  111 Conselyea St, Brooklyn, NY
+                </InlineLink>
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-8">
                 <PrimaryButton href={LUMA_URL}>Visit by joining us for an event</PrimaryButton>
@@ -165,7 +238,11 @@ export function Campus() {
           </h2>
           <ul className="space-y-5 text-sm md:text-base text-white/90 font-light leading-relaxed max-w-3xl">
             <li>
-              <strong className="font-semibold text-white">Fractal AI Accelerator participants</strong>
+              <strong className="font-semibold text-white">
+                <InlineLink href={ACCELERATOR_URL} external={false}>
+                  Fractal AI Accelerator participants
+                </InlineLink>
+              </strong>
             </li>
             <li>
               <strong className="font-semibold text-white">
@@ -186,8 +263,8 @@ export function Campus() {
               to our space for coworking and projects
             </li>
             <li>
-              <strong className="font-semibold text-white">Guests</strong> coming to one of the 5+
-              events we host per week
+              <strong className="font-semibold text-white">Guests</strong> coming to one of the{" "}
+              <InlineLink href={LUMA_EVENTS_URL}>5+ events we host per week</InlineLink>
             </li>
           </ul>
           <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-start items-center">
@@ -228,12 +305,16 @@ export function Campus() {
             <p>
               We prioritize intentional community: you'll share space, meals, conversations, and
               ideate with small companies, talented founders, designers, and engineers from all
-              over New York City, as well as be motivated by working alongside our Fractal AI
-              Accelerator cohorts.
+              over New York City, as well as be motivated by working alongside our{" "}
+              <InlineLink href={ACCELERATOR_URL} external={false}>
+                Fractal AI Accelerator cohorts
+              </InlineLink>
+              .
             </p>
             <p>
-              The Campus hosts regular events in evenings and on weekends. We aim to ignite a New
-              York City Renaissance by networking
+              The Campus hosts{" "}
+              <InlineLink href={LUMA_EVENTS_URL}>regular events</InlineLink> in evenings and on
+              weekends. We aim to ignite a New York City Renaissance by networking
             </p>
             <p>
               While we have strict rules against interrupting people who are mid-work, or being
@@ -266,10 +347,10 @@ export function Campus() {
             <p className="text-white/70 italic">— Andrew Rose, Fractal Campus co-founder</p>
           </div>
           <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-start items-center">
-            <PrimaryButton href={LUMA_URL}>
+            <PrimaryButton href={FLOWGLAD_MEMBERSHIP_URL}>
               I'm in, I want to become a member! ($300/mo)
             </PrimaryButton>
-            <PrimaryButton href={LUMA_URL}>
+            <PrimaryButton href={FLOWGLAD_DAYPASS_URL}>
               Or I want to purchase a Day Pass for $40!
             </PrimaryButton>
           </div>
@@ -318,10 +399,10 @@ export function Campus() {
             <p className="text-white/70 italic">Co-founder (and uncle) Jake Zegil</p>
           </div>
           <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-start items-center">
-            <PrimaryButton href={LUMA_URL}>
+            <PrimaryButton href={FLOWGLAD_MEMBERSHIP_URL}>
               You've inspired me, I'm up for membership! — $300/mo
             </PrimaryButton>
-            <PrimaryButton href={LUMA_URL}>
+            <PrimaryButton href={FLOWGLAD_DAYPASS_URL}>
               Or I'm interested in a day pass! — $40
             </PrimaryButton>
           </div>
@@ -350,7 +431,10 @@ export function Campus() {
             And many more — seriously, we've hosted almost one event per day we've been open!
           </p>
           <p className="mt-4 text-sm md:text-base text-white/70 italic font-light leading-relaxed max-w-3xl">
-            Want to host an event here? Contact Andrew!
+            Want to host an event here?{" "}
+            <InlineLink href={CONTACT_ANDREW_MAILTO} external={false}>
+              Contact Andrew!
+            </InlineLink>
           </p>
         </FadeIn>
       </div>
@@ -387,7 +471,7 @@ export function Campus() {
       </div>
 
       {/* McCarren Park */}
-      <div className="max-w-7xl mx-auto px-6 md:px-[4.5%] pb-24 md:pb-40">
+      <div className="max-w-7xl mx-auto px-6 md:px-[4.5%] pb-24 md:pb-32">
         <FadeIn>
           <h2 className="text-2xl md:text-3xl font-serif mb-6 normal-case">
             …and a short walk to McCarren Park
@@ -401,9 +485,104 @@ export function Campus() {
             </footer>
           </blockquote>
           <p className="text-sm md:text-base text-white/90 font-light leading-relaxed max-w-3xl">
-            For more, check out our PamPam map of our favorite spots to eat, drink, and explore
-            nearby!
+            For more, check out our{" "}
+            <InlineLink href={PAMPAM_URL}>PamPam map</InlineLink> of our favorite spots to eat,
+            drink, and explore nearby!
           </p>
+        </FadeIn>
+      </div>
+
+      {/* Build with us */}
+      <div className="max-w-7xl mx-auto px-6 md:px-[4.5%] pb-24 md:pb-32">
+        <FadeIn>
+          <h2 className="text-2xl md:text-3xl font-serif mb-6 normal-case">Build with us.</h2>
+          <p className="text-sm md:text-base text-white/90 font-light leading-relaxed max-w-3xl mb-10">
+            <InlineLink href={HELLO_FRACTAL_MAILTO} external={false}>
+              hello@fractaltech.xyz
+            </InlineLink>
+          </p>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-12 max-w-4xl mb-12">
+            {teamBios.map((bio) => (
+              <div key={bio.name} className="flex flex-col gap-3">
+                <div>
+                  <p className="text-lg md:text-xl font-serif text-white normal-case">
+                    {bio.name}
+                  </p>
+                  <p className="text-sm text-white/70 italic normal-case">{bio.role}</p>
+                </div>
+                <div className="flex flex-wrap gap-4 text-sm text-white/80 font-light">
+                  {bio.links.map((link, idx) => (
+                    <span key={link.href} className="flex items-center gap-4">
+                      {idx > 0 && <span aria-hidden className="text-white/30">·</span>}
+                      <InlineLink href={link.href}>{link.label}</InlineLink>
+                    </span>
+                  ))}
+                </div>
+                <p className="text-sm md:text-base text-white/90 font-light leading-relaxed">
+                  <span className="text-white/60">Previously: </span>
+                  {bio.previously}
+                </p>
+              </div>
+            ))}
+          </div>
+
+          <div className="max-w-3xl space-y-6 text-sm md:text-base text-white/90 font-light leading-relaxed mb-10">
+            <p>
+              We built Fractal Campus to raise the aspirations of every founder and engineer
+              looking for community. Instead of working solo, we want our members to find
+              themselves in good company — with founders who are earnest about building something
+              meaningful, students who are earnest about learning new skills, and researchers who
+              share what they're learning.
+            </p>
+            <p>It's dangerous to build alone! Join us:</p>
+          </div>
+
+          <div className="flex flex-col sm:flex-row gap-4 justify-start items-center mb-10">
+            <PrimaryButton href={FLOWGLAD_MEMBERSHIP_URL}>
+              Become a coworking member — $300/mo
+            </PrimaryButton>
+            <PrimaryButton href={FLOWGLAD_DAYPASS_URL}>
+              Just want a day pass — $40
+            </PrimaryButton>
+          </div>
+
+          <p className="text-sm md:text-base text-white/70 font-light leading-relaxed max-w-3xl">
+            P.S. Need to manage or cancel your membership?{" "}
+            <InlineLink href={STRIPE_BILLING_URL}>You can do that here</InlineLink>.
+          </p>
+        </FadeIn>
+      </div>
+
+      {/* …by the way, what's Fractal? */}
+      <div className="max-w-7xl mx-auto px-6 md:px-[4.5%] pb-24 md:pb-40">
+        <FadeIn>
+          <h2 className="text-2xl md:text-3xl font-serif mb-6 normal-case">
+            …by the way, what's Fractal?
+          </h2>
+          <div className="space-y-6 text-sm md:text-base text-white/90 font-light leading-relaxed max-w-3xl">
+            <p>
+              <strong className="font-semibold text-white">
+                <InlineLink href="/" external={false}>
+                  Fractal
+                </InlineLink>
+              </strong>{" "}
+              is a loose collective of writers, designers, musicians, clowns, entrepreneurs,
+              artists, coders, and scientists who decided to live within walking distance of each
+              other in Brooklyn.
+            </p>
+            <p>
+              Fractal is made up of 15+ affiliated co-living houses and has spawned a bunch of fun
+              projects, including{" "}
+              <InlineLink href={FRACTAL_U_URL}>Fractal University</InlineLink>, third spaces like{" "}
+              <InlineLink href={MERLINS_URL}>Merlin's Place</InlineLink>, and of course{" "}
+              <InlineLink href="/campus" external={false}>
+                Fractal Campus
+              </InlineLink>{" "}
+              and{" "}
+              <InlineLink href={FRACTAL_BOOTCAMP_URL}>Fractal Bootcamp</InlineLink>!
+            </p>
+          </div>
         </FadeIn>
       </div>
     </section>
