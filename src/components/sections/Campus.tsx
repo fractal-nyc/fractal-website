@@ -17,6 +17,7 @@ const MERLINS_URL = "https://merlins.place/";
 const FRACTAL_BOOTCAMP_URL = "https://fractalbootcamp.com/";
 const STRIPE_BILLING_URL = "https://billing.stripe.com/p/login/7sI8zddAWdabfYc144";
 const CONTACT_ANDREW_MAILTO = "mailto:ajroberts0417@gmail.com";
+const MERLINS_EVENTS_MAILTO = "mailto:events@merlins.place";
 const HELLO_FRACTAL_MAILTO = "mailto:hello@fractaltech.xyz";
 
 const inlineLinkClass =
@@ -409,9 +410,6 @@ export function Campus() {
       <div className="max-w-7xl mx-auto px-6 md:px-[4.5%] pb-24 md:pb-32">
         <FadeIn>
           <h2 className="text-2xl md:text-3xl font-serif mb-6 normal-case">Events</h2>
-          <div className="mb-10 flex flex-col sm:flex-row gap-4 justify-start items-center">
-            <PrimaryButton href={LUMA_URL}>Check out our Event Calendar</PrimaryButton>
-          </div>
           <p className="text-sm md:text-base text-white/90 font-light leading-relaxed max-w-3xl mb-8">
             Types of events we've hosted at the Fractal Campus so far:
           </p>
@@ -426,10 +424,13 @@ export function Campus() {
           <p className="mt-8 text-sm md:text-base text-white/90 font-light leading-relaxed max-w-3xl">
             And many more — seriously, we've hosted almost one event per day we've been open!
           </p>
+          <div className="mt-10 mb-6 flex flex-col sm:flex-row gap-4 justify-start items-center">
+            <PrimaryButton href={LUMA_URL}>Join events at Fractal Campus</PrimaryButton>
+          </div>
           <p className="mt-4 text-sm md:text-base text-white/70 italic font-light leading-relaxed max-w-3xl">
             Want to host an event here?{" "}
-            <InlineLink href={CONTACT_ANDREW_MAILTO} external={false}>
-              Contact Andrew!
+            <InlineLink href={MERLINS_EVENTS_MAILTO} external={false}>
+              Email Merlin's Place
             </InlineLink>
           </p>
         </FadeIn>
