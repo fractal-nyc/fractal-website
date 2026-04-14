@@ -355,6 +355,23 @@ export function Campus() {
         </FadeIn>
       </div>
 
+      {/* Merlin's Place */}
+      <div className="max-w-7xl mx-auto px-6 md:px-[4.5%] pb-24 md:pb-32">
+        <FadeIn>
+          <h2 className="text-2xl md:text-3xl font-serif mb-6 normal-case">
+            Merlin's Place
+          </h2>
+          <p className="text-sm md:text-base text-white/90 font-light leading-relaxed max-w-3xl mb-8">
+            Merlin's Place is our communal living room — a Brooklyn loft that
+            hundreds of neighbors share as a third space. It's where so many of
+            our classes, dinners, hangouts, and friendships start.
+          </p>
+          <PrimaryButton href="https://merlins.place/">
+            Visit Merlin's Place
+          </PrimaryButton>
+        </FadeIn>
+      </div>
+
       {/* Williamsburg */}
       <div className="max-w-7xl mx-auto px-6 md:px-[4.5%] pb-24 md:pb-32">
         <FadeIn>
