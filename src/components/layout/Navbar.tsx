@@ -15,19 +15,24 @@ const sectionLinks = [
   { name: "People", href: "/people", color: "#C49040" },
 ];
 
-// Inner-page navbar hides all eight section links. The home page navbar and the
-// full-screen overlay menu still expose all eight sections.
+// FRAC-161: Hide "Political Club" and "People" from every nav variant without
+// removing their routes/components. To restore, remove names from this set.
+const HIDDEN_SECTION_NAMES = new Set(["Political Club", "People"]);
+const visibleSectionLinks = sectionLinks.filter(
+  (link) => !HIDDEN_SECTION_NAMES.has(link.name),
+);
+
+// Inner-page navbar hides all remaining section links. The home page navbar
+// and the full-screen overlay menu still expose the visible sections.
 const innerPageHiddenLinks = new Set([
   "Story",
   "Campus",
   "Neighborhood",
   "Events",
   "New Liberal Arts",
-  "Political Club",
   "Lab",
-  "People",
 ]);
-const innerPageSectionLinks = sectionLinks.filter(
+const innerPageSectionLinks = visibleSectionLinks.filter(
   (link) => !innerPageHiddenLinks.has(link.name)
 );
 
@@ -111,8 +116,8 @@ export function Navbar() {
 
   });
 
-  const leftLinks = sectionLinks.slice(0, 4);
-  const rightLinks = sectionLinks.slice(4);
+  const leftLinks = visibleSectionLinks.slice(0, 3);
+  const rightLinks = visibleSectionLinks.slice(3);
 
   const showFull = isHome && !hasScrolledPast;
 
@@ -211,7 +216,7 @@ export function Navbar() {
 
               {/* Nav letters row */}
               <nav className="flex items-baseline justify-between mt-2">
-                {sectionLinks.map((link) => (
+                {visibleSectionLinks.map((link) => (
                   <Link
                     key={link.name}
                     href={link.href}
@@ -347,7 +352,7 @@ export function Navbar() {
       >
         {/* Section page list */}
         <nav className="flex flex-col w-full pt-24 pb-8 px-6 max-w-md mx-auto">
-          {sectionLinks.map((link) => {
+          {visibleSectionLinks.map((link) => {
             const letter =
               link.name === "New Liberal Arts"
                 ? "LA"

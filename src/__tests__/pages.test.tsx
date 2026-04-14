@@ -37,6 +37,8 @@ vi.mock("@/hooks/use-archive-filter", () => ({
 // Import pages after mocks
 // ═══════════════════════════════════════════════════════════════════════════
 
+import { Home } from "@/pages/Home";
+import { HouseBannerGrid } from "@/components/house/HouseBannerGrid";
 import { StoryPage } from "@/pages/StoryPage";
 import { CampusPage } from "@/pages/CampusPage";
 import { NeighborhoodPage } from "@/pages/NeighborhoodPage";
@@ -107,6 +109,33 @@ describe("Page rendering", () => {
 // ═══════════════════════════════════════════════════════════════════════════
 // Route path mapping — verify the App routes match expected URL structure
 // ═══════════════════════════════════════════════════════════════════════════
+
+// ═══════════════════════════════════════════════════════════════════════════
+// FRAC-161 — hidden surfaces
+// ═══════════════════════════════════════════════════════════════════════════
+
+describe("FRAC-161 visibility filters", () => {
+  it("HouseBannerGrid should NOT render Political Club", () => {
+    const { container } = render(<HouseBannerGrid />);
+    expect(container.textContent).not.toContain("Political Club");
+    // Banner uses "PC" as the monogram for the forum house; it should be absent.
+    expect(container.textContent).not.toContain("PC");
+  });
+
+  it("Home page should NOT render the 'How Do I Get Involved' banner grid heading", () => {
+    const { hook } = memoryLocation({ path: "/", static: true });
+    const { container } = render(
+      <QueryClientProvider client={queryClient}>
+        <TooltipProvider>
+          <WouterRouter hook={hook}>
+            <Home />
+          </WouterRouter>
+        </TooltipProvider>
+      </QueryClientProvider>,
+    );
+    expect(container.textContent).not.toContain("How Do I Get Involved");
+  });
+});
 
 describe("Route paths match expected URLs", () => {
   const expectedRoutes = [
