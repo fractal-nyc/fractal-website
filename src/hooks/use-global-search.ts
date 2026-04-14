@@ -1,6 +1,6 @@
 import { useState, useMemo, useCallback } from "react";
 import { PEOPLE, HOUSES, type Person, type House } from "@/data/houses";
-import { LAB_DOCUMENTS, type LabDocument } from "@/data/lab-documents";
+import { LAB_DOCUMENTS, formatAuthors, type LabDocument } from "@/data/lab-documents";
 import { TAG_LABELS } from "@/data/lab-tags";
 
 // ---------------------------------------------------------------------------
