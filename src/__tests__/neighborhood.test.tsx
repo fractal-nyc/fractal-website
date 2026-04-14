@@ -98,14 +98,16 @@ describe("Neighborhood page — ordered list", () => {
 // ═══════════════════════════════════════════════════════════════════════════
 
 describe("Neighborhood page — content", () => {
-  it("should display the SectorHeader with letter N", () => {
+  it("should display the SectorHeader with letter V", () => {
     renderNeighborhood();
-    expect(screen.getByText("N")).toBeTruthy();
-    // "Neighborhood" appears in both the navbar links and the SectorHeader name,
+    // "V" appears in navbar NavLink's decorative first letter as well as the
+    // SectorHeader's letter span — use getAllByText.
+    expect(screen.getAllByText("V").length).toBeGreaterThanOrEqual(1);
+    // "Visit" appears in both the navbar links and the SectorHeader name,
     // so use getAllByText and verify at least one is the SectorHeader's <span>
-    const neighborhoodElements = screen.getAllByText("Neighborhood");
-    expect(neighborhoodElements.length).toBeGreaterThanOrEqual(1);
-    const sectorSpan = neighborhoodElements.find(
+    const visitElements = screen.getAllByText("Visit");
+    expect(visitElements.length).toBeGreaterThanOrEqual(1);
+    const sectorSpan = visitElements.find(
       (el) => el.tagName === "SPAN" && el.className.includes("tracking-widest"),
     );
     expect(sectorSpan).toBeTruthy();

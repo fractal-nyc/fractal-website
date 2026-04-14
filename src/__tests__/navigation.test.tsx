@@ -40,10 +40,10 @@ describe("Inner page navbar", () => {
     const expectedSections = [
       "Story",
       "Campus",
-      "Neighborhood",
+      "Visit",
       "Events",
-      "New Liberal Arts",
-      "Lab",
+      "Education",
+      "Publications",
     ];
 
     for (const section of expectedSections) {
@@ -83,10 +83,10 @@ describe("Inner page navbar", () => {
     const expectedNames = [
       "Story",
       "Campus",
-      "Neighborhood",
+      "Visit",
       "Events",
-      "New Liberal Arts",
-      "Lab",
+      "Education",
+      "Publications",
     ];
     const overlay = document.querySelector(".fixed.inset-0.z-40");
     expect(overlay).toBeTruthy();
@@ -159,13 +159,14 @@ describe("Home page navbar (full state)", () => {
   });
 
   it("should render mobile nav with abbreviated labels for long section names", () => {
-    // Mobile + tablet full navbar shows abbreviated: LA for New Liberal Arts.
-    // FRAC-158 raised the mobile-stack breakpoint from md to lg so the mobile
-    // layout now covers viewports up to 1023px. FRAC-161 removed PC (Political
-    // Club) entirely.
-    const mobileSection = document.querySelector(".lg\\:hidden");
+    // Mobile + tablet full navbar shows abbreviated labels. After FRAC-161
+    // (hide Political Club + People) and FRAC-163 (rename New Liberal Arts →
+    // Education, Lab → Publications), the mobile row shows 6 letters:
+    // S C V E E P. No "PC" anymore (Political Club is hidden).
+    const mobileSection = document.querySelector(".lg\:hidden");
     expect(mobileSection).toBeTruthy();
-    expect(mobileSection!.textContent).toContain("LA");
+    expect(mobileSection!.textContent).toContain("E");
+    expect(mobileSection!.textContent).not.toContain("PC");
   });
 });
 

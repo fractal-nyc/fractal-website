@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { Fragment, useState } from "react";
 import { motion, useScroll, useMotionValueEvent } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import { Link, useLocation } from "wouter";
@@ -7,11 +7,11 @@ import { JustifiedParagraph } from "@/components/typeset/JustifiedParagraph";
 const sectionLinks = [
   { name: "Story", href: "/story", color: "#D4BA58" },
   { name: "Campus", href: "/campus", color: "#2B5A48" },
-  { name: "Neighborhood", href: "/neighborhood", color: "#889460" },
+  { name: "Visit", href: "/neighborhood", color: "#889460" },
   { name: "Events", href: "/events", color: "#D4857A" },
-  { name: "New Liberal Arts", href: "/new-liberal-arts", color: "#C41E20" },
+  { name: "Education", href: "/new-liberal-arts", color: "#C41E20" },
   { name: "Political Club", href: "/political-club", color: "#6E1830" },
-  { name: "Lab", href: "/lab", color: "#E870A0" },
+  { name: "Publications", href: "/lab", color: "#E870A0" },
   { name: "People", href: "/people", color: "#C49040" },
 ];
 
@@ -27,10 +27,12 @@ const visibleSectionLinks = sectionLinks.filter(
 const innerPageHiddenLinks = new Set([
   "Story",
   "Campus",
-  "Neighborhood",
+  "Visit",
   "Events",
-  "New Liberal Arts",
-  "Lab",
+  "Education",
+  "Political Club",
+  "Publications",
+  "People",
 ]);
 const innerPageSectionLinks = visibleSectionLinks.filter(
   (link) => !innerPageHiddenLinks.has(link.name)
@@ -43,52 +45,52 @@ const RIGHT_TEXT =
   "we believe small groups who share context deeply & build agentic tools for each other can move dramatically faster than individuals working alone, so We embrace experimentation, joyful cyborgism & fun-first collaboration to solve problems together with friends.";
 
 function NavLink({ name, href, color }: { name: string; href: string; color: string }) {
-  const isPoliticalClub = name === "Political Club";
-  if (isPoliticalClub) {
-    return (
-      <Link
-        href={href}
-        className="hover:opacity-70 transition-opacity"
-        style={{ color }}
-        aria-label="Political Club"
-      >
-        <span
-          style={{
-            fontFamily: "'Jacquard 24', system-ui",
-            fontSize: "38px",
-            lineHeight: 1,
-          }}
-        >
-          PC
-        </span>
-      </Link>
-    );
-  }
-  const first = name[0];
-  const rest = name.slice(1);
+  // Render each word's leading cap in Jacquard 24 (38px) and the remainder in
+  // light serif (22px). Multi-word labels like "New Liberal Arts" and
+  // "Political Club" therefore get a Jacquard cap on every word's first
+  // letter; single-word labels are unchanged.
+  const words = name.split(" ");
   return (
     <Link href={href} className="hover:opacity-70 transition-opacity" style={{ color }}>
-      <span
-        style={{
-          fontFamily: "'Jacquard 24', system-ui",
-          fontSize: "38px",
-          lineHeight: 1,
-        }}
-      >
-        {first}
-      </span>
-      <span
-        className="font-serif"
-        style={{
-          fontSize: "22px",
-          lineHeight: 1,
-          textTransform: "none",
-          fontStyle: "normal",
-          fontWeight: 300,
-        }}
-      >
-        {rest}
-      </span>
+      {words.map((word, i) => (
+        <Fragment key={i}>
+          {i > 0 && (
+            <span
+              className="font-serif"
+              style={{
+                fontSize: "22px",
+                lineHeight: 1,
+                textTransform: "none",
+                fontStyle: "normal",
+                fontWeight: 300,
+              }}
+            >
+              {"\u00A0"}
+            </span>
+          )}
+          <span
+            style={{
+              fontFamily: "'Jacquard 24', system-ui",
+              fontSize: "38px",
+              lineHeight: 1,
+            }}
+          >
+            {word[0]}
+          </span>
+          <span
+            className="font-serif"
+            style={{
+              fontSize: "22px",
+              lineHeight: 1,
+              textTransform: "none",
+              fontStyle: "normal",
+              fontWeight: 300,
+            }}
+          >
+            {word.slice(1)}
+          </span>
+        </Fragment>
+      ))}
     </Link>
   );
 }
@@ -230,8 +232,8 @@ export function Navbar() {
                         lineHeight: 1,
                       }}
                     >
-                      {link.name === "New Liberal Arts"
-                        ? "LA"
+                      {link.name === "Education"
+                        ? "E"
                         : link.name === "Political Club"
                           ? "PC"
                           : link.name[0]}
@@ -354,8 +356,8 @@ export function Navbar() {
         <nav className="flex flex-col w-full pt-24 pb-8 px-6 max-w-md mx-auto">
           {visibleSectionLinks.map((link) => {
             const letter =
-              link.name === "New Liberal Arts"
-                ? "LA"
+              link.name === "Education"
+                ? "E"
                 : link.name === "Political Club"
                   ? "PC"
                   : link.name[0];
