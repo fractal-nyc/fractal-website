@@ -186,17 +186,13 @@ export function Campus() {
                   111 Conselyea St, Brooklyn, NY
                 </InlineLink>
               </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-8">
+              <div className="flex flex-col sm:flex-row sm:flex-wrap gap-4 justify-center items-center mb-4">
                 <PrimaryButton href={LUMA_URL}>Visit by joining us for an event</PrimaryButton>
+                <PrimaryButton href={FLOWGLAD_MEMBERSHIP_URL}>Co-work with us — $300/mo</PrimaryButton>
+                <PrimaryButton href={FLOWGLAD_DAYPASS_URL}>Day Pass — $40</PrimaryButton>
               </div>
-              <p className="text-sm md:text-base text-white/90 font-light normal-case mb-2">
-                Co-work with us! Register here — $300/mo
-              </p>
-              <p className="text-sm md:text-base text-white/90 font-light normal-case mb-3">
-                Or Purchase a Day Pass for $40*
-              </p>
-              <p className="text-xs md:text-sm text-white/70 italic normal-case">
-                *Want a reduced rate? Let us know. We want the space to be accessible to all.
+              <p className="text-xs md:text-sm text-white/70 italic normal-case text-center">
+                Want a reduced rate? Let us know. We want the space to be accessible to all.
               </p>
             </div>
           </FadeIn>
