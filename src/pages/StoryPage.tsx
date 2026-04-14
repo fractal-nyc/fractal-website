@@ -203,15 +203,23 @@ export function StoryPage() {
       <div className="relative z-10">
       <Navbar />
       <div>
-        {/* Talks & Podcasts Section */}
-        <section className="min-h-screen flex flex-col items-center justify-start pt-16 md:pt-24 pb-16 md:pb-24">
-          <div className="max-w-6xl mx-auto px-6 md:px-[4.5%]">
+        {/* Story heading + origin narrative + diagram */}
+        <section className="flex flex-col items-center justify-start pt-16 md:pt-24">
+          <div className="max-w-6xl mx-auto px-6 md:px-[4.5%] w-full">
             <SectorHeader letter="S" name="Story" color="#8A7A20" />
             <FadeIn>
               <p className="font-serif text-4xl md:text-6xl leading-[1.3] mb-12 text-center" style={{ fontWeight: 300, textTransform: "uppercase", fontStyle: "normal" }}>
                 From a Single Apartment to a Neighborhood Campus
               </p>
             </FadeIn>
+          </div>
+        </section>
+
+        <OriginStory />
+
+        {/* Talks & Podcasts Section */}
+        <section className="flex flex-col items-center justify-start pt-8 md:pt-12 pb-16 md:pb-24">
+          <div className="max-w-6xl mx-auto px-6 md:px-[4.5%]">
             <FadeIn>
               <PretextParagraph
                 size={TEXT_SIZES.lg}
@@ -234,7 +242,6 @@ export function StoryPage() {
           </div>
         </section>
 
-        <OriginStory />
         <PhotoGallery sections={gallerySections} />
       </div>
       <Footer />
