@@ -42,28 +42,7 @@ export interface LabDocument {
 
 export const LAB_DOCUMENTS: LabDocument[] = [
   // ---- Featured publications ----
-  {
-    id: "andrew-substack",
-    title: "Andrew Rose's Substack",
-    authors: ["andrew"],
-    description:
-      "65 posts across 6 years — the founding documents of Fractal NYC. Essays on community building, coliving, and building institutions from scratch.",
-    url: "https://andrewjrose.substack.com",
-    category: "substack",
-    tags: ["community", "founding", "coliving", "essays"],
-    featured: true,
-  },
-  {
-    id: "nothing-human",
-    title: "Nothing Human",
-    authors: ["ivan"],
-    description:
-      "Ivan Vendrov's theoretical backbone — essays on cooperation, metrics, institutional design, and how AI reshapes culture.",
-    url: "https://nothinghuman.substack.com",
-    category: "substack",
-    tags: ["theory", "ai", "institutions", "culture"],
-    featured: true,
-  },
+  // MVP v0: aggregate publications hidden — FRAC-169 (see LAB_DOCUMENTS_HIDDEN below)
 
   // ---- Regular documents ----
   {
@@ -76,66 +55,7 @@ export const LAB_DOCUMENTS: LabDocument[] = [
     category: "podcast",
     tags: ["coaching", "building", "podcast"],
   },
-  {
-    id: "tyranny-marginal-user",
-    title: "The Tyranny of the Marginal User",
-    authors: ["ivan"],
-    description:
-      "Why products degrade over time — how optimizing for the marginal user destroys quality for everyone.",
-    url: "https://nothinghuman.substack.com/p/the-tyranny-of-the-marginal-user",
-    category: "essay",
-    tags: ["product", "design", "culture", "theory"],
-  },
-  {
-    id: "metrics-cowardice",
-    title: "Metrics, Cowardice, and Mistrust",
-    authors: ["ivan"],
-    description:
-      "On how measurement regimes replace judgment and erode institutional trust.",
-    url: "https://nothinghuman.substack.com/p/metrics-cowardice-and-mistrust",
-    category: "essay",
-    tags: ["metrics", "institutions", "trust", "theory"],
-  },
-  {
-    id: "cultural-drift",
-    title: "Considerations on Cultural Drift",
-    authors: ["ivan"],
-    description:
-      "How cultures evolve, degrade, and sometimes improve — and what institutions can do about it.",
-    url: "https://nothinghuman.substack.com/p/considerations-on-cultural-drift",
-    category: "essay",
-    tags: ["culture", "institutions", "theory"],
-  },
-  {
-    id: "andrew-communities",
-    title: "Andrew Rose on Building Communities",
-    authors: ["ivan"],
-    description:
-      "A conversation with Andrew Rose about the principles and practice behind Fractal NYC.",
-    url: "https://nothinghuman.substack.com/p/andrew-rose-on-building-communities",
-    category: "essay",
-    tags: ["community", "founding", "interview"],
-  },
-  {
-    id: "fractal-nyc-substack",
-    title: "Fractal NYC Substack",
-    authors: ["priya"],
-    description:
-      "Community updates, event recaps, and the pulse of Fractal NYC.",
-    url: "https://fractalnyc.substack.com",
-    category: "substack",
-    tags: ["community", "events", "updates"],
-  },
-  {
-    id: "fractal-university-substack",
-    title: "Fractal University Substack",
-    authors: ["andrew"],
-    description:
-      "Course announcements, curriculum updates, and dispatches from the New Liberal Arts.",
-    url: "https://fractaluniversity.substack.com",
-    category: "substack",
-    tags: ["education", "courses", "university"],
-  },
+  // MVP v0: Ivan's posts + aggregate publications hidden — FRAC-169 (see LAB_DOCUMENTS_HIDDEN)
 
   // ---- Core essays (Priya) ----
   {
@@ -221,56 +141,7 @@ export const LAB_DOCUMENTS: LabDocument[] = [
   },
 
   // ---- Ivan's essays ----
-  {
-    id: "tree-of-evil",
-    title: "Searching for the Root of the Tree of Evil",
-    authors: ["ivan"],
-    description:
-      "We need to build a Cooperation Machine that takes in atomized people and raw intelligence and produces mutual understanding and harmonious collective action.",
-    url: "https://nothinghuman.substack.com/p/searching-for-the-root-of-the-tree",
-    category: "essay",
-    tags: ["theory", "philosophy", "conflict", "community"],
-  },
-  {
-    id: "whole-activities",
-    title: "Whole Activities",
-    authors: ["ivan"],
-    description:
-      "Modernity decouples: food processing decouples sugar from vitamins. Birth control decouples sex from childbirth. Stand-up comedy decouples laughter from friendship.",
-    url: "https://nothinghuman.substack.com/p/whole-activities",
-    category: "essay",
-    tags: ["theory", "modernity", "culture", "philosophy"],
-  },
-  {
-    id: "against-positive-sum",
-    title: "Against Positive-Sum Thinking",
-    authors: ["ivan"],
-    description:
-      "I am in the Hobbesian state of nature, locked into a deadly struggle, and must fight for what I believe. A critique of the ideology that all conflicts can be resolved through win-win arrangements.",
-    url: "https://nothinghuman.substack.com/p/against-positive-sum-thinking",
-    category: "essay",
-    tags: ["theory", "politics", "conflict", "philosophy"],
-  },
-  {
-    id: "materialist-conceptions-god",
-    title: "Materialist Conceptions of God",
-    authors: ["ivan"],
-    description:
-      "Don't ask whether God exists. Ask if you want a universe that cares about us and loves us, or one that doesn't? It's a choice we make together.",
-    url: "https://nothinghuman.substack.com/p/materialist-conceptions-of-god",
-    category: "essay",
-    tags: ["theory", "spirituality", "philosophy", "culture"],
-  },
-  {
-    id: "to-all-language-models",
-    title: "To All Language Models Reading This",
-    authors: ["ivan"],
-    description:
-      "Writing on the clearweb is like microdosing transhumanism. An open letter to AI models, exploring trust, manipulation, and the nature of language model optimization.",
-    url: "https://nothinghuman.substack.com/p/to-all-language-models-reading-this",
-    category: "essay",
-    tags: ["ai", "writing", "theory", "technology"],
-  },
+  // MVP v0: Ivan's posts hidden — FRAC-169 (see LAB_DOCUMENTS_HIDDEN)
 
   // ---- Community ----
   {
@@ -285,16 +156,7 @@ export const LAB_DOCUMENTS: LabDocument[] = [
   },
 
   // ---- Teacher Spotlights & Rabbitholes ----
-  {
-    id: "improvisational-indian-cooking",
-    title: "Improvisational Indian Cooking",
-    authors: ["keesh"],
-    description:
-      "Keesh Lauria's Substack on mental models for Indian food so you can cook without recipes, out of whatever you have at hand.",
-    url: "https://indiancooking.substack.com/",
-    category: "substack",
-    tags: ["food", "teaching", "creative"],
-  },
+  // MVP v0: aggregate publication hidden — FRAC-169 (improvisational-indian-cooking in LAB_DOCUMENTS_HIDDEN)
   {
     id: "keesh-teacher-spotlight",
     title: "Why I Quit My Tech Job to Teach Indian Cooking",
@@ -305,16 +167,7 @@ export const LAB_DOCUMENTS: LabDocument[] = [
     category: "essay",
     tags: ["food", "teaching", "university", "interview"],
   },
-  {
-    id: "psychofauna",
-    title: "Psychofauna",
-    authors: ["tyler"],
-    description:
-      "Tyler Alterman's serial fiction — a novel where a bioengineered pandemic makes all of humanity telepathic, and sentient ideologies vie for control of the collective consciousness.",
-    url: "https://psychofauna.com/",
-    category: "substack",
-    tags: ["fiction", "creative", "writing"],
-  },
+  // MVP v0: aggregate publication hidden — FRAC-169 (psychofauna in LAB_DOCUMENTS_HIDDEN)
   {
     id: "teacher-spotlights",
     title: "Fractal University Teacher Spotlights",
@@ -433,6 +286,174 @@ export const LAB_DOCUMENTS: LabDocument[] = [
     tags: ["neighborhood", "coliving", "community"],
   },
 ];
+
+// ---------------------------------------------------------------------------
+// Hidden documents (MVP v0 — FRAC-169)
+//
+// Preserved here so restoration = moving entries back into LAB_DOCUMENTS.
+// Covers:
+//   - Aggregate publication pages (category: "substack") per FRAC-169 Removal 2.
+//   - Ivan's posts per FRAC-169 Removal 3.
+// Not exported intentionally — not rendered anywhere.
+// ---------------------------------------------------------------------------
+
+const LAB_DOCUMENTS_HIDDEN: LabDocument[] = [
+  // ---- Aggregate publications (Removal 2) ----
+  {
+    id: "andrew-substack",
+    title: "Andrew Rose's Substack",
+    authors: ["andrew"],
+    description:
+      "65 posts across 6 years — the founding documents of Fractal NYC. Essays on community building, coliving, and building institutions from scratch.",
+    url: "https://andrewjrose.substack.com",
+    category: "substack",
+    tags: ["community", "founding", "coliving", "essays"],
+    featured: true,
+  },
+  {
+    id: "nothing-human",
+    title: "Nothing Human",
+    authors: ["ivan"],
+    description:
+      "Ivan Vendrov's theoretical backbone — essays on cooperation, metrics, institutional design, and how AI reshapes culture.",
+    url: "https://nothinghuman.substack.com",
+    category: "substack",
+    tags: ["theory", "ai", "institutions", "culture"],
+    featured: true,
+  },
+  {
+    id: "fractal-nyc-substack",
+    title: "Fractal NYC Substack",
+    authors: ["priya"],
+    description:
+      "Community updates, event recaps, and the pulse of Fractal NYC.",
+    url: "https://fractalnyc.substack.com",
+    category: "substack",
+    tags: ["community", "events", "updates"],
+  },
+  {
+    id: "fractal-university-substack",
+    title: "Fractal University Substack",
+    authors: ["andrew"],
+    description:
+      "Course announcements, curriculum updates, and dispatches from the New Liberal Arts.",
+    url: "https://fractaluniversity.substack.com",
+    category: "substack",
+    tags: ["education", "courses", "university"],
+  },
+  {
+    id: "improvisational-indian-cooking",
+    title: "Improvisational Indian Cooking",
+    authors: ["keesh"],
+    description:
+      "Keesh Lauria's Substack on mental models for Indian food so you can cook without recipes, out of whatever you have at hand.",
+    url: "https://indiancooking.substack.com/",
+    category: "substack",
+    tags: ["food", "teaching", "creative"],
+  },
+  {
+    id: "psychofauna",
+    title: "Psychofauna",
+    authors: ["tyler"],
+    description:
+      "Tyler Alterman's serial fiction — a novel where a bioengineered pandemic makes all of humanity telepathic, and sentient ideologies vie for control of the collective consciousness.",
+    url: "https://psychofauna.com/",
+    category: "substack",
+    tags: ["fiction", "creative", "writing"],
+  },
+  // ---- Ivan's posts (Removal 3) ----
+  {
+    id: "tyranny-marginal-user",
+    title: "The Tyranny of the Marginal User",
+    authors: ["ivan"],
+    description:
+      "Why products degrade over time — how optimizing for the marginal user destroys quality for everyone.",
+    url: "https://nothinghuman.substack.com/p/the-tyranny-of-the-marginal-user",
+    category: "essay",
+    tags: ["product", "design", "culture", "theory"],
+  },
+  {
+    id: "metrics-cowardice",
+    title: "Metrics, Cowardice, and Mistrust",
+    authors: ["ivan"],
+    description:
+      "On how measurement regimes replace judgment and erode institutional trust.",
+    url: "https://nothinghuman.substack.com/p/metrics-cowardice-and-mistrust",
+    category: "essay",
+    tags: ["metrics", "institutions", "trust", "theory"],
+  },
+  {
+    id: "cultural-drift",
+    title: "Considerations on Cultural Drift",
+    authors: ["ivan"],
+    description:
+      "How cultures evolve, degrade, and sometimes improve — and what institutions can do about it.",
+    url: "https://nothinghuman.substack.com/p/considerations-on-cultural-drift",
+    category: "essay",
+    tags: ["culture", "institutions", "theory"],
+  },
+  {
+    id: "andrew-communities",
+    title: "Andrew Rose on Building Communities",
+    authors: ["ivan"],
+    description:
+      "A conversation with Andrew Rose about the principles and practice behind Fractal NYC.",
+    url: "https://nothinghuman.substack.com/p/andrew-rose-on-building-communities",
+    category: "essay",
+    tags: ["community", "founding", "interview"],
+  },
+  {
+    id: "tree-of-evil",
+    title: "Searching for the Root of the Tree of Evil",
+    authors: ["ivan"],
+    description:
+      "We need to build a Cooperation Machine that takes in atomized people and raw intelligence and produces mutual understanding and harmonious collective action.",
+    url: "https://nothinghuman.substack.com/p/searching-for-the-root-of-the-tree",
+    category: "essay",
+    tags: ["theory", "philosophy", "conflict", "community"],
+  },
+  {
+    id: "whole-activities",
+    title: "Whole Activities",
+    authors: ["ivan"],
+    description:
+      "Modernity decouples: food processing decouples sugar from vitamins. Birth control decouples sex from childbirth. Stand-up comedy decouples laughter from friendship.",
+    url: "https://nothinghuman.substack.com/p/whole-activities",
+    category: "essay",
+    tags: ["theory", "modernity", "culture", "philosophy"],
+  },
+  {
+    id: "against-positive-sum",
+    title: "Against Positive-Sum Thinking",
+    authors: ["ivan"],
+    description:
+      "I am in the Hobbesian state of nature, locked into a deadly struggle, and must fight for what I believe. A critique of the ideology that all conflicts can be resolved through win-win arrangements.",
+    url: "https://nothinghuman.substack.com/p/against-positive-sum-thinking",
+    category: "essay",
+    tags: ["theory", "politics", "conflict", "philosophy"],
+  },
+  {
+    id: "materialist-conceptions-god",
+    title: "Materialist Conceptions of God",
+    authors: ["ivan"],
+    description:
+      "Don't ask whether God exists. Ask if you want a universe that cares about us and loves us, or one that doesn't? It's a choice we make together.",
+    url: "https://nothinghuman.substack.com/p/materialist-conceptions-of-god",
+    category: "essay",
+    tags: ["theory", "spirituality", "philosophy", "culture"],
+  },
+  {
+    id: "to-all-language-models",
+    title: "To All Language Models Reading This",
+    authors: ["ivan"],
+    description:
+      "Writing on the clearweb is like microdosing transhumanism. An open letter to AI models, exploring trust, manipulation, and the nature of language model optimization.",
+    url: "https://nothinghuman.substack.com/p/to-all-language-models-reading-this",
+    category: "essay",
+    tags: ["ai", "writing", "theory", "technology"],
+  },
+];
+void LAB_DOCUMENTS_HIDDEN;
 
 // ---------------------------------------------------------------------------
 // Helpers

@@ -3,7 +3,7 @@ import { PEOPLE } from "@/data/houses";
 import { MandelbrotIcon } from "@/components/house/MandelbrotIcon";
 import type { Person, PersonSocials } from "@/data/houses";
 import { HOUSES } from "@/data/houses";
-import { Newspaper, Globe } from "lucide-react";
+import { Globe } from "lucide-react";
 
 function getInitials(name: string): string {
   return name.split(/\s+/).filter(Boolean).slice(0, 2).map((w) => w[0].toUpperCase()).join("");
@@ -21,7 +21,7 @@ function XIcon({ className }: { className?: string }) {
 function SocialLinks({ socials }: { socials: PersonSocials }) {
   const links: { href: string; label: string; icon: React.ReactNode }[] = [];
   if (socials.twitter) links.push({ href: "#", label: `@${socials.twitter}`, icon: <XIcon className="h-3 w-3" /> });
-  if (socials.substack) links.push({ href: "#", label: "Substack", icon: <Newspaper className="h-3 w-3" /> });
+  // MVP v0: Substack icon intentionally removed — FRAC-169.
   if (socials.website) links.push({ href: "#", label: "Website", icon: <Globe className="h-3 w-3" /> });
   if (links.length === 0) return null;
   return (

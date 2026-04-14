@@ -25,14 +25,6 @@ vi.mock("@/components/lab/DocumentGrid", () => ({
   DocumentGrid: () => <div data-testid="document-grid-mock" />,
 }));
 
-vi.mock("@/components/lab/ArchiveToolbar", () => ({
-  ArchiveToolbar: () => <div data-testid="archive-toolbar-mock" />,
-}));
-
-vi.mock("@/hooks/use-archive-filter", () => ({
-  useArchiveFilter: () => ({ isFiltering: false, filtered: [] }),
-}));
-
 // ═══════════════════════════════════════════════════════════════════════════
 // Import pages after mocks
 // ═══════════════════════════════════════════════════════════════════════════

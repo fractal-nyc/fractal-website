@@ -174,13 +174,17 @@ function searchDocuments(query: string): SearchResult[] {
   const results: { result: SearchResult; score: number }[] = [];
   for (const doc of LAB_DOCUMENTS) {
     const titleScore = matchScore(doc.title, q);
-    const authorName = authorNameMap.get(doc.author) ?? doc.author;
-    const authorScore = matchScore(authorName, q) * 0.5;
+    const authorScore =
+      Math.max(
+        ...doc.authors.map((id) => matchScore(authorNameMap.get(id) ?? id, q)),
+      ) * 0.5;
     const descScore = matchScore(doc.description, q) * 0.4;
     const tagScore = bestScore(doc.tags, q) * 0.5;
     const score = Math.max(titleScore, authorScore, descScore, tagScore);
     if (score > 0) {
-      const authorDisplay = PEOPLE.find((p) => p.id === doc.author)?.name ?? doc.author;
+      const authorDisplay = doc.authors
+        .map((id) => PEOPLE.find((p) => p.id === id)?.name ?? id)
+        .join(", ");
       results.push({
         result: {
           type: "document",
