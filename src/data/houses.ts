@@ -272,6 +272,18 @@ export const HOUSES: House[] = [
 // Helper functions
 // ---------------------------------------------------------------------------
 
+// ---------------------------------------------------------------------------
+// Visibility filters (FRAC-161)
+// ---------------------------------------------------------------------------
+// The Political Club house is hidden from nav / banner grid without removing
+// the underlying data entry or route. To restore, remove the id from this set.
+export const HIDDEN_HOUSE_IDS = new Set<string>(["forum"]);
+
+/** Houses visible in the nav/banner UI. Direct routes to hidden houses still work. */
+export const VISIBLE_HOUSES: House[] = HOUSES.filter(
+  (h) => !HIDDEN_HOUSE_IDS.has(h.id),
+);
+
 /** Look up a house by its URL slug. */
 export function getHouseBySlug(slug: string): House | undefined {
   return HOUSES.find((h) => h.slug === slug);

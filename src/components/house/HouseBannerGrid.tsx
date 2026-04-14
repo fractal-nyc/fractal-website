@@ -1,4 +1,4 @@
-import { HOUSES } from "@/data/houses";
+import { VISIBLE_HOUSES } from "@/data/houses";
 import { HouseBanner } from "./HouseBanner";
 import { FadeIn } from "@/components/ui/FadeIn";
 import { Link } from "wouter";
@@ -29,7 +29,7 @@ export function HouseBannerGrid({ className = "" }: HouseBannerGridProps) {
 
         {/* Banner grid */}
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 md:gap-5">
-          {HOUSES.map((house, index) => (
+          {VISIBLE_HOUSES.map((house, index) => (
             <FadeIn key={house.id} delay={index * 0.08}>
               <Link
                 href={house.route}
