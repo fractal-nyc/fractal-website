@@ -149,6 +149,15 @@ export const PEOPLE: Person[] = [
     },
   },
   {
+    id: "pav",
+    name: "Pav",
+    role: "Writer",
+    houses: ["lab"],
+    socials: {
+      substack: "https://chaosophia.substack.com/",
+    },
+  },
+  {
     id: "keesh",
     name: "Keesh Lauria",
     role: "Fractal University Teacher",
