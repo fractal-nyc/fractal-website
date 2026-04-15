@@ -159,8 +159,7 @@ export const LAB_DOCUMENTS: LabDocument[] = [
   {
     id: "gardener-leader",
     title: "The Gardener Leader",
-    // TODO: confirm author — chaosophia.substack.com byline
-    authors: ["andrew"],
+    authors: ["pav"],
     description:
       "A Garden is a complex, self-organizing system of organic entities and processes operating in chaotic harmony. A Factory is a tightly run ship where every detail is orchestrated to the last T.",
     url: "https://chaosophia.substack.com/p/the-gardener-leader",
