@@ -1,0 +1,33 @@
+{
+  "assigned_to": null,
+  "branch_links": [
+    {
+      "branch": "frac-5-9-3d-nav-glow",
+      "linked_at": "2026-04-15T13:44:49Z",
+      "linked_by": "agent:claude-opus-4-impl-3d-nav-glow",
+      "repo": null
+    }
+  ],
+  "comment_count": 1,
+  "complexity": null,
+  "created_at": "2026-04-14T23:33:17Z",
+  "created_by": "agent:claude-opus-4-orchestrator",
+  "custom_fields": {},
+  "description": null,
+  "done_at": null,
+  "evidence_refs": [],
+  "id": "task_01KP75F4Q14GHWNNA6TAB9KC40",
+  "last_event_id": "ev_01KP8P6BMTB2JV9SS1G62TJJWN",
+  "last_status_changed_at": "2026-04-15T13:44:49Z",
+  "priority": "medium",
+  "relationships_out": [],
+  "reopened_count": 1,
+  "schema_version": 1,
+  "short_id": "FRAC-9",
+  "status": "review",
+  "tags": null,
+  "title": "3D model: glowing + pulsing node animation",
+  "type": "task",
+  "updated_at": "2026-04-15T13:44:49Z",
+  "urgency": null
+}

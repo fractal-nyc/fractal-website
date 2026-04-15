@@ -17,19 +17,6 @@ export function EventsPage() {
 
           <FadeIn delay={0.1}>
             <p className="font-serif text-4xl md:text-6xl leading-[1.3] mb-6 text-center" style={{ fontWeight: 300, textTransform: "uppercase", fontStyle: "normal" }}>
-              Host Our Next Event
-            </p>
-            <a
-              href="mailto:events@merlins.place"
-              className="inline-block max-w-xs w-full border border-foreground/20 rounded-md px-8 py-5 text-sm tracking-widest uppercase bg-foreground/[0.03] hover:bg-foreground/10 transition-colors duration-300 text-center relative overflow-hidden mb-12"
-            >
-              <CornerDecorations size="xs" />
-              Email Merlin's Place
-            </a>
-          </FadeIn>
-
-          <FadeIn delay={0.2}>
-            <p className="font-serif text-4xl md:text-6xl leading-[1.3] mb-6 text-center" style={{ fontWeight: 300, textTransform: "uppercase", fontStyle: "normal" }}>
               Join Tech Events
             </p>
             {/*
@@ -56,6 +43,19 @@ export function EventsPage() {
               className="inline-block mb-12 text-xs tracking-widest uppercase opacity-70 hover:opacity-100 transition-opacity duration-300"
             >
               Open calendar in new tab →
+            </a>
+          </FadeIn>
+
+          <FadeIn delay={0.25}>
+            <p className="font-serif text-4xl md:text-6xl leading-[1.3] mb-6 text-center" style={{ fontWeight: 300, textTransform: "uppercase", fontStyle: "normal" }}>
+              Host Our Next Event
+            </p>
+            <a
+              href="mailto:events@merlins.place"
+              className="inline-block max-w-xs w-full border border-foreground/20 rounded-md px-8 py-5 text-sm tracking-widest uppercase bg-foreground/[0.03] hover:bg-foreground/10 transition-colors duration-300 text-center relative overflow-hidden mb-12"
+            >
+              <CornerDecorations size="xs" />
+              Email Merlin's Place
             </a>
           </FadeIn>
 

@@ -99,7 +99,7 @@ function PillarCard({ pillar }: { pillar: Pillar }) {
 function CenterNode({ compact = false }: { compact?: boolean }) {
   return (
     <div
-      className={`rounded-full flex flex-col items-center justify-center text-center ${compact ? "w-44 h-44 md:w-56 md:h-56" : "w-full max-w-xs mx-auto aspect-square"}`}
+      className={`rounded-full flex flex-col items-center justify-center text-center ${compact ? "w-28 h-28 sm:w-40 sm:h-40 md:w-56 md:h-56" : "w-full max-w-xs mx-auto aspect-square"}`}
       style={{
         border: `2px solid ${RING_COLOR}`,
         backgroundColor: "transparent",
@@ -126,23 +126,30 @@ function CenterNode({ compact = false }: { compact?: boolean }) {
 function CircularLayout() {
   // Diagram dimensions. Use a generous square canvas so pillar cards have
   // room at the cardinal-ish positions without colliding with the ring.
+  // The canvas is a percentage-based square that scales with viewport,
+  // keeping the diagram circular at every breakpoint.
   const size = 760;
   const center = size / 2;
   const ringRadius = 240;
 
   // 5 pillars distributed around the circle, starting at top (-90deg).
+  // Positions are normalized to percentages of the canvas so the diagram
+  // scales faithfully when the container shrinks below 760px.
   const positions = PILLARS.map((_, i) => {
     const angle = -Math.PI / 2 + (i * 2 * Math.PI) / PILLARS.length;
     return {
-      x: center + ringRadius * Math.cos(angle),
-      y: center + ringRadius * Math.sin(angle),
+      xPct: ((center + ringRadius * Math.cos(angle)) / size) * 100,
+      yPct: ((center + ringRadius * Math.sin(angle)) / size) * 100,
     };
   });
 
   return (
     <div
-      className="relative mx-auto"
-      style={{ width: size, height: size, maxWidth: "100%" }}
+      className="relative mx-auto aspect-square"
+      style={{
+        width: "min(100vw - 32px, 760px)",
+        maxWidth: "100%",
+      }}
     >
       {/* Ring */}
       <svg
@@ -176,16 +183,15 @@ function CircularLayout() {
 
       {/* Pillar cards */}
       {PILLARS.map((pillar, i) => {
-        const { x, y } = positions[i];
+        const { xPct, yPct } = positions[i];
         return (
           <div
             key={pillar.title}
-            className="absolute"
+            className="absolute w-[45%] sm:w-[35%] md:w-[220px]"
             style={{
-              left: x,
-              top: y,
+              left: `${xPct}%`,
+              top: `${yPct}%`,
               transform: "translate(-50%, -50%)",
-              width: 220,
             }}
           >
             <PillarCard pillar={pillar} />
@@ -197,39 +203,14 @@ function CircularLayout() {
 }
 
 // ---------------------------------------------------------------------------
-// Mobile stacked layout.
-// ---------------------------------------------------------------------------
-
-function StackedLayout() {
-  return (
-    <div className="flex flex-col items-stretch gap-5 max-w-sm mx-auto">
-      <div className="flex justify-center">
-        <CenterNode compact />
-      </div>
-      <div className="flex flex-col gap-3">
-        {PILLARS.map((pillar) => (
-          <PillarCard key={pillar.title} pillar={pillar} />
-        ))}
-      </div>
-    </div>
-  );
-}
-
-// ---------------------------------------------------------------------------
 // Top-level component.
 // ---------------------------------------------------------------------------
 
 export function NeighborhoodCampusDiagram() {
   return (
     <div className="mt-16 md:mt-24 px-[4.5%]" aria-label="Neighborhood campus diagram">
-      {/* Mobile: stacked. Hidden at md+. */}
-      <div className="md:hidden">
-        <StackedLayout />
-      </div>
-      {/* Desktop: circular. Hidden below md. */}
-      <div className="hidden md:block">
-        <CircularLayout />
-      </div>
+      {/* Circular layout at all widths — scales down on narrow viewports. */}
+      <CircularLayout />
     </div>
   );
 }

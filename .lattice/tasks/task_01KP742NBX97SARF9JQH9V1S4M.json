@@ -1,26 +1,33 @@
 {
   "assigned_to": null,
-  "branch_links": [],
-  "comment_count": 1,
+  "branch_links": [
+    {
+      "branch": "frac-campus-links-and-bios",
+      "linked_at": "2026-04-14T23:20:06Z",
+      "linked_by": "agent:claude-opus-4-impl-campus-links",
+      "repo": null
+    }
+  ],
+  "comment_count": 2,
   "complexity": null,
   "created_at": "2026-04-14T23:08:59Z",
   "created_by": "agent:claude-opus-4-orchestrator",
   "custom_fields": {},
   "description": null,
-  "done_at": null,
+  "done_at": "2026-04-14T23:24:06Z",
   "evidence_refs": [],
   "id": "task_01KP742NBX97SARF9JQH9V1S4M",
-  "last_event_id": "ev_01KP742NGMRE75EEE5EB5Z8NV1",
-  "last_status_changed_at": "2026-04-14T23:08:59Z",
+  "last_event_id": "ev_01KP74YAZHSEHQW9MZE9D8SJH7",
+  "last_status_changed_at": "2026-04-14T23:24:06Z",
   "priority": "medium",
   "relationships_out": [],
-  "reopened_count": 0,
+  "reopened_count": 1,
   "schema_version": 1,
   "short_id": "FRAC-2",
-  "status": "needs_human",
+  "status": "done",
   "tags": null,
   "title": "FRAC-172 Phase B: Writing content ingestion (blocked on user)",
   "type": "task",
-  "updated_at": "2026-04-14T23:08:59Z",
+  "updated_at": "2026-04-14T23:24:06Z",
   "urgency": null
 }
