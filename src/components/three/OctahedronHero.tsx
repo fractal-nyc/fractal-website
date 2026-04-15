@@ -24,6 +24,26 @@ import * as THREE from "three";
 export const TAP_MOVE_PX = 10;
 export const TAP_MAX_MS = 350;
 
+// ---------------------------------------------------------------------------
+// FRAC-9: prefers-reduced-motion hook
+// ---------------------------------------------------------------------------
+// Subscribes to the reduced-motion media query. Nav node pulse animation is
+// disabled when the user has opted out of non-essential motion.
+function usePrefersReducedMotion(): boolean {
+  const [reduced, setReduced] = useState(() => {
+    if (typeof window === "undefined" || !window.matchMedia) return false;
+    return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  });
+  useEffect(() => {
+    if (typeof window === "undefined" || !window.matchMedia) return;
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const handler = (e: MediaQueryListEvent) => setReduced(e.matches);
+    mq.addEventListener?.("change", handler);
+    return () => mq.removeEventListener?.("change", handler);
+  }, []);
+  return reduced;
+}
+
 export interface TapState {
   x: number;
   y: number;
@@ -75,8 +95,10 @@ export function useTapHandlers(onTap: () => void) {
 }
 
 // ---------------------------------------------------------------------------
-// Nav node definitions — 6 houses on octahedron vertices
+// Nav node definitions — 5 visible houses on octahedron vertices
 // ---------------------------------------------------------------------------
+// FRAC-5 / FRAC-161: Political Club is hidden from the hero nav. The 6-vertex
+// octahedron still has a vertex at index 4 — we simply leave it unpopulated.
 
 interface NavNode {
   label: string;
@@ -86,12 +108,11 @@ interface NavNode {
 }
 
 const OUTER_NAV_NODES: NavNode[] = [
-  { label: "Visit",            route: "/neighborhood",     color: "#889460", vertexIndex: 3 },
-  { label: "Events",           route: "/events",           color: "#D4857A", vertexIndex: 2 },
-  { label: "Campus",           route: "/campus",           color: "#2B5A48", vertexIndex: 0 },
-  { label: "Education",        route: "/new-liberal-arts", color: "#C41E20", vertexIndex: 1 },
-  { label: "Political Club",   route: "/political-club",   color: "#6E1830", vertexIndex: 4 },
-  { label: "Publications",          route: "/lab",              color: "#E870A0", vertexIndex: 5 },
+  { label: "Visit",         route: "/neighborhood",     color: "#889460", vertexIndex: 3 },
+  { label: "Events",        route: "/events",           color: "#D4857A", vertexIndex: 2 },
+  { label: "Campus",        route: "/campus",           color: "#2B5A48", vertexIndex: 0 },
+  { label: "Education",     route: "/new-liberal-arts", color: "#C41E20", vertexIndex: 1 },
+  { label: "Publications",  route: "/lab",              color: "#E870A0", vertexIndex: 5 },
 ];
 
 // ---------------------------------------------------------------------------
@@ -334,26 +355,29 @@ function StreamingCrossConnections({
 // Per-face section definitions for the center octahedron
 // ---------------------------------------------------------------------------
 
-// Banner images — all 8 sections have images
+// Banner images — per visible section.
+// FRAC-5: `forum` (Political Club) is hidden from nav, so we skip its banner
+// and fall back to a desaturated solid color on that face. Geometry stays
+// intact (8 triangular faces); only the visual treatment changes.
 const FACE_BANNER_IMAGES: Record<string, string> = {
   story:        "/images/banners/story.jpeg",
   campus:       "/images/banners/campus.jpeg",
   neighborhood: "/images/banners/neighborhood.jpeg",
   events:       "/images/banners/events.jpeg",
   school:       "/images/banners/new-liberal-arts.jpeg",
-  forum:        "/images/banners/political-club.jpeg",
   lab:          "/images/banners/lab.jpeg",
   people:       "/images/banners/people.jpeg",
 };
 
-// Section colors — all 8 sections matching navbar colors
+// Section colors. `forum` is intentionally desaturated (muted grey-tan) to
+// read as de-emphasized — it has no nav node and no banner texture.
 const FACE_SECTION_COLORS: Record<string, string> = {
   story:        "#D4BA58",
   campus:       "#2B5A48",
   neighborhood: "#889460",
   events:       "#D4857A",
   school:       "#C41E20",
-  forum:        "#6E1830",
+  forum:        "#8a7a6a",
   lab:          "#E870A0",
   people:       "#C49040",
 };
@@ -573,6 +597,7 @@ function NavNodeMesh({
   onNavigate: (route: string) => void;
 }) {
   const meshRef = useRef<THREE.Mesh>(null);
+  const materialRef = useRef<THREE.MeshStandardMaterial>(null);
   const [hovered, setHovered] = useState(false);
   const [revealed, setRevealed] = useState(false);
   const revealedRef = useRef(false);
@@ -582,6 +607,10 @@ function NavNodeMesh({
   // popup), set on any pointer-leave.
   const hoverHideTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const phase = useRef(Math.random() * Math.PI * 2);
+  // FRAC-9: independent phase for the emissive glow pulse so the sine breath
+  // is decorrelated from the existing scale pulse and staggered across nodes.
+  const glowPhase = useRef(Math.random() * Math.PI * 2);
+  const prefersReducedMotion = usePrefersReducedMotion();
   const isTouchDevice = typeof window !== "undefined" && "ontouchstart" in window;
 
   const cancelHoverHide = () => {
@@ -606,6 +635,21 @@ function NavNodeMesh({
       const target = (hovered || revealed) ? 1.8 : 1.0;
       const s = meshRef.current.scale.x / pulse;
       meshRef.current.scale.setScalar((s + (target - s) * 0.15) * pulse);
+    }
+    // FRAC-9: emissive glow pulse. ~2.5s sinusoid period (TAU / 2.5 ~= 2.51
+    // rad/s). Base intensity 1.0, amplitude 0.6 → glow breathes between 0.4
+    // and 1.6. Hover/reveal boosts to 2.4 peak. Reduced-motion → static.
+    if (materialRef.current) {
+      if (prefersReducedMotion) {
+        materialRef.current.emissiveIntensity =
+          hovered || revealed ? 2.0 : 1.0;
+      } else {
+        glowPhase.current += delta * 2.51;
+        const base = hovered || revealed ? 1.8 : 1.0;
+        const amp = hovered || revealed ? 0.6 : 0.6;
+        materialRef.current.emissiveIntensity =
+          base + Math.sin(glowPhase.current) * amp;
+      }
     }
   });
 
@@ -636,9 +680,10 @@ function NavNodeMesh({
       <mesh ref={meshRef}>
         <sphereGeometry args={[0.08, 16, 16]} />
         <meshStandardMaterial
+          ref={materialRef}
           color={node.color}
           emissive={node.color}
-          emissiveIntensity={(hovered || revealed) ? 2.0 : 1.0}
+          emissiveIntensity={1.0}
         />
         {(hovered || revealed) && (
           <Html center distanceFactor={8} style={{ pointerEvents: "auto" }}>
