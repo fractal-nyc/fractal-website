@@ -5,7 +5,7 @@ import { FractalPattern } from "@/components/ui/FractalPattern";
 
 export function CampusPage() {
   return (
-    <main className="relative min-h-screen selection:bg-foreground selection:text-background" style={{ backgroundColor: "#4A9678", color: "#fff" }}>
+    <main className="relative min-h-screen selection:bg-foreground selection:text-background" style={{ backgroundColor: "#2E6B4A", color: "#fff" }}>
       <FractalPattern color="#1A3A2E" />
       <div className="relative z-10">
         <Navbar />

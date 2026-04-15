@@ -505,10 +505,11 @@ function usePerFaceMaterials() {
       const color = FACE_SECTION_COLORS[sectionKey] ?? "#c4a265";
 
       if (tex) {
-        // Textured face — show the banner image once it has loaded.
+        // Textured face — tint the banner image with the section color so it
+        // reads as the intended house hue instead of a washed-out photo.
         return new THREE.MeshBasicMaterial({
           map: tex,
-          color: "#ffffff",
+          color,
           side: THREE.FrontSide,
         });
       }
