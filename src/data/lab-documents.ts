@@ -146,6 +146,77 @@ export const LAB_DOCUMENTS: LabDocument[] = [
     category: "essay",
     tags: ["tpot", "community", "social"],
   },
+  {
+    id: "neighborhood-stroll",
+    title: "a neighborhood stroll",
+    authors: ["joce"],
+    description:
+      "I never want to forget why this walkable place, with all the people I love (and have yet to love), leaves me in awe.",
+    url: "https://joceorante.substack.com/p/a-neighborhood-stroll",
+    category: "essay",
+    tags: ["neighborhood", "reflection"],
+  },
+  {
+    id: "gardener-leader",
+    title: "The Gardener Leader",
+    // TODO: confirm author — chaosophia.substack.com byline
+    authors: ["andrew"],
+    description:
+      "A Garden is a complex, self-organizing system of organic entities and processes operating in chaotic harmony. A Factory is a tightly run ship where every detail is orchestrated to the last T.",
+    url: "https://chaosophia.substack.com/p/the-gardener-leader",
+    category: "essay",
+    tags: ["leadership", "community"],
+  },
+  {
+    id: "origin-story-of-fractal",
+    title: "The Origin Story of Fractal",
+    authors: ["priya"],
+    description:
+      "A personal telling of how Fractal started.",
+    url: "https://youtu.be/gEB-kkNM5L8?si=3g_pA5hPvrZKOnMk",
+    category: "video",
+    tags: ["origin", "founding"],
+  },
+  {
+    id: "nyc-is-affordable-1",
+    title: "New York City is Affordable (Part 1)",
+    authors: ["daniel"],
+    description:
+      "Daniel grew up on a farm in Indiana. In this video he shows how New York City can be more affordable than Indianapolis, Indiana.",
+    url: "https://youtu.be/EQyT8sNWYQ0?si=xIu-_E2ierZJhIma",
+    category: "video",
+    tags: ["nyc", "affordability"],
+  },
+  {
+    id: "nyc-is-affordable-2",
+    title: "New York City is Affordable (Part 2)",
+    authors: ["daniel"],
+    description:
+      "Part 2 — continued affordability analysis of New York City versus the Midwest.",
+    url: "https://youtu.be/SnAKne5OmG8?si=u13IViKoKWSQ9bqc",
+    category: "video",
+    tags: ["nyc", "affordability"],
+  },
+  {
+    id: "ebr-interview",
+    title: "An Interview with Elizabeth Barlow Rogers, Founder of the Central Park Conservancy",
+    authors: ["hailey"],
+    description:
+      "Hailey interviews Elizabeth Barlow Rogers. Back in the 70s, Central Park was falling apart — EBR founded the Central Park Conservancy, a revolutionary public-private partnership which revived the park and continues to steward it to this day.",
+    url: "https://youtu.be/7Wyl8eUstdI?si=ltPh5BhYhMOrqJZM",
+    category: "video",
+    tags: ["nyc", "interview", "civic"],
+  },
+  {
+    id: "social-fabric-nyc",
+    title: "Social Fabric NYC",
+    authors: ["liam"],
+    description:
+      "A directory of community groups and networks making up New York's social fabric.",
+    url: "http://socialfabric.nyc",
+    category: "project",
+    tags: ["nyc", "directory", "community"],
+  },
 
   // ---- Teacher Spotlights & Rabbitholes ----
   {
