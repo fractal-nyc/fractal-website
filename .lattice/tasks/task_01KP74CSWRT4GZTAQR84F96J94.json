@@ -1,26 +1,33 @@
 {
   "assigned_to": null,
-  "branch_links": [],
+  "branch_links": [
+    {
+      "branch": "frac-story-reorder-up",
+      "linked_at": "2026-04-14T23:23:20Z",
+      "linked_by": "agent:claude-opus-4-impl-story-reorder",
+      "repo": null
+    }
+  ],
   "comment_count": 1,
   "complexity": null,
   "created_at": "2026-04-14T23:14:31Z",
   "created_by": "agent:claude-opus-4-orchestrator",
   "custom_fields": {},
   "description": null,
-  "done_at": null,
+  "done_at": "2026-04-14T23:24:06Z",
   "evidence_refs": [],
   "id": "task_01KP74CSWRT4GZTAQR84F96J94",
-  "last_event_id": "ev_01KP74CT26PP60G8KD86M3JJJA",
-  "last_status_changed_at": "2026-04-14T23:14:31Z",
+  "last_event_id": "ev_01KP74YAWZPGAVDHN8WASBE6W1",
+  "last_status_changed_at": "2026-04-14T23:24:06Z",
   "priority": "medium",
   "relationships_out": [],
   "reopened_count": 0,
   "schema_version": 1,
   "short_id": "FRAC-4",
-  "status": "backlog",
+  "status": "done",
   "tags": null,
   "title": "Move Story page paragraph + diagram up, closer to main heading",
   "type": "task",
-  "updated_at": "2026-04-14T23:14:32Z",
+  "updated_at": "2026-04-14T23:24:06Z",
   "urgency": null
 }

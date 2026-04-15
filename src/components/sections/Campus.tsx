@@ -131,19 +131,22 @@ function PrimaryButton({
   href,
   children,
   external = true,
+  fullWidth = false,
 }: {
   href: string;
   children: React.ReactNode;
   external?: boolean;
+  fullWidth?: boolean;
 }) {
   const externalProps = external
     ? { target: "_blank" as const, rel: "noopener noreferrer" }
     : {};
+  const widthClass = fullWidth ? "w-full" : "max-w-xs w-full";
   return (
     <a
       href={href}
       {...externalProps}
-      className="inline-block max-w-xs w-full border border-foreground/20 rounded-md px-8 py-5 text-sm tracking-widest uppercase bg-foreground/[0.03] hover:bg-foreground/10 transition-colors duration-300 text-center relative overflow-hidden"
+      className={`inline-block ${widthClass} border border-foreground/20 rounded-md px-8 py-5 text-sm tracking-widest uppercase bg-black/20 hover:bg-black/30 transition-colors duration-300 text-center relative overflow-hidden`}
     >
       <CornerDecorations size="xs" />
       {children}
@@ -187,10 +190,18 @@ export function Campus() {
                   111 Conselyea St, Brooklyn, NY
                 </InlineLink>
               </p>
-              <div className="flex flex-col sm:flex-row sm:flex-wrap gap-4 justify-center items-center mb-4">
-                <PrimaryButton href={LUMA_URL}>Visit by joining us for an event</PrimaryButton>
-                <PrimaryButton href={FLOWGLAD_MEMBERSHIP_URL}>Co-work with us — $300/mo</PrimaryButton>
-                <PrimaryButton href={FLOWGLAD_DAYPASS_URL}>Day Pass — $40</PrimaryButton>
+              <div className="flex flex-col gap-4 items-center mb-4 max-w-2xl mx-auto">
+                <PrimaryButton href={LUMA_URL} fullWidth>
+                  Visit by joining us for an event
+                </PrimaryButton>
+                <div className="flex flex-col md:flex-row gap-4 w-full items-center justify-center">
+                  <PrimaryButton href={FLOWGLAD_MEMBERSHIP_URL} fullWidth>
+                    Co-work with us — $300/mo
+                  </PrimaryButton>
+                  <PrimaryButton href={FLOWGLAD_DAYPASS_URL} fullWidth>
+                    Day Pass — $40
+                  </PrimaryButton>
+                </div>
               </div>
               <p className="text-xs md:text-sm text-white/70 italic normal-case text-center">
                 Want a reduced rate? Let us know. We want the space to be accessible to all.

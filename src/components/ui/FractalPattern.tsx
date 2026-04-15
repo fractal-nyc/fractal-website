@@ -24,7 +24,7 @@ export function FractalPattern({
 }: FractalPatternProps) {
   return (
     <div
-      className="pointer-events-none absolute inset-0 z-0"
+      className="pointer-events-none absolute inset-0 -z-10"
       aria-hidden="true"
       style={{ opacity }}
     >
