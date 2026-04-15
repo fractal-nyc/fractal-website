@@ -8,9 +8,11 @@ import type { ArchiveFilterState } from "@/hooks/use-archive-filter";
 
 interface ArchiveToolbarProps {
   filter: ArchiveFilterState;
+  /** When false, the tag chip row is hidden; search + result count still render. */
+  showTags?: boolean;
 }
 
-export function ArchiveToolbar({ filter }: ArchiveToolbarProps) {
+export function ArchiveToolbar({ filter, showTags = true }: ArchiveToolbarProps) {
   const {
     query,
     activeTags,
@@ -30,12 +32,14 @@ export function ArchiveToolbar({ filter }: ArchiveToolbarProps) {
       <ArchiveSearch value={query} onChange={setQuery} />
 
       {/* Tag chips */}
-      <TagFilter
-        tags={allTags}
-        tagCounts={tagCounts}
-        activeTags={activeTags}
-        onToggle={toggleTag}
-      />
+      {showTags && (
+        <TagFilter
+          tags={allTags}
+          tagCounts={tagCounts}
+          activeTags={activeTags}
+          onToggle={toggleTag}
+        />
+      )}
 
       {/* Result count + clear button — only shown when filtering */}
       {isFiltering && (

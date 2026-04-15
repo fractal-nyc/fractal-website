@@ -4,11 +4,14 @@ import { SectorHeader } from "@/components/layout/SectorHeader";
 import { FadeIn } from "@/components/ui/FadeIn";
 import { MandelbrotIcon } from "@/components/house/MandelbrotIcon";
 import { DocumentGrid } from "@/components/lab/DocumentGrid";
+import { ArchiveToolbar } from "@/components/lab/ArchiveToolbar";
+import { useArchiveFilter } from "@/hooks/use-archive-filter";
 import { PretextParagraph } from "@/components/pretext/PretextParagraph";
 import { TEXT_SIZES } from "@/lib/pretext";
 import { FractalPattern } from "@/components/ui/FractalPattern";
 
 export function LabPage() {
+  const filter = useArchiveFilter();
   return (
     <main className="relative min-h-screen text-foreground selection:bg-foreground selection:text-background" style={{ backgroundColor: "#E870A0" }}>
       <FractalPattern color="#C44878" />
@@ -59,8 +62,11 @@ export function LabPage() {
               </div>
             </FadeIn>
 
-            {/* Archive toolbar (search + tags) intentionally removed for MVP v0; see FRAC-169. */}
-            <DocumentGrid />
+            {/* Archive toolbar: search only for MVP v0 (FRAC-8); tags hidden per FRAC-169 cleanup. */}
+            <FadeIn delay={0.4}>
+              <ArchiveToolbar filter={filter} showTags={false} />
+            </FadeIn>
+            <DocumentGrid documents={filter.isFiltering ? filter.filtered : undefined} />
           </div>
         </section>
       </div>
