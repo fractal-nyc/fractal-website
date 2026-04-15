@@ -140,6 +140,15 @@ export const PEOPLE: Person[] = [
     },
   },
   {
+    id: "joce",
+    name: "Joce Orante",
+    role: "Writer",
+    houses: ["lab"],
+    socials: {
+      substack: "https://joceorante.substack.com/",
+    },
+  },
+  {
     id: "keesh",
     name: "Keesh Lauria",
     role: "Fractal University Teacher",
