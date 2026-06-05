@@ -43,7 +43,7 @@
 
 :root {
   /* Asimov Collective Aesthetic: Warm, refined, high-contrast, editorial */
-  --background: 40 25% 96%; /* #f7f6f2 - Warm off-white */
+  --background: 40 25% 96%; /* #f8f6f0 — warm off-white */
   --foreground: 0 0% 9%; /* #171717 - Deep charcoal/black */
   
   --card: 40 25% 98%;
@@ -149,7 +149,7 @@
   }
   
   .hero-text-shadow {
-    text-shadow: 0 1px 6px rgba(250,248,245,0.95), 0 0 20px rgba(250,248,245,0.8);
+    text-shadow: 0 1px 6px rgba(248,246,240,0.95), 0 0 20px rgba(248,246,240,0.8);
   }
 
   .link-underline {
