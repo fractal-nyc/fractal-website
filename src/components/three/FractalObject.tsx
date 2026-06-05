@@ -230,7 +230,7 @@ function DecorativeDot({ position }: { position: [number, number, number] }) {
 
 function tooltipStyle(borderColor: string): React.CSSProperties {
   return {
-    background: "rgba(250,248,245,0.92)",
+    background: "rgba(248,246,240,0.92)",
     border: `1.5px solid ${borderColor}`,
     borderRadius: 6,
     padding: "4px 10px",

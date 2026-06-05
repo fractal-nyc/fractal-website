@@ -22,7 +22,7 @@ export function Home() {
       {/* FRAC-161: <HouseBannerGrid /> hidden on home. */}
 
       {/* Golden Age Protocol */}
-      <section className="bg-[#faf8f5] px-[4.5%] py-40 md:py-60">
+      <section className="bg-background px-[4.5%] py-40 md:py-60">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16 items-start">
           <FadeIn>
             <h2
