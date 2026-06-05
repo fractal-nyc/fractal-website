@@ -37,6 +37,18 @@ export interface House {
   description: string; // 2-3 paragraphs from Fractal OS synthesis
   leaders: string[]; // person IDs
   externalLinks: ExternalLink[];
+  // ---------------------------------------------------------------------------
+  // Per-surface visibility flags (FRAC-32 — single source of truth)
+  // ---------------------------------------------------------------------------
+  // Each flag hides the house from a specific visual layer without removing
+  // the underlying data or route. Direct routes always remain reachable.
+  // `undefined` is treated as `false` (i.e. visible) everywhere.
+  hideFromNavbar?: boolean;
+  hideFromBanners?: boolean;
+  // The OctahedronHero treats absence-of-banner-image as the hide signal for
+  // a face, so this flag is informational rather than load-bearing today.
+  // Kept on the model for future use and consistency.
+  hideFromOctahedronFaces?: boolean;
 }
 
 // ---------------------------------------------------------------------------
@@ -267,6 +279,11 @@ export const HOUSES: House[] = [
       "Explicitly political. Andrew's word choice is intentional: 'You want people to know that it's explicitly political. It is actually pursuing explicit political change.' This isn't a debate club. This is a group of people who think New York City governance can be dramatically better and are doing something about it.\n\nDaniel Golliher is the anchor — Manhattan Institute fellow, founder of Maximum New York, teaches NYC government and law at the Campus. The MI Skunkworks proposal is a formal pitch for an embedded AI policy team at the Manhattan Institute: 'Think Xerox PARC. Think the Manhattan Project.' Civic hacking classes turn policy ideas into working tools. The #local-government Discord channel is where active discussion of NYC urban policy happens daily. They've been demoing Claude Code to government agencies.\n\nDaniel's intellectual frame is 'The Vertical Republic' — NYC going vertical technologically and individually. The Forum is where that vision meets action.",
     leaders: ["daniel", "andrew", "liam"],
     externalLinks: [],
+    // FRAC-161: Political Club is hidden from the navbar and banner grid.
+    // The /political-club route remains live, and the octahedron keeps an
+    // unpopulated face vertex for `forum` (see OctahedronHero).
+    hideFromNavbar: true,
+    hideFromBanners: true,
   },
 
   // 6. Lab — Research + Writing
@@ -291,15 +308,24 @@ export const HOUSES: House[] = [
 // ---------------------------------------------------------------------------
 
 // ---------------------------------------------------------------------------
-// Visibility filters (FRAC-161)
+// Visibility filters (FRAC-32 — derived from per-house flags)
 // ---------------------------------------------------------------------------
-// The Political Club house is hidden from nav / banner grid without removing
-// the underlying data entry or route. To restore, remove the id from this set.
-export const HIDDEN_HOUSE_IDS = new Set<string>(["forum"]);
+// Each visual layer derives its visible set from the per-house flags on the
+// House model. To hide a house from a surface, set the corresponding flag on
+// the House entry rather than maintaining a parallel list here. Direct routes
+// to hidden houses remain reachable.
 
-/** Houses visible in the nav/banner UI. Direct routes to hidden houses still work. */
-export const VISIBLE_HOUSES: House[] = HOUSES.filter(
-  (h) => !HIDDEN_HOUSE_IDS.has(h.id),
+/** Houses visible in the banner grid. Hides any house with `hideFromBanners`. */
+export const VISIBLE_HOUSES: House[] = HOUSES.filter((h) => !h.hideFromBanners);
+
+/** Houses visible in the navbar. Hides any house with `hideFromNavbar`. */
+export const NAVBAR_VISIBLE_HOUSES: House[] = HOUSES.filter(
+  (h) => !h.hideFromNavbar,
+);
+
+/** Route paths hidden from the navbar — used to filter the navbar's sectionLinks. */
+export const NAVBAR_HIDDEN_ROUTES: Set<string> = new Set(
+  HOUSES.filter((h) => h.hideFromNavbar).map((h) => h.route),
 );
 
 /** Look up a house by its URL slug. */
