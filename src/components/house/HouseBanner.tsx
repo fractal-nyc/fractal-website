@@ -1,4 +1,5 @@
 import type { House } from "@/data/houses";
+import { HOUSES } from "@/data/houses";
 import { MandelbrotIcon } from "./MandelbrotIcon";
 
 // ---------------------------------------------------------------------------
@@ -14,23 +15,19 @@ function isDark(hex: string): boolean {
 }
 
 // ---------------------------------------------------------------------------
-// Fractal Elegant palette — paired bg + Jacquard 24 letter colors per house
+// Color pair derivation — FRAC-24 single source of truth
 // ---------------------------------------------------------------------------
+// Per-house bg + Jacquard 24 letter colors derive from each House's canonical
+// `palette` pair (set in `src/data/houses.ts`). The banner grid uniformly uses
+// `palette.light` as the bg and `palette.deep` as the monogram letter color.
+// Per-page "inverted" treatments (forum, school) are page-level decisions and
+// do not affect the banner grid.
 
-const ELEGANT_PAIRS: Record<string, { bg: string; letter: string }> = {
-  // Peach pair: light peach bg + deep coral letter
-  events:       { bg: "#D4857A", letter: "#C13B2A" },
-  // Red pair: bright red bg + vivid red letter (bright for readability over image)
-  school:       { bg: "#C41E20", letter: "#E63636" },
-  // Light green pair: olive bg + dark olive letter
-  neighborhood: { bg: "#889460", letter: "#4A5A30" },
-  // Dark green pair: forest bg + darker forest letter
-  campus:       { bg: "#2B5A48", letter: "#1A3A2E" },
-  // Fuschia pair: pink bg + deep pink letter
-  lab:          { bg: "#E870A0", letter: "#C44878" },
-  // Burgundy pair: dusty rose bg + dark burgundy letter
-  forum:        { bg: "#C89898", letter: "#6E1830" },
-};
+function getBannerPair(houseId: string): { bg: string; letter: string } | null {
+  const palette = HOUSES.find((h) => h.id === houseId)?.palette;
+  if (!palette) return null;
+  return { bg: palette.light, letter: palette.deep };
+}
 
 // ---------------------------------------------------------------------------
 // Duochrome background images — only 4 of 6 houses have images
@@ -94,7 +91,7 @@ export function HouseBanner({
   className = "",
 }: HouseBannerProps) {
   const isGrid = variant === "grid";
-  const pair = ELEGANT_PAIRS[house.id];
+  const pair = getBannerPair(house.id);
   const bgColor = pair?.bg ?? house.color;
   const letterColor = pair?.letter ?? (isDark(house.color) ? "#ffffff" : "#1a1a1a");
   const textColor = isDark(bgColor) ? "#ffffff" : "#1a1a1a";

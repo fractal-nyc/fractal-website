@@ -3,17 +3,27 @@ import { motion, useScroll, useMotionValueEvent } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import { Link, useLocation } from "wouter";
 import { JustifiedParagraph } from "@/components/typeset/JustifiedParagraph";
-import { NAVBAR_HIDDEN_ROUTES } from "@/data/houses";
+import { HOUSES, NAVBAR_HIDDEN_ROUTES } from "@/data/houses";
+
+// FRAC-24: Per-link colors derive from the canonical House palette where a
+// House exists. Non-house links (Story, People) keep literal colors — there's
+// no House entry to derive from. House links default to `.light` to match
+// what each link CURRENTLY shows; Political Club uses `.deep` because the
+// link's visual identity has always been the deeper burgundy.
+function houseColor(route: string, prefer: "light" | "deep" = "light"): string {
+  const palette = HOUSES.find((h) => h.route === route)?.palette;
+  return palette ? palette[prefer] : "#000";
+}
 
 const sectionLinks = [
-  { name: "Story", href: "/story", color: "#D4BA58" },
-  { name: "Campus", href: "/campus", color: "#2B5A48" },
-  { name: "Visit", href: "/neighborhood", color: "#889460" },
-  { name: "Events", href: "/events", color: "#D4857A" },
-  { name: "Education", href: "/new-liberal-arts", color: "#C41E20" },
-  { name: "Political Club", href: "/political-club", color: "#6E1830" },
-  { name: "Publications", href: "/lab", color: "#E870A0" },
-  { name: "People", href: "/people", color: "#C49040" },
+  { name: "Story",          href: "/story",             color: "#D4BA58" },
+  { name: "Campus",         href: "/campus",            color: houseColor("/campus") },
+  { name: "Visit",          href: "/neighborhood",      color: houseColor("/neighborhood") },
+  { name: "Events",         href: "/events",            color: houseColor("/events") },
+  { name: "Education",      href: "/new-liberal-arts",  color: houseColor("/new-liberal-arts") },
+  { name: "Political Club", href: "/political-club",    color: houseColor("/political-club", "deep") },
+  { name: "Publications",   href: "/lab",               color: houseColor("/lab") },
+  { name: "People",         href: "/people",            color: "#C49040" },
 ];
 
 // FRAC-32: Hide routes from every nav variant by deriving from the House data

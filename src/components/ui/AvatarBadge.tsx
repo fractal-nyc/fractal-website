@@ -17,11 +17,13 @@ function getInitials(name: string): string {
     .join("");
 }
 
-/** Resolve the accent color for a person (first house's color, fallback gray). */
+/** Resolve the accent color for a person (first house's deep palette color,
+ *  fallback warm system charcoal). FRAC-24: derives from canonical palette
+ *  pair instead of the deprecated `color` field. */
 function getPersonColor(person: Person): string {
-  if (person.houses.length === 0) return "#6B7280"; // gray-500
+  if (person.houses.length === 0) return "#171717"; // warm system charcoal
   const house = HOUSES.find((h) => h.id === person.houses[0]);
-  return house?.color ?? "#6B7280";
+  return house?.palette?.deep ?? "#171717";
 }
 
 // ---------------------------------------------------------------------------

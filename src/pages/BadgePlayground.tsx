@@ -9,9 +9,10 @@ function getInitials(name: string): string {
   return name.split(/\s+/).filter(Boolean).slice(0, 2).map((w) => w[0].toUpperCase()).join("");
 }
 function getPersonColor(person: Person): string {
-  if (person.houses.length === 0) return "#6B7280";
+  // FRAC-24: derive from canonical palette pair instead of legacy `color`.
+  if (person.houses.length === 0) return "#171717";
   const house = HOUSES.find((h) => h.id === person.houses[0]);
-  return house?.color ?? "#6B7280";
+  return house?.palette?.deep ?? "#171717";
 }
 function XIcon({ className }: { className?: string }) {
   return (<svg viewBox="0 0 24 24" fill="currentColor" className={className} aria-hidden="true">
