@@ -4,6 +4,7 @@ import { Menu, X } from "lucide-react";
 import { Link, useLocation } from "wouter";
 import { JustifiedParagraph } from "@/components/typeset/JustifiedParagraph";
 import { HOUSES, NAVBAR_HIDDEN_ROUTES } from "@/data/houses";
+import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 
 // FRAC-24: Per-link colors derive from the canonical House palette where a
 // House exists. Non-house links (Story, People) keep literal colors — there's
@@ -118,6 +119,7 @@ export function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [location, setLocation] = useLocation();
   const isHome = location === "/" || location === "";
+  const prefersReducedMotion = usePrefersReducedMotion();
 
   useMotionValueEvent(scrollY, "change", (latest) => {
     const previous = scrollY.getPrevious() || 0;
@@ -146,7 +148,11 @@ export function Navbar() {
           hidden: { y: "-100%" },
         }}
         animate={hidden ? "hidden" : "visible"}
-        transition={{ duration: 0.4, ease: [0.25, 1, 0.5, 1] }}
+        transition={
+          prefersReducedMotion
+            ? { duration: 0 }
+            : { duration: 0.4, ease: [0.25, 1, 0.5, 1] }
+        }
         className="fixed top-0 left-0 right-0 z-50 bg-transparent"
       >
         {showFull ? (
@@ -364,7 +370,11 @@ export function Navbar() {
           open: { opacity: 1, pointerEvents: "auto" as const },
           closed: { opacity: 0, pointerEvents: "none" as const },
         }}
-        transition={{ duration: 0.3, ease: "easeInOut" }}
+        transition={
+          prefersReducedMotion
+            ? { duration: 0 }
+            : { duration: 0.3, ease: "easeInOut" }
+        }
         className="fixed inset-0 z-40 bg-background overflow-y-auto"
       >
         {/* Section page list */}

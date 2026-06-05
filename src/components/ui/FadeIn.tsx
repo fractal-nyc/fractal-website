@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { ReactNode } from "react";
+import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 
 interface FadeInProps {
   children: ReactNode;
@@ -16,6 +17,17 @@ export function FadeIn({
   className = "",
   duration = 0.8,
 }: FadeInProps) {
+  const prefersReducedMotion = usePrefersReducedMotion();
+
+  // FRAC-28: when the user prefers reduced motion, render children directly
+  // in their final visible state. Bypassing the <motion.div> entirely (rather
+  // than passing `transition={{ duration: 0 }}`) avoids any flash of the
+  // pre-animation offset/opacity that Framer Motion can briefly paint before
+  // applying the zero-duration tween.
+  if (prefersReducedMotion) {
+    return <div className={className}>{children}</div>;
+  }
+
   const directions = {
     up: { y: 40, x: 0 },
     down: { y: -40, x: 0 },

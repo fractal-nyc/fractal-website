@@ -2,6 +2,7 @@ import { useRef, useMemo, useState, useEffect } from "react";
 import { useFrame, ThreeEvent } from "@react-three/fiber";
 import { Html } from "@react-three/drei";
 import * as THREE from "three";
+import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 import { HOUSES } from "@/data/houses";
 
 // FRAC-24: House color helper — derives from canonical palette pair in
@@ -34,24 +35,12 @@ export const TAP_MOVE_PX = 10;
 export const TAP_MAX_MS = 350;
 
 // ---------------------------------------------------------------------------
-// FRAC-9: prefers-reduced-motion hook
+// FRAC-9 / FRAC-28: prefers-reduced-motion is sourced from the shared hook at
+// src/hooks/usePrefersReducedMotion.ts. All motion sites in this file
+// (auto-rotation, edge-text scroll, center scale-breathing, node scale-pulse,
+// node emissive-glow) consult that hook and freeze when the user has opted
+// out of non-essential motion.
 // ---------------------------------------------------------------------------
-// Subscribes to the reduced-motion media query. Nav node pulse animation is
-// disabled when the user has opted out of non-essential motion.
-function usePrefersReducedMotion(): boolean {
-  const [reduced, setReduced] = useState(() => {
-    if (typeof window === "undefined" || !window.matchMedia) return false;
-    return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  });
-  useEffect(() => {
-    if (typeof window === "undefined" || !window.matchMedia) return;
-    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const handler = (e: MediaQueryListEvent) => setReduced(e.matches);
-    mq.addEventListener?.("change", handler);
-    return () => mq.removeEventListener?.("change", handler);
-  }, []);
-  return reduced;
-}
 
 export interface TapState {
   x: number;
@@ -221,6 +210,7 @@ const EDGE_TEXT = " THE PROTOCOL · THE PROTOCOL · THE PROTOCOL · THE PROTOCOL
 function useScrollingTextTexture(color: string) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const textureRef = useRef<THREE.CanvasTexture | null>(null);
+  const prefersReducedMotion = usePrefersReducedMotion();
 
   const texture = useMemo(() => {
     const canvas = document.createElement("canvas");
@@ -254,8 +244,11 @@ function useScrollingTextTexture(color: string) {
     return tex;
   }, [color]);
 
-  // Animate the texture offset to scroll
+  // Animate the texture offset to scroll. FRAC-28: when the user prefers
+  // reduced motion, freeze the offset so the "THE PROTOCOL" text along the
+  // edges stays still.
   useFrame((_, delta) => {
+    if (prefersReducedMotion) return;
     if (textureRef.current) {
       textureRef.current.offset.x -= delta * 0.15;
     }
@@ -545,13 +538,20 @@ function CenterOctahedron({
   const meshRef = useRef<THREE.Mesh>(null);
   const geometry = usePerFaceOctahedronGeometry(1);
   const materials = usePerFaceMaterials();
+  const prefersReducedMotion = usePrefersReducedMotion();
 
+  // FRAC-28: when reduced motion is requested, lock the center octahedron at
+  // its neutral resting scale (0.9). The hover scale-up is purely decorative
+  // breathing — skipping it keeps the surface still without affecting layout.
   useFrame(() => {
-    if (meshRef.current) {
-      const target = hovered ? 0.95 : 0.9;
-      const s = meshRef.current.scale.x;
-      meshRef.current.scale.setScalar(s + (target - s) * 0.1);
+    if (!meshRef.current) return;
+    if (prefersReducedMotion) {
+      meshRef.current.scale.setScalar(0.9);
+      return;
     }
+    const target = hovered ? 0.95 : 0.9;
+    const s = meshRef.current.scale.x;
+    meshRef.current.scale.setScalar(s + (target - s) * 0.1);
   });
 
   // FRAC-124: Use tap-vs-drag discriminator instead of onClick so vertical
@@ -643,11 +643,21 @@ function NavNodeMesh({
 
   useFrame((_, delta) => {
     if (meshRef.current) {
-      phase.current += delta * 2;
-      const pulse = 1 + Math.sin(phase.current) * 0.08;
-      const target = (hovered || revealed) ? 1.8 : 1.0;
-      const s = meshRef.current.scale.x / pulse;
-      meshRef.current.scale.setScalar((s + (target - s) * 0.15) * pulse);
+      // FRAC-28: scale-pulse is the decorative breathing on each nav node.
+      // When the user prefers reduced motion, lock the node at its target
+      // size (hover/reveal still snaps cleanly via lerp) so the sinusoid
+      // pulse component is removed.
+      if (prefersReducedMotion) {
+        const target = (hovered || revealed) ? 1.8 : 1.0;
+        const s = meshRef.current.scale.x;
+        meshRef.current.scale.setScalar(s + (target - s) * 0.15);
+      } else {
+        phase.current += delta * 2;
+        const pulse = 1 + Math.sin(phase.current) * 0.08;
+        const target = (hovered || revealed) ? 1.8 : 1.0;
+        const s = meshRef.current.scale.x / pulse;
+        meshRef.current.scale.setScalar((s + (target - s) * 0.15) * pulse);
+      }
     }
     // FRAC-9: emissive glow pulse. ~2.5s sinusoid period (TAU / 2.5 ~= 2.51
     // rad/s). Base intensity 1.0, amplitude 0.6 → glow breathes between 0.4
@@ -776,12 +786,16 @@ export function FractalObject({
   onNavigate: (route: string) => void;
 }) {
   const groupRef = useRef<THREE.Group>(null);
+  const prefersReducedMotion = usePrefersReducedMotion();
 
   const outerVerts = useMemo(() => makeOctahedronVertices(1.7), []);
   const innerVerts = useMemo(() => makeOctahedronVertices(1.1), []);
 
-  // Slow auto-rotation — Y-axis only so it stays vertical
+  // Slow auto-rotation — Y-axis only so it stays vertical.
+  // FRAC-28: skip the rotation delta when the user prefers reduced motion so
+  // the entire hero scene parks at its initial pose.
   useFrame((_, delta) => {
+    if (prefersReducedMotion) return;
     if (groupRef.current) {
       const d = Math.min(delta, 0.05);
       groupRef.current.rotation.y += d * 0.12;

@@ -153,3 +153,13 @@
 .animate-blink {
   animation: blink 1s step-end infinite;
 }
+
+/* FRAC-28: respect the user's reduced-motion preference. The blink animation
+   is purely decorative (a CRT-style cursor on text), so we freeze it at the
+   visible state when the OS asks for less motion. */
+@media (prefers-reduced-motion: reduce) {
+  .animate-blink {
+    animation: none;
+    opacity: 1;
+  }
+}
