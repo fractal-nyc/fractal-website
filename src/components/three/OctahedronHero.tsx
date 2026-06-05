@@ -591,7 +591,7 @@ function usePerFaceMaterials() {
         // used elsewhere on the site. Non-House sections (story, people)
         // fall back to FACE_SECTION_COLORS.
         const tintHex = HOUSE_SECTION_IDS.has(sectionKey)
-          ? housePalette(sectionKey, "deep")
+          ? housePalette(sectionKey, "light")
           : (FACE_SECTION_COLORS[sectionKey] ?? "#c4a265");
         const tintColor = new THREE.Color(tintHex);
 
