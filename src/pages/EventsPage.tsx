@@ -4,6 +4,7 @@ import { SectorHeader } from "@/components/layout/SectorHeader";
 import { FadeIn } from "@/components/ui/FadeIn";
 import { FractalPattern } from "@/components/ui/FractalPattern";
 import { CornerDecorations } from "@/components/ui/MandelbrotCorners";
+import { Button } from "@/components/ui/button";
 
 export function EventsPage() {
   return (
@@ -50,28 +51,24 @@ export function EventsPage() {
             <p className="font-serif text-4xl md:text-6xl leading-[1.3] mb-6 text-center display-roman">
               Host Our Next Event
             </p>
-            <a
-              href="mailto:events@merlins.place"
-              className="inline-block max-w-xs w-full border border-foreground/20 rounded-md px-8 py-5 text-sm tracking-widest uppercase bg-foreground/[0.03] hover:bg-foreground/10 transition-colors duration-300 text-center relative overflow-hidden mb-12"
-            >
-              <CornerDecorations size="xs" />
-              Email Merlin's Place
-            </a>
+            <Button asChild className="max-w-xs w-full mb-12 text-center">
+              <a href="mailto:events@merlins.place">Email Merlin's Place</a>
+            </Button>
           </FadeIn>
 
           <FadeIn delay={0.3}>
             <p className="font-serif text-4xl md:text-6xl leading-[1.3] mb-6 text-center display-roman">
               Stay in the Loop
             </p>
-            <a
-              href="https://discord.com/invite/vugp6Nza"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-block max-w-xs w-full border border-foreground/20 rounded-md px-8 py-5 text-sm tracking-widest uppercase bg-foreground/[0.03] hover:bg-foreground/10 transition-colors duration-300 text-center relative overflow-hidden"
-            >
-              <CornerDecorations size="xs" />
-              Join Discord
-            </a>
+            <Button asChild className="max-w-xs w-full text-center">
+              <a
+                href="https://discord.com/invite/vugp6Nza"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Join Discord
+              </a>
+            </Button>
           </FadeIn>
         </section>
       </div>

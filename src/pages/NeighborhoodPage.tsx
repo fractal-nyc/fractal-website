@@ -5,7 +5,8 @@ import { FadeIn } from "@/components/ui/FadeIn";
 import { PretextParagraph } from "@/components/pretext/PretextParagraph";
 import { TEXT_SIZES } from "@/lib/pretext";
 import { FractalPattern } from "@/components/ui/FractalPattern";
-import { MandelbrotCorners, CornerDecorations } from "@/components/ui/MandelbrotCorners";
+import { MandelbrotCorners } from "@/components/ui/MandelbrotCorners";
+import { Button } from "@/components/ui/button";
 
 export function NeighborhoodPage() {
   return (
@@ -56,15 +57,15 @@ export function NeighborhoodPage() {
                 >
                   {"Want to visit? Fill out this form."}
                 </PretextParagraph>
-                <a
-                  href="https://airtable.com/appDkSh1TsmjHzacK/shrbrfFHeMTcSJ9dd"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-block max-w-xs w-full border border-foreground/20 rounded-md px-8 py-4 md:py-5 text-sm tracking-widest uppercase bg-foreground/[0.03] hover:bg-foreground/10 transition-colors duration-300 text-center relative overflow-hidden"
-                >
-                  <CornerDecorations size="xs" />
-                  Visitor Form
-                </a>
+                <Button asChild className="max-w-xs w-full text-center">
+                  <a
+                    href="https://airtable.com/appDkSh1TsmjHzacK/shrbrfFHeMTcSJ9dd"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Visitor Form
+                  </a>
+                </Button>
               </div>
             </FadeIn>
           </div>

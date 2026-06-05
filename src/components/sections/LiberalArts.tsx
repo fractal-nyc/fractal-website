@@ -2,7 +2,7 @@ import { FadeIn } from "@/components/ui/FadeIn";
 import { SectorHeader } from "@/components/layout/SectorHeader";
 import { PretextParagraph } from "@/components/pretext/PretextParagraph";
 import { TEXT_SIZES } from "@/lib/pretext";
-import { CornerDecorations } from "@/components/ui/MandelbrotCorners";
+import { Button } from "@/components/ui/button";
 
 export function LiberalArts() {
   return (
@@ -34,24 +34,24 @@ export function LiberalArts() {
             </PretextParagraph>
 
             <div className="flex flex-col sm:flex-row gap-4 mb-10 justify-center items-center">
-              <a
-                href="https://fractaluniversity.substack.com/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-block max-w-xs w-full border border-foreground/20 rounded-md px-8 py-5 text-sm tracking-widest uppercase bg-foreground/[0.03] hover:bg-foreground/10 transition-colors duration-300 text-center relative overflow-hidden"
-              >
-                <CornerDecorations size="xs" />
-                Learn More
-              </a>
-              <a
-                href="https://airtable.com/appqj7FQhKgCdLnWM/shr23K8Sa62ptKc7Q"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-block max-w-xs w-full border border-foreground/20 rounded-md px-8 py-5 text-sm tracking-widest uppercase bg-foreground/[0.03] hover:bg-foreground/10 transition-colors duration-300 text-center relative overflow-hidden"
-              >
-                <CornerDecorations size="xs" />
-                Apply as Instructor
-              </a>
+              <Button asChild className="max-w-xs w-full text-center">
+                <a
+                  href="https://fractaluniversity.substack.com/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Learn More
+                </a>
+              </Button>
+              <Button asChild className="max-w-xs w-full text-center">
+                <a
+                  href="https://airtable.com/appqj7FQhKgCdLnWM/shr23K8Sa62ptKc7Q"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Apply as Instructor
+                </a>
+              </Button>
             </div>
 
             <PretextParagraph

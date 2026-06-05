@@ -1,6 +1,6 @@
 import { FadeIn } from "@/components/ui/FadeIn";
 import { SectorHeader } from "@/components/layout/SectorHeader";
-import { CornerDecorations } from "@/components/ui/MandelbrotCorners";
+import { Button } from "@/components/ui/button";
 
 const LUMA_URL = "https://luma.com/nyc-tech";
 const LUMA_EVENTS_URL = "https://lu.ma/nyc-tech";
@@ -141,16 +141,20 @@ function PrimaryButton({
   const externalProps = external
     ? { target: "_blank" as const, rel: "noopener noreferrer" }
     : {};
+  // Campus-specific tint: darker translucent black instead of the default
+  // foreground/[0.03] — preserves the shipped Campus look against the green
+  // Campus background. The Button base styles handle border, padding,
+  // uppercase mono, focus-visible, and corner decorations.
   const widthClass = fullWidth ? "w-full" : "max-w-xs w-full";
   return (
-    <a
-      href={href}
-      {...externalProps}
-      className={`inline-block ${widthClass} border border-foreground/20 rounded-md px-8 py-5 text-sm tracking-widest uppercase bg-black/20 hover:bg-black/30 transition-colors duration-300 text-center relative overflow-hidden`}
+    <Button
+      asChild
+      className={`${widthClass} bg-black/20 hover:bg-black/30 text-center`}
     >
-      <CornerDecorations size="xs" />
-      {children}
-    </a>
+      <a href={href} {...externalProps}>
+        {children}
+      </a>
+    </Button>
   );
 }
 
