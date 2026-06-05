@@ -3,6 +3,15 @@ import { useFrame, ThreeEvent } from "@react-three/fiber";
 import { Html } from "@react-three/drei";
 import * as THREE from "three";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
+import { HOUSES } from "@/data/houses";
+
+// FRAC-24: House color helper — derives from canonical palette pair in
+// HOUSES instead of literal hex. Falls back to magenta to surface a missing
+// house id loudly in dev.
+const housePalette = (id: string, prefer: "light" | "deep" = "light"): string => {
+  const palette = HOUSES.find((h) => h.id === id)?.palette;
+  return palette ? palette[prefer] : "#ff00ff";
+};
 
 // ---------------------------------------------------------------------------
 // FRAC-124: Tap-vs-drag discriminator
@@ -97,11 +106,11 @@ interface NavNode {
 }
 
 const OUTER_NAV_NODES: NavNode[] = [
-  { label: "Visit",         route: "/neighborhood",     color: "#889460", vertexIndex: 3 },
-  { label: "Events",        route: "/events",           color: "#D4857A", vertexIndex: 2 },
-  { label: "Campus",        route: "/campus",           color: "#2B5A48", vertexIndex: 0 },
-  { label: "Education",     route: "/new-liberal-arts", color: "#C41E20", vertexIndex: 1 },
-  { label: "Publications",  route: "/lab",              color: "#E870A0", vertexIndex: 5 },
+  { label: "Visit",         route: "/neighborhood",     color: housePalette("neighborhood"), vertexIndex: 3 },
+  { label: "Events",        route: "/events",           color: housePalette("events"),       vertexIndex: 2 },
+  { label: "Campus",        route: "/campus",           color: housePalette("campus"),       vertexIndex: 0 },
+  { label: "Education",     route: "/new-liberal-arts", color: housePalette("school"),       vertexIndex: 1 },
+  { label: "Publications",  route: "/lab",              color: housePalette("lab"),          vertexIndex: 5 },
 ];
 
 // ---------------------------------------------------------------------------
@@ -362,16 +371,19 @@ const FACE_BANNER_IMAGES: Record<string, string> = {
   people:       "/images/banners/people.jpeg",
 };
 
-// Section colors. `forum` is intentionally desaturated (muted grey-tan) to
-// read as de-emphasized — it has no nav node and no banner texture.
+// Section colors. House-backed faces derive from canonical palette pairs
+// (FRAC-24). `story` and `people` are not Houses and keep literal hexes.
+// `forum` is intentionally desaturated (muted grey-tan) to read as
+// de-emphasized — it has no nav node and no banner texture, so the literal
+// is kept as a deliberate stylistic exception rather than a palette identity.
 const FACE_SECTION_COLORS: Record<string, string> = {
   story:        "#D4BA58",
-  campus:       "#2B5A48",
-  neighborhood: "#889460",
-  events:       "#D4857A",
-  school:       "#C41E20",
+  campus:       housePalette("campus"),
+  neighborhood: housePalette("neighborhood"),
+  events:       housePalette("events"),
+  school:       housePalette("school"),
   forum:        "#8a7a6a",
-  lab:          "#E870A0",
+  lab:          housePalette("lab"),
   people:       "#C49040",
 };
 
