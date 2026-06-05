@@ -87,7 +87,7 @@ export function Hero() {
   const noResults = query.trim().length > 1 && flatResults.length === 0;
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center pt-20 overflow-hidden bg-[#faf8f5]">
+    <section className="relative min-h-screen flex items-center justify-center pt-20 overflow-hidden bg-background">
       <Suspense fallback={null}>
         <FractalCityScene onNavigate={handleNavigate} />
       </Suspense>
@@ -111,14 +111,14 @@ export function Hero() {
               onFocus={() => setIsOpen(true)}
               onKeyDown={handleKeyDown}
               placeholder="Explore Fractal..."
-              className="w-full font-mono text-sm tracking-widest uppercase text-foreground/60 border border-foreground/20 rounded-md bg-[#faf8f5]/90 backdrop-blur-sm placeholder:text-foreground/40 outline-none transition-all duration-200 focus:border-foreground/40 focus:text-foreground/80 h-[30px] pl-8 pr-3"
+              className="w-full font-mono text-sm tracking-widest uppercase text-foreground/60 border border-foreground/20 rounded-md bg-background/90 backdrop-blur-sm placeholder:text-foreground/40 outline-none transition-all duration-200 focus:border-foreground/40 focus:text-foreground/80 h-[30px] pl-8 pr-3"
             />
           </div>
 
           {/* Dropdown */}
           {isOpen && (hasResults || noResults) && (
             <div
-              className="absolute bottom-full left-0 mb-1 w-full bg-[#faf8f5]/95 backdrop-blur-sm border border-foreground/20 rounded-md overflow-hidden shadow-lg max-h-[60vh] overflow-y-auto"
+              className="absolute bottom-full left-0 mb-1 w-full bg-background/95 backdrop-blur-sm border border-foreground/20 rounded-md overflow-hidden shadow-lg max-h-[60vh] overflow-y-auto"
               role="listbox"
             >
               {noResults && (

@@ -22,12 +22,11 @@ export function Home() {
       {/* FRAC-161: <HouseBannerGrid /> hidden on home. */}
 
       {/* Golden Age Protocol */}
-      <section className="bg-[#faf8f5] px-[4.5%] py-40 md:py-60">
+      <section className="bg-background px-[4.5%] py-40 md:py-60">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16 items-start">
           <FadeIn>
             <h2
-              className="font-serif text-5xl md:text-7xl leading-[1.3]"
-              style={{ fontWeight: 300, textTransform: "uppercase", fontStyle: "normal" }}
+              className="font-serif text-5xl md:text-7xl leading-[1.3] display-roman"
             >
               A Golden<br />Age Protocol
             </h2>

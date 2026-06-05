@@ -3,6 +3,7 @@ import { motion, useScroll, useMotionValueEvent } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import { Link, useLocation } from "wouter";
 import { JustifiedParagraph } from "@/components/typeset/JustifiedParagraph";
+import { NAVBAR_HIDDEN_ROUTES } from "@/data/houses";
 
 const sectionLinks = [
   { name: "Story", href: "/story", color: "#D4BA58" },
@@ -15,11 +16,15 @@ const sectionLinks = [
   { name: "People", href: "/people", color: "#C49040" },
 ];
 
-// FRAC-161: Hide "Political Club" and "People" from every nav variant without
-// removing their routes/components. To restore, remove names from this set.
-const HIDDEN_SECTION_NAMES = new Set(["Political Club", "People"]);
+// FRAC-32: Hide routes from every nav variant by deriving from the House data
+// model (`hideFromNavbar`). Non-house section links (e.g. "People", which has
+// a route but no House entry) are hidden via the explicit set below.
+// To restore a house, flip its `hideFromNavbar` flag in src/data/houses.ts.
+// To restore a non-house link, remove its href from EXTRA_HIDDEN_HREFS.
+const EXTRA_HIDDEN_HREFS = new Set<string>(["/people"]);
 const visibleSectionLinks = sectionLinks.filter(
-  (link) => !HIDDEN_SECTION_NAMES.has(link.name),
+  (link) =>
+    !NAVBAR_HIDDEN_ROUTES.has(link.href) && !EXTRA_HIDDEN_HREFS.has(link.href),
 );
 
 // Inner-page navbar hides all remaining section links. The home page navbar
@@ -160,13 +165,13 @@ export function Navbar() {
                 <Link href="/" className="text-center leading-[1.1] tracking-tighter min-w-0">
                   <span
                     className="block"
-                    style={{ fontFamily: "'Jacquard 24', system-ui", fontSize: "82px" }}
+                    style={{ fontFamily: "'Jacquard 24', system-ui", fontSize: "clamp(42px, 8vw, 82px)" }}
                   >
                     Fractal
                   </span>
                   <span
                     className="font-serif block italic"
-                    style={{ fontSize: "48px", textTransform: "none", fontWeight: 100 }}
+                    style={{ fontSize: "clamp(27px, 5vw, 48px)", textTransform: "none", fontWeight: 100 }}
                   >
                     Collective
                   </span>
@@ -197,7 +202,7 @@ export function Navbar() {
                 <Link href="/" className="tracking-tighter shrink-0 leading-[0.9] text-center">
                   <span
                     className="block"
-                    style={{ fontFamily: "'Jacquard 24', system-ui", fontSize: "42px" }}
+                    style={{ fontFamily: "'Jacquard 24', system-ui", fontSize: "clamp(24px, 4.5vw, 42px)" }}
                   >
                     Fractal
                   </span>
@@ -252,7 +257,7 @@ export function Navbar() {
                 <Link href="/" className="text-center leading-[1.1] tracking-tighter">
                   <span
                     className="block"
-                    style={{ fontFamily: "'Jacquard 24', system-ui", fontSize: "50px" }}
+                    style={{ fontFamily: "'Jacquard 24', system-ui", fontSize: "clamp(28px, 5.5vw, 50px)" }}
                   >
                     Fractal
                   </span>

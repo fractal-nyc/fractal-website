@@ -43,7 +43,7 @@
 
 :root {
   /* Asimov Collective Aesthetic: Warm, refined, high-contrast, editorial */
-  --background: 40 25% 96%; /* #f7f6f2 - Warm off-white */
+  --background: 40 25% 96%; /* #f8f6f0 — warm off-white */
   --foreground: 0 0% 9%; /* #171717 - Deep charcoal/black */
   
   --card: 40 25% 98%;
@@ -70,36 +70,6 @@
   --border: 40 10% 85%; /* Visible but soft borders for structure */
   --input: 40 10% 85%;
   --ring: 0 0% 9%;
-}
-
-.dark {
-  --background: 0 0% 7%;
-  --foreground: 40 25% 96%;
-  
-  --card: 0 0% 9%;
-  --card-foreground: 40 25% 96%;
-  
-  --popover: 0 0% 9%;
-  --popover-foreground: 40 25% 96%;
-  
-  --primary: 40 25% 96%;
-  --primary-foreground: 0 0% 9%;
-  
-  --secondary: 0 0% 15%;
-  --secondary-foreground: 40 25% 96%;
-  
-  --muted: 0 0% 15%;
-  --muted-foreground: 0 0% 65%;
-  
-  --accent: 0 0% 15%;
-  --accent-foreground: 40 25% 96%;
-  
-  --destructive: 0 62% 30%;
-  --destructive-foreground: 40 25% 96%;
-  
-  --border: 0 0% 20%;
-  --input: 0 0% 20%;
-  --ring: 40 25% 96%;
 }
 
 @layer base {
@@ -149,7 +119,7 @@
   }
   
   .hero-text-shadow {
-    text-shadow: 0 1px 6px rgba(250,248,245,0.95), 0 0 20px rgba(250,248,245,0.8);
+    text-shadow: 0 1px 6px rgba(248,246,240,0.95), 0 0 20px rgba(248,246,240,0.8);
   }
 
   .link-underline {
@@ -163,6 +133,15 @@
   }
   .scrollbar-hide::-webkit-scrollbar {
     display: none;
+  }
+
+  /* Display heading in Roman (non-italic) light weight, uppercase.
+     Overrides the global .font-serif italic rule for cases where we
+     want the Fraunces display rendered upright instead of italic. */
+  .display-roman {
+    font-weight: 300;
+    text-transform: uppercase;
+    font-style: normal;
   }
 }
 

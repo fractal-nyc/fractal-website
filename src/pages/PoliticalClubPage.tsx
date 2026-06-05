@@ -16,7 +16,7 @@ export function PoliticalClubPage() {
           <div className="px-6 md:px-[4.5%] text-center">
             <SectorHeader letter="PC" name="Political Club" color="#C83858" />
             <FadeIn>
-              <p className="font-serif text-4xl md:text-6xl leading-[1.3] text-center mb-10" style={{ fontWeight: 300, textTransform: "uppercase", fontStyle: "normal" }}>
+              <p className="font-serif text-4xl md:text-6xl leading-[1.3] text-center mb-10 display-roman">
                 Maximum New York — A New Civics School
               </p>
               <a

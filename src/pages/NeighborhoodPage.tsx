@@ -19,7 +19,7 @@ export function NeighborhoodPage() {
             <SectorHeader letter="V" name="Visit" color="#4A5A30" />
 
             <FadeIn>
-              <p className="font-serif text-xl md:text-6xl leading-[1.3] mb-3 md:mb-10 text-center" style={{ fontWeight: 300, textTransform: "uppercase", fontStyle: "normal" }}>
+              <p className="font-serif text-xl md:text-6xl leading-[1.3] mb-3 md:mb-10 text-center display-roman">
                 Live Near 100 Friends & Peers
               </p>
             </FadeIn>
