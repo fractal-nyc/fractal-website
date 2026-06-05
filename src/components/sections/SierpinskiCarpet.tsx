@@ -1,4 +1,5 @@
 import { useRef, useEffect, useCallback } from "react";
+import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 
 const QUOTES = [
   "THE GOLDEN AGE IS ALREADY IN THE COMPUTER",
@@ -106,11 +107,15 @@ export function SierpinskiCarpet({
 }: SierpinskiCarpetProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const prefersReducedMotion = usePrefersReducedMotion();
   const stateRef = useRef({
-    progress: 0,
+    // FRAC-28: when reduced motion is active, start the carpet fully grown
+    // and stationary so the user sees the finished fractal without the
+    // grow-in animation or scrolling text.
+    progress: prefersReducedMotion ? MAX_LEVEL : 0,
     textOffset: 0,
     playing: autoPlay,
-    phase: "grow" as "grow" | "stream",
+    phase: (prefersReducedMotion ? "stream" : "grow") as "grow" | "stream",
     lastTime: 0,
     streamAcc: 0,
     photo: null as HTMLImageElement | null,
@@ -234,45 +239,51 @@ export function SierpinskiCarpet({
     draw();
     resizeRaf = requestAnimationFrame(checkResize);
 
-    // Animation loop
-    let animRaf: number;
+    // FRAC-28: When the user prefers reduced motion, render the fully-grown
+    // carpet once (state was initialised to MAX_LEVEL above) and skip the
+    // requestAnimationFrame tick that would otherwise grow the fractal and
+    // scroll the text. The resize-check loop above is kept because it is
+    // responsive layout polling, not decorative motion.
+    let animRaf: number | undefined;
+    if (!prefersReducedMotion) {
+      // Animation loop
+      function tick(now: number) {
+        animRaf = requestAnimationFrame(tick);
+        const s = stateRef.current;
+        if (!s.playing) {
+          s.lastTime = now;
+          return;
+        }
 
-    function tick(now: number) {
-      animRaf = requestAnimationFrame(tick);
-      const s = stateRef.current;
-      if (!s.playing) {
+        const dt = Math.min(now - s.lastTime, 50);
         s.lastTime = now;
-        return;
-      }
 
-      const dt = Math.min(now - s.lastTime, 50);
-      s.lastTime = now;
-
-      if (s.phase === "grow") {
-        s.progress += dt * 0.0004;
-        if (s.progress >= MAX_LEVEL) {
-          s.progress = MAX_LEVEL;
-          s.phase = "stream";
-          s.streamAcc = 0;
-        }
-        draw();
-      } else if (s.phase === "stream") {
-        s.streamAcc += dt;
-        if (s.streamAcc > 120) {
-          s.textOffset++;
-          s.streamAcc -= 120;
+        if (s.phase === "grow") {
+          s.progress += dt * 0.0004;
+          if (s.progress >= MAX_LEVEL) {
+            s.progress = MAX_LEVEL;
+            s.phase = "stream";
+            s.streamAcc = 0;
+          }
           draw();
+        } else if (s.phase === "stream") {
+          s.streamAcc += dt;
+          if (s.streamAcc > 120) {
+            s.textOffset++;
+            s.streamAcc -= 120;
+            draw();
+          }
         }
       }
-    }
 
-    animRaf = requestAnimationFrame(tick);
+      animRaf = requestAnimationFrame(tick);
+    }
 
     return () => {
       cancelAnimationFrame(resizeRaf);
-      cancelAnimationFrame(animRaf);
+      if (animRaf !== undefined) cancelAnimationFrame(animRaf);
     };
-  }, [photoUrl, draw, resizeCanvas]);
+  }, [photoUrl, draw, resizeCanvas, prefersReducedMotion]);
 
   return (
     <div
