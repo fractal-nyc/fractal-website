@@ -134,6 +134,15 @@
   .scrollbar-hide::-webkit-scrollbar {
     display: none;
   }
+
+  /* Display heading in Roman (non-italic) light weight, uppercase.
+     Overrides the global .font-serif italic rule for cases where we
+     want the Fraunces display rendered upright instead of italic. */
+  .display-roman {
+    font-weight: 300;
+    text-transform: uppercase;
+    font-style: normal;
+  }
 }
 
 @keyframes blink {

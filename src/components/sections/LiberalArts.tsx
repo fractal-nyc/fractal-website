@@ -10,7 +10,7 @@ export function LiberalArts() {
       <div className="w-full px-6 md:px-[4.5%] text-center">
         <SectorHeader letter="E" name="Education" color="#C41E20" />
         <FadeIn>
-          <p className="font-serif text-2xl sm:text-4xl md:text-6xl leading-[1.3] mb-4 md:mb-6 text-center" style={{ fontWeight: 300, textTransform: "uppercase", fontStyle: "normal" }}>
+          <p className="font-serif text-2xl sm:text-4xl md:text-6xl leading-[1.3] mb-4 md:mb-6 text-center display-roman">
             Tech, Entrepreneurship, Rhetoric, Civics
           </p>
         </FadeIn>

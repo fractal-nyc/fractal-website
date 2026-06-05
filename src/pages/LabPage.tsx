@@ -24,7 +24,7 @@ export function LabPage() {
             <SectorHeader letter="P" name="Publications" color="#C44878" />
             <FadeIn delay={0.1}>
               <div className="text-center">
-                <p className="font-serif text-4xl md:text-6xl leading-[1.3] mb-6 text-center" style={{ fontWeight: 300, textTransform: "uppercase", fontStyle: "normal" }}>
+                <p className="font-serif text-4xl md:text-6xl leading-[1.3] mb-6 text-center display-roman">
                   A Research Institute Doing 'Gain of Function Research on the Golden Age Virus'
                 </p>
               </div>

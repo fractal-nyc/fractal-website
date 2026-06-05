@@ -19,7 +19,7 @@ export function PeoplePage() {
             <SectorHeader letter="P" name="People" color="#B65D19" />
             <FadeIn delay={0.2}>
               <div className="text-center">
-                <p className="font-serif text-4xl md:text-6xl leading-[1.3] text-white mb-6 text-center" style={{ fontWeight: 300, textTransform: "uppercase", fontStyle: "normal" }}>
+                <p className="font-serif text-4xl md:text-6xl leading-[1.3] text-white mb-6 text-center display-roman">
                   A Fractal Is a Friendship Infrastructure
                 </p>
                 <a
