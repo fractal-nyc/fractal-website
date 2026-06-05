@@ -402,14 +402,14 @@ const FACE_SECTION_COLORS: Record<string, string> = {
 // Octahedron faces (detail=0) are ordered by the geometry's index buffer.
 // Face indices 0-7 correspond to the 8 triangular faces.
 const FACE_SECTION_MAP: (string | null)[] = [
-  "story",         // face 0
-  "campus",        // face 1
-  "neighborhood",  // face 2
-  "events",        // face 3
-  "school",        // face 4
-  "forum",         // face 5
-  "lab",           // face 6
-  "people",        // face 7
+  "campus",        // face 0
+  "events",        // face 1
+  "lab",           // face 2
+  "people",        // face 3
+  "neighborhood",  // face 4
+  "story",         // face 5
+  "forum",         // face 6
+  "school",        // face 7
 ];
 
 /**
