@@ -5,7 +5,7 @@ import { FadeIn } from "@/components/ui/FadeIn";
 import { PretextParagraph } from "@/components/pretext/PretextParagraph";
 import { TEXT_SIZES } from "@/lib/pretext";
 import { FractalPattern } from "@/components/ui/FractalPattern";
-import { CornerDecorations } from "@/components/ui/MandelbrotCorners";
+import { Button } from "@/components/ui/button";
 
 export function PeoplePage() {
   return (
@@ -22,15 +22,15 @@ export function PeoplePage() {
                 <p className="font-serif text-4xl md:text-6xl leading-[1.3] text-white mb-6 text-center display-roman">
                   A Fractal Is a Friendship Infrastructure
                 </p>
-                <a
-                  href="https://discord.com/invite/vugp6Nza"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-block max-w-xs w-full border border-foreground/20 rounded-md px-8 py-5 text-sm tracking-widest uppercase bg-foreground/[0.03] hover:bg-foreground/10 transition-colors duration-300 text-center relative overflow-hidden mb-8"
-                >
-                  <CornerDecorations size="xs" />
-                  Join Discord
-                </a>
+                <Button asChild className="max-w-xs w-full mb-8 text-center">
+                  <a
+                    href="https://discord.com/invite/vugp6Nza"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Join Discord
+                  </a>
+                </Button>
                 <PretextParagraph
                   size={TEXT_SIZES.lg}
                   className="font-light text-white"

@@ -16,10 +16,18 @@ import { Button, buttonVariants } from "@/components/ui/button";
 
 // ═══════════════════════════════════════════════════════════════════════════
 // Button component renders all variants
+//
+// FRAC-27: The old shadcn Button shipped `destructive` / `secondary` / `icon`
+// variants and a `min-h-12` default size — all dependent on undefined
+// Replit-injected utilities (hover-elevate, [border-color:var(...)],
+// border-primary-border, etc.) that were never declared in src/index.css.
+// The new minimal Button matches shipped CTA reality: four variants
+// (default, outline, ghost, link) and three sizes (default, sm, lg) plus
+// `icon` for vendored shadcn components.
 // ═══════════════════════════════════════════════════════════════════════════
 
 describe("Button component", () => {
-  const variants = ["default", "destructive", "outline", "secondary", "ghost", "link"] as const;
+  const variants = ["default", "outline", "ghost", "link"] as const;
 
   for (const variant of variants) {
     it(`should render the "${variant}" variant without crashing`, () => {
@@ -38,14 +46,18 @@ describe("Button component", () => {
   }
 
   it("should support the asChild prop (Radix Slot pattern)", () => {
-    // Note: The Button component adds Mandelbrot corner decoration spans
-    // as siblings to props.children, so asChild with a single child element
-    // will throw because Slot expects exactly one child. This is a known
-    // limitation — asChild should only be used when the Button is
-    // customized without corner decorations, or the consumer wraps
-    // children in a fragment. We verify the prop is accepted.
-    expect(Button).toBeDefined();
-    expect(typeof Button === "object" || typeof Button === "function").toBe(true);
+    // asChild forwards classes and ref to the consumer's child element.
+    // The Button injects Mandelbrot corner decorations into that child via
+    // React.cloneElement, so asChild remains compatible with the
+    // corner-decoration default variant.
+    render(
+      <Button asChild>
+        <a href="https://example.com">Linky</a>
+      </Button>
+    );
+    const link = screen.getByText("Linky");
+    expect(link.tagName).toBe("A");
+    expect((link as HTMLAnchorElement).href).toContain("example.com");
   });
 
   it("should have inline-flex (not full-width) as the default display", () => {
@@ -55,7 +67,7 @@ describe("Button component", () => {
     expect(button!.className).toContain("inline-flex");
   });
 
-  it("should include Mandelbrot corner decorations", () => {
+  it("should include Mandelbrot corner decorations on the default variant", () => {
     const { container } = render(<Button>Decorated</Button>);
     const icons = container.querySelectorAll('[data-testid="mandelbrot-icon"]');
     // 4 corners
@@ -67,12 +79,40 @@ describe("Button component", () => {
     const corners = container.querySelectorAll("[aria-hidden]");
     expect(corners.length).toBe(4);
   });
+
+  it("should NOT render Mandelbrot corners on the outline variant", () => {
+    const { container } = render(<Button variant="outline">Plain</Button>);
+    const icons = container.querySelectorAll('[data-testid="mandelbrot-icon"]');
+    expect(icons.length).toBe(0);
+  });
+
+  it("should NOT render Mandelbrot corners on the ghost variant", () => {
+    const { container } = render(<Button variant="ghost">Ghosty</Button>);
+    const icons = container.querySelectorAll('[data-testid="mandelbrot-icon"]');
+    expect(icons.length).toBe(0);
+  });
+
+  it("should NOT render Mandelbrot corners on the link variant", () => {
+    const { container } = render(<Button variant="link">Linky</Button>);
+    const icons = container.querySelectorAll('[data-testid="mandelbrot-icon"]');
+    expect(icons.length).toBe(0);
+  });
+
+  it("should expose a real focus-visible ring state (was missing sitewide)", () => {
+    render(<Button>Focusable</Button>);
+    const button = screen.getByText("Focusable").closest("button");
+    expect(button!.className).toContain("focus-visible:ring-2");
+  });
 });
 
 // ═══════════════════════════════════════════════════════════════════════════
-// CTA link buttons have max-width constraint (FRAC-86 regression)
-// These are the styled <a> tags used on section pages, not the Button
-// component itself, but the pattern should be consistent.
+// CTA link button styling (FRAC-86 regression)
+//
+// These assertions live alongside the Button tests so the inline-block +
+// max-w-xs pattern stays enforced even after CTAs migrate to <Button asChild>.
+// The Button's default variant intentionally does not constrain width — the
+// consuming page wraps the Button with `max-w-xs w-full` when the constraint
+// is desired (as on EventsPage, NeighborhoodPage, etc.).
 // ═══════════════════════════════════════════════════════════════════════════
 
 describe("CTA link button styling (FRAC-86 regression)", () => {
@@ -123,18 +163,20 @@ describe("buttonVariants utility", () => {
     expect(classes).toContain("inline-flex");
   });
 
-  it("should include hover-elevate animation class", () => {
+  it("should include focus-visible ring (real a11y state, not Replit's hover-elevate)", () => {
     const classes = buttonVariants();
-    expect(classes).toContain("hover-elevate");
+    expect(classes).toContain("focus-visible:ring-2");
   });
 
-  it("should include min-h-12 for default size", () => {
+  it("should include uppercase tracking for site mono CTA aesthetic", () => {
     const classes = buttonVariants({ size: "default" });
-    expect(classes).toContain("min-h-12");
+    expect(classes).toContain("uppercase");
+    expect(classes).toContain("tracking-widest");
   });
 
-  it("should include min-h-10 for sm size", () => {
+  it("should produce a smaller padding string for sm size", () => {
     const classes = buttonVariants({ size: "sm" });
-    expect(classes).toContain("min-h-10");
+    expect(classes).toContain("px-4");
+    expect(classes).toContain("py-2");
   });
 });
