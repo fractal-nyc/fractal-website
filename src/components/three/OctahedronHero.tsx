@@ -489,6 +489,11 @@ function usePerFaceMaterials() {
             tex.dispose();
             return;
           }
+          // FRAC-35: tag as sRGB so the renderer doesn't apply a linear→sRGB
+          // shift that brightens JPEGs. Three.js r152+ defaults color textures
+          // to NoColorSpace (linear); without this flag the JPEG color data
+          // gets double-gamma-corrected on output, washing the photos out.
+          tex.colorSpace = THREE.SRGBColorSpace;
           setTextures((prev) => ({ ...prev, [key]: tex }));
         })
         .catch((err) => {
