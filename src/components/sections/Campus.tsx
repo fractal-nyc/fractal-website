@@ -180,8 +180,7 @@ export function Campus() {
           <FadeIn>
             <div className="text-center max-w-4xl mx-auto">
               <p
-                className="font-serif text-4xl md:text-6xl leading-[1.3] text-white mb-4 text-center"
-                style={{ fontWeight: 300, textTransform: "uppercase", fontStyle: "normal" }}
+                className="font-serif text-4xl md:text-6xl leading-[1.3] text-white mb-4 text-center display-roman"
               >
                 Fractal Campus
               </p>
