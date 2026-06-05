@@ -93,27 +93,34 @@ export function useTapHandlers(onTap: () => void) {
 }
 
 // ---------------------------------------------------------------------------
-// Nav node definitions — 5 visible houses on octahedron vertices
+// Nav node definitions — 6 nodes on octahedron vertices
 // ---------------------------------------------------------------------------
-// FRAC-5 / FRAC-161: Political Club is hidden from the hero nav. The 6-vertex
-// octahedron still has a vertex at index 4 — we simply leave it unpopulated.
+// FRAC-5 / FRAC-161 / FRAC-36: Political Club is hidden from the navbar
+// (FRAC-32) and its banner grid card stays hidden (FRAC-161). On the hero
+// octahedron itself, vertex 4 was previously left unpopulated. FRAC-36
+// restores a sphere at vertex 4 as a "Coming Soon" placeholder so the
+// geometry reads as complete (6 vertices, 6 nodes). The placeholder is
+// non-navigable: taps surface the tooltip but do NOT call onNavigate.
 
 interface NavNode {
   label: string;
   route: string;
   color: string;
   vertexIndex: number;
+  comingSoon?: boolean;
 }
 
 // FRAC-33: exported so the FractalCityScene wrapper can render a
 // keyboard-accessible skip-nav with the same routes (a parallel path
 // for keyboard users, since the 3D nav nodes are pointer-only).
 export const OUTER_NAV_NODES: NavNode[] = [
-  { label: "Visit",         route: "/neighborhood",     color: housePalette("neighborhood"), vertexIndex: 3 },
-  { label: "Events",        route: "/events",           color: housePalette("events"),       vertexIndex: 2 },
-  { label: "Campus",        route: "/campus",           color: housePalette("campus"),       vertexIndex: 0 },
-  { label: "Education",     route: "/new-liberal-arts", color: housePalette("school"),       vertexIndex: 1 },
-  { label: "Publications",  route: "/lab",              color: housePalette("lab"),          vertexIndex: 5 },
+  { label: "Visit",          route: "/neighborhood",     color: housePalette("neighborhood"), vertexIndex: 3 },
+  { label: "Events",         route: "/events",           color: housePalette("events"),       vertexIndex: 2 },
+  { label: "Campus",         route: "/campus",           color: housePalette("campus"),       vertexIndex: 0 },
+  { label: "Education",      route: "/new-liberal-arts", color: housePalette("school"),       vertexIndex: 1 },
+  { label: "Publications",   route: "/lab",              color: housePalette("lab"),          vertexIndex: 5 },
+  // FRAC-36: Political Club placeholder — visible sphere, non-navigable.
+  { label: "Political Club", route: "/political-club",   color: housePalette("forum", "light"), vertexIndex: 4, comingSoon: true },
 ];
 
 // ---------------------------------------------------------------------------
@@ -705,6 +712,11 @@ function NavNodeMesh({
       }, 3000);
       return;
     }
+    // FRAC-36: "Coming Soon" placeholder nodes surface the tooltip on tap
+    // but do not route. On touch the first-tap branch above already showed
+    // the tooltip; on desktop the hover state shows it. Either way, swallow
+    // the navigation here.
+    if (node.comingSoon) return;
     onNavigate(node.route);
   });
 
@@ -722,7 +734,10 @@ function NavNodeMesh({
         {(hovered || revealed) && (
           <Html center distanceFactor={8} style={{ pointerEvents: "auto" }}>
             <div
-              style={{ ...tooltipStyle(node.color), cursor: "pointer" }}
+              style={{
+                ...tooltipStyle(node.color),
+                cursor: node.comingSoon ? "default" : "pointer",
+              }}
               onPointerEnter={() => {
                 // Cursor moved from mesh into the popup — keep it visible.
                 cancelHoverHide();
@@ -735,10 +750,24 @@ function NavNodeMesh({
               }}
               onClick={(e) => {
                 e.stopPropagation();
+                // FRAC-36: non-navigable placeholder. Tooltip is the surface.
+                if (node.comingSoon) return;
                 onNavigate(node.route);
               }}
             >
               {node.label}
+              {node.comingSoon && (
+                <div
+                  style={{
+                    fontSize: 9,
+                    opacity: 0.7,
+                    marginTop: 2,
+                    letterSpacing: "0.12em",
+                  }}
+                >
+                  Coming Soon
+                </div>
+              )}
             </div>
           </Html>
         )}
