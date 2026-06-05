@@ -755,19 +755,11 @@ function NavNodeMesh({
                 onNavigate(node.route);
               }}
             >
-              {node.label}
-              {node.comingSoon && (
-                <div
-                  style={{
-                    fontSize: 9,
-                    opacity: 0.7,
-                    marginTop: 2,
-                    letterSpacing: "0.12em",
-                  }}
-                >
-                  Coming Soon
-                </div>
-              )}
+              {/* FRAC-37: Coming Soon placeholder shows ONLY "Coming Soon"
+                  (rendered uppercase by tooltipStyle's textTransform), at
+                  the same visual prominence as other nav tooltips — no
+                  small subline, no Political Club caption. */}
+              {node.comingSoon ? "Coming Soon" : node.label}
             </div>
           </Html>
         )}
