@@ -361,15 +361,16 @@ function StreamingCrossConnections({
 // ---------------------------------------------------------------------------
 
 // Banner images — per visible section.
-// FRAC-5: `forum` (Political Club) is hidden from nav, so we skip its banner
-// and fall back to a desaturated solid color on that face. Geometry stays
-// intact (8 triangular faces); only the visual treatment changes.
+// FRAC-20: `forum` (Political Club) banner restored. Earlier (FRAC-5) it was
+// skipped because the section was hidden from nav; user later confirmed the
+// face should still show its photo. Geometry stays intact (8 triangular faces).
 const FACE_BANNER_IMAGES: Record<string, string> = {
   story:        "/images/banners/story.jpeg",
   campus:       "/images/banners/campus.jpeg",
   neighborhood: "/images/banners/neighborhood.jpeg",
   events:       "/images/banners/events.jpeg",
   school:       "/images/banners/new-liberal-arts.jpeg",
+  forum:        "/images/banners/political-club.jpeg",
   lab:          "/images/banners/lab.jpeg",
   people:       "/images/banners/people.jpeg",
 };
@@ -513,11 +514,13 @@ function usePerFaceMaterials() {
       const color = FACE_SECTION_COLORS[sectionKey] ?? "#c4a265";
 
       if (tex) {
-        // Textured face — tint the banner image with the section color so it
-        // reads as the intended house hue instead of a washed-out photo.
+        // Textured face — render the banner photo untinted. FRAC-17 multiplied
+        // the texture by the section accent color (passed as `color` on the
+        // MeshBasicMaterial); user confirmed (FRAC-20) the tint was the wrong
+        // direction. The solid-color fallback below still uses the section
+        // color while textures load.
         return new THREE.MeshBasicMaterial({
           map: tex,
-          color,
           side: THREE.FrontSide,
         });
       }
