@@ -105,7 +105,10 @@ interface NavNode {
   vertexIndex: number;
 }
 
-const OUTER_NAV_NODES: NavNode[] = [
+// FRAC-33: exported so the FractalCityScene wrapper can render a
+// keyboard-accessible skip-nav with the same routes (a parallel path
+// for keyboard users, since the 3D nav nodes are pointer-only).
+export const OUTER_NAV_NODES: NavNode[] = [
   { label: "Visit",         route: "/neighborhood",     color: housePalette("neighborhood"), vertexIndex: 3 },
   { label: "Events",        route: "/events",           color: housePalette("events"),       vertexIndex: 2 },
   { label: "Campus",        route: "/campus",           color: housePalette("campus"),       vertexIndex: 0 },
