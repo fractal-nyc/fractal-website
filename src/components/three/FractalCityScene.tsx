@@ -4,7 +4,6 @@ import { OrbitControls } from "@react-three/drei";
 import * as THREE from "three";
 import { TOUCH } from "three";
 // Hero geometry variants — swap the import to try different shapes
-// import { FractalObject } from "./FractalObject";       // Icosahedron (original)
 // import { FractalObject } from "./MetatronCube";        // Nested hexahedra (Metatron's Cube)
 import { FractalObject } from "./OctahedronHero";         // Octahedron
 
