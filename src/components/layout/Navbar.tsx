@@ -160,13 +160,13 @@ export function Navbar() {
                 <Link href="/" className="text-center leading-[1.1] tracking-tighter min-w-0">
                   <span
                     className="block"
-                    style={{ fontFamily: "'Jacquard 24', system-ui", fontSize: "82px" }}
+                    style={{ fontFamily: "'Jacquard 24', system-ui", fontSize: "clamp(42px, 8vw, 82px)" }}
                   >
                     Fractal
                   </span>
                   <span
                     className="font-serif block italic"
-                    style={{ fontSize: "48px", textTransform: "none", fontWeight: 100 }}
+                    style={{ fontSize: "clamp(27px, 5vw, 48px)", textTransform: "none", fontWeight: 100 }}
                   >
                     Collective
                   </span>
@@ -197,7 +197,7 @@ export function Navbar() {
                 <Link href="/" className="tracking-tighter shrink-0 leading-[0.9] text-center">
                   <span
                     className="block"
-                    style={{ fontFamily: "'Jacquard 24', system-ui", fontSize: "42px" }}
+                    style={{ fontFamily: "'Jacquard 24', system-ui", fontSize: "clamp(24px, 4.5vw, 42px)" }}
                   >
                     Fractal
                   </span>
@@ -252,7 +252,7 @@ export function Navbar() {
                 <Link href="/" className="text-center leading-[1.1] tracking-tighter">
                   <span
                     className="block"
-                    style={{ fontFamily: "'Jacquard 24', system-ui", fontSize: "50px" }}
+                    style={{ fontFamily: "'Jacquard 24', system-ui", fontSize: "clamp(28px, 5.5vw, 50px)" }}
                   >
                     Fractal
                   </span>
