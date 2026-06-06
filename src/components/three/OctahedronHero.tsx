@@ -478,61 +478,6 @@ function usePerFaceOctahedronGeometry(radius: number) {
  * colored faces, and upgrades to textured faces in a subsequent paint when
  * each JPEG/PNG finishes downloading.
  */
-// FRAC-39: Photoshop "Overlay" blend strength applied per textured face.
-// Tunable single source — dial up to push the brand color harder, dial down
-// for a more neutral photo. 0.35 preserves photo detail while clearly tinting
-// the face toward the section's canonical palette deep color.
-const OVERLAY_STRENGTH = 0.35;
-
-// FRAC-39: House section IDs that resolve to a canonical palette via
-// housePalette(). Non-House sections (story, people) fall back to
-// FACE_SECTION_COLORS for their tint. Sourced from src/data/houses.ts.
-const HOUSE_SECTION_IDS = new Set([
-  "campus",
-  "neighborhood",
-  "events",
-  "school",
-  "forum",
-  "lab",
-]);
-
-// FRAC-39: vertex/fragment GLSL for the per-face tint. The shader samples the
-// banner texture (which the sampler converts sRGB→linear because of
-// tex.colorSpace = SRGBColorSpace, FRAC-35), applies a per-channel Photoshop
-// "Overlay" blend against the section's tint color, and lerps the result back
-// toward the original by `strength`. The renderer's output then applies its
-// linear→sRGB output transform, so the perceived result matches Photoshop's
-// behavior on the same source assets.
-const FACE_OVERLAY_VERT = /* glsl */ `
-  varying vec2 vUv;
-  void main() {
-    vUv = uv;
-    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-  }
-`;
-
-const FACE_OVERLAY_FRAG = /* glsl */ `
-  uniform sampler2D map;
-  uniform vec3 tint;
-  uniform float strength;
-  varying vec2 vUv;
-
-  vec3 overlayBlend(vec3 base, vec3 blend) {
-    return mix(
-      2.0 * base * blend,
-      1.0 - 2.0 * (1.0 - base) * (1.0 - blend),
-      step(0.5, base)
-    );
-  }
-
-  void main() {
-    vec4 texColor = texture2D(map, vUv);
-    vec3 blended = overlayBlend(texColor.rgb, tint);
-    vec3 result = mix(texColor.rgb, blended, strength);
-    gl_FragColor = vec4(result, 1.0);
-  }
-`;
-
 function usePerFaceMaterials() {
   const [textures, setTextures] = useState<Record<string, THREE.Texture>>({});
 
@@ -581,28 +526,10 @@ function usePerFaceMaterials() {
       const color = FACE_SECTION_COLORS[sectionKey] ?? "#c4a265";
 
       if (tex) {
-        // FRAC-39: textured face — Photoshop "Overlay" blend toward the
-        // section's canonical palette deep color at OVERLAY_STRENGTH (0.35).
-        // This replaces the FRAC-17 mix() at 0.55 (washed out detail; user
-        // rejected, FRAC-20 removed) and the FRAC-20 untinted texture.
-        //
-        // Tint source: House sections (campus, neighborhood, events, school,
-        // forum, lab) use housePalette(id, "deep") — same canonical palette
-        // used elsewhere on the site. Non-House sections (story, people)
-        // fall back to FACE_SECTION_COLORS.
-        const tintHex = HOUSE_SECTION_IDS.has(sectionKey)
-          ? housePalette(sectionKey, "light")
-          : (FACE_SECTION_COLORS[sectionKey] ?? "#c4a265");
-        const tintColor = new THREE.Color(tintHex);
-
-        return new THREE.ShaderMaterial({
-          uniforms: {
-            map: { value: tex },
-            tint: { value: new THREE.Vector3(tintColor.r, tintColor.g, tintColor.b) },
-            strength: { value: OVERLAY_STRENGTH },
-          },
-          vertexShader: FACE_OVERLAY_VERT,
-          fragmentShader: FACE_OVERLAY_FRAG,
+        // FRAC-41: revert FRAC-39/40 overlay tinting. Plain texture rendering;
+        // brightening will be handled at the source-JPEG layer separately.
+        return new THREE.MeshBasicMaterial({
+          map: tex,
           side: THREE.FrontSide,
         });
       }
