@@ -95,12 +95,14 @@ export function useTapHandlers(onTap: () => void) {
 // ---------------------------------------------------------------------------
 // Nav node definitions — 6 nodes on octahedron vertices
 // ---------------------------------------------------------------------------
-// FRAC-5 / FRAC-161 / FRAC-36: Political Club is hidden from the navbar
-// (FRAC-32) and its banner grid card stays hidden (FRAC-161). On the hero
-// octahedron itself, vertex 4 was previously left unpopulated. FRAC-36
-// restores a sphere at vertex 4 as a "Coming Soon" placeholder so the
-// geometry reads as complete (6 vertices, 6 nodes). The placeholder is
-// non-navigable: taps surface the tooltip but do NOT call onNavigate.
+// FRAC-5 / FRAC-161 / FRAC-36 / FRAC-47: Political Club is hidden from the
+// navbar (FRAC-32) and its banner grid card stays hidden (FRAC-161). On the
+// hero octahedron, vertex 4 was previously the FRAC-36 "Coming Soon"
+// placeholder for Political Club. FRAC-47 converts that slot to a Story
+// node — fully active, navigable to /story, in the Story brand color
+// #D4BA58 (matches Navbar.tsx Story link + StoryPage STORY_COLOR). The
+// geometry still reads as complete (6 vertices, 6 nodes); Political Club
+// remains hidden from the navbar.
 
 interface NavNode {
   label: string;
@@ -119,8 +121,12 @@ export const OUTER_NAV_NODES: NavNode[] = [
   { label: "Campus",         route: "/campus",           color: housePalette("campus"),       vertexIndex: 0 },
   { label: "Education",      route: "/new-liberal-arts", color: housePalette("school"),       vertexIndex: 1 },
   { label: "Publications",   route: "/lab",              color: housePalette("lab"),          vertexIndex: 5 },
-  // FRAC-36: Political Club placeholder — visible sphere, non-navigable.
-  { label: "Political Club", route: "/political-club",   color: housePalette("forum", "light"), vertexIndex: 4, comingSoon: true },
+  // FRAC-47: Story nav node at vertex 4 — fully active, navigates to /story.
+  // Replaces the FRAC-36 Political Club "Coming Soon" placeholder (Political
+  // Club stays hidden from Navbar per FRAC-161). Color matches Navbar Story
+  // link and StoryPage STORY_COLOR (#D4BA58); Story is not a House so the
+  // hex is literal rather than a palette ref.
+  { label: "Story",          route: "/story",            color: "#D4BA58",                       vertexIndex: 4 },
 ];
 
 // ---------------------------------------------------------------------------
