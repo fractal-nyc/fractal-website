@@ -581,7 +581,7 @@ function CenterOctahedron({
       <mesh ref={meshRef} geometry={geometry} material={materials}>
         {hovered && (
           <Html center distanceFactor={8} style={{ pointerEvents: "none" }}>
-            <div style={tooltipStyle("#1a1a1a")}>The Protocol</div>
+            <div style={tooltipStyle("hsl(var(--foreground))")}>The Protocol</div>
           </Html>
         )}
       </mesh>
@@ -798,7 +798,7 @@ function tooltipStyle(borderColor: string): React.CSSProperties {
     textTransform: "uppercase",
     letterSpacing: "0.08em",
     whiteSpace: "nowrap",
-    color: "#1a1a1a",
+    color: "hsl(var(--foreground))",
     transform: "translateY(-28px)",
   };
 }

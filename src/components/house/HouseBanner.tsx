@@ -93,8 +93,8 @@ export function HouseBanner({
   const isGrid = variant === "grid";
   const pair = getBannerPair(house.id);
   const bgColor = pair?.bg ?? house.color;
-  const letterColor = pair?.letter ?? (isDark(house.color) ? "#ffffff" : "#1a1a1a");
-  const textColor = isDark(bgColor) ? "#ffffff" : "#1a1a1a";
+  const letterColor = pair?.letter ?? (isDark(house.color) ? "#ffffff" : "hsl(var(--foreground))");
+  const textColor = isDark(bgColor) ? "#ffffff" : "hsl(var(--foreground))";
   const bannerImage = BANNER_IMAGES[house.id];
 
   return (
