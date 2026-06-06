@@ -1,0 +1,54 @@
+{
+  "assigned_to": null,
+  "branch_links": [
+    {
+      "branch": "frac-23-gap-analysis",
+      "linked_at": "2026-06-06T00:37:36Z",
+      "linked_by": "agent:claude-opus-4-7-orchestrator",
+      "repo": null
+    }
+  ],
+  "comment_count": 2,
+  "complexity": null,
+  "created_at": "2026-06-05T19:36:41Z",
+  "created_by": "agent:claude-opus-4-7",
+  "custom_fields": {},
+  "description": "**Step 2 of 3** in the DESIGN.md workstream.\n\nTake the FRAC-21 code-review findings and the @google/design.md format spec (https://github.com/google-labs-code/design.md) and produce a gap analysis: what does the current Fractal NYC codebase have, what does the design.md spec expect, where do they diverge?\n\n## Inputs\n- `.lattice/notes/<FRAC-21-id>-code-review.md` (code-review findings)\n- The design.md spec (token schema, prose section order, component property closed-set, lint rules)\n- The PRD: `.lattice/plans/FRAC-22.md` (file name is historical; the live PRD task ID is task_01KN2805JH23P36QDSQH4EJ538, not the current FRAC-22 short ID)\n- Optional: the v0 DESIGN.md draft on branch `frac-19-design-md` (worktree at `.claude/worktrees/agent-a3a9810eccf8190d6/DESIGN.md`) as reference only \u2014 not authoritative\n\n## Required output sections (structured doc at `.lattice/notes/<task_id>-gap-analysis.md`)\n\n1. **What maps cleanly** \u2014 tokens that translate 1:1 to design.md (colors, radii, fonts)\n2. **What needs translation** \u2014 HSL \u2192 hex/oklch, CSS-var indirection \u2192 flat values, naming conflicts (e.g., `--primary: charcoal` vs design.md's `primary: brand`)\n3. **What design.md cannot model** \u2014 motion, transitions, shaders, R3F geometry, noise textures, gradients (anything outside the closed component property set). Must live in prose only.\n4. **What's missing from current code** \u2014 tokens design.md expects but the codebase doesn't have (typography tokens beyond fonts, spacing scale, component-level token definitions, contrast-ratio implications)\n5. **What's missing from the design.md spec relative to our needs** \u2014 gaps in the spec itself that affect us (e.g., no per-house theming, no motion tokens, alpha-stage format)\n6. **Naming conflicts and reconciliations** \u2014 decisions to make before authoring: cream canonical (#f8f6f0 already decided), house token naming (`house-{id}` vs `house-{displayname}`), `primary` semantic\n7. **Octahedron / FRAC-20 caveat** \u2014 restate in-flux status, what NOT to canonicalize until FRAC-20 resolves\n8. **Open questions for human** \u2014 anything needing user input before DESIGN.md can be authored cleanly\n\n## Deliverable\nSingle markdown file at `.lattice/notes/<task_id>-gap-analysis.md`. No source files touched.\n\n## NOT in scope\n- No source files modified\n- No DESIGN.md authoring (that's FRAC-19)\n- Do NOT re-run /code_review (use FRAC-21 output)\n- Do NOT resolve FRAC-20\n\n## Depends on\nFRAC-21 (code review) must be `done` before this can start.\n\n## Blocks\nFRAC-19 (DESIGN.md authoring).",
+  "done_at": "2026-06-06T00:39:32Z",
+  "evidence_refs": [
+    {
+      "id": "ev_01KTD5X8MZA7J9051RZ9486V5Z",
+      "role": "review",
+      "source_type": "comment"
+    }
+  ],
+  "id": "task_01KTCMK9QP8GT21KMZV34S82J7",
+  "last_event_id": "ev_01KTD5XTR9078CE5366B080NRG",
+  "last_status_changed_at": "2026-06-06T00:39:32Z",
+  "priority": "medium",
+  "relationships_out": [
+    {
+      "created_at": "2026-06-05T19:37:16Z",
+      "created_by": "agent:claude-opus-4-7",
+      "note": null,
+      "target_task_id": "task_01KTCMBXY5935W7AVJT23PJ8PP",
+      "type": "depends_on"
+    },
+    {
+      "created_at": "2026-06-05T19:37:16Z",
+      "created_by": "agent:claude-opus-4-7",
+      "note": null,
+      "target_task_id": "task_01KTCGKVEEQM7KQP0BETPWCFJ3",
+      "type": "blocks"
+    }
+  ],
+  "reopened_count": 0,
+  "schema_version": 1,
+  "short_id": "FRAC-23",
+  "status": "done",
+  "tags": null,
+  "title": "Gap analysis: current state vs @google/design.md spec \u2014 identify problems and missing definitions",
+  "type": "task",
+  "updated_at": "2026-06-06T00:39:32Z",
+  "urgency": null
+}
