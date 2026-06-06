@@ -1,6 +1,7 @@
 import { formatAuthors, type LabDocument, type DocumentCategory } from "@/data/lab-documents";
 import type { LucideIcon } from "lucide-react";
 import { MandelbrotCorners } from "@/components/ui/MandelbrotCorners";
+import { HOUSES } from "@/data/houses";
 import {
   ArrowUpRight,
   BookOpen,
@@ -29,8 +30,8 @@ const CATEGORY_META: Record<
   project: { icon: Boxes, label: "Project" },
 };
 
-// Lab house accent
-const LAB_COLOR = "#6B4C9A";
+// Lab house accent — canonical deep pink from the houses palette
+const LAB_DEEP = HOUSES.find((h) => h.id === "lab")!.palette.deep;
 
 // ---------------------------------------------------------------------------
 // DocumentBadge
@@ -56,7 +57,7 @@ export function DocumentBadge({ document, className = "" }: DocumentBadgeProps) 
       className={`
         group block rounded-lg border border-border bg-background
         transition-all duration-200 ease-out
-        hover:scale-[1.02] hover:shadow-lg hover:border-[#6B4C9A]/40
+        hover:scale-[1.02] hover:shadow-lg hover:border-[#C44878]/40
         focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring
         ${isFeatured ? "p-6 md:p-8" : "p-5 md:p-6"}
         ${className}
@@ -67,17 +68,17 @@ export function DocumentBadge({ document, className = "" }: DocumentBadgeProps) 
         <div className="flex items-center gap-2">
           <div
             className="flex items-center justify-center w-7 h-7 rounded-md"
-            style={{ backgroundColor: `${LAB_COLOR}20` }}
+            style={{ backgroundColor: `${LAB_DEEP}20` }}
           >
             <CategoryIcon
               size={14}
               strokeWidth={1.5}
-              style={{ color: LAB_COLOR }}
+              style={{ color: LAB_DEEP }}
             />
           </div>
           <span
             className="text-xs font-semibold tracking-wider uppercase"
-            style={{ color: LAB_COLOR }}
+            style={{ color: LAB_DEEP }}
           >
             {categoryLabel}
           </span>
@@ -112,7 +113,7 @@ export function DocumentBadge({ document, className = "" }: DocumentBadgeProps) 
       {/* Accent bar at bottom */}
       <div
         className="mt-4 h-0.5 w-8 rounded-full opacity-40 group-hover:w-12 group-hover:opacity-70 transition-all duration-300"
-        style={{ backgroundColor: LAB_COLOR }}
+        style={{ backgroundColor: LAB_DEEP }}
       />
     </a>
     </MandelbrotCorners>

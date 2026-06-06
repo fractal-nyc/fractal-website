@@ -1,11 +1,12 @@
 import { getTagLabel } from "@/data/lab-tags";
+import { HOUSES } from "@/data/houses";
 
 // ---------------------------------------------------------------------------
 // TagFilter — horizontal scrollable row of pill-shaped tag buttons
 // ---------------------------------------------------------------------------
 
-// Lab house accent
-const LAB_COLOR = "#6B4C9A";
+// Lab house accent — canonical deep pink from the houses palette
+const LAB_DEEP = HOUSES.find((h) => h.id === "lab")!.palette.deep;
 
 interface TagFilterProps {
   tags: string[];
@@ -49,15 +50,15 @@ export function TagFilter({
               text-sm font-medium
               rounded-full border
               transition-all duration-150
-              focus:outline-none focus:ring-2 focus:ring-[#6B4C9A]/40 focus:ring-offset-1
+              focus:outline-none focus:ring-2 focus:ring-[#C44878]/40 focus:ring-offset-1
               whitespace-nowrap
-              ${isActive ? "hover:opacity-90" : "hover:border-[#6B4C9A]/40 hover:text-foreground"}
+              ${isActive ? "hover:opacity-90" : "hover:border-[#C44878]/40 hover:text-foreground"}
             `}
             style={
               isActive
                 ? {
-                    backgroundColor: LAB_COLOR,
-                    borderColor: LAB_COLOR,
+                    backgroundColor: LAB_DEEP,
+                    borderColor: LAB_DEEP,
                     color: "#ffffff",
                   }
                 : {

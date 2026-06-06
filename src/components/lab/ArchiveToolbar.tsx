@@ -61,7 +61,7 @@ export function ArchiveToolbar({ filter, showTags = true }: ArchiveToolbarProps)
               text-muted-foreground hover:text-foreground
               underline underline-offset-2
               transition-colors duration-150
-              focus:outline-none focus:ring-2 focus:ring-[#6B4C9A]/40 focus:rounded
+              focus:outline-none focus:ring-2 focus:ring-[#C44878]/40 focus:rounded
             "
           >
             Clear filters
