@@ -405,11 +405,11 @@ const FACE_SECTION_MAP: (string | null)[] = [
   "campus",        // face 0
   "events",        // face 1
   "lab",           // face 2
-  "people",        // face 3
+  "school",        // face 3
   "neighborhood",  // face 4
   "story",         // face 5
   "forum",         // face 6
-  "school",        // face 7
+  "people",        // face 7
 ];
 
 /**
