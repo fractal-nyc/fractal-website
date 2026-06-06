@@ -407,9 +407,9 @@ const FACE_SECTION_MAP: (string | null)[] = [
   "lab",           // face 2
   "school",        // face 3
   "neighborhood",  // face 4
-  "story",         // face 5
+  "people",        // face 5
   "forum",         // face 6
-  "people",        // face 7
+  "story",         // face 7
 ];
 
 /**
