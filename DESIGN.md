@@ -105,7 +105,7 @@ Three deliberate constraints sit at the foundation of this system:
 2. **No dark mode.** The `.dark` token block was deleted (FRAC-30); we are not planning a dark scheme. Surfaces are always cream, type is always charcoal.
 3. **Charcoal-on-cream is the voice, not a brand accent.** `colors.primary` is the dominant text color (`#171717`), not a saturated brand hue. This deliberately trips the `@google/design.md` `missing-primary` lint as a warning — see **Linting Notes**.
 
-The Political Club house is visible in the OctahedronHero 3D scene (as a "Coming Soon" placeholder) but is hidden from the Navbar and from the banner grid via the `hideFromNavbar` / `hideFromBanners` flags on `houses.ts`. It is reachable by direct route.
+The Political Club house is hidden from the OctahedronHero 3D scene, the Navbar, and the banner grid via the `hideFromNavbar` / `hideFromBanners` flags on `houses.ts`. It is reachable by direct route. Vertex 4 of the octahedron — previously a Political Club "Coming Soon" placeholder — is now the Story nav node (FRAC-47).
 
 ## Colors
 
@@ -177,11 +177,11 @@ Most houses use `{light}` as the page background with `{deep}` as the accent for
 
 ### Lab/Publications uses palette pinks; the old `#6B4C9A` is dead
 
-Lab/Publications (internal id `lab`, displayName `Publications`) has exactly two canonical color tokens — `house-publications-light` (`#E870A0`) and `house-publications-deep` (`#C44878`). The purple `#6B4C9A` that still appears as a raw literal in several `src/components/lab/*` files is **legacy pre-FRAC-24** and is being removed (rewritten FRAC-34 scope). Lab uses its palette pinks for accents; **no third color is canonical**. Do not declare a `house-publications-accent` or `lab-purple` token.
+Lab/Publications (internal id `lab`, displayName `Publications`) has exactly two canonical color tokens — `house-publications-light` (`#E870A0`) and `house-publications-deep` (`#C44878`). The legacy `#6B4C9A` purple was removed from `src/components/lab/*` in FRAC-34; one last occurrence remains on the deprecated `color` field of the `lab` entry in `houses.ts` (line 319) and is slated for removal alongside the rest of the legacy `color` field cleanup. Lab uses its palette pinks for accents; **no third color is canonical**. Do not declare a `house-publications-accent` or `lab-purple` token.
 
 ### Charcoal drift note
 
-Four sites in the codebase still use `#1a1a1a` as a charcoal literal (`OctahedronHero.tsx:584,801`, `HouseBanner.tsx:96-97`). This is drift. The canonical charcoal is `#171717` (the `foreground` token). The visual difference is imperceptible; the consolidation is a separate follow-up task. Do not introduce a `charcoal-deep` token to legitimize the drift.
+The canonical charcoal is `#171717` (the `foreground` token). Raw `#1a1a1a` is drift; the four sites that previously used it were normalized to `hsl(var(--foreground))` in FRAC-46. Do not reintroduce raw `#1a1a1a` and do not declare a `charcoal-deep` token to legitimize drift if it appears in future code.
 
 ### Cream-math note
 
@@ -191,7 +191,7 @@ The canonical written cream is `#f8f6f0`. The `--background` CSS variable in `sr
 
 Four type families ship; two are declared as tokens (`font-sans`, `font-mono`) and two live in prose because the system does not yet have a codified size/weight scale for them.
 
-- **Inter** (declared `font-sans`, *not yet implemented*). The canonical sans for body and label use. The codebase currently has `--font-sans = 'JetBrains Mono', monospace` as a known short-term artifact of pre-DESIGN.md typography; the canonical token is Inter and a cleanup task will add the Google Font import and swap the value in `src/index.css`. New designs may declare the intent to use `font-sans` (Inter); implementations will get the real family when the migration lands.
+- **Inter** (declared `font-sans`). The canonical sans for body and label use. Imported at `src/index.css:1` and assigned to `--font-sans` at `src/index.css:6` (FRAC-44). New designs that reach for `font-sans` get Inter at runtime.
 - **JetBrains Mono** (declared `font-mono`). The body family today, and the long-term home for labels, UI chrome, and monospaced metadata. Used by Button via `font-mono uppercase tracking-widest`.
 - **Fraunces** (display serif, prose-only). Applied globally to `h1–h6` via `src/index.css:90-94`: `font-style: italic`, `text-transform: uppercase`, `letter-spacing: 0.04em`. The `.display-roman` utility (FRAC-31) opts a heading out of the italic rule when an upright Fraunces is needed. Not modeled as a `typography:` token because design.md's typography schema has no `textTransform` or `fontStyle` fields — italic and uppercase are the load-bearing rules and they live in prose.
 - **Jacquard 24** (display script, prose-only). Inline-styled only — used on the Navbar wordmark and the HouseBanner monogram letter. The `[style*="Jacquard"]` rule in `src/index.css:102-105` opts it out of the global uppercase + italic. No size or weight scale is codified; sizing is per-surface via `clamp()` (FRAC-29) or fixed-`px`.
@@ -274,7 +274,7 @@ HouseBanner uses a CSS clip-path V-notch shape — `polygon(0% 0%, 100% 0%, 100%
 
 ### Octahedron geometry (prose, for traceability only)
 
-OctahedronHero renders an 8-face octahedron with each face mapped to one section of the site. The face order is locked at `campus, events, lab, school, neighborhood, people, forum, story` (`src/components/three/OctahedronHero.tsx:404-413`). This is presentation logic, not a token — recorded here so future agents do not re-derive it.
+OctahedronHero renders an 8-face octahedron with each face mapped to one section of the site. The face order is locked at `campus, events, lab, school, neighborhood, people, forum, story` (`src/components/three/OctahedronHero.tsx:410-419`). This is presentation logic, not a token — recorded here so future agents do not re-derive it.
 
 ## Components
 
@@ -297,14 +297,14 @@ Five components are modeled in the `components:` YAML block. Four more are docum
 - **AvatarBadge** — small circular identity chip for a person, themed by their associated house palette. Not modeled because its surface area is small and its theming runs through the house palette tokens via the data model rather than via design tokens directly.
 - **Navbar wordmark** — Jacquard 24 inline-style, sized via `clamp()` for fluid responsiveness (FRAC-29). Sizing exceeds the closed property set; not modeled.
 - **Hero combobox** — the search/filter combobox on the homepage hero. FRAC-33 ironed out combobox/listbox a11y semantics. Behavior dominates; not modeled.
-- **OctahedronHero** — the 3D octahedron scene at the homepage hero. Three.js / R3F with eight triangular faces, each carrying a section photo on a plain `MeshBasicMaterial` with `tex.colorSpace = THREE.SRGBColorSpace` for correct gamma (locked decision #7). Auto-rotation, edge-text scrolling textures, center-scale breathing, and node-scale pulses are all gated by `usePrefersReducedMotion()` (FRAC-28). Keyboard skip-nav is provided via the `.sr-only-focusable` utility (FRAC-33) so keyboard users can reach the destination routes without depending on 3D pointer events. The Political Club node sits at vertex 4 as a "Coming Soon" placeholder (locked decision #5). Motion, shaders, materials, and the face order are not tokens — they are code.
+- **OctahedronHero** — the 3D octahedron scene at the homepage hero. Three.js / R3F with eight triangular faces, each carrying a section photo on a plain `MeshBasicMaterial` with `tex.colorSpace = THREE.SRGBColorSpace` for correct gamma (locked decision #7). Auto-rotation, edge-text scrolling textures, center-scale breathing, and node-scale pulses are all gated by `usePrefersReducedMotion()` (FRAC-28). Keyboard skip-nav is provided via the `.sr-only-focusable` utility (FRAC-33) so keyboard users can reach the destination routes without depending on 3D pointer events. Vertex 4 is the Story nav node (FRAC-47, replaces the FRAC-36 Political Club "Coming Soon" placeholder); Political Club remains hidden from the Navbar and banner grid and is reachable only by direct route. Motion, shaders, materials, and the face order are not tokens — they are code.
 
 ## Do's and Don'ts
 
 **Do:**
 
 - Design for the 375px mobile baseline first. Every component must read on a phone before any wider-viewport consideration. The PRD says mobile-first is non-negotiable; the system enforces it.
-- Use Fraunces for headings (via the global `h1–h6` italic + uppercase rule) and the monospace body family for body text, labels, and chrome. Migrate body to Inter (`font-sans`) when the FRAC-XX migration lands; until then, JetBrains Mono is both `font-sans` and `font-mono`.
+- Use Fraunces for headings (via the global `h1–h6` italic + uppercase rule), JetBrains Mono (`font-mono`) for labels and chrome, and Inter (`font-sans`) for body copy where the design calls for sans rather than mono.
 - Reach for semantic surface tokens (`background`, `foreground`, `card`, `border`, `muted`, `accent`) rather than raw hex values.
 - Use house palette tokens (`house-{display-slug}-{light|deep}`) inside that house's scope. Theme banners, avatars, and per-house chrome from the matching house's pair.
 - Respect the global uppercase + italic-Fraunces rule. If a heading needs Roman (upright), reach for `.display-roman`. If a block needs mixed-case, use `normal-case`.
@@ -345,6 +345,4 @@ The `missing-primary` warning anticipated by the plan does **not** fire — the 
 ### Accepted divergences from shipped code (documented for the next agent)
 
 1. `colors.background = "#f8f6f0"` (canonical written cream) — current CSS `hsl(40 25% 96%)` computes to `#f7f6f2`. Follow-up task: tighten the HSL math so it produces `#f8f6f0`.
-2. `typography.font-sans = Inter` — current CSS `--font-sans = 'JetBrains Mono'`. Follow-up task: add the Inter Google Font import and swap the variable value.
-3. Four `#1a1a1a` literal sites are charcoal drift; canonical is `#171717`. Follow-up task: replace with `--foreground`.
-4. Eight `#6B4C9A` literal sites in `src/components/lab/*` are dead Lab purple. Follow-up task: FRAC-34 (rewritten scope) replaces them with Lab palette pinks and drops the legacy `color` field from the `lab` entry in `houses.ts`.
+2. `houses.ts:319` still carries the deprecated `color: "#6B4C9A"` field on the `lab` entry. FRAC-34 removed every consumer of the legacy `color` field from `src/components/lab/`; the field itself stays until the broader sweep that drops the deprecated `color` field from every house entry. The Lab purple is no longer rendered anywhere in the UI.
