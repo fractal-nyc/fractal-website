@@ -39,9 +39,6 @@ export interface House {
   subtitle: string; // "The Neighborhood", "The School", etc.
   slug: string; // URL slug
   route: string; // full route path
-  /** @deprecated FRAC-24 — use `palette.light` or `palette.deep`. Kept temporarily
-   *  for AvatarBadge backwards-compat; will be removed in a follow-up. */
-  color: string; // hex accent color (legacy)
   /**
    * Canonical light/deep color pair. FRAC-24 single source of truth.
    * The pair is the unit; which member is bg vs. accent is a per-surface
@@ -221,7 +218,6 @@ export const HOUSES: House[] = [
     subtitle: "Visit",
     slug: "neighborhood",
     route: "/neighborhood",
-    color: "#8B7355",
     palette: { light: "#889460", deep: "#4A5A30" },
     tagline: "Want to live here?",
     description:
@@ -237,7 +233,6 @@ export const HOUSES: House[] = [
     subtitle: "Events",
     slug: "events",
     route: "/events",
-    color: "#E07A5F",
     palette: { light: "#D4857A", deep: "#C13B2A" },
     tagline: "Want to host?",
     description:
@@ -255,7 +250,6 @@ export const HOUSES: House[] = [
     subtitle: "Campus",
     slug: "campus",
     route: "/campus",
-    color: "#457B9D",
     palette: { light: "#2E6B4A", deep: "#1A3A2E" },
     tagline: "Want to work together?",
     description:
@@ -277,7 +271,6 @@ export const HOUSES: House[] = [
     subtitle: "Education",
     slug: "new-liberal-arts",
     route: "/new-liberal-arts",
-    color: "#1D3557",
     palette: { light: "#B52828", deep: "#5C1010" },
     tagline: "Want to learn?",
     description:
@@ -294,7 +287,6 @@ export const HOUSES: House[] = [
     subtitle: "Political Club",
     slug: "political-club",
     route: "/political-club",
-    color: "#CC2936",
     palette: { light: "#C83858", deep: "#6E1830" },
     tagline: "Want to change things?",
     description:
@@ -316,7 +308,6 @@ export const HOUSES: House[] = [
     subtitle: "Publications",
     slug: "lab",
     route: "/lab",
-    color: "#6B4C9A",
     palette: { light: "#E870A0", deep: "#C44878" },
     tagline: "Want to think, build, publish?",
     description:

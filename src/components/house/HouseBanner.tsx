@@ -1,5 +1,4 @@
 import type { House } from "@/data/houses";
-import { HOUSES } from "@/data/houses";
 import { MandelbrotIcon } from "./MandelbrotIcon";
 
 // ---------------------------------------------------------------------------
@@ -22,12 +21,6 @@ function isDark(hex: string): boolean {
 // `palette.light` as the bg and `palette.deep` as the monogram letter color.
 // Per-page "inverted" treatments (forum, school) are page-level decisions and
 // do not affect the banner grid.
-
-function getBannerPair(houseId: string): { bg: string; letter: string } | null {
-  const palette = HOUSES.find((h) => h.id === houseId)?.palette;
-  if (!palette) return null;
-  return { bg: palette.light, letter: palette.deep };
-}
 
 // ---------------------------------------------------------------------------
 // Duochrome background images — only 4 of 6 houses have images
@@ -91,9 +84,8 @@ export function HouseBanner({
   className = "",
 }: HouseBannerProps) {
   const isGrid = variant === "grid";
-  const pair = getBannerPair(house.id);
-  const bgColor = pair?.bg ?? house.color;
-  const letterColor = pair?.letter ?? (isDark(house.color) ? "#ffffff" : "hsl(var(--foreground))");
+  const bgColor = house.palette.light;
+  const letterColor = house.palette.deep;
   const textColor = isDark(bgColor) ? "#ffffff" : "hsl(var(--foreground))";
   const bannerImage = BANNER_IMAGES[house.id];
 

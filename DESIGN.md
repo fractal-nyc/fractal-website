@@ -150,7 +150,7 @@ Each house has both an internal data-model `id` (used in routes and `houses.ts`)
 
 ### House palette values
 
-Verified against `src/data/houses.ts` at HEAD. The `HOUSES[id].palette: { light, deep }` field is the single source of truth — the legacy `color` field on each house entry is `@deprecated` and slated for removal in a follow-up.
+Verified against `src/data/houses.ts` at HEAD. The `HOUSES[id].palette: { light, deep }` field is the single source of truth for house color; the pre-FRAC-24 single-color `color` field was removed in FRAC-50.
 
 | Token | Hex |
 |---|---|
@@ -177,7 +177,7 @@ Most houses use `{light}` as the page background with `{deep}` as the accent for
 
 ### Lab/Publications uses palette pinks; the old `#6B4C9A` is dead
 
-Lab/Publications (internal id `lab`, displayName `Publications`) has exactly two canonical color tokens — `house-publications-light` (`#E870A0`) and `house-publications-deep` (`#C44878`). The legacy `#6B4C9A` purple was removed from `src/components/lab/*` in FRAC-34; one last occurrence remains on the deprecated `color` field of the `lab` entry in `houses.ts` (line 319) and is slated for removal alongside the rest of the legacy `color` field cleanup. Lab uses its palette pinks for accents; **no third color is canonical**. Do not declare a `house-publications-accent` or `lab-purple` token.
+Lab/Publications (internal id `lab`, displayName `Publications`) has exactly two canonical color tokens — `house-publications-light` (`#E870A0`) and `house-publications-deep` (`#C44878`). The legacy `#6B4C9A` purple was removed from `src/components/lab/*` in FRAC-34 (consumers) and from `src/data/houses.ts` in FRAC-50 (the deprecated `color` field itself). Lab uses its palette pinks for accents; **no third color is canonical**. Do not declare a `house-publications-accent` or `lab-purple` token.
 
 ### Charcoal drift note
 
@@ -290,7 +290,7 @@ Five components are modeled in the `components:` YAML block. Four more are docum
 
 **`button-link`** — inline text-action style for sitting inside prose. The compound variant in `buttonVariants` strips padding to `px-0 py-0` regardless of size. `underline underline-offset-4`, `hover:text-foreground/80`.
 
-**`house-banner`** — the pennant-shaped V-notch card used in the 6-house grid (`variant="grid"`, `aspect-[1/3]`) and on individual house pages (`variant="full"`, `aspect-[3/4] max-w-2xl mx-auto`). The YAML entry encodes a representative pairing — `house-events-light` / `house-events-deep` — because design.md cannot express "the background and text color are swapped per house at runtime." The actual `bgColor` is `palette.light` and `letterColor` is `palette.deep`, both sourced from `houses.ts.palette` via `getBannerPair(houseId)`. The banner overlay opacity is `0.45` for most houses and `0.30` for `school` so the red letters stay readable over the Liberal Arts photo (`HouseBanner.tsx:49-53`). An `isDark()` luminance helper drives the body text color (`HouseBanner.tsx:9-15`); this is not modelable. The monogram letter (Jacquard 24, inline-styled) is per-house: `N E C LA PC L` (`HouseBanner.tsx:60-67`).
+**`house-banner`** — the pennant-shaped V-notch card used in the 6-house grid (`variant="grid"`, `aspect-[1/3]`) and on individual house pages (`variant="full"`, `aspect-[3/4] max-w-2xl mx-auto`). The YAML entry encodes a representative pairing — `house-events-light` / `house-events-deep` — because design.md cannot express "the background and text color are swapped per house at runtime." The actual `bgColor` is `house.palette.light` and `letterColor` is `house.palette.deep`, both read directly from the House passed in (`HouseBanner.tsx`). The banner overlay opacity is `0.45` for most houses and `0.30` for `school` so the red letters stay readable over the Liberal Arts photo. An `isDark()` luminance helper drives the body text color; this is not modelable. The monogram letter (Jacquard 24, inline-styled) is per-house: `N E C LA PC L`.
 
 ### Prose-only
 
@@ -337,7 +337,7 @@ Pinned lint command: `npx @google/design.md@0.2.0 lint DESIGN.md`. Future spec b
     - `components.house-banner` — representative pair `house-events-light` over `house-events-deep` is 1.89:1. The monogram letter (`#c13b2a` on `#d4857a`) is decorative Jacquard 24 with `aria-hidden`; the visible tagline uses a luminance-derived `isDark()` text color that the spec cannot trace.
   - **25 `orphaned-tokens` warnings.** Surface tokens that don't appear in any `components:` entry (`card`, `popover`, the matched `*-foreground` tokens, `muted`, `accent`, `destructive`, `border`, `input`, `ring`, etc.) and 10 of the 12 house tokens (only `house-events-{light,deep}` are referenced, by the representative `house-banner` entry). Acceptable because:
     - Surface tokens are consumed by raw Tailwind utilities (`bg-card`, `text-muted-foreground`, etc.) and global CSS in `src/index.css`, not by modeled components.
-    - House tokens are runtime-swapped per house via `getBannerPair(house.id)` (`HouseBanner.tsx:26-30`); static analysis cannot trace the reference. The **Colors** mapping table is the human-readable trace.
+    - House tokens are runtime-swapped per house via `house.palette.{light,deep}` (`HouseBanner.tsx`); static analysis cannot trace the reference. The **Colors** mapping table is the human-readable trace.
 - **Info:** `token-summary` reports `31 colors, 2 typography scales, 4 rounding levels, 19 spacing tokens, 5 components` — matches intent.
 
 The `missing-primary` warning anticipated by the plan does **not** fire — the lint validates that a `primary` token exists, not that it carries a saturated brand hue. The charcoal-as-primary decision still stands for the system (see **Colors**), but it does not produce a lint warning. Documented here so future readers don't expect one.
@@ -345,4 +345,3 @@ The `missing-primary` warning anticipated by the plan does **not** fire — the 
 ### Accepted divergences from shipped code (documented for the next agent)
 
 1. `colors.background = "#f8f6f0"` (canonical written cream) — current CSS `hsl(40 25% 96%)` computes to `#f7f6f2`. Follow-up task: tighten the HSL math so it produces `#f8f6f0`.
-2. `houses.ts:319` still carries the deprecated `color: "#6B4C9A"` field on the `lab` entry. FRAC-34 removed every consumer of the legacy `color` field from `src/components/lab/`; the field itself stays until the broader sweep that drops the deprecated `color` field from every house entry. The Lab purple is no longer rendered anywhere in the UI.
