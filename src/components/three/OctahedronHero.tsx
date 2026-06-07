@@ -109,7 +109,6 @@ interface NavNode {
   route: string;
   color: string;
   vertexIndex: number;
-  comingSoon?: boolean;
 }
 
 // FRAC-33: exported so the FractalCityScene wrapper can render a
@@ -715,11 +714,6 @@ function NavNodeMesh({
       }, 3000);
       return;
     }
-    // FRAC-36: "Coming Soon" placeholder nodes surface the tooltip on tap
-    // but do not route. On touch the first-tap branch above already showed
-    // the tooltip; on desktop the hover state shows it. Either way, swallow
-    // the navigation here.
-    if (node.comingSoon) return;
     onNavigate(node.route);
   });
 
@@ -739,7 +733,7 @@ function NavNodeMesh({
             <div
               style={{
                 ...tooltipStyle(node.color),
-                cursor: node.comingSoon ? "default" : "pointer",
+                cursor: "pointer",
               }}
               onPointerEnter={() => {
                 // Cursor moved from mesh into the popup — keep it visible.
@@ -753,16 +747,10 @@ function NavNodeMesh({
               }}
               onClick={(e) => {
                 e.stopPropagation();
-                // FRAC-36: non-navigable placeholder. Tooltip is the surface.
-                if (node.comingSoon) return;
                 onNavigate(node.route);
               }}
             >
-              {/* FRAC-37: Coming Soon placeholder shows ONLY "Coming Soon"
-                  (rendered uppercase by tooltipStyle's textTransform), at
-                  the same visual prominence as other nav tooltips — no
-                  small subline, no Political Club caption. */}
-              {node.comingSoon ? "Coming Soon" : node.label}
+              {node.label}
             </div>
           </Html>
         )}
