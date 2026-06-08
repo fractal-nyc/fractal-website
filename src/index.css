@@ -167,15 +167,13 @@
   .text-title {
     @apply font-serif text-3xl md:text-5xl;
     font-style: italic;
-    text-transform: uppercase;
     letter-spacing: 0.04em;
   }
 
   .text-subtitle {
     @apply font-serif text-xl md:text-2xl;
-    font-style: italic;
+    font-style: normal;
     font-weight: 300;
-    text-transform: uppercase;
     letter-spacing: 0.04em;
   }
 
