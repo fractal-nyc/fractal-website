@@ -208,7 +208,7 @@ export function StoryPage() {
           <div className="max-w-6xl mx-auto px-6 md:px-[4.5%] w-full">
             <SectorHeader letter="S" name="Story" color="#8A7A20" />
             <FadeIn>
-              <p className="font-serif text-4xl md:text-6xl leading-[1.3] mb-12 text-center display-roman">
+              <p className="text-display mb-12 text-center">
                 From a Single Apartment to a Neighborhood Campus
               </p>
             </FadeIn>

@@ -17,7 +17,7 @@ export function EventsPage() {
           <SectorHeader letter="E" name="Events" color="#C13B2A" />
 
           <FadeIn delay={0.1}>
-            <p className="font-serif text-4xl md:text-6xl leading-[1.3] mb-6 text-center display-roman">
+            <p className="text-display mb-6 text-center">
               Join Tech Events
             </p>
             {/*
@@ -48,7 +48,7 @@ export function EventsPage() {
           </FadeIn>
 
           <FadeIn delay={0.25}>
-            <p className="font-serif text-4xl md:text-6xl leading-[1.3] mb-6 text-center display-roman">
+            <p className="text-display mb-6 text-center">
               Host Our Next Event
             </p>
             <Button asChild className="max-w-xs w-full mb-12 text-center">
@@ -57,7 +57,7 @@ export function EventsPage() {
           </FadeIn>
 
           <FadeIn delay={0.3}>
-            <p className="font-serif text-4xl md:text-6xl leading-[1.3] mb-6 text-center display-roman">
+            <p className="text-display mb-6 text-center">
               Stay in the Loop
             </p>
             <Button asChild className="max-w-xs w-full text-center">
