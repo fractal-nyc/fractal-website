@@ -32,7 +32,6 @@ export function Home() {
             </h2>
           </FadeIn>
           <FadeIn delay={0.15}>
-            {/* TODO FRAC-56: mono uppercase body block — flag for body-cleanup task */}
             <div className="font-mono text-sm md:text-base leading-relaxed text-foreground/80 space-y-6 uppercase font-thin" style={{ fontStyle: "normal" }}>
               <p>
                 From the{" "}

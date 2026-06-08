@@ -173,7 +173,7 @@ function PhotoPlaceholder({ caption }: { caption: string }) {
       <div className="aspect-[4/5] md:aspect-square w-full bg-white/5 border border-white/10 flex items-center justify-center">
         <span className="text-label text-white/40">Photo</span>
       </div>
-      <p className="text-xs md:text-sm text-white/70 font-light leading-relaxed normal-case">
+      <p className="text-xs md:text-sm text-white/70 font-light leading-relaxed">
         {caption}
       </p>
     </div>
@@ -215,7 +215,7 @@ export function Campus() {
                   </PrimaryButton>
                 </div>
               </div>
-              <p className="text-xs md:text-sm text-white/70 italic normal-case text-center">
+              <p className="text-xs md:text-sm text-white/70 italic text-center">
                 Want a reduced rate? Let us know. We want the space to be accessible to all.
               </p>
             </div>
@@ -500,7 +500,7 @@ export function Campus() {
             <p className="text-lg md:text-xl font-serif italic text-white/90 leading-relaxed normal-case">
               "All truly great thoughts are conceived while walking."
             </p>
-            <footer className="mt-3 text-sm text-white/70 normal-case">
+            <footer className="mt-3 text-sm text-white/70">
               — Friedrich Nietzsche
             </footer>
           </blockquote>
@@ -529,7 +529,7 @@ export function Campus() {
                   <p className="text-lg md:text-xl font-serif text-white normal-case">
                     {bio.name}
                   </p>
-                  <p className="text-sm text-white/70 italic normal-case">{bio.role}</p>
+                  <p className="text-sm text-white/70 italic">{bio.role}</p>
                 </div>
                 <div className="flex flex-wrap gap-4 text-sm text-white/80 font-light">
                   {bio.links.map((link, idx) => (
