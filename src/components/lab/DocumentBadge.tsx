@@ -57,8 +57,8 @@ export function DocumentBadge({ document, className = "" }: DocumentBadgeProps) 
       className={`
         group block rounded-lg border border-border bg-background
         transition-all duration-200 ease-out
-        hover:scale-[1.02] hover:shadow-lg hover:border-[#C44878]/40
-        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring
+        hover:scale-[1.02] hover:shadow-lg hover:border-house-publications-deep/40
+        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-house-publications-deep/40
         ${isFeatured ? "p-6 md:p-8" : "p-5 md:p-6"}
         ${className}
       `}
@@ -96,11 +96,11 @@ export function DocumentBadge({ document, className = "" }: DocumentBadgeProps) 
       </h3>
 
       {/* Author */}
-      <p className="text-sm text-muted-foreground mt-1">{authorName}</p>
+      <p className="text-meta text-muted-foreground mt-1">{authorName}</p>
 
       {/* Description (featured only) */}
       {isFeatured && document.description && (
-        <p className="text-sm text-muted-foreground mt-3 leading-relaxed">
+        <p className="text-body text-muted-foreground mt-3 leading-relaxed">
           {document.description}
         </p>
       )}
