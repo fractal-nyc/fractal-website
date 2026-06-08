@@ -8,26 +8,32 @@
       "repo": null
     }
   ],
-  "comment_count": 1,
+  "comment_count": 3,
   "complexity": null,
   "created_at": "2026-06-08T20:55:26Z",
   "created_by": "agent:claude-opus-4-7-orchestrator",
   "custom_fields": {},
   "description": null,
-  "done_at": null,
-  "evidence_refs": [],
+  "done_at": "2026-06-08T22:09:31Z",
+  "evidence_refs": [
+    {
+      "id": "ev_01KTMMH6DP1J2YYP5TYMGJN2SE",
+      "role": "review",
+      "source_type": "comment"
+    }
+  ],
   "id": "task_01KTMG9MJQARW182SFQ1WGQCXA",
-  "last_event_id": "ev_01KTMM4B7S5J9T9K53GQ7GJMGB",
-  "last_status_changed_at": "2026-06-08T22:02:26Z",
+  "last_event_id": "ev_01KTMMHA45DQ5YQWZ5MWGCTKG4",
+  "last_status_changed_at": "2026-06-08T22:09:31Z",
   "priority": "medium",
   "relationships_out": [],
   "reopened_count": 0,
   "schema_version": 1,
   "short_id": "FRAC-43",
-  "status": "in_progress",
+  "status": "done",
   "tags": null,
   "title": "Restore thick blinking cursor on text inputs / search bars (regression)",
   "type": "task",
-  "updated_at": "2026-06-08T22:02:26Z",
+  "updated_at": "2026-06-08T22:09:31Z",
   "urgency": null
 }
