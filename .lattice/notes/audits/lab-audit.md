@@ -162,11 +162,11 @@ Rationale: Hex value identical to house-publications-light. Migrate to token ref
 ```
 Element: src/pages/LabPage.tsx:16 — <main className="… text-foreground selection:bg-foreground selection:text-background …">
 Current: text-foreground (#171717), selection:bg-foreground, selection:text-background
-Role: text + selection-background + selection-text
-Nearest canonical token: foreground / background
-Match quality: EXACT
+Role: text (page default) + selection-background + selection-text
+Nearest canonical token: background (for the page-default text) ; foreground + background (for selection chrome)
+Match quality: NEAR (page-default text) ; EXACT (selection chrome)
 Action: MIGRATE
-Rationale: Already on canonical tokens. No migration needed beyond a no-op rewrite. Page-level default text-foreground on a saturated house-light bg is intentional per the project text-color rule (foreground or background; house pair for display/highlight only).
+Rationale: Per DESIGN.md → Text foregrounds (codified by this PR): cream is the default voice on saturated house backgrounds. The page-default text on the pink house-publications-light bg should be text-background, not text-foreground. Apply task: rewrite the page-level text class to text-background and let it cascade. Selection chrome (selection:bg-foreground selection:text-background) stays — selection has the same charcoal-on-cream-on-saturated logic and the tokens are canonical. Cascade implication: descendant elements that don't override their own color will inherit text-background; rows for those descendants are unchanged because they either re-declare a color (DocumentBadge cards on cream surface re-set to text-foreground via context) or already migrate to text-background here (LabPage:49,58).
 ```
 
 ```
@@ -233,10 +233,10 @@ Rationale: Hex value identical to house-publications-deep; drift is mechanism (a
 Element: src/components/lab/DocumentBadge.tsx:61 — className="… focus-visible:ring-ring …"
 Current: focus-visible:ring-ring (resolves to #171717)
 Role: ring (focus)
-Nearest canonical token: ring
-Match quality: EXACT
+Nearest canonical token: house-publications-deep
+Match quality: NEAR
 Action: MIGRATE
-Rationale: Already on the canonical ring token (charcoal). No-op migration. Note: contrast with the canonical text-color rule — charcoal ring on a cream card sitting on a saturated pink page is acceptable focus chrome. Not switched to house-deep because the focus ring elsewhere in DocumentBadge / on the toolbar uses #C44878 inconsistently; consolidating those is an Apply-task call.
+Rationale: Focus-ring inconsistency on the Lab page: ArchiveToolbar:64, ArchiveSearch:45,60 already use house-publications-deep with alpha; DocumentBadge here is the lone holdout on the canonical charcoal ring. Per DESIGN.md → Text foregrounds (codified by this PR), house pair is permitted as highlight chrome including focus rings on the house's own page. Normalize on house-publications-deep so all Lab focus chrome reads the same. Apply task migrates ring-ring → ring-house-publications-deep (or the alpha-token equivalent), matching the toolbar/search treatment.
 ```
 
 ```
@@ -328,6 +328,21 @@ Match quality: EXACT
 Action: MIGRATE
 Rationale: Already on canonical tokens. No-op migration. Clear-button affordance.
 ```
+
+## Forward observations (not GAPs under current rules)
+
+Surfaced during this audit, not blocking the Apply task, recorded so the next
+iteration of the system has them.
+
+- **Container text size.** Two NEAR rows (`DocumentBadge.tsx:103`,
+  `DocumentGrid.tsx:29`) use `text-sm` where the canonical `.text-body` is
+  `text-base`. The Apply task will size them up to text-base unless a future
+  system rule says otherwise. Worth considering whether the system needs a
+  container-scoped body utility (e.g., `.text-body-card` at `text-sm`) to
+  honor the visual choice that body copy reads slightly smaller inside cards
+  while keeping page-level body at text-base. Not a GAP today because the
+  current rule (single canonical `.text-body`) cleanly resolves these rows
+  via NEAR → MIGRATE.
 
 ## Gap appendix
 
