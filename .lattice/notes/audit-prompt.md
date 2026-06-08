@@ -442,6 +442,10 @@ The per-page Audit sub-agent writes exactly one file at
 
 <one row per distinct color use in the format from section 5>
 
+## Forward observations (not GAPs under current rules)
+
+<optional. Surfaced during this audit, not blocking the Apply task, recorded so the next iteration of the system has them. Patterns that fall short of a GAP under section 6 tie-breaking rules — e.g., "container body copy reads slightly smaller than .text-body in cards; not a GAP because .text-body cleanly resolves these rows, but worth flagging for a future container-scoped utility." If nothing, omit the section.>
+
 ## Gap appendix
 
 <copy of any GAP-LOG-AND-MIGRATE entries also appended to .lattice/notes/audit-gaps.md, OR "No gaps." if none>
