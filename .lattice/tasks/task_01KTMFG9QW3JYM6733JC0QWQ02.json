@@ -1,17 +1,30 @@
 {
   "assigned_to": null,
-  "branch_links": [],
-  "comment_count": 1,
+  "branch_links": [
+    {
+      "branch": "frac-42-surface-foreground-pairing",
+      "linked_at": "2026-06-08T21:40:34Z",
+      "linked_by": "agent:claude-opus-4-7-orchestrator",
+      "repo": null
+    }
+  ],
+  "comment_count": 3,
   "complexity": null,
   "created_at": "2026-06-08T20:41:35Z",
   "created_by": "agent:claude-opus-4-7-orchestrator",
   "custom_fields": {},
   "description": null,
-  "done_at": null,
-  "evidence_refs": [],
+  "done_at": "2026-06-08T21:54:45Z",
+  "evidence_refs": [
+    {
+      "id": "ev_01KTMKP5EZWM5VCR2VCK5XRHXD",
+      "role": "review",
+      "source_type": "comment"
+    }
+  ],
   "id": "task_01KTMFG9QW3JYM6733JC0QWQ02",
-  "last_event_id": "ev_01KTMFGXMNZTPXRTQ00B337CGW",
-  "last_status_changed_at": "2026-06-08T20:41:35Z",
+  "last_event_id": "ev_01KTMKP92TJEZXQY0NE2PH1T39",
+  "last_status_changed_at": "2026-06-08T21:54:45Z",
   "priority": "medium",
   "relationships_out": [
     {
@@ -25,10 +38,10 @@
   "reopened_count": 0,
   "schema_version": 1,
   "short_id": "FRAC-42",
-  "status": "backlog",
+  "status": "done",
   "tags": null,
   "title": "System: surface-foreground token pairing convention + Publications pair migration",
   "type": "task",
-  "updated_at": "2026-06-08T20:41:56Z",
+  "updated_at": "2026-06-08T21:54:45Z",
   "urgency": null
 }

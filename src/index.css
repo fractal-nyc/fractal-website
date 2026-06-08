@@ -35,15 +35,23 @@
   --color-input: hsl(var(--input));
   --color-ring: hsl(var(--ring));
 
-  /* House palette tokens (FRAC-21). Static brand hexes — declared
-     directly without the hsl(var(...)) indirection used by surface
-     tokens above, because house colors do not theme-swap (no dark mode
-     per FRAC-30) and the indirection would add no value. See
-     DESIGN.md → House palette values for the full set; FRAC-21 lands
-     only the Publications pair (the remaining 5 pairs land in their
-     respective per-house Apply tasks). */
+  /* House palette tokens (FRAC-21) + paired foregrounds (FRAC-42).
+     Static brand hexes — declared directly without the hsl(var(...))
+     indirection used by surface tokens above, because house colors do
+     not theme-swap (no dark mode per FRAC-30) and the indirection
+     would add no value. See DESIGN.md → House palette values for the
+     full set; FRAC-21 lands only the Publications pair (the remaining
+     5 pairs land in their respective per-house Apply tasks).
+
+     Each house surface ships an explicit *-foreground sibling per the
+     shadcn/Material-3 pairing convention (FRAC-42). Today both
+     Publications foreground siblings resolve to cream; see DESIGN.md
+     → Surface foreground pairing for the rule and the four canonical
+     pairs. */
   --color-house-publications-light: #E870A0;
   --color-house-publications-deep: #C44878;
+  --color-house-publications-light-foreground: var(--color-background);
+  --color-house-publications-deep-foreground: var(--color-background);
 
   --radius-sm: 0.25rem;
   --radius-md: 0.5rem;

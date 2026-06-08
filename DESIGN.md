@@ -185,6 +185,25 @@ Two canonical text colors carry the entire site: `foreground` (`#171717` charcoa
 
 **House colors for display and highlight.** On a house's own page, that house's `{light, deep}` pair is permitted as text color for display headings and highlight chrome — Jacquard monogram letters, accent labels, focus rings, eyebrow text on the house's own bg. House colors do not cross page boundaries; the Lab page may use `house-publications-{light,deep}` but not `house-events-light`.
 
+### Surface foreground pairing
+
+Every surface token has a paired foreground token. Authors who reach for a surface utility (`bg-*`) on a container reach for the matching foreground utility (`text-*`) on the same node — never relying on the page-level text-color cascade to "still be correct" inside a nested surface. This is the same convention shadcn/ui and Material 3 use, adapted to the four surface families this system declares.
+
+The four canonical pairs:
+
+| Surface | Pair | Source of the foreground |
+|---|---|---|
+| Neutral light (cream) | `bg-background` + `text-foreground` | Implicit — `--color-foreground` already exists. No new token. |
+| Neutral dark (charcoal as surface) | `bg-foreground` + `text-background` | Implicit inverse — `--color-background` already exists. No new token. |
+| House light | `bg-house-{slug}-light` + `text-house-{slug}-light-foreground` | New sibling token per house. |
+| House deep | `bg-house-{slug}-deep` + `text-house-{slug}-deep-foreground` | New sibling token per house. |
+
+For every house pair declared today, the light- and deep-foreground siblings resolve to `var(--color-background)` (cream). Cream on saturated house surfaces is the editorial voice; the foreground tokens exist to make the pairing explicit at the call site, not to vary the value.
+
+**Why explicit foreground tokens on saturated surfaces?** Surfaces compose. A cream-card-on-house-page chain (`bg-house-publications-light` → `bg-background`) breaks if the inner surface omits its paired foreground: text inside the card inherits `text-background` from the cascade and renders cream-on-cream. The paired token forces every surface to re-assert its own voice, which is the only way nested surfaces compose correctly. (FRAC-21 review caught exactly this regression — DocumentBadge `h3` titles rendered invisible at 375px.)
+
+**Out of scope today:** Only the Publications pair has its foreground siblings declared (FRAC-42, after FRAC-21). The other five houses' siblings land with their respective per-house Apply tasks; the pairing rule applies to them ahead of declaration.
+
 ### Charcoal drift note
 
 The canonical charcoal is `#171717` (the `foreground` token). Raw `#1a1a1a` is drift; the four sites that previously used it were normalized to `hsl(var(--foreground))` in FRAC-46. Do not reintroduce raw `#1a1a1a` and do not declare a `charcoal-deep` token to legitimize drift if it appears in future code.
