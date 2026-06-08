@@ -253,7 +253,7 @@ export function Campus() {
       {/* Four audiences */}
       <div className="max-w-7xl mx-auto px-6 md:px-[4.5%] pb-24 md:pb-32">
         <FadeIn>
-          <h2 className="text-2xl md:text-3xl font-serif mb-8 normal-case">
+          <h2 className="text-title mb-8 normal-case">
             Fractal Campus serves four audiences
           </h2>
           <ul className="space-y-5 text-sm md:text-base text-white/90 font-light leading-relaxed max-w-3xl">
@@ -296,7 +296,7 @@ export function Campus() {
       {/* Get shit done */}
       <div className="max-w-7xl mx-auto px-6 md:px-[4.5%] pb-24 md:pb-32">
         <FadeIn>
-          <h2 className="text-2xl md:text-3xl font-serif mb-6 normal-case">
+          <h2 className="text-title mb-6 normal-case">
             A place to get shit done…
           </h2>
           <div className="space-y-6 text-sm md:text-base text-white/90 font-light leading-relaxed max-w-3xl">
@@ -318,7 +318,7 @@ export function Campus() {
       {/* And have a good time */}
       <div className="max-w-7xl mx-auto px-6 md:px-[4.5%] pb-24 md:pb-32">
         <FadeIn>
-          <h2 className="text-2xl md:text-3xl font-serif mb-6 normal-case">
+          <h2 className="text-title mb-6 normal-case">
             …and have a good time doing it.
           </h2>
           <div className="space-y-6 text-sm md:text-base text-white/90 font-light leading-relaxed max-w-3xl">
@@ -348,7 +348,7 @@ export function Campus() {
       {/* More than a WeWork */}
       <div className="max-w-7xl mx-auto px-6 md:px-[4.5%] pb-24 md:pb-32">
         <FadeIn>
-          <h2 className="text-2xl md:text-3xl font-serif mb-6 normal-case">
+          <h2 className="text-title mb-6 normal-case">
             More than a WeWork…
           </h2>
           <div className="space-y-6 text-sm md:text-base text-white/90 font-light leading-relaxed max-w-3xl">
@@ -380,7 +380,7 @@ export function Campus() {
       {/* Meet the Space */}
       <div className="max-w-7xl mx-auto px-6 md:px-[4.5%] pb-24 md:pb-32">
         <FadeIn>
-          <h2 className="text-2xl md:text-3xl font-serif mb-6 normal-case">Meet the Space</h2>
+          <h2 className="text-title mb-6">Meet the Space</h2>
           <p className="text-sm md:text-base text-white/90 font-light leading-relaxed max-w-3xl mb-12">
             4200 sq ft of open working space, kitchen, phone booths, and large meeting rooms. Oh,
             and 5000 sq. ft of sunny rooftop. We're re-decorating the space now, and will continue
@@ -397,7 +397,7 @@ export function Campus() {
       {/* What's it like */}
       <div className="max-w-7xl mx-auto px-6 md:px-[4.5%] pb-24 md:pb-32">
         <FadeIn>
-          <h2 className="text-2xl md:text-3xl font-serif mb-6 normal-case">
+          <h2 className="text-title mb-6 normal-case">
             What's it like to be here?
           </h2>
           <div className="space-y-6 text-sm md:text-base text-white/90 font-light leading-relaxed max-w-3xl">
@@ -432,7 +432,7 @@ export function Campus() {
       {/* Events */}
       <div className="max-w-7xl mx-auto px-6 md:px-[4.5%] pb-24 md:pb-32">
         <FadeIn>
-          <h2 className="text-2xl md:text-3xl font-serif mb-6 normal-case">Events</h2>
+          <h2 className="text-title mb-6">Events</h2>
           <p className="text-sm md:text-base text-white/90 font-light leading-relaxed max-w-3xl mb-8">
             Types of events we've hosted at the Fractal Campus so far:
           </p>
@@ -462,7 +462,7 @@ export function Campus() {
       {/* Merlin's Place */}
       <div className="max-w-7xl mx-auto px-6 md:px-[4.5%] pb-24 md:pb-32">
         <FadeIn>
-          <h2 className="text-2xl md:text-3xl font-serif mb-6 normal-case">
+          <h2 className="text-title mb-6 normal-case">
             Merlin's Place
           </h2>
           <p className="text-sm md:text-base text-white/90 font-light leading-relaxed max-w-3xl mb-8">
@@ -479,7 +479,7 @@ export function Campus() {
       {/* Williamsburg */}
       <div className="max-w-7xl mx-auto px-6 md:px-[4.5%] pb-24 md:pb-32">
         <FadeIn>
-          <h2 className="text-2xl md:text-3xl font-serif mb-6 normal-case">
+          <h2 className="text-title mb-6 normal-case">
             Our little corner in Williamsburg
           </h2>
           <p className="text-sm md:text-base text-white/90 font-light leading-relaxed max-w-3xl">
@@ -493,7 +493,7 @@ export function Campus() {
       {/* McCarren Park */}
       <div className="max-w-7xl mx-auto px-6 md:px-[4.5%] pb-24 md:pb-32">
         <FadeIn>
-          <h2 className="text-2xl md:text-3xl font-serif mb-6 normal-case">
+          <h2 className="text-title mb-6 normal-case">
             …and a short walk to McCarren Park
           </h2>
           <blockquote className="border-l-2 border-white/30 pl-6 my-6 max-w-3xl">
@@ -515,7 +515,7 @@ export function Campus() {
       {/* Build with us */}
       <div className="max-w-7xl mx-auto px-6 md:px-[4.5%] pb-24 md:pb-32">
         <FadeIn>
-          <h2 className="text-2xl md:text-3xl font-serif mb-6 normal-case">Build with us.</h2>
+          <h2 className="text-title mb-6">Build with us.</h2>
           <p className="text-sm md:text-base text-white/90 font-light leading-relaxed max-w-3xl mb-10">
             <InlineLink href={HELLO_FRACTAL_MAILTO} external={false}>
               hello@fractaltech.xyz
@@ -577,7 +577,7 @@ export function Campus() {
       {/* …by the way, what's Fractal? */}
       <div className="max-w-7xl mx-auto px-6 md:px-[4.5%] pb-24 md:pb-40">
         <FadeIn>
-          <h2 className="text-2xl md:text-3xl font-serif mb-6 normal-case">
+          <h2 className="text-title mb-6 normal-case">
             …by the way, what's Fractal?
           </h2>
           <div className="space-y-6 text-sm md:text-base text-white/90 font-light leading-relaxed max-w-3xl">

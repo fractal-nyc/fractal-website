@@ -14,7 +14,7 @@ export function Vision() {
 
       <div className="max-w-4xl mx-auto px-[4.5%] text-center relative z-10">
         <FadeIn>
-          <h2 className="font-serif text-4xl md:text-6xl lg:text-7xl leading-tight text-foreground normal-case">
+          <h2 className="text-title text-foreground normal-case leading-tight">
             "Is there a <span className="italic normal-case">vision?</span>"
           </h2>
         </FadeIn>

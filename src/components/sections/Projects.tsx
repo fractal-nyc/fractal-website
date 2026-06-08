@@ -46,7 +46,7 @@ export function Projects() {
                 <FadeIn direction={index % 2 === 0 ? "right" : "left"}>
                   <div className="flex flex-col gap-6">
                     <span className="font-serif text-6xl md:text-8xl text-muted/50">{project.id}</span>
-                    <h3 className="text-3xl md:text-4xl font-serif normal-case">{project.title}</h3>
+                    <h3 className="text-title normal-case">{project.title}</h3>
                     <p className="text-lg text-foreground/70 leading-relaxed font-light">
                       {project.description}
                     </p>

@@ -25,7 +25,7 @@ export function LiberalArts() {
 
         <FadeIn delay={0.15}>
           <div className="text-left max-w-3xl mx-auto">
-            <h3 className="text-2xl md:text-3xl font-serif mb-6 normal-case">Fractal U</h3>
+            <h3 className="text-subtitle mb-6 normal-case">Fractal U</h3>
             <PretextParagraph
               size={TEXT_SIZES.lg}
               className="text-white/90 mb-8"

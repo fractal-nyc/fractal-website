@@ -21,7 +21,7 @@ export function Directory() {
         <FadeIn>
           <div className="mb-16 md:mb-24 flex flex-col md:flex-row md:items-end justify-between gap-8 border-b border-border pb-12">
             <div>
-              <h2 className="text-4xl md:text-6xl font-serif normal-case">Directory</h2>
+              <h2 className="text-title">Directory</h2>
               <p className="text-muted-foreground mt-4 font-light text-lg">Explore the facets of our community.</p>
             </div>
           </div>
@@ -45,7 +45,7 @@ export function Directory() {
                     strokeWidth={1}
                   />
                 </div>
-                <h3 className="text-xl md:text-2xl font-serif font-medium tracking-tight pr-4 normal-case">
+                <h3 className="text-subtitle pr-4 normal-case">
                   {item.title}
                 </h3>
               </Link>

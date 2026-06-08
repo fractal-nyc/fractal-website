@@ -181,6 +181,7 @@ export function AvatarBadge({ person, className = "" }: AvatarBadgeProps) {
 
       {/* Gradient + text at bottom of image */}
       <div className="absolute inset-x-0 bottom-0 z-10 bg-gradient-to-t from-black/70 via-black/40 to-transparent px-4 pb-4 pt-16">
+        {/* Intentional label-tier styling on h3 (text-sm overlay caption on photo). .text-subtitle would visually destroy. Future: consider retagging as <p className="text-label">. */}
         <h3 className="font-serif text-sm sm:text-base font-medium leading-tight text-white drop-shadow-sm">
           {person.name}
         </h3>
