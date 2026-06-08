@@ -1,6 +1,7 @@
 import { FadeIn } from "@/components/ui/FadeIn";
 import { SectorHeader } from "@/components/layout/SectorHeader";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 const LUMA_URL = "https://luma.com/nyc-tech";
 const LUMA_EVENTS_URL = "https://lu.ma/nyc-tech";
@@ -132,11 +133,13 @@ function PrimaryButton({
   children,
   external = true,
   fullWidth = false,
+  wrap = true,
 }: {
   href: string;
   children: React.ReactNode;
   external?: boolean;
   fullWidth?: boolean;
+  wrap?: boolean;
 }) {
   const externalProps = external
     ? { target: "_blank" as const, rel: "noopener noreferrer" }
@@ -146,10 +149,16 @@ function PrimaryButton({
   // Campus background. The Button base styles handle border, padding,
   // uppercase mono, focus-visible, and corner decorations.
   const widthClass = fullWidth ? "w-full" : "max-w-xs w-full";
+  // FRAC-53: Long membership/day-pass labels (up to 53 chars) overflow the
+  // max-w-xs container at the 375px mobile baseline. Default wrap=true lets
+  // them flow to 2-3 lines via whitespace-normal + leading-snug. Mandelbrot
+  // corners are position:absolute at 4px insets so they continue to hug the
+  // border on multi-line wraps without manual adjustment.
+  const wrapClass = wrap ? "whitespace-normal leading-snug" : "";
   return (
     <Button
       asChild
-      className={`${widthClass} bg-black/20 hover:bg-black/30 text-center`}
+      className={cn(widthClass, "bg-black/20 hover:bg-black/30 text-center", wrapClass)}
     >
       <a href={href} {...externalProps}>
         {children}

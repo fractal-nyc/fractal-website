@@ -106,50 +106,48 @@ describe("Button component", () => {
 });
 
 // ═══════════════════════════════════════════════════════════════════════════
-// CTA link button styling (FRAC-86 regression)
+// CTA link button styling (FRAC-86 regression, FRAC-53 migration)
 //
-// These assertions live alongside the Button tests so the inline-block +
-// max-w-xs pattern stays enforced even after CTAs migrate to <Button asChild>.
-// The Button's default variant intentionally does not constrain width — the
-// consuming page wraps the Button with `max-w-xs w-full` when the constraint
-// is desired (as on EventsPage, NeighborhoodPage, etc.).
+// Originally these assertions enforced the raw `inline-block + max-w-xs`
+// fake-button pattern used sitewide before FRAC-27 / FRAC-53. After the
+// migration to <Button asChild>, the consuming pages now pass max-w-xs /
+// w-full through className to a Button that wraps a real <a>. These tests
+// assert the migrated equivalent: a Button asChild over an <a> still
+// produces the inline-flex CTA chrome (border, translucent background,
+// Mandelbrot corners) and forwards width constraints from the consumer.
 // ═══════════════════════════════════════════════════════════════════════════
 
 describe("CTA link button styling (FRAC-86 regression)", () => {
-  it("should use inline-block + max-w-xs pattern for CTA links", () => {
-    // Render a typical CTA link as found on EventsPage, NeighborhoodPage, etc.
+  it("should render <Button asChild> over an <a> as a styled CTA link", () => {
     const { container } = render(
-      <a
-        href="https://example.com"
-        className="inline-block max-w-xs w-full border border-foreground/20 rounded-md px-8 py-5 text-sm tracking-widest uppercase bg-foreground/[0.03] hover:bg-foreground/10 transition-colors duration-300 text-center relative overflow-hidden"
-      >
-        Test CTA
-      </a>,
+      <Button asChild className="max-w-xs w-full">
+        <a href="https://example.com">Long Label Text That Wraps</a>
+      </Button>,
     );
     const link = container.querySelector("a");
     expect(link).toBeTruthy();
-    // Must have inline-block to prevent full-width stretching
-    expect(link!.className).toContain("inline-block");
-    // Must have max-w-xs to constrain width
+    // Slot forwards width constraints from the Button consumer to the <a>.
     expect(link!.className).toContain("max-w-xs");
+    expect(link!.className).toContain("w-full");
+    // The Button base styles render the inline-flex CTA chrome on the
+    // forwarded element.
+    expect(link!.className).toContain("inline-flex");
+    // The default variant supplies the bordered, translucent CTA surface
+    // (preserved across the FRAC-86 fake-button → Button migration).
+    expect(link!.className).toContain("border-foreground/20");
+    expect(link!.className).toContain("bg-foreground/[0.03]");
   });
 
-  it("should not have full-width stretching without max-width constraint", () => {
+  it("should render four Mandelbrot corner decorations on the CTA <a>", () => {
+    // Corners are appended as siblings inside the slotted child via
+    // React.cloneElement — see Button.tsx asChild branch.
     const { container } = render(
-      <a
-        href="https://example.com"
-        className="inline-block max-w-xs w-full"
-      >
-        Constrained CTA
-      </a>,
+      <Button asChild className="max-w-xs w-full">
+        <a href="https://example.com">CTA</a>
+      </Button>,
     );
-    const link = container.querySelector("a");
-    // The combination of inline-block + max-w-xs + w-full means:
-    // - w-full makes it fill its inline-block container
-    // - max-w-xs caps it at 20rem (320px)
-    // - inline-block prevents block-level full-width
-    expect(link!.className).toContain("inline-block");
-    expect(link!.className).toContain("max-w-xs");
+    const icons = container.querySelectorAll('[data-testid="mandelbrot-icon"]');
+    expect(icons.length).toBe(4);
   });
 });
 
