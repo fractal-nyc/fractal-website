@@ -38,7 +38,7 @@ export function ArchiveSearch({ value, onChange }: ArchiveSearchProps) {
         aria-label="Search the archive"
         className="
           w-full h-11 pl-10 pr-10
-          text-base font-light
+          text-control
           bg-background border border-border rounded-lg
           text-foreground placeholder:text-muted-foreground
           transition-colors duration-200

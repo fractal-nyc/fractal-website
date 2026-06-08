@@ -211,6 +211,20 @@
     letter-spacing: 0.1em;
   }
 
+  /* Control tier (JetBrains Mono, normal-case, no tracking, text-base for
+     iOS no-zoom). The chrome tier's uppercase + text-sm breaks input UX
+     (forces typed text uppercase, triggers iOS zoom-on-focus), so input
+     controls get their own role-based utility. Named .text-control rather
+     than .text-input to avoid colliding with Tailwind v4's auto-generated
+     `text-input` color utility (the codebase declares --color-input as a
+     theme token for input borders). FRAC-41. */
+  .text-control {
+    @apply font-mono text-base;
+    font-weight: 400;
+    text-transform: none;
+    letter-spacing: normal;
+  }
+
   /* FRAC-33: visually-hidden until any descendant receives focus. Used
      for the octahedron hero skip-nav so keyboard users can reach the
      nav routes without depending on 3D mesh pointer events. */

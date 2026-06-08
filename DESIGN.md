@@ -238,6 +238,14 @@ FRAC-51 introduces a Tailwind-aligned semantic scale delivered as utility classe
 
 `.text-eyebrow`, `.text-label`, and `.text-meta` are deliberately three names for the same rendering — the *meaning* differs at the call site (overline label vs. form label vs. inline metadata), and keeping three names lets future authors signal intent without forcing a rendering decision today.
 
+**Control tier (JetBrains Mono, normal-case)**
+
+| Utility | Rendering | Tailwind size |
+|---|---|---|
+| `.text-control` | mono, weight 400, normal-case, normal tracking | `text-base` |
+
+`.text-control` exists because the chrome tier's `uppercase + text-sm` breaks input UX: uppercase forces typed text into uppercase, and `text-sm` (14px) triggers iOS zoom-on-focus. `.text-control` keeps the mono family identity of the chrome tier while sizing up to `text-base` (16px = iOS no-zoom threshold) and dropping the case/tracking transforms. Use on `<input>`, `<textarea>`, `<select>`, and other typeable controls. Named `.text-control` rather than `.text-input` because the codebase declares `--color-input` as a theme color token (for input borders), which makes Tailwind v4 auto-generate a `text-input` color utility — a name collision that would override `color` on any element it touched.
+
 **Button (2 variants in `src/components/ui/button.tsx`)**
 
 | Size | Padding | Type |
