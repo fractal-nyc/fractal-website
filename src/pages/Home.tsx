@@ -26,7 +26,7 @@ export function Home() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16 items-start">
           <FadeIn>
             <h2
-              className="font-serif text-5xl md:text-7xl leading-[1.3] display-roman"
+              className="text-display"
             >
               A Golden<br />Age Protocol
             </h2>
