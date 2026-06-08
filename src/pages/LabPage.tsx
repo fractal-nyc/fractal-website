@@ -52,7 +52,7 @@ export function LabPage() {
                   The Records
                 </p>
                 <p className="text-body-lead mt-3 max-w-xl">
-                  Essays, publications, and podcasts from the minds behind Fractal Labs.
+                  Essays, publications, and podcasts from the minds of Fractal.
                 </p>
               </div>
             </FadeIn>

@@ -55,7 +55,7 @@ export function DocumentBadge({ document, className = "" }: DocumentBadgeProps) 
       target="_blank"
       rel="noopener noreferrer"
       className={`
-        group block rounded-lg border border-border bg-background
+        group block rounded-lg border border-border bg-background text-foreground
         transition-all duration-200 ease-out
         hover:scale-[1.02] hover:shadow-lg hover:border-house-publications-deep/40
         focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-house-publications-deep/40
