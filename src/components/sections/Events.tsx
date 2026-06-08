@@ -6,7 +6,7 @@ export function Events() {
       <div className="max-w-7xl mx-auto px-[4.5%]">
         <FadeIn>
           <div className="mb-20 md:mb-32">
-            <h2 className="text-sm font-semibold tracking-widest uppercase text-muted-foreground mb-4">Events</h2>
+            <h2 className="text-eyebrow text-muted-foreground mb-4">Events</h2>
             <p className="text-3xl md:text-5xl font-serif max-w-2xl leading-tight normal-case">
               Come <span className="italic normal-case">hang out</span> with us.
             </p>

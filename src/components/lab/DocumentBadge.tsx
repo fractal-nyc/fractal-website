@@ -77,7 +77,7 @@ export function DocumentBadge({ document, className = "" }: DocumentBadgeProps) 
             />
           </div>
           <span
-            className="text-xs font-semibold tracking-wider uppercase"
+            className="text-eyebrow"
             style={{ color: LAB_DEEP }}
           >
             {categoryLabel}
