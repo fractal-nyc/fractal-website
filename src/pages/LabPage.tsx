@@ -6,14 +6,12 @@ import { MandelbrotIcon } from "@/components/house/MandelbrotIcon";
 import { DocumentGrid } from "@/components/lab/DocumentGrid";
 import { ArchiveToolbar } from "@/components/lab/ArchiveToolbar";
 import { useArchiveFilter } from "@/hooks/use-archive-filter";
-import { PretextParagraph } from "@/components/pretext/PretextParagraph";
-import { TEXT_SIZES } from "@/lib/pretext";
 import { FractalPattern } from "@/components/ui/FractalPattern";
 
 export function LabPage() {
   const filter = useArchiveFilter();
   return (
-    <main className="relative min-h-screen text-foreground selection:bg-foreground selection:text-background" style={{ backgroundColor: "#E870A0" }}>
+    <main className="relative min-h-screen bg-house-publications-light text-background selection:bg-foreground selection:text-background">
       <FractalPattern color="#C44878" />
       <div className="relative z-10">
       <Navbar />
@@ -21,7 +19,7 @@ export function LabPage() {
         {/* Publications heading + description */}
         <section className="flex flex-col items-center justify-start pt-16 md:pt-24 pb-12 md:pb-20 w-full">
           <div className="px-6 md:px-[4.5%] w-full">
-            <SectorHeader letter="P" name="Publications" color="#C44878" />
+            <SectorHeader letter="P" name="Publications" color="var(--color-house-publications-deep)" />
             <FadeIn delay={0.1}>
               <div className="text-center">
                 <p className="text-display mb-6 text-center">
@@ -46,19 +44,16 @@ export function LabPage() {
 
             <FadeIn delay={0.3}>
               <div className="mb-12 md:mb-16 border-b border-border pb-8">
-                <h2 className="text-eyebrow flex items-center gap-2 text-white mb-3">
+                <h2 className="text-eyebrow not-italic flex items-center gap-2 mb-3">
                   Research + Writing
                   <MandelbrotIcon size={18} opacity={0.35} />
                 </h2>
-                <p className="text-3xl md:text-4xl font-serif leading-tight normal-case">
+                <p className="text-title leading-tight normal-case">
                   The Records
                 </p>
-                <PretextParagraph
-                  size={TEXT_SIZES.base}
-                  className="text-white mt-3 font-light max-w-xl"
-                >
-                  {"Essays, publications, and podcasts from the minds behind Fractal Labs."}
-                </PretextParagraph>
+                <p className="text-body-lead mt-3 max-w-xl">
+                  Essays, publications, and podcasts from the minds behind Fractal Labs.
+                </p>
               </div>
             </FadeIn>
 
