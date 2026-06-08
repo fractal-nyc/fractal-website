@@ -212,8 +212,8 @@ FRAC-51 introduces a Tailwind-aligned semantic scale delivered as utility classe
 | Utility | Rendering | Tailwind size |
 |---|---|---|
 | `.text-display` | upright, weight 300, uppercase, tracking 0.04em, leading 1.1 | `text-5xl md:text-7xl` |
-| `.text-title` | italic, uppercase, tracking 0.04em | `text-3xl md:text-5xl` |
-| `.text-subtitle` | italic, weight 300, uppercase, tracking 0.04em | `text-xl md:text-2xl` |
+| `.text-title` | italic, tracking 0.04em | `text-3xl md:text-5xl` |
+| `.text-subtitle` | upright, weight 300, tracking 0.04em | `text-xl md:text-2xl` |
 
 **Body tier (Inter, normal-case)**
 
