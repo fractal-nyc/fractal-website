@@ -17,8 +17,8 @@
   "done_at": null,
   "evidence_refs": [],
   "id": "task_01KTJQEZKAED53BBTSCNK86Q8X",
-  "last_event_id": "ev_01KTM75EY42CW24444JPKA1STP",
-  "last_status_changed_at": "2026-06-08T18:15:52Z",
+  "last_event_id": "ev_01KTM7BSRGVNH21J4EQA4JF0P6",
+  "last_status_changed_at": "2026-06-08T18:19:19Z",
   "priority": "medium",
   "relationships_out": [
     {
@@ -32,10 +32,10 @@
   "reopened_count": 0,
   "schema_version": 1,
   "short_id": "FRAC-19",
-  "status": "planned",
+  "status": "review",
   "tags": null,
   "title": "Author typography + color audit prompt + gaps register",
   "type": "task",
-  "updated_at": "2026-06-08T18:15:52Z",
+  "updated_at": "2026-06-08T18:19:19Z",
   "urgency": null
 }
