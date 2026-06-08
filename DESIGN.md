@@ -198,14 +198,52 @@ Four type families ship; two are declared as tokens (`font-sans`, `font-mono`) a
 
 ### Global type rules (prose-only, not modelable)
 
-- `body` has `text-transform: uppercase` applied globally (`src/index.css:84`). All body copy renders uppercase by default. Use `normal-case` to opt out for headlines, taglines, and any content where case carries meaning.
+- `body` renders **normal-case** by default. The pre-FRAC-51 global `text-transform: uppercase` on `body` was removed; uppercase is now opt-in via `.font-serif`, the `h1–h6` rule, or one of the chrome utilities (`.text-eyebrow`, `.text-label`, `.text-meta`).
 - `h1–h6` are italic + uppercase Fraunces with `letter-spacing: 0.04em`. Use `.display-roman` for upright headings.
 - `.font-serif` also implies italic + uppercase by rule.
 - `[style*="Jacquard"]` opts out of both transforms.
 
-### Why no `headline-lg` / `body-md` tokens?
+### Semantic type scale
 
-There is no codified `text-*` scale in the codebase yet. The shipped components each set their own sizes (planner observed `text-sm` 116×, `text-xs` 36×, `text-base` 31× in `src/`). Declaring a fictional scale now would be aspirational rather than descriptive. The two declared `font-sans` / `font-mono` family tokens satisfy `missing-typography` while accurately reflecting today's reality.
+FRAC-51 introduces a Tailwind-aligned semantic scale delivered as utility classes (precedent: the existing `.display-roman` utility). Each utility maps to **one** Tailwind size — no arbitrary `text-[…]` values. Body family is Inter (FRAC-44). Body case is **normal-case**; uppercase is opt-in.
+
+**Display tier (Fraunces)**
+
+| Utility | Rendering | Tailwind size |
+|---|---|---|
+| `.text-display` | upright, weight 300, uppercase, tracking 0.04em, leading 1.1 | `text-5xl md:text-7xl` |
+| `.text-title` | italic, uppercase, tracking 0.04em | `text-3xl md:text-5xl` |
+| `.text-subtitle` | italic, weight 300, uppercase, tracking 0.04em | `text-xl md:text-2xl` |
+
+**Body tier (Inter, normal-case)**
+
+| Utility | Rendering | Tailwind size |
+|---|---|---|
+| `.text-body` | weight 400, normal-case | `text-base` |
+| `.text-body-lead` | weight 300, normal-case, leading 1.7 | `text-lg` |
+
+**Chrome tier (JetBrains Mono)**
+
+| Utility | Rendering | Tailwind size |
+|---|---|---|
+| `.text-eyebrow` | uppercase, weight 500, tracking 0.1em | `text-sm` |
+| `.text-label` | identical to `.text-eyebrow` | `text-sm` |
+| `.text-meta` | identical to `.text-eyebrow` | `text-sm` |
+
+`.text-eyebrow`, `.text-label`, and `.text-meta` are deliberately three names for the same rendering — the *meaning* differs at the call site (overline label vs. form label vs. inline metadata), and keeping three names lets future authors signal intent without forcing a rendering decision today.
+
+**Button (2 variants in `src/components/ui/button.tsx`)**
+
+| Size | Padding | Type |
+|---|---|---|
+| `default` | `px-8 py-5` | `text-sm tracking-widest uppercase font-medium` |
+| `sm` | `px-4 py-2.5` | `text-xs tracking-widest uppercase font-medium` |
+
+Both Button sizes share the same JetBrains Mono / uppercase / `tracking-widest` base from the `buttonVariants` cva string.
+
+**`.display-roman` is preserved** as the low-level escape hatch (font-style/weight/transform only, no size or tracking). `.text-display` is the full semantic preset and should be the default reach. Authors who only need to opt a heading out of italic without taking on the full display rendering can keep using `.display-roman`.
+
+**On the `typography:` YAML key:** No change. The existing `font-sans` / `font-mono` family declarations remain; the semantic size scale is not modeled in YAML because design.md's typography schema has no slots for size, letter-spacing, line-height, or text-transform. The scale above is the canonical reference and lives in prose.
 
 ## Layout
 

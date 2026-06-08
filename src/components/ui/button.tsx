@@ -55,8 +55,8 @@ const buttonVariants = cva(
           "border-0 bg-transparent text-foreground underline underline-offset-4 hover:text-foreground/80",
       },
       size: {
-        default: "px-8 py-5 text-sm",
-        sm: "px-4 py-2 text-xs",
+        default: "px-8 py-5 text-sm font-medium",
+        sm: "px-4 py-2.5 text-xs font-medium",
         lg: "px-10 py-6 text-base",
         // `icon` is required by vendored shadcn components (calendar, carousel,
         // sidebar). Square button for a single glyph.
