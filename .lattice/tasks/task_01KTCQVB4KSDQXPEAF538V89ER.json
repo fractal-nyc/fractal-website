@@ -1,0 +1,41 @@
+{
+  "assigned_to": null,
+  "branch_links": [
+    {
+      "branch": "frac-26-cream-normalize",
+      "linked_at": "2026-06-05T21:08:08Z",
+      "linked_by": "agent:claude-opus-4-7-impl",
+      "repo": null
+    }
+  ],
+  "comment_count": 1,
+  "complexity": null,
+  "created_at": "2026-06-05T20:33:30Z",
+  "created_by": "agent:claude-opus-4-7",
+  "custom_fields": {},
+  "description": "**[CRITICAL CLEANUP]**\n\nPer FRAC-21 \u00a7H5 and the canonical-cream decision already recorded on FRAC-19: replace stray cream literals with the canonical `#f8f6f0` and fix the stale `index.css:46` comment.\n\n## What's wrong\n\n1. `src/index.css:46` comment claims `/* #f7f6f2 */` but the actual `--background` HSL (40 25% 96%) resolves to `#f8f6f0`. Comment is stale.\n2. `src/pages/Home.tsx:25` hardcodes `bg-[#faf8f5]` for the Golden Age Protocol section \u2014 a pinker cream that doesn't match the body bg.\n3. `src/components/sections/Hero.tsx:90,114,121` hardcodes the same `bg-[#faf8f5]` on hero, search input, dropdown.\n4. `src/index.css:152` `.hero-text-shadow` uses `rgba(250,248,245,\u2026)` = `#faf8f5`.\n5. Tooltips `OctahedronHero.tsx:764` use `rgba(250,248,245,0.92)` = `#faf8f5`.\n6. `src/components/three/FractalCityScene.tsx:14` ambient light uses `#f5f0ea`.\n\n## Action\n\n- Replace all hardcoded `#faf8f5` literals with the system token (`bg-background` for Tailwind, `hsl(var(--background))` for inline, or `#f8f6f0` as the explicit hex if the token reference doesn't fit context \u2014 e.g. Three.js / SVG)\n- Replace `.hero-text-shadow` `rgba(250,248,245,\u2026)` with `rgba(248,246,240,\u2026)` (the canonical cream)\n- Fix the stale `src/index.css:46` comment to `/* #f8f6f0 \u2014 warm off-white */`\n- Verify: the visible seam between body bg and the hero/protocol-section overlay vanishes (or document it as intentional if not)\n\n## NOT in scope\n- The FractalCityScene ambient light `#f5f0ea` is its own decision (warm 3D ambient \u2260 surface paint) \u2014 leave unless visually problematic\n\n## Acceptance criteria\n\n- Zero `#faf8f5` literals in `src/` (grep-clean)\n- Zero `rgba(250,248,245,\u2026)` literals\n- `src/index.css:46` comment corrected\n- Visual smoke: home, hero, all pages render with consistent cream\n\n## Cites\nFRAC-21 synthesis \u00a7H5; FRAC-19 comment recording canonical cream = #f8f6f0",
+  "done_at": "2026-06-05T21:09:28Z",
+  "evidence_refs": [],
+  "id": "task_01KTCQVB4KSDQXPEAF538V89ER",
+  "last_event_id": "ev_01KTCSX60ZB09GWHMVDE9W41PZ",
+  "last_status_changed_at": "2026-06-05T21:09:28Z",
+  "priority": "critical",
+  "relationships_out": [
+    {
+      "created_at": "2026-06-05T20:35:48Z",
+      "created_by": "agent:claude-opus-4-7",
+      "note": null,
+      "target_task_id": "task_01KTCMK9QP8GT21KMZV34S82J7",
+      "type": "blocks"
+    }
+  ],
+  "reopened_count": 0,
+  "schema_version": 1,
+  "short_id": "FRAC-26",
+  "status": "done",
+  "tags": null,
+  "title": "[Cleanup] Cream normalize: replace #faf8f5 literals with #f8f6f0; fix stale /* #f7f6f2 */ comment",
+  "type": "task",
+  "updated_at": "2026-06-05T21:09:28Z",
+  "urgency": null
+}

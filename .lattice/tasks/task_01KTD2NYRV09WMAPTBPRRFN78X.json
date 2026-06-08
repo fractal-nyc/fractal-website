@@ -1,0 +1,33 @@
+{
+  "assigned_to": null,
+  "branch_links": [
+    {
+      "branch": "frac-39-palette-overlay",
+      "linked_at": "2026-06-05T23:46:10Z",
+      "linked_by": "agent:claude-opus-4-7-impl",
+      "repo": null
+    }
+  ],
+  "comment_count": 1,
+  "complexity": null,
+  "created_at": "2026-06-05T23:42:48Z",
+  "created_by": "agent:claude-opus-4-7",
+  "custom_fields": {},
+  "description": "Apply a per-face color overlay to the octahedron banner photos using each section's canonical deep palette color (from FRAC-24's HOUSES.palette.deep). Use a Photoshop-style 'Overlay' blend function (preserves contrast better than mix) at a tunable strength starting at 0.35.\n\nThis reintroduces a ShaderMaterial in usePerFaceMaterials (FRAC-20 had removed the prior ShaderMaterial tint). Trade-off accepted because the overlay blend preserves photo detail much better than the prior mix() at 0.55.\n\nMapping: each face uses its FACE_SECTION_COLORS entry \u2014 except where the canonical FRAC-24 palette deep is preferred. For sections in HOUSES (campus, neighborhood, events, school, forum, lab): use housePalette(id, 'deep'). For story / people (not Houses): use their FACE_SECTION_COLORS entry directly.\n\n## Acceptance\n- All 8 face photos render with the overlay tint applied\n- Photo detail preserved (no washed-out look)\n- A single OVERLAY_STRENGTH constant near the shader, default 0.35\n- Build + tests pass\n- Easy to dial the strength up/down via the constant",
+  "done_at": "2026-06-05T23:46:13Z",
+  "evidence_refs": [],
+  "id": "task_01KTD2NYRV09WMAPTBPRRFN78X",
+  "last_event_id": "ev_01KTD2W7728W9FH11YW47KCZHE",
+  "last_status_changed_at": "2026-06-05T23:46:13Z",
+  "priority": "medium",
+  "relationships_out": [],
+  "reopened_count": 0,
+  "schema_version": 1,
+  "short_id": "FRAC-39",
+  "status": "done",
+  "tags": null,
+  "title": "Overlay each octahedron face photo with its canonical palette color (Photoshop overlay blend)",
+  "type": "task",
+  "updated_at": "2026-06-05T23:46:13Z",
+  "urgency": null
+}

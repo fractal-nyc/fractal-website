@@ -1,0 +1,50 @@
+{
+  "assigned_to": null,
+  "branch_links": [
+    {
+      "branch": "frac-53-button-consolidation",
+      "linked_at": "2026-06-08T01:24:07Z",
+      "linked_by": "agent:claude-opus-4-7-orchestrator",
+      "repo": null
+    }
+  ],
+  "comment_count": 2,
+  "complexity": "medium",
+  "created_at": "2026-06-08T00:39:43Z",
+  "created_by": "agent:claude-opus-4-7-orchestrator",
+  "custom_fields": {},
+  "description": "Migrate 7+ inline <a> 'fake button' patterns (border border-foreground/20 rounded-md px-8 py-5 text-sm tracking-widest uppercase bg-foreground/[0.03] hover:bg-foreground/10 + CornerDecorations) to the Button component. May require Button to support 'asChild' (Radix Slot) so an anchor can wrap it without nested interactives.\n\nSpec: .lattice/notes/typography-spec-20260607.md.\n\nWhy: The same button styling is duplicated across 7+ pages instead of consuming the Button component. The Button 'default' variant already renders this. Consolidation eliminates drift; future variant changes propagate automatically. Depends on FRAC-51 foundation (for any new size variants).\n\nAcceptance: Every CTA on EventsPage, PeoplePage, PoliticalClubPage, NeighborhoodPage, LabPage, LiberalArts (and any others found) renders via <Button> or <Button asChild>. No inline duplicate styling remains. CornerDecorations behavior preserved.",
+  "done_at": "2026-06-08T01:30:02Z",
+  "evidence_refs": [
+    {
+      "id": "ev_01KTJDKNKY4PDK0MCRCT2HB6Y0",
+      "role": "review",
+      "source_type": "comment"
+    }
+  ],
+  "id": "task_01KTJAQM2Q0M64C8M199KKE8B7",
+  "last_event_id": "ev_01KTJDKR6V0Z6139RDC34D45G4",
+  "last_status_changed_at": "2026-06-08T01:30:02Z",
+  "priority": "medium",
+  "relationships_out": [
+    {
+      "created_at": "2026-06-08T00:39:49Z",
+      "created_by": "agent:claude-opus-4-7-orchestrator",
+      "note": null,
+      "target_task_id": "task_01KTJAPPBAK614A0NRPZP0W8QN",
+      "type": "depends_on"
+    }
+  ],
+  "reopened_count": 0,
+  "schema_version": 1,
+  "short_id": "FRAC-53",
+  "status": "done",
+  "tags": [
+    "typography",
+    "components"
+  ],
+  "title": "Button consolidation \u2014 fake CTAs migrate to Button component",
+  "type": "task",
+  "updated_at": "2026-06-08T01:30:02Z",
+  "urgency": null
+}

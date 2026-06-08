@@ -1,0 +1,41 @@
+{
+  "assigned_to": null,
+  "branch_links": [
+    {
+      "branch": "frac-30-delete-dark-block",
+      "linked_at": "2026-06-05T21:02:41Z",
+      "linked_by": "agent:claude-opus-4-7-impl",
+      "repo": null
+    }
+  ],
+  "comment_count": 2,
+  "complexity": null,
+  "created_at": "2026-06-05T20:33:31Z",
+  "created_by": "agent:claude-opus-4-7",
+  "custom_fields": {},
+  "description": "**[CRITICAL CLEANUP]**\n\nPer FRAC-21 \u00a7S3: `src/index.css:75-103` declares 28 dark-mode CSS variables, but no `ThemeProvider`, no `.dark` class toggle, no `next-themes` \u2014 the entire block is unreachable config. The only `dark:` utilities exist in vendored shadcn `ui/*`.\n\n## Decision\n\nEither:\n1. **Wire dark mode** \u2014 add a `ThemeProvider`, toggle `.dark` on `document.documentElement` based on `prefers-color-scheme` + a user override. Document dark surface conventions in DESIGN.md.\n2. **Delete the block** \u2014 remove `src/index.css:75-103` entirely. Remove the unused `dark:` utilities in vendored `ui/*` IF they're cheap to find; otherwise leave them as inert (they cost nothing if `.dark` is never applied).\n\nRecommend option 2 unless dark mode is actually planned. DESIGN.md should not declare tokens for a mode that doesn't exist in runtime.\n\n## Acceptance criteria\n\n- Either dark mode is functionally wired (toggleable, persists, surfaces look correct), OR\n- The `.dark` block at `src/index.css:75-103` is deleted with a clear commit message: \"Remove unwired dark-mode tokens \u2014 not planned\"\n- No visible change to the live (light-mode) experience\n\n## Cites\nFRAC-21 synthesis \u00a7S3",
+  "done_at": "2026-06-05T21:04:42Z",
+  "evidence_refs": [],
+  "id": "task_01KTCQVBE55XS123SWZTEMCJVF",
+  "last_event_id": "ev_01KTCSMEVX3WQ3TAZ3Q43GZ2F4",
+  "last_status_changed_at": "2026-06-05T21:04:42Z",
+  "priority": "critical",
+  "relationships_out": [
+    {
+      "created_at": "2026-06-05T20:35:48Z",
+      "created_by": "agent:claude-opus-4-7",
+      "note": null,
+      "target_task_id": "task_01KTCGKVEEQM7KQP0BETPWCFJ3",
+      "type": "blocks"
+    }
+  ],
+  "reopened_count": 0,
+  "schema_version": 1,
+  "short_id": "FRAC-30",
+  "status": "done",
+  "tags": null,
+  "title": "[Cleanup] .dark block decision: wire ThemeProvider + class toggle, OR delete the unused dark token block",
+  "type": "task",
+  "updated_at": "2026-06-05T21:04:42Z",
+  "urgency": null
+}

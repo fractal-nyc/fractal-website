@@ -1,0 +1,41 @@
+{
+  "assigned_to": null,
+  "branch_links": [
+    {
+      "branch": "frac-27-minimal-button",
+      "linked_at": "2026-06-05T21:56:31Z",
+      "linked_by": "agent:claude-opus-4-7-impl",
+      "repo": null
+    }
+  ],
+  "comment_count": 2,
+  "complexity": null,
+  "created_at": "2026-06-05T20:33:30Z",
+  "created_by": "agent:claude-opus-4-7",
+  "custom_fields": {},
+  "description": "**[CRITICAL CLEANUP]**\n\nPer FRAC-21 \u00a7H2: the shadcn `Button` is unused by every product page AND its dependencies are broken. Real CTAs are raw `<a>` with no `focus-visible`.\n\n## What's broken\n- `src/components/ui/button.tsx` references undefined Replit-injected utilities/tokens: `hover-elevate`, `active-elevate-2`, `[border-color:var(--button-outline)]`, `border-primary-border`, `border-destructive-border`, `border-secondary-border`. None declared in `src/index.css`. **Hover/active elevation is a silent no-op; outline border is invisible.**\n- Real CTAs are raw `<a className=\"hover:underline\">` (e.g. `EventsPage.tsx:55,70`, `NeighborhoodPage.tsx:59`, `PoliticalClubPage.tsx:26`, `PeoplePage.tsx:29`, `Campus.tsx:130` defines its own `PrimaryButton`). Across all of pages/, sections/, layout/, house/, `focus-visible:` appears exactly TWICE.\n- Navbar menu buttons (`Navbar.tsx:282-339`) have no `aria-label` and no focus-visible style.\n\n## Decision required (open to user judgment)\n1. **Fix Button** \u2014 define the missing tokens in `src/index.css`, then migrate all raw `<a>` CTAs to use Button or its `link`/`outline` variant.\n2. **Retire Button** \u2014 delete `button.tsx` and the unused shadcn primitives it pulls in. Codify the raw-anchor CTA pattern as the system; add a `.cta` utility with proper focus state.\n3. **New minimal Button** \u2014 write a small new Button matching current product reality (uppercase, mono, underline-on-hover), with focus-visible baked in. Migrate CTAs.\n\nRecommend option 3 \u2014 closest to shipped reality, smallest surface area, gives FRAC-19 a real component to document.\n\n## Acceptance criteria\n\n- All product CTAs (raw `<a>` and Button-like) have visible focus-visible state\n- Navbar menu icon buttons have `aria-label` and focus state\n- Whichever option chosen: the broken Replit-token references in `button.tsx` are resolved (defined OR removed)\n- No silent no-op hover/active classes remain\n\n## Cites\nFRAC-21 synthesis \u00a7H2",
+  "done_at": "2026-06-05T21:58:00Z",
+  "evidence_refs": [],
+  "id": "task_01KTCQVB6ZNCNXX02GMWPR528K",
+  "last_event_id": "ev_01KTCWP244KRWN2FQSBGXV8XAZ",
+  "last_status_changed_at": "2026-06-05T21:58:00Z",
+  "priority": "critical",
+  "relationships_out": [
+    {
+      "created_at": "2026-06-05T20:35:48Z",
+      "created_by": "agent:claude-opus-4-7",
+      "note": null,
+      "target_task_id": "task_01KTCGKVEEQM7KQP0BETPWCFJ3",
+      "type": "blocks"
+    }
+  ],
+  "reopened_count": 0,
+  "schema_version": 1,
+  "short_id": "FRAC-27",
+  "status": "done",
+  "tags": null,
+  "title": "[Cleanup] Button strategy: pick one (fix Replit-broken shadcn Button, OR retire it, OR new minimal Button); ensure focus-visible on real CTAs",
+  "type": "task",
+  "updated_at": "2026-06-05T21:58:00Z",
+  "urgency": null
+}

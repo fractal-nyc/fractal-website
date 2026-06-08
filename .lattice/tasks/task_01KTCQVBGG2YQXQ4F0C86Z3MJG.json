@@ -1,0 +1,33 @@
+{
+  "assigned_to": null,
+  "branch_links": [
+    {
+      "branch": "frac-31-display-roman",
+      "linked_at": "2026-06-05T21:13:20Z",
+      "linked_by": "agent:claude-opus-4-7-impl",
+      "repo": null
+    }
+  ],
+  "comment_count": 1,
+  "complexity": null,
+  "created_at": "2026-06-05T20:33:31Z",
+  "created_by": "agent:claude-opus-4-7",
+  "custom_fields": {},
+  "description": "**[CRITICAL CLEANUP]**\n\nPer FRAC-21 \u00a7S1: the verbatim inline triplet `style={{ fontWeight: 300, textTransform: \"uppercase\", fontStyle: \"normal\" }}` is copy-pasted ~12 times across pages/sections.\n\n## Where it's used (incomplete sample from audit)\n- `src/pages/Home.tsx:30`\n- `src/pages/EventsPage.tsx:19,50,63`\n- `src/pages/LabPage.tsx:27`\n- `src/pages/NeighborhoodPage.tsx:22`\n- `src/pages/PoliticalClubPage.tsx:19`\n- `src/pages/PeoplePage.tsx:22`\n- `src/pages/StoryPage.tsx:211`\n- `src/components/sections/Campus.tsx:184`\n- `src/components/sections/LiberalArts.tsx:13`\n\n## Action\n\n1. Add a utility in `src/index.css` `@layer utilities`:\n```css\n.display-roman {\n  font-weight: 300;\n  text-transform: uppercase;\n  font-style: normal;\n}\n```\n2. Replace every inline triplet with `className=\"display-roman\"` (preserving any existing classes).\n3. Grep verify: zero remaining occurrences of `fontStyle: \"normal\"` paired with `textTransform: \"uppercase\"` in inline styles in `src/`.\n\n## Acceptance criteria\n\n- `.display-roman` defined in `src/index.css`\n- ~12 inline triplets replaced\n- No visual change\n\n## Cites\nFRAC-21 synthesis \u00a7S1",
+  "done_at": "2026-06-05T21:15:22Z",
+  "evidence_refs": [],
+  "id": "task_01KTCQVBGG2YQXQ4F0C86Z3MJG",
+  "last_event_id": "ev_01KTCT80AQZJK0SPEFH4QQKDNC",
+  "last_status_changed_at": "2026-06-05T21:15:22Z",
+  "priority": "critical",
+  "relationships_out": [],
+  "reopened_count": 0,
+  "schema_version": 1,
+  "short_id": "FRAC-31",
+  "status": "done",
+  "tags": null,
+  "title": "[Cleanup] Display-roman utility: replace ~12 copy-pasted inline style={{fontWeight:300,textTransform:'uppercase',fontStyle:'normal'}} with a single class",
+  "type": "task",
+  "updated_at": "2026-06-05T21:15:22Z",
+  "urgency": null
+}

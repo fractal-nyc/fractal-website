@@ -1,0 +1,41 @@
+{
+  "assigned_to": null,
+  "branch_links": [
+    {
+      "branch": "frac-24-house-palette-sot",
+      "linked_at": "2026-06-05T21:33:28Z",
+      "linked_by": "agent:claude-opus-4-7-impl",
+      "repo": null
+    }
+  ],
+  "comment_count": 1,
+  "complexity": null,
+  "created_at": "2026-06-05T20:33:30Z",
+  "created_by": "agent:claude-opus-4-7",
+  "custom_fields": {},
+  "description": "**[CRITICAL CLEANUP \u2014 blocks FRAC-23 and FRAC-19]**\n\nThe site has 4\u20135 conflicting palettes per house, surfaced by FRAC-21 audit (synthesis: `.lattice/notes/FRAC-21-team-review-20260605-1551.md`). User decision: **canonical = the pairs currently used on each individual house page** (background color + FractalPattern overlay color). All other palettes get retired.\n\n## Canonical pairs (light, deep)\n\nPer-page values currently shipping (verified `src/pages/*.tsx`):\n\n| House id | Light | Deep | Currently shipped as |\n|---|---|---|---|\n| campus | `#2E6B4A` | `#1A3A2E` | bg=light, pattern=deep |\n| neighborhood | `#889460` | `#4A5A30` | bg=light, pattern=deep |\n| events | `#D4857A` | `#C13B2A` | bg=light, pattern=deep |\n| lab | `#E870A0` | `#C44878` | bg=light, pattern=deep |\n| people | `#C49040` | `#B65D19` | bg=light, pattern=deep |\n| story | `#D4BA58` | `#8A7A20` | bg=light, pattern=deep |\n| forum (Political Club) | `#C83858` | `#6E1830` | **bg=deep, pattern=light** (inverted treatment) |\n| school (Liberal Arts) | `#B52828` | `#5C1010` | **bg=deep, pattern=light** (inverted treatment) |\n\nNote: Political Club and Liberal Arts ship with the deeper of the pair as the page bg \u2014 a moodier treatment. Both light and deep are valid surfaces; the per-page decision of which is bg vs accent is allowed to differ.\n\n## What changes\n\n1. **`src/data/houses.ts`** \u2014 replace the single `color: string` field on each House with `palette: { light: string; deep: string }`. Delete the old \"Fractal Bright\" hex values (`#8B7355`, `#E07A5F`, `#457B9D`, `#1D3557`, `#CC2936`, `#6B4C9A`) \u2014 they survive only in dead code (`FractalObject.tsx`, retired separately in FRAC-25) and as misleading fallbacks.\n\n2. **`src/components/layout/Navbar.tsx` `sectionLinks`** \u2014 derive colors from `HOUSES[id].palette`, not from local `sectionLinks` literals. Pick `.deep` or `.light` per design intent (Navbar currently uses what reads as the deep hue for most houses).\n\n3. **`src/components/house/HouseBanner.tsx` `ELEGANT_PAIRS`** \u2014 replace with derivations from `HOUSES[id].palette`. Banner bg = `.light`, letter color = `.deep` (matching current usage except for forum/school which keep their inverted treatment).\n\n4. **`src/components/three/OctahedronHero.tsx` `NAV_NODES` + `FACE_SECTION_COLORS`** \u2014 same: derive from `HOUSES[id].palette`. (Per FRAC-20, the tint values themselves are in-flux at `needs_human` \u2014 this task standardizes the SOURCE; the deeper tint-strength question is owned by FRAC-20.)\n\n5. **`src/components/ui/AvatarBadge.tsx:24`** \u2014 currently reads `house?.color`. Switch to `house?.palette?.deep ?? \"#171717\"`. The cool-slate fallback `#6B7280` is out-of-system; replace with the warm system equivalent (foreground charcoal).\n\n6. **`src/pages/*Page.tsx`** \u2014 keep the page bg/pattern literals for now (they ARE the source of truth this task is consolidating around). In a follow-up, replace literals with `style={{ backgroundColor: HOUSES.campus.palette.light }}` etc. \u2014 but verify no visual regression first.\n\n7. **`src/pages/BadgePlayground.tsx:14`** \u2014 same fix as AvatarBadge.\n\n## Acceptance criteria\n\n- `HOUSES` data model exposes `palette: { light, deep }` for all 8 houses (including hidden forum/school)\n- Zero references to the old \"Fractal Bright\" hex values (`#8B7355`, `#E07A5F`, `#457B9D`, `#1D3557`, `#CC2936`, `#6B4C9A`) anywhere in `src/` (except possibly `FractalObject.tsx` if not yet deleted via FRAC-25)\n- Navbar, HouseBanner, OctahedronHero derive house colors from `HOUSES[id].palette` (no inline literals duplicating palette values)\n- AvatarBadge falls back to a warm-system value, not Tailwind cool slate\n- Visual smoke test: no page changes color (the canonical pairs are the values currently shipped)\n\n## Blocks\nFRAC-23 (gap analysis) \u2014 DESIGN.md must canonicalize ONE house palette, not four\n\n## Cites\nFRAC-21 synthesis \u00a7H1 \"House accent color has no single source of truth\"",
+  "done_at": "2026-06-05T21:34:47Z",
+  "evidence_refs": [],
+  "id": "task_01KTCQVAZYY54MXW7G5KQWM64J",
+  "last_event_id": "ev_01KTCVBHVJ1ZNMS7P51T564N9Q",
+  "last_status_changed_at": "2026-06-05T21:34:47Z",
+  "priority": "critical",
+  "relationships_out": [
+    {
+      "created_at": "2026-06-05T20:35:48Z",
+      "created_by": "agent:claude-opus-4-7",
+      "note": null,
+      "target_task_id": "task_01KTCMK9QP8GT21KMZV34S82J7",
+      "type": "blocks"
+    }
+  ],
+  "reopened_count": 0,
+  "schema_version": 1,
+  "short_id": "FRAC-24",
+  "status": "done",
+  "tags": null,
+  "title": "[Cleanup] House palette: consolidate to canonical light/deep pairs from individual pages",
+  "type": "task",
+  "updated_at": "2026-06-05T21:34:47Z",
+  "urgency": null
+}

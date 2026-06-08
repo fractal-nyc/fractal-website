@@ -1,0 +1,49 @@
+{
+  "assigned_to": null,
+  "branch_links": [
+    {
+      "branch": "frac-56-body-cleanup",
+      "linked_at": "2026-06-08T02:20:21Z",
+      "linked_by": "agent:claude-opus-4-7-orchestrator",
+      "repo": null
+    }
+  ],
+  "comment_count": 1,
+  "complexity": "low",
+  "created_at": "2026-06-08T00:39:44Z",
+  "created_by": "agent:claude-opus-4-7-orchestrator",
+  "custom_fields": {},
+  "description": "After FRAC-51 flips body to default normal-case, the 37 explicit 'normal-case' class instances become redundant. Mechanical cleanup pass: remove redundant normal-case, adopt .text-body / .text-body-lead where appropriate.\n\nSpec: .lattice/notes/typography-spec-20260607.md.\n\nWhy: Dead class instances clutter className strings and obscure intent. Removing them prevents future agents from misinterpreting them as load-bearing. Depends on FRAC-51 foundation.\n\nAcceptance: Zero 'normal-case' on body-tier elements (still allowed on headings that opt out of the italic Fraunces uppercase). .text-body / .text-body-lead adopted on substantial paragraph blocks. No visual regressions.",
+  "done_at": "2026-06-08T02:24:39Z",
+  "evidence_refs": [
+    {
+      "id": "ev_01KTJGQ4HDZBJT1PYWCC3MYTC9",
+      "role": "review",
+      "source_type": "comment"
+    }
+  ],
+  "id": "task_01KTJAQM9VFQ7FTAWQSTHEWPRC",
+  "last_event_id": "ev_01KTJGQR1C0YXEBVFDHKP928K9",
+  "last_status_changed_at": "2026-06-08T02:24:39Z",
+  "priority": "low",
+  "relationships_out": [
+    {
+      "created_at": "2026-06-08T00:39:49Z",
+      "created_by": "agent:claude-opus-4-7-orchestrator",
+      "note": null,
+      "target_task_id": "task_01KTJAPPBAK614A0NRPZP0W8QN",
+      "type": "depends_on"
+    }
+  ],
+  "reopened_count": 0,
+  "schema_version": 1,
+  "short_id": "FRAC-56",
+  "status": "done",
+  "tags": [
+    "typography"
+  ],
+  "title": "Body cleanup \u2014 remove redundant normal-case + adopt .text-body",
+  "type": "task",
+  "updated_at": "2026-06-08T02:24:39Z",
+  "urgency": null
+}

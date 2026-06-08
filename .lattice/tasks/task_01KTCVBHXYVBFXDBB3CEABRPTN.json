@@ -1,0 +1,39 @@
+{
+  "assigned_to": null,
+  "branch_links": [
+    {
+      "branch": "frac-34-lab-purple-remove",
+      "linked_at": "2026-06-06T04:25:04Z",
+      "linked_by": "agent:claude-opus-4-7-impl",
+      "repo": null
+    }
+  ],
+  "comment_count": 2,
+  "complexity": null,
+  "created_at": "2026-06-05T21:34:47Z",
+  "created_by": "agent:claude-opus-4-7",
+  "custom_fields": {},
+  "description": "Discovered during FRAC-24 impl. Four files in src/components/lab/ (DocumentBadge.tsx, TagFilter.tsx, ArchiveSearch.tsx, ArchiveToolbar.tsx) hardcode `const LAB_COLOR = '#6B4C9A'` \u2014 the old 'Fractal Bright' purple. The canonical lab palette per FRAC-24 is light=#E870A0 / deep=#C44878. Either update LAB_COLOR to a palette derivation or switch each consumer to import HOUSES and read palette.deep. \n\nAlso from FRAC-21 audit \u00a7C6: the references include raw `border-[#6B4C9A]` and `ring-[#6B4C9A]` Tailwind arbitrary classes \u2014 replace with token-driven equivalents or move them to a CSS variable.\n\nNot blocking DESIGN.md authoring (lab page bg already canonical). Cosmetic / consistency cleanup.",
+  "done_at": "2026-06-06T04:28:58Z",
+  "evidence_refs": [
+    {
+      "id": "ev_01KTDK1TGMXTYDTZBQVBQWCGF7",
+      "role": "review",
+      "source_type": "comment"
+    }
+  ],
+  "id": "task_01KTCVBHXYVBFXDBB3CEABRPTN",
+  "last_event_id": "ev_01KTDK1Y7PWWXR2XVHTPH62C1C",
+  "last_status_changed_at": "2026-06-06T04:28:58Z",
+  "priority": "high",
+  "relationships_out": [],
+  "reopened_count": 0,
+  "schema_version": 1,
+  "short_id": "FRAC-34",
+  "status": "done",
+  "tags": null,
+  "title": "[Cleanup] Migrate src/components/lab/ LAB_COLOR (#6B4C9A old purple) to canonical lab palette (#E870A0/#C44878)",
+  "type": "task",
+  "updated_at": "2026-06-06T04:28:58Z",
+  "urgency": null
+}

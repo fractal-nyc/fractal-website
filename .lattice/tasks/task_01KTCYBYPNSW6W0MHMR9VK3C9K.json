@@ -1,0 +1,33 @@
+{
+  "assigned_to": null,
+  "branch_links": [
+    {
+      "branch": "frac-35-texture-srgb-colorspace",
+      "linked_at": "2026-06-05T22:35:06Z",
+      "linked_by": "agent:claude-opus-4-7-impl",
+      "repo": null
+    }
+  ],
+  "comment_count": 1,
+  "complexity": null,
+  "created_at": "2026-06-05T22:27:26Z",
+  "created_by": "agent:claude-opus-4-7",
+  "custom_fields": {},
+  "description": "User-reported follow-up to FRAC-20: even after removing the per-face tint, photos still appear brightened/shifted vs the raw JPEG colors.\n\n## Root cause\nsrc/components/three/OctahedronHero.tsx loads textures via THREE.TextureLoader().loadAsync(path) but never sets tex.colorSpace. In Three.js r152+, color textures must be tagged with THREE.SRGBColorSpace \u2014 otherwise the raw JPEG data is treated as linear, and the renderer's linear\u2192sRGB output transform brightens and washes them out.\n\n## Fix\nAfter each successful load, before storing the texture in state:\n`tex.colorSpace = THREE.SRGBColorSpace;`\n\n## Acceptance\n- All 8 octahedron face photos render at colors visually matching their source JPEGs\n- Build + tests baseline preserved",
+  "done_at": "2026-06-05T22:35:14Z",
+  "evidence_refs": [],
+  "id": "task_01KTCYBYPNSW6W0MHMR9VK3C9K",
+  "last_event_id": "ev_01KTCYT77JB0HK3HFF5YADHRQS",
+  "last_status_changed_at": "2026-06-05T22:35:14Z",
+  "priority": "high",
+  "relationships_out": [],
+  "reopened_count": 0,
+  "schema_version": 1,
+  "short_id": "FRAC-35",
+  "status": "done",
+  "tags": null,
+  "title": "[Bug] Octahedron face photos appear brightened \u2014 textures missing sRGB colorSpace",
+  "type": "task",
+  "updated_at": "2026-06-05T22:35:14Z",
+  "urgency": null
+}

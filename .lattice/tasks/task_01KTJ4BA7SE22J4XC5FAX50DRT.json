@@ -1,0 +1,39 @@
+{
+  "assigned_to": null,
+  "branch_links": [
+    {
+      "branch": "frac-50-houses-color-sweep",
+      "linked_at": "2026-06-07T22:58:49Z",
+      "linked_by": "agent:claude-opus-4-7-impl",
+      "repo": null
+    }
+  ],
+  "comment_count": 1,
+  "complexity": null,
+  "created_at": "2026-06-07T22:48:09Z",
+  "created_by": "agent:claude-opus-4-7-orchestrator",
+  "custom_fields": {},
+  "description": null,
+  "done_at": "2026-06-07T23:03:26Z",
+  "evidence_refs": [
+    {
+      "id": "ev_01KTJ576608FVSNTAG0EQS3D2D",
+      "role": "review",
+      "source_type": "comment"
+    }
+  ],
+  "id": "task_01KTJ4BA7SE22J4XC5FAX50DRT",
+  "last_event_id": "ev_01KTJ579ZA05VWQWW3YDC5XP9N",
+  "last_status_changed_at": "2026-06-07T23:03:26Z",
+  "priority": "medium",
+  "relationships_out": [],
+  "reopened_count": 0,
+  "schema_version": 1,
+  "short_id": "FRAC-50",
+  "status": "done",
+  "tags": null,
+  "title": "Remove deprecated 'color' field from all House entries + HouseBanner fallback",
+  "type": "task",
+  "updated_at": "2026-06-07T23:03:26Z",
+  "urgency": null
+}

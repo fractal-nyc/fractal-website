@@ -1,0 +1,39 @@
+{
+  "assigned_to": null,
+  "branch_links": [
+    {
+      "branch": "frac-46-charcoal-normalize",
+      "linked_at": "2026-06-06T04:25:03Z",
+      "linked_by": "agent:claude-opus-4-7-impl",
+      "repo": null
+    }
+  ],
+  "comment_count": 2,
+  "complexity": null,
+  "created_at": "2026-06-06T01:46:33Z",
+  "created_by": "agent:claude-opus-4-7-orchestrator",
+  "custom_fields": {},
+  "description": null,
+  "done_at": "2026-06-06T04:28:36Z",
+  "evidence_refs": [
+    {
+      "id": "ev_01KTDK15PNWZNTBRYST7C25QZF",
+      "role": "review",
+      "source_type": "comment"
+    }
+  ],
+  "id": "task_01KTD9RHVS0VH734N56ESS1JFT",
+  "last_event_id": "ev_01KTDK192FD1C89R48EE0BQHSZ",
+  "last_status_changed_at": "2026-06-06T04:28:36Z",
+  "priority": "medium",
+  "relationships_out": [],
+  "reopened_count": 0,
+  "schema_version": 1,
+  "short_id": "FRAC-46",
+  "status": "done",
+  "tags": null,
+  "title": "Normalize 4 raw #1a1a1a literals to --foreground",
+  "type": "task",
+  "updated_at": "2026-06-06T04:28:36Z",
+  "urgency": null
+}

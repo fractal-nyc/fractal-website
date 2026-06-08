@@ -1,0 +1,39 @@
+{
+  "assigned_to": null,
+  "branch_links": [
+    {
+      "branch": "frac-49-coming-soon-cleanup",
+      "linked_at": "2026-06-07T22:59:17Z",
+      "linked_by": "agent:claude-opus-4-7-impl",
+      "repo": null
+    }
+  ],
+  "comment_count": 1,
+  "complexity": null,
+  "created_at": "2026-06-07T22:48:07Z",
+  "created_by": "agent:claude-opus-4-7-orchestrator",
+  "custom_fields": {},
+  "description": null,
+  "done_at": "2026-06-07T23:01:41Z",
+  "evidence_refs": [
+    {
+      "id": "ev_01KTJ53ZR2KSWYF9YG3F0ZS1G9",
+      "role": "review",
+      "source_type": "comment"
+    }
+  ],
+  "id": "task_01KTJ4B8RFGPNN1Q8J8EBVP647",
+  "last_event_id": "ev_01KTJ543S0TMGRFQWH3N669F7R",
+  "last_status_changed_at": "2026-06-07T23:01:41Z",
+  "priority": "medium",
+  "relationships_out": [],
+  "reopened_count": 0,
+  "schema_version": 1,
+  "short_id": "FRAC-49",
+  "status": "done",
+  "tags": null,
+  "title": "Strip dead comingSoon plumbing from OctahedronHero",
+  "type": "task",
+  "updated_at": "2026-06-07T23:01:41Z",
+  "urgency": null
+}

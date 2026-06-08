@@ -1,0 +1,49 @@
+{
+  "assigned_to": null,
+  "branch_links": [
+    {
+      "branch": "frac-55-heading-normalization",
+      "linked_at": "2026-06-08T02:00:40Z",
+      "linked_by": "agent:claude-opus-4-7-orchestrator",
+      "repo": null
+    }
+  ],
+  "comment_count": 1,
+  "complexity": "high",
+  "created_at": "2026-06-08T00:39:44Z",
+  "created_by": "agent:claude-opus-4-7-orchestrator",
+  "custom_fields": {},
+  "description": "Reassign every <h1>-<h6> in src/ to either .text-title (text-3xl md:text-5xl) or .text-subtitle (text-xl md:text-2xl). Replace ad-hoc heading sizes that currently range from text-2xl (Campus) to text-6xl (PeopleDirectory) for the same semantic level.\n\nPer-site judgment is the bulk of the work \u2014 e.g., Campus's 'Meet the Space' likely subtitle (relative to page hero), PeopleDirectory's 'People' is title. Plan file records all assignments.\n\nSpec: .lattice/notes/typography-spec-20260607.md.\n\nWhy: Same semantic heading level renders at wildly different sizes across pages. Creates inconsistent visual hierarchy. Depends on FRAC-51 foundation.\n\nAcceptance: Every <h1>-<h6> uses .text-title or .text-subtitle (no ad-hoc text-* sizes on headings). Section structure on every page reviewed for title/subtitle correctness. Visual diff per page recorded in plan.",
+  "done_at": "2026-06-08T02:10:26Z",
+  "evidence_refs": [
+    {
+      "id": "ev_01KTJFXM3HP3W7505RJ33A7388",
+      "role": "review",
+      "source_type": "comment"
+    }
+  ],
+  "id": "task_01KTJAQM7GJJ8EYPS11SJF8CBB",
+  "last_event_id": "ev_01KTJFXPPKY9ZTTPVXEWCDB898",
+  "last_status_changed_at": "2026-06-08T02:10:26Z",
+  "priority": "medium",
+  "relationships_out": [
+    {
+      "created_at": "2026-06-08T00:39:49Z",
+      "created_by": "agent:claude-opus-4-7-orchestrator",
+      "note": null,
+      "target_task_id": "task_01KTJAPPBAK614A0NRPZP0W8QN",
+      "type": "depends_on"
+    }
+  ],
+  "reopened_count": 0,
+  "schema_version": 1,
+  "short_id": "FRAC-55",
+  "status": "done",
+  "tags": [
+    "typography"
+  ],
+  "title": "Heading size normalization \u2014 adopt .text-title and .text-subtitle",
+  "type": "task",
+  "updated_at": "2026-06-08T02:10:26Z",
+  "urgency": null
+}
