@@ -23,10 +23,10 @@ export function DocumentGrid({ documents }: DocumentGridProps) {
     if (documents.length === 0) {
       return (
         <div className="py-16 text-center">
-          <p className="text-lg font-light text-muted-foreground">
+          <p className="text-body-lead text-muted-foreground">
             No documents match your filters.
           </p>
-          <p className="text-sm text-muted-foreground mt-2">
+          <p className="text-body text-muted-foreground mt-2">
             Try adjusting your search or clearing some tags.
           </p>
         </div>
