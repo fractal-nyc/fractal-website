@@ -1,17 +1,23 @@
 {
   "assigned_to": null,
   "branch_links": [],
-  "comment_count": 1,
+  "comment_count": 2,
   "complexity": null,
   "created_at": "2026-06-08T20:10:03Z",
   "created_by": "agent:claude-opus-4-7-orchestrator",
   "custom_fields": {},
   "description": null,
-  "done_at": null,
-  "evidence_refs": [],
+  "done_at": "2026-06-08T21:01:23Z",
+  "evidence_refs": [
+    {
+      "id": "ev_01KTMGMHGVYJD41WRSBWY4PB91",
+      "role": "review",
+      "source_type": "comment"
+    }
+  ],
   "id": "task_01KTMDPJ988K734VKQY1CZG17N",
-  "last_event_id": "ev_01KTMGJAHE64WT28S3VGP09MAC",
-  "last_status_changed_at": "2026-06-08T21:00:10Z",
+  "last_event_id": "ev_01KTMGMHK8NTXV5WWRYRE2WFTA",
+  "last_status_changed_at": "2026-06-08T21:01:23Z",
   "priority": "medium",
   "relationships_out": [
     {
@@ -25,10 +31,10 @@
   "reopened_count": 0,
   "schema_version": 1,
   "short_id": "FRAC-41",
-  "status": "in_progress",
+  "status": "done",
   "tags": null,
   "title": "Add mono input typography tier to DESIGN.md + migrate ArchiveSearch input to it",
   "type": "task",
-  "updated_at": "2026-06-08T21:00:10Z",
+  "updated_at": "2026-06-08T21:01:23Z",
   "urgency": null
 }

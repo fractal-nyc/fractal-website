@@ -8,7 +8,7 @@
       "repo": null
     }
   ],
-  "comment_count": 4,
+  "comment_count": 5,
   "complexity": null,
   "created_at": "2026-06-08T04:22:12Z",
   "created_by": "agent:claude-opus-4-7-orchestrator",
@@ -23,7 +23,7 @@
     }
   ],
   "id": "task_01KTJQEZTJC18NWD6TAK2T5R05",
-  "last_event_id": "ev_01KTMEMHRB31EN06T22F3VCTKA",
+  "last_event_id": "ev_01KTMGMY45TF68X0HDMGR5NRQV",
   "last_status_changed_at": "2026-06-08T20:26:26Z",
   "priority": "medium",
   "relationships_out": [
@@ -49,6 +49,6 @@
   "tags": null,
   "title": "Apply Publications (Lab) page audit findings",
   "type": "task",
-  "updated_at": "2026-06-08T20:26:26Z",
+  "updated_at": "2026-06-08T21:01:36Z",
   "urgency": null
 }
