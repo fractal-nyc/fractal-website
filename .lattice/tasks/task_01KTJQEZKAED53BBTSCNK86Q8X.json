@@ -8,17 +8,17 @@
       "repo": null
     }
   ],
-  "comment_count": 0,
+  "comment_count": 1,
   "complexity": null,
   "created_at": "2026-06-08T04:22:12Z",
   "created_by": "agent:claude-opus-4-7-orchestrator",
   "custom_fields": {},
   "description": null,
-  "done_at": null,
+  "done_at": "2026-06-08T18:21:47Z",
   "evidence_refs": [],
   "id": "task_01KTJQEZKAED53BBTSCNK86Q8X",
-  "last_event_id": "ev_01KTM7BSRGVNH21J4EQA4JF0P6",
-  "last_status_changed_at": "2026-06-08T18:19:19Z",
+  "last_event_id": "ev_01KTM7GA7EQ0KN09DJYBD0JGBK",
+  "last_status_changed_at": "2026-06-08T18:21:47Z",
   "priority": "medium",
   "relationships_out": [
     {
@@ -32,10 +32,10 @@
   "reopened_count": 0,
   "schema_version": 1,
   "short_id": "FRAC-19",
-  "status": "review",
+  "status": "done",
   "tags": null,
   "title": "Author typography + color audit prompt + gaps register",
   "type": "task",
-  "updated_at": "2026-06-08T18:19:19Z",
+  "updated_at": "2026-06-08T18:21:47Z",
   "urgency": null
 }
