@@ -306,6 +306,25 @@ classify per section 6 (likely `MIGRATE` with NEAR quality).
 - Raw `#6B4C9A` (anywhere) → migrate to `house-publications-deep` or
   `house-publications-light` per role. NEAR.
 
+### Surface-foreground pairing check
+
+Every surface declaration on the audited page must carry its paired foreground token at the same node. Per DESIGN.md → Surface foreground pairing, the four canonical pairs are:
+
+| Surface utility | Paired foreground utility |
+|---|---|
+| `bg-background` | `text-foreground` |
+| `bg-foreground` | `text-background` |
+| `bg-house-{slug}-light` | `text-house-{slug}-light-foreground` |
+| `bg-house-{slug}-deep` | `text-house-{slug}-deep-foreground` |
+
+When auditing a `bg-*` row, check the same JSX node (or its nearest ancestor that establishes the text color) for the matching `text-*` foreground utility. A surface that relies on the page-level text cascade — without re-asserting its own foreground — is a finding: classify as `NEAR` (rendering may be correct today by inheritance, but a nested surface or future restructure will break it) and migrate to the paired token.
+
+Selection-chrome utilities (`selection:bg-foreground selection:text-background`) are paired-inverse states, not surface declarations — exempt from this check.
+
+`{deep}` and `{light}` used as text-color highlights on a same-house page surface (the SectorHeader letter color, accent labels, eyebrows) are display uses, not surface declarations — also exempt.
+
+If a house's foreground sibling token does not yet exist at `src/index.css` (the other 5 houses, pre-Apply-task), record the finding as `GAP-LOG-AND-MIGRATE`: migrate to the nearest neutral (`text-background` for `{light}` or `{deep}` surfaces), log a gap entry proposing the token addition, and let the per-house Apply task pick it up.
+
 ---
 
 ## 6. Decision rubric — NO HUMAN IN LOOP
