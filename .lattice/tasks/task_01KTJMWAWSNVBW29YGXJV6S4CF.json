@@ -1,6 +1,13 @@
 {
   "assigned_to": null,
-  "branch_links": [],
+  "branch_links": [
+    {
+      "branch": "frac-17-typography-spec",
+      "linked_at": "2026-06-08T04:30:32Z",
+      "linked_by": "agent:claude-opus-4-7-orchestrator",
+      "repo": null
+    }
+  ],
   "comment_count": 3,
   "complexity": null,
   "created_at": "2026-06-08T03:37:04Z",
@@ -10,17 +17,17 @@
   "done_at": null,
   "evidence_refs": [],
   "id": "task_01KTJMWAWSNVBW29YGXJV6S4CF",
-  "last_event_id": "ev_01KTJPF3XNMDV7N0VHYPJ2NKA5",
-  "last_status_changed_at": "2026-06-08T03:37:04Z",
+  "last_event_id": "ev_01KTJR0ZT5BXZDR52NDDVY5E6E",
+  "last_status_changed_at": "2026-06-08T04:32:02Z",
   "priority": "medium",
   "relationships_out": [],
   "reopened_count": 0,
   "schema_version": 1,
   "short_id": "FRAC-17",
-  "status": "backlog",
+  "status": "planned",
   "tags": null,
   "title": "Typography: drop uppercase from .text-title/.text-subtitle, sweep ad-hoc Fraunces to canonical utilities",
   "type": "task",
-  "updated_at": "2026-06-08T04:04:48Z",
+  "updated_at": "2026-06-08T04:32:02Z",
   "urgency": null
 }
