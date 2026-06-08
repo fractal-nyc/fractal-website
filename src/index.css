@@ -81,7 +81,6 @@
 
   body {
     @apply font-sans antialiased bg-background text-foreground;
-    text-transform: uppercase;
     /* Subtle noise texture for a slightly tactile, premium feel */
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.03'/%3E%3C/svg%3E");
   }
@@ -144,6 +143,64 @@
     font-weight: 300;
     text-transform: uppercase;
     font-style: normal;
+  }
+
+  /* ───────────────────────────────────────────────────────────────────────
+     FRAC-51: Semantic typography scale.
+     8 utilities + Button (default | sm) form the locked type system.
+     .display-roman (above) is preserved as the low-level escape hatch:
+     it sets only font-style/weight/transform. .text-display is the
+     semantic preset that bundles family, size, tracking, and leading.
+     See DESIGN.md → "Semantic type scale".
+     ─────────────────────────────────────────────────────────────────── */
+
+  /* Display tier (Fraunces) */
+  .text-display {
+    @apply font-serif text-5xl md:text-7xl;
+    font-style: normal;
+    font-weight: 300;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    line-height: 1.1;
+  }
+
+  .text-title {
+    @apply font-serif text-3xl md:text-5xl;
+    font-style: italic;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .text-subtitle {
+    @apply font-serif text-xl md:text-2xl;
+    font-style: italic;
+    font-weight: 300;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  /* Body tier (Inter, normal-case) */
+  .text-body {
+    @apply font-sans text-base;
+    font-weight: 400;
+    text-transform: none;
+  }
+
+  .text-body-lead {
+    @apply font-sans text-lg;
+    font-weight: 300;
+    text-transform: none;
+    line-height: 1.7;
+  }
+
+  /* Chrome tier (JetBrains Mono, uppercase, widest tracking) */
+  .text-eyebrow,
+  .text-label,
+  .text-meta {
+    @apply font-mono text-sm;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
   }
 
   /* FRAC-33: visually-hidden until any descendant receives focus. Used
