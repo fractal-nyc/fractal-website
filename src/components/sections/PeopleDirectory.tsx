@@ -21,7 +21,7 @@ export function PeopleDirectory({ className = "" }: PeopleDirectoryProps) {
         <FadeIn>
           <div className="mb-8 md:mb-10 flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-border pb-6">
             <div>
-              <h2 className="text-4xl md:text-6xl font-serif">People</h2>
+              <h2 className="text-title">People</h2>
               <p className="text-muted-foreground mt-2 font-light text-lg">
                 The people behind Fractal.
               </p>

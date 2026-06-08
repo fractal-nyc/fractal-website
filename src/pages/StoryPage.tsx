@@ -166,7 +166,7 @@ function TalkCard({ talk }: { talk: TalkItem }) {
       </div>
 
       {/* Title */}
-      <h3 className="font-serif text-lg md:text-xl leading-snug tracking-tight normal-case">
+      <h3 className="text-subtitle leading-snug normal-case">
         {talk.title}
       </h3>
 

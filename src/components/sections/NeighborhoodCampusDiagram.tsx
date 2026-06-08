@@ -74,7 +74,7 @@ function PillarCard({ pillar }: { pillar: Pillar }) {
         <span className="text-xl md:text-2xl" aria-hidden>
           {pillar.emoji}
         </span>
-        <h3 className="font-serif text-base md:text-lg leading-tight normal-case tracking-tight">
+        <h3 className="text-subtitle leading-tight normal-case">
           {pillar.title}
         </h3>
       </div>
