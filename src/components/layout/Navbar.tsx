@@ -409,8 +409,7 @@ export function Navbar() {
                   {letter}
                 </span>
                 <span
-                  className="font-mono uppercase tracking-wider text-foreground"
-                  style={{ fontSize: "14px", letterSpacing: "0.08em" }}
+                  className="text-label text-foreground"
                 >
                   {link.name}
                 </span>

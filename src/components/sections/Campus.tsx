@@ -171,7 +171,7 @@ function PhotoPlaceholder({ caption }: { caption: string }) {
   return (
     <div className="flex flex-col gap-3">
       <div className="aspect-[4/5] md:aspect-square w-full bg-white/5 border border-white/10 flex items-center justify-center">
-        <span className="text-xs tracking-widest uppercase text-white/40">Photo</span>
+        <span className="text-label text-white/40">Photo</span>
       </div>
       <p className="text-xs md:text-sm text-white/70 font-light leading-relaxed normal-case">
         {caption}

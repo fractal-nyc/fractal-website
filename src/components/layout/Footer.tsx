@@ -32,7 +32,7 @@ export function Footer() {
           </p>
 
           <div className="flex flex-col items-center gap-2">
-            <p className="text-xs md:text-sm tracking-[0.2em] uppercase font-medium">
+            <p className="text-meta">
               New York City
             </p>
             <a
@@ -77,8 +77,7 @@ export function Footer() {
 
           {/* Tagline */}
           <p
-            className="text-background/50 text-xs md:text-sm tracking-[0.25em] uppercase text-center"
-            style={{ fontFamily: "'JetBrains Mono', monospace" }}
+            className="text-meta text-background/50 text-center"
           >
             New York City Collective
           </p>

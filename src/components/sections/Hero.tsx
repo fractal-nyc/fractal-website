@@ -170,7 +170,7 @@ export function Hero() {
                 focusedIndex >= 0 ? optionId(focusedIndex) : undefined
               }
               aria-label="Search Fractal"
-              className="w-full font-mono text-sm tracking-widest uppercase text-foreground/60 border border-foreground/20 rounded-md bg-background/90 backdrop-blur-sm placeholder:text-foreground/60 outline-none transition-all duration-200 focus:border-foreground/40 focus:text-foreground/80 h-[30px] pl-8 pr-3"
+              className="w-full text-label text-foreground/60 border border-foreground/20 rounded-md bg-background/90 backdrop-blur-sm placeholder:text-foreground/60 outline-none transition-all duration-200 focus:border-foreground/40 focus:text-foreground/80 h-[30px] pl-8 pr-3"
             />
           </div>
 
@@ -186,7 +186,7 @@ export function Hero() {
               className="absolute bottom-full left-0 mb-1 w-full bg-background/95 backdrop-blur-sm border border-foreground/20 rounded-md overflow-hidden shadow-lg max-h-[60vh] overflow-y-auto"
             >
               {noResults && (
-                <div className="px-3 py-3 text-sm text-foreground/60 font-mono tracking-wider uppercase text-center">
+                <div className="text-meta text-foreground/60 text-center px-3 py-3">
                   No results
                 </div>
               )}
@@ -215,7 +215,7 @@ export function Hero() {
                     >
                       <Icon className="h-3.5 w-3.5 mt-0.5 shrink-0 opacity-60" />
                       <div className="min-w-0 flex-1">
-                        <div className="font-mono text-sm tracking-wider uppercase truncate flex items-center gap-1">
+                        <div className="text-label truncate flex items-center gap-1">
                           {result.title}
                           {result.external && (
                             <ArrowUpRight className="h-3 w-3 opacity-40 shrink-0" />
@@ -231,7 +231,8 @@ export function Hero() {
 
                 return (
                   <div key={group.type} role="presentation">
-                    <div className="px-3 pt-2 pb-1 text-[10px] font-mono tracking-[0.2em] uppercase text-foreground/40">
+                    {/* text-[10px] density override for compact search dropdown */}
+                    <div className="text-eyebrow text-[10px] text-foreground/40 px-3 pt-2 pb-1">
                       {group.label}
                     </div>
                     <ul role="presentation">{items}</ul>

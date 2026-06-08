@@ -152,7 +152,7 @@ function TalkCard({ talk }: { talk: TalkItem }) {
             />
           </div>
           <span
-            className="text-xs font-semibold tracking-wider uppercase"
+            className="text-eyebrow"
             style={{ color: STORY_COLOR }}
           >
             {categoryLabel}
