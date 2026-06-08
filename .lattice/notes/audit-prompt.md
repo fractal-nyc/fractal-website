@@ -191,6 +191,11 @@ finding to migrate **away from**.
 - **Any `text-[<arbitrary>]` or `bg-[<arbitrary>]` Tailwind arbitrary value** —
   treat as ad-hoc. Resolve the literal to its nearest canonical token and
   classify per section 6.
+- **Any standard Tailwind color utility resolving to a value not in DESIGN.md's
+  token list (`text-white`, `bg-white`, `text-black`, `text-gray-*`, etc.)** —
+  treat as ad-hoc. Resolve to nearest canonical token per role (see DESIGN.md
+  → Text foregrounds for the text-color rule). Not just arbitrary `text-[…]`
+  values; standard utilities count too.
 - **No `house-publications-accent`, `lab-purple`, or `charcoal-deep`** — these
   are explicitly forbidden by DESIGN.md. If a finding seems to require one of
   these, it is a `GAP` — log to `audit-gaps.md`, migrate to nearest fit, and
@@ -211,6 +216,9 @@ Match quality: EXACT | NEAR | GAP
 Action: MIGRATE | JUSTIFY-WORDMARK | GAP-LOG-AND-MIGRATE | JUSTIFY
 Rationale: <one line>
 ```
+
+`<file:line>` points at the opening JSX tag of the element. For multi-line
+elements, the opening-tag line wins.
 
 ### Match quality definitions
 
@@ -236,6 +244,23 @@ uppercase Fraunces rule from `src/index.css`. If an element relies on these
 global rules without explicit utility application, treat the rendered result as
 its `Current` state and classify as if those rules were applied.
 
+When a utility class and a global rule (h1–h6, `body`, `.font-serif`,
+`[style*="Jacquard"]`) both apply, record the rendered state in `Current` and
+classify against the utility's intended spec. Drift between rendered and
+intended goes in the Rationale. Pattern: chrome utility (`.text-eyebrow`,
+`.text-label`, `.text-meta`) on an h-tag yields accidental italic; flag NEAR
+and log to audit-gaps if recurring.
+
+### Pretext-rendered text
+
+Elements rendered via `PretextParagraph` (and the underlying `usePretext`
+hook) use inline pixel sizes from `TEXT_SIZES` and font families from
+`FONTS`. Record the inline px size in `Current`; nearest fit is the closest
+body-tier utility regardless of family mismatch (Pretext always uses JBM via
+FONTS.body; canonical body utilities are Inter). Family mismatch goes in
+Rationale; classification is GAP unless a future body-mono utility lands in
+the system.
+
 ---
 
 ## 5. Per-element color checklist (PRESCRIPTIVE format)
@@ -253,6 +278,11 @@ Match quality: EXACT | NEAR | GAP
 Action: MIGRATE | JUSTIFY | GAP-LOG-AND-MIGRATE
 Rationale: <one line>
 ```
+
+Group color findings by (file + canonical token). The `Role:` line lists every
+role the token serves in that file (e.g., `Role: text + background + stroke`).
+Across files, repeat the row. This keeps the doc dense enough to read but
+enumerable enough for the Apply task to find every site.
 
 ### House-scope check
 
@@ -308,6 +338,13 @@ The auditor never asks a question. The auditor never invents a tier or token.
 - **Multiple GAP candidates** — for an element that gaps in both typography
   and color, file two separate gap entries (one in each audit table row,
   appended as two gap entries with distinct "Why it didn't fit" lines).
+- **Auditor flagged → human decided → audit re-classified.** When an audit run
+  surfaces a pattern the human resolves with a system rule (e.g., "text is
+  always foreground or background, or the page's own house colors for
+  display/highlight"), fold the decision back into DESIGN.md AND tighten this
+  prompt to reference it, then re-classify rows to reflect the rule. Do not
+  log to audit-gaps if the rule is now canonical. The audit run becomes the
+  moment the system rule is codified.
 
 New tiers/tokens are proposed only in the gaps register, never executed in the
 Apply task.

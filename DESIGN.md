@@ -179,6 +179,12 @@ Most houses use `{light}` as the page background with `{deep}` as the accent for
 
 Lab/Publications (internal id `lab`, displayName `Publications`) has exactly two canonical color tokens — `house-publications-light` (`#E870A0`) and `house-publications-deep` (`#C44878`). The legacy `#6B4C9A` purple was removed from `src/components/lab/*` in FRAC-34 (consumers) and from `src/data/houses.ts` in FRAC-50 (the deprecated `color` field itself). Lab uses its palette pinks for accents; **no third color is canonical**. Do not declare a `house-publications-accent` or `lab-purple` token.
 
+### Text foregrounds
+
+Two canonical text colors carry the entire site: `foreground` (`#171717` charcoal) and `background` (`#f8f6f0` cream). Charcoal is the default voice on cream surfaces; cream is the default voice on charcoal or saturated house backgrounds. The absence of a white or gray text token is the canonical statement that the system does not use them.
+
+**House colors for display and highlight.** On a house's own page, that house's `{light, deep}` pair is permitted as text color for display headings and highlight chrome — Jacquard monogram letters, accent labels, focus rings, eyebrow text on the house's own bg. House colors do not cross page boundaries; the Lab page may use `house-publications-{light,deep}` but not `house-events-light`.
+
 ### Charcoal drift note
 
 The canonical charcoal is `#171717` (the `foreground` token). Raw `#1a1a1a` is drift; the four sites that previously used it were normalized to `hsl(var(--foreground))` in FRAC-46. Do not reintroduce raw `#1a1a1a` and do not declare a `charcoal-deep` token to legitimize drift if it appears in future code.
