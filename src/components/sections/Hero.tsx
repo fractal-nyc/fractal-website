@@ -1,4 +1,4 @@
-import { Suspense, lazy, useCallback, useState, useRef, useEffect, useId } from "react";
+import { Suspense, lazy, useCallback, useState, useRef, useEffect, useLayoutEffect, useId } from "react";
 import { useLocation } from "wouter";
 import { useGlobalSearch, type SearchResult } from "@/hooks/use-global-search";
 import { Search, User, FileText, MapPin, Hash, ArrowUpRight, LayoutGrid } from "lucide-react";
@@ -36,8 +36,22 @@ export function Hero() {
   // ArrowUp can move back to -1 (input regains focus visually). Pointer
   // hover also drives this so keyboard and mouse stay in sync.
   const [focusedIndex, setFocusedIndex] = useState(-1);
+  // FRAC-43: thick blinking cursor overlay state. isFocused gates render so
+  // the decorative caret only shows while typing; caretLeft is the measured
+  // text-width offset from the mirror span below.
+  const [isFocused, setIsFocused] = useState(false);
+  const [caretLeft, setCaretLeft] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const mirrorRef = useRef<HTMLSpanElement>(null);
+
+  // FRAC-43: measure rendered text width same-frame so the caret sits flush
+  // at end-of-text. Keyed on [query, isFocused] — focus toggling matters
+  // because the placeholder string is what's measured when query is empty.
+  useLayoutEffect(() => {
+    if (!mirrorRef.current) return;
+    setCaretLeft(mirrorRef.current.offsetWidth);
+  }, [query, isFocused]);
 
   // FRAC-33: stable IDs for combobox/listbox/option ARIA wiring.
   const listboxId = useId();
@@ -155,7 +169,11 @@ export function Hero() {
                 setQuery(e.target.value);
                 setIsOpen(true);
               }}
-              onFocus={() => setIsOpen(true)}
+              onFocus={() => {
+                setIsOpen(true);
+                setIsFocused(true);
+              }}
+              onBlur={() => setIsFocused(false)}
               onKeyDown={handleKeyDown}
               placeholder="Explore Fractal..."
               // FRAC-33: combobox semantics — input owns the listbox via
@@ -170,8 +188,44 @@ export function Hero() {
                 focusedIndex >= 0 ? optionId(focusedIndex) : undefined
               }
               aria-label="Search Fractal"
+              // FRAC-43: native caret suppressed — overlay span below renders
+              // the thick blinking cursor restored from commit 1ba8aa2.
+              style={{ caretColor: "transparent" }}
               className="w-full text-label text-foreground/60 border border-foreground/20 rounded-md bg-background/90 backdrop-blur-sm placeholder:text-foreground/60 outline-none transition-all duration-200 focus:border-foreground/40 focus:text-foreground/80 h-[30px] pl-8 pr-3"
             />
+            {/* FRAC-43: hidden mirror — its offsetWidth drives the caret's
+                left offset. Same typography class as the input so width
+                measurement matches actual rendered width. */}
+            <span
+              ref={mirrorRef}
+              aria-hidden="true"
+              className="text-label"
+              style={{
+                position: "absolute",
+                visibility: "hidden",
+                whiteSpace: "pre",
+                pointerEvents: "none",
+                top: 0,
+                left: 0,
+              }}
+            >
+              {query || "Explore Fractal..."}
+            </span>
+            {/* FRAC-43: thick blinking cursor overlay. 9px × 18px charcoal
+                block at end-of-text, restored from commit 1ba8aa2. Reuses
+                the surviving .animate-blink utility (with FRAC-28 reduced-
+                motion guard) and is purely decorative. */}
+            {isFocused && (
+              <span
+                aria-hidden="true"
+                className="absolute inline-block w-[9px] h-[18px] bg-foreground/70 animate-blink pointer-events-none"
+                style={{
+                  left: 32 + caretLeft,
+                  top: "50%",
+                  transform: "translateY(-50%)",
+                }}
+              />
+            )}
           </div>
 
           {/* Dropdown */}
