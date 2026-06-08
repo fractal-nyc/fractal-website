@@ -1,6 +1,13 @@
 {
   "assigned_to": null,
-  "branch_links": [],
+  "branch_links": [
+    {
+      "branch": "frac-43-restore-blinking-cursor",
+      "linked_at": "2026-06-08T21:55:59Z",
+      "linked_by": "agent:claude-opus-4-7-orchestrator",
+      "repo": null
+    }
+  ],
   "comment_count": 1,
   "complexity": null,
   "created_at": "2026-06-08T20:55:26Z",
@@ -10,17 +17,17 @@
   "done_at": null,
   "evidence_refs": [],
   "id": "task_01KTMG9MJQARW182SFQ1WGQCXA",
-  "last_event_id": "ev_01KTMGA9HB0W7RWF27NQ2MRP5M",
-  "last_status_changed_at": "2026-06-08T20:55:26Z",
+  "last_event_id": "ev_01KTMM4B7S5J9T9K53GQ7GJMGB",
+  "last_status_changed_at": "2026-06-08T22:02:26Z",
   "priority": "medium",
   "relationships_out": [],
   "reopened_count": 0,
   "schema_version": 1,
   "short_id": "FRAC-43",
-  "status": "backlog",
+  "status": "in_progress",
   "tags": null,
   "title": "Restore thick blinking cursor on text inputs / search bars (regression)",
   "type": "task",
-  "updated_at": "2026-06-08T20:55:47Z",
+  "updated_at": "2026-06-08T22:02:26Z",
   "urgency": null
 }
