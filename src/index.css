@@ -35,6 +35,16 @@
   --color-input: hsl(var(--input));
   --color-ring: hsl(var(--ring));
 
+  /* House palette tokens (FRAC-21). Static brand hexes — declared
+     directly without the hsl(var(...)) indirection used by surface
+     tokens above, because house colors do not theme-swap (no dark mode
+     per FRAC-30) and the indirection would add no value. See
+     DESIGN.md → House palette values for the full set; FRAC-21 lands
+     only the Publications pair (the remaining 5 pairs land in their
+     respective per-house Apply tasks). */
+  --color-house-publications-light: #E870A0;
+  --color-house-publications-deep: #C44878;
+
   --radius-sm: 0.25rem;
   --radius-md: 0.5rem;
   --radius-lg: 0.75rem;
@@ -199,6 +209,20 @@
     font-weight: 500;
     text-transform: uppercase;
     letter-spacing: 0.1em;
+  }
+
+  /* Control tier (JetBrains Mono, normal-case, no tracking, text-base for
+     iOS no-zoom). The chrome tier's uppercase + text-sm breaks input UX
+     (forces typed text uppercase, triggers iOS zoom-on-focus), so input
+     controls get their own role-based utility. Named .text-control rather
+     than .text-input to avoid colliding with Tailwind v4's auto-generated
+     `text-input` color utility (the codebase declares --color-input as a
+     theme token for input borders). FRAC-41. */
+  .text-control {
+    @apply font-mono text-base;
+    font-weight: 400;
+    text-transform: none;
+    letter-spacing: normal;
   }
 
   /* FRAC-33: visually-hidden until any descendant receives focus. Used

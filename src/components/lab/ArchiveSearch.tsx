@@ -38,11 +38,11 @@ export function ArchiveSearch({ value, onChange }: ArchiveSearchProps) {
         aria-label="Search the archive"
         className="
           w-full h-11 pl-10 pr-10
-          text-base font-light
+          text-control
           bg-background border border-border rounded-lg
           text-foreground placeholder:text-muted-foreground
           transition-colors duration-200
-          focus:outline-none focus:ring-2 focus:ring-[#C44878]/40 focus:border-[#C44878]/60
+          focus:outline-none focus:ring-2 focus:ring-house-publications-deep/40 focus:border-house-publications-deep/60
         "
       />
 
@@ -57,7 +57,7 @@ export function ArchiveSearch({ value, onChange }: ArchiveSearchProps) {
             p-1 rounded-md
             text-muted-foreground hover:text-foreground
             transition-colors duration-150
-            focus:outline-none focus:ring-2 focus:ring-[#C44878]/40
+            focus:outline-none focus:ring-2 focus:ring-house-publications-deep/40
           "
         >
           <X size={16} strokeWidth={1.5} />
