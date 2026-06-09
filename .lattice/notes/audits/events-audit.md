@@ -205,7 +205,7 @@ Role: prop (consumed by SectorHeader as Jacquard-letter fill + "Events" eyebrow 
 Nearest canonical token: house-events-deep
 Match quality: EXACT
 Action: MIGRATE
-Rationale: Hex value identical to house-events-deep. Mirrors LabPage:24's color="#C44878" → house-publications-deep and CampusPage:190 SectorHeader's color="#1A3A2E" → house-campus-deep. Migrate to a token reference (CSS var var(--color-house-events-deep), HOUSES.find(h => h.id==="events")!.palette.deep import, or the mechanism FRAC-35 Apply chooses — Campus's FRAC-25 PR is the precedent for the chosen mechanism). The drift is mechanism (raw hex literal), not value. House-deep as a display/highlight color on the house's own page is permitted under DESIGN.md → Text foregrounds. SectorHeader internals out of scope.
+Rationale: Hex value identical to house-events-deep. Mirrors LabPage:24's color="#C44878" → house-publications-deep and Campus.tsx:190 SectorHeader's color="#1A3A2E" → house-campus-deep. Migrate to a token reference (CSS var var(--color-house-events-deep), HOUSES.find(h => h.id==="events")!.palette.deep import, or the mechanism FRAC-35 Apply chooses — Campus's FRAC-25 PR is the precedent for the chosen mechanism). The drift is mechanism (raw hex literal), not value. House-deep as a display/highlight color on the house's own page is permitted under DESIGN.md → Text foregrounds. SectorHeader internals out of scope.
 ```
 
 ```
