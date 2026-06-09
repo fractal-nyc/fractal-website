@@ -3,3 +3,4 @@
 {"actor":"agent:claude-opus-4-7-frac-34-planner","data":{"branch":"frac-34-audit-events"},"id":"ev_01KTNCF9J49T5AADAJXV689XR6","schema_version":1,"task_id":"task_01KTJQF2CJGDM07KB79GC14QQN","ts":"2026-06-09T05:07:51Z","type":"branch_linked"}
 {"actor":"agent:claude-opus-4-7-frac-34-planner","data":{"from":"backlog","to":"in_planning"},"id":"ev_01KTNCFAJRZMJE4BK1SAPSDVQ9","schema_version":1,"task_id":"task_01KTJQF2CJGDM07KB79GC14QQN","ts":"2026-06-09T05:07:52Z","type":"status_changed"}
 {"actor":"agent:claude-opus-4-7-frac-34-planner","data":{"from":"in_planning","to":"planned"},"id":"ev_01KTNCQXV0SJH923BE1SCWEEPV","schema_version":1,"task_id":"task_01KTJQF2CJGDM07KB79GC14QQN","ts":"2026-06-09T05:12:34Z","type":"status_changed"}
+{"actor":"agent:claude-opus-4-7-frac-34-impl","data":{"from":"planned","to":"in_progress"},"id":"ev_01KTNCVHSMYPETZ07Z7B8Q9THR","schema_version":1,"task_id":"task_01KTJQF2CJGDM07KB79GC14QQN","ts":"2026-06-09T05:14:33Z","type":"status_changed"}

@@ -17,8 +17,8 @@
   "done_at": null,
   "evidence_refs": [],
   "id": "task_01KTJQF2CJGDM07KB79GC14QQN",
-  "last_event_id": "ev_01KTNCQXV0SJH923BE1SCWEEPV",
-  "last_status_changed_at": "2026-06-09T05:12:34Z",
+  "last_event_id": "ev_01KTNCVHSMYPETZ07Z7B8Q9THR",
+  "last_status_changed_at": "2026-06-09T05:14:33Z",
   "priority": "medium",
   "relationships_out": [
     {
@@ -32,10 +32,10 @@
   "reopened_count": 0,
   "schema_version": 1,
   "short_id": "FRAC-34",
-  "status": "planned",
+  "status": "in_progress",
   "tags": null,
   "title": "Audit Events page (typography + color)",
   "type": "task",
-  "updated_at": "2026-06-09T05:12:34Z",
+  "updated_at": "2026-06-09T05:14:33Z",
   "urgency": null
 }
