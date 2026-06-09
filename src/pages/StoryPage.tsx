@@ -124,7 +124,7 @@ function TalkCard({ talk }: { talk: TalkItem }) {
       target="_blank"
       rel="noopener noreferrer"
       className={`
-        group block rounded-lg border border-border bg-background
+        group block rounded-lg border border-border bg-background text-foreground
         transition-all duration-200 ease-out
         hover:scale-[1.02] hover:shadow-lg
         focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring
@@ -171,7 +171,7 @@ function TalkCard({ talk }: { talk: TalkItem }) {
       </h3>
 
       {/* Author + Year */}
-      <p className="text-sm text-foreground mt-1">
+      <p className="text-meta text-foreground mt-1">
         {talk.author}, {talk.year}
       </p>
 
