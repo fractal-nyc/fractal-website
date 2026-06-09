@@ -110,11 +110,15 @@
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.03'/%3E%3C/svg%3E");
   }
 
-  /* Serif headings: neobrutalist Fraunces — uppercase italic */
+  /* Serif headings: Fraunces italic with editorial tracking. Case is NOT
+     pinned globally — utilities (.text-display, .text-title, etc.) declare
+     their own text-transform so call sites don't need per-site overrides.
+     FRAC-46 dropped the global uppercase rule because it forced every
+     mixed-case utility to add a normal-case modifier on every call site
+     and silently uppercased the ones that forgot. */
   h1, h2, h3, h4, h5, h6 {
     @apply font-serif font-normal italic;
     letter-spacing: 0.04em;
-    text-transform: uppercase;
   }
 
   /* Fraunces body text inherits uppercase from body; Jacquard keeps none */
@@ -192,6 +196,7 @@
   .text-title {
     @apply font-serif text-3xl md:text-5xl;
     font-style: italic;
+    text-transform: none;
     letter-spacing: 0.04em;
   }
 
@@ -199,6 +204,7 @@
     @apply font-serif text-xl md:text-2xl;
     font-style: normal;
     font-weight: 300;
+    text-transform: none;
     letter-spacing: 0.04em;
   }
 

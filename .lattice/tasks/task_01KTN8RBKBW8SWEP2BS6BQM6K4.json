@@ -1,0 +1,32 @@
+{
+  "assigned_to": null,
+  "branch_links": [],
+  "comment_count": 1,
+  "complexity": null,
+  "created_at": "2026-06-09T04:02:54Z",
+  "created_by": "agent:claude-opus-4-7-orchestrator",
+  "custom_fields": {},
+  "description": "FRAC-25 local review surfaced inconsistent h2 rendering: 9 of 12 .text-title sites in Campus.tsx have 'normal-case' modifier, 3 don't \u2014 those render uppercase via the global h1-h6 cascade. The utilities lie about their rendering (DESIGN.md says mixed-case). Fix: drop 'text-transform: uppercase' from the global h1-h6 block (keep font-family, italic, tracking); add explicit 'text-transform: none' to .text-title and .text-subtitle.",
+  "done_at": "2026-06-09T04:08:18Z",
+  "evidence_refs": [
+    {
+      "id": "ev_01KTN928D1Z31QBFWJV9N6261Q",
+      "role": "review",
+      "source_type": "comment"
+    }
+  ],
+  "id": "task_01KTN8RBKBW8SWEP2BS6BQM6K4",
+  "last_event_id": "ev_01KTN928HYX5SBF0K45A29E566",
+  "last_status_changed_at": "2026-06-09T04:08:18Z",
+  "priority": "medium",
+  "relationships_out": [],
+  "reopened_count": 0,
+  "schema_version": 1,
+  "short_id": "FRAC-44",
+  "status": "done",
+  "tags": null,
+  "title": "Drop global h1-h6 uppercase rule; codify case on .text-title and .text-subtitle",
+  "type": "task",
+  "updated_at": "2026-06-09T04:08:18Z",
+  "urgency": null
+}
