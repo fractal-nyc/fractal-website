@@ -23,41 +23,6 @@ export function EventsPage() {
             <p className="text-display mb-6 text-center">
               Join Tech Events
             </p>
-            <div className="max-w-3xl mx-auto mb-8 space-y-4 text-body text-foreground/90 leading-relaxed text-left">
-              <p>
-                Our community hosts events nearly every day. See upcoming events on our{" "}
-                <a
-                  href={LUMA_EVENTS_URL}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="underline decoration-foreground/40 hover:decoration-foreground transition-colors"
-                >
-                  Luma calendar
-                </a>{" "}
-                🎉
-              </p>
-              <p>Anyone can host an event in our space, even non-members:</p>
-              <p>
-                🆓 To host a free event, add it directly to our{" "}
-                <a
-                  href={LUMA_EVENTS_URL}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="underline decoration-foreground/40 hover:decoration-foreground transition-colors"
-                >
-                  Luma calendar
-                </a>
-              </p>
-              <p>
-                💰 To host a paid event, email{" "}
-                <a
-                  href={CRYSTAL_MAILTO}
-                  className="underline decoration-foreground/40 hover:decoration-foreground transition-colors"
-                >
-                  crystal@fractalnyc.com
-                </a>
-              </p>
-            </div>
             {/*
               Luma embed: slug-based URL `https://lu.ma/embed/calendar/nyc-tech/events`.
               If Luma ever rejects this path, replace with the canonical calendar-UUID
@@ -75,23 +40,43 @@ export function EventsPage() {
                 referrerPolicy="no-referrer-when-downgrade"
               />
             </div>
-            <a
-              href="https://luma.com/nyc-tech"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-meta inline-block mb-12 opacity-70 hover:opacity-100 transition-opacity duration-300"
-            >
-              Open calendar in new tab →
-            </a>
+            <p className="max-w-3xl mx-auto mb-12 text-body text-foreground/90 leading-relaxed text-center">
+              Our community hosts events nearly every day. See upcoming events on our{" "}
+              <a
+                href={LUMA_EVENTS_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline decoration-foreground/40 hover:decoration-foreground transition-colors"
+              >
+                Luma calendar
+              </a>{" "}
+              →
+            </p>
           </FadeIn>
 
           <FadeIn delay={0.25}>
             <p className="text-display mb-6 text-center">
               Host Our Next Event
             </p>
-            <Button asChild className="max-w-xs w-full mb-12 text-center">
-              <a href="mailto:events@merlins.place">Email Merlin's Place</a>
-            </Button>
+            <div className="max-w-3xl mx-auto mb-6 space-y-3 text-body text-foreground/90 leading-relaxed text-left">
+              <p>Anyone can host an event in our space, even non-members:</p>
+              <p>🆓 To host a free event, add it directly to our Luma calendar</p>
+              <p>💰 To host a paid event, email crystal@fractalnyc.com</p>
+            </div>
+            <div className="flex flex-col md:flex-row gap-3 justify-center items-center mb-12">
+              <Button asChild className="max-w-xs w-full text-center">
+                <a
+                  href={LUMA_EVENTS_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Luma calendar
+                </a>
+              </Button>
+              <Button asChild className="max-w-xs w-full text-center">
+                <a href={CRYSTAL_MAILTO}>Email Crystal</a>
+              </Button>
+            </div>
           </FadeIn>
 
           <FadeIn delay={0.3}>
