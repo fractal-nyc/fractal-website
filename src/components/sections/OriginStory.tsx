@@ -1,5 +1,4 @@
 import { FadeIn } from "@/components/ui/FadeIn";
-import { NeighborhoodCampusDiagram } from "@/components/sections/NeighborhoodCampusDiagram";
 
 export function OriginStory() {
   return (
@@ -20,7 +19,15 @@ export function OriginStory() {
         </FadeIn>
       </div>
       <FadeIn>
-        <NeighborhoodCampusDiagram />
+        <div className="max-w-5xl mx-auto px-[4.5%] mt-10 md:mt-16">
+          <img
+            src="/images/fractal-nyc-diagram.png"
+            alt="Fractal NYC neighborhood campus diagram — five pillars: Events, Community-run University, Fractal Tech, Venues, Housing Network"
+            className="block w-full h-auto mx-auto"
+            loading="lazy"
+            decoding="async"
+          />
+        </div>
       </FadeIn>
     </section>
   );
