@@ -271,7 +271,7 @@ export const HOUSES: House[] = [
     subtitle: "Education",
     slug: "new-liberal-arts",
     route: "/new-liberal-arts",
-    palette: { light: "#B52828", deep: "#5C1010" },
+    palette: { light: "#C41E20", deep: "#5C1010" },
     tagline: "Want to learn?",
     description:
       "The new liberal arts — cyborgism, tech, entrepreneurship, rhetoric, civics. Andrew designed a year-long program that actually makes sense for right now: Phase 1 is the Finishing School, reshaping habits, reading 12 books, memorizing the Constitution, killing phone addiction. Phase 2 is government and law plus software engineering — 'You're a wizard now, Harry.' Phase 3 is launch and accelerator. The pedagogy is Montessori-derived: environments that liberate the spirit and encourage experimentation, exercise, responsibility, and real work.\n\nThe AI Accelerator is the flagship — a 3-month, $15k, 60-hours-a-week accelerator with 100% placement rate. Fractal University runs community classes: EDM production, coding, civics, LLMs, population genetics, HCI — over 1,000 students across 8 or 9 semesters and counting. There's also the Claude Code course and the Unblocked coaching series.\n\nThe teaching innovation that ties it all together: the config IS the lesson. Instead of lecturing about a concept, you package it as a downloadable skill that students install into their harness and immediately apply to their own project. The skill teaches by doing, not by explaining.",
