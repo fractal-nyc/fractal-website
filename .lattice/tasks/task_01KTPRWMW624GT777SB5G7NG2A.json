@@ -14,11 +14,11 @@
   "created_by": "agent:claude-opus-4-7",
   "custom_fields": {},
   "description": "On the Campus page, in the section that describes Fractal Campus's four audiences (the section that lists: Fractal AI Accelerator participants / Fractal U students \u2014 participants in a class held on Campus / Members with 24/7 coworking access / Guests at the 5+ weekly events), add a button that links to https://www.fractalaccelerator.com/.\n\nUser's phrasing: 'Fractal U that is the fractal accelerator button and links to https://www.fractalaccelerator.com/' \u2014 interpreted as: the button is positioned with/near the Fractal U (and/or Fractal AI Accelerator) audience line, labeled 'Fractal Accelerator' (or 'Fractal U' \u2014 confirm during planning), opens https://www.fractalaccelerator.com/ in new tab.\n\nRelationship to FRAC-51: FRAC-51 hyperlinks the inline phrase 'Fractal AI Accelerator participants'. This task adds a separate, visually prominent button CTA. They can ship together but are distinct treatments.\n\nAcceptance: (a) button appears in the audiences section on Campus; (b) clicking opens https://www.fractalaccelerator.com/ in a new tab; (c) button styling matches the sitewide button treatment (including FRAC-52 frost/accent updates if those land first); (d) mobile-first: legible and tappable at 375px.",
-  "done_at": null,
+  "done_at": "2026-06-09T19:08:36Z",
   "evidence_refs": [],
   "id": "task_01KTPRWMW624GT777SB5G7NG2A",
-  "last_event_id": "ev_01KTPWD4GPV88JVDWKJ8TX96VE",
-  "last_status_changed_at": "2026-06-09T19:05:32Z",
+  "last_event_id": "ev_01KTPWJR8CT0E8KRZKHYM00WG0",
+  "last_status_changed_at": "2026-06-09T19:08:36Z",
   "priority": "medium",
   "relationships_out": [
     {
@@ -32,10 +32,10 @@
   "reopened_count": 0,
   "schema_version": 1,
   "short_id": "FRAC-53",
-  "status": "review",
+  "status": "done",
   "tags": null,
   "title": "Campus page: add Fractal Accelerator button in audiences section linking to https://www.fractalaccelerator.com/",
   "type": "task",
-  "updated_at": "2026-06-09T19:05:32Z",
+  "updated_at": "2026-06-09T19:08:36Z",
   "urgency": null
 }

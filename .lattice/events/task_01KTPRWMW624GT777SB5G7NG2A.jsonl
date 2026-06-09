@@ -5,3 +5,4 @@
 {"actor":"agent:claude-opus-4-7-impl","data":{"from":"planned","to":"in_progress"},"id":"ev_01KTPW89R4341GSVKJ91XMFE9V","schema_version":1,"task_id":"task_01KTPRWMW624GT777SB5G7NG2A","ts":"2026-06-09T19:02:53Z","type":"status_changed"}
 {"actor":"agent:claude-opus-4-7-impl","data":{"branch":"frac-51-53-54-ai-accelerator"},"id":"ev_01KTPWD49EEJFSY4F1HDZAYNBA","schema_version":1,"task_id":"task_01KTPRWMW624GT777SB5G7NG2A","ts":"2026-06-09T19:05:32Z","type":"branch_linked"}
 {"actor":"agent:claude-opus-4-7-impl","data":{"from":"in_progress","to":"review"},"id":"ev_01KTPWD4GPV88JVDWKJ8TX96VE","schema_version":1,"task_id":"task_01KTPRWMW624GT777SB5G7NG2A","ts":"2026-06-09T19:05:32Z","type":"status_changed"}
+{"actor":"agent:claude-opus-4-7-reviewer","data":{"from":"review","to":"done"},"id":"ev_01KTPWJR8CT0E8KRZKHYM00WG0","schema_version":1,"task_id":"task_01KTPRWMW624GT777SB5G7NG2A","ts":"2026-06-09T19:08:36Z","type":"status_changed"}
