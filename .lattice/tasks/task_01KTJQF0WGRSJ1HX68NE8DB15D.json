@@ -1,6 +1,13 @@
 {
   "assigned_to": null,
-  "branch_links": [],
+  "branch_links": [
+    {
+      "branch": "frac-26-audit-story",
+      "linked_at": "2026-06-09T05:06:20Z",
+      "linked_by": "agent:claude-opus-4-7-frac-26-planner",
+      "repo": null
+    }
+  ],
   "comment_count": 0,
   "complexity": null,
   "created_at": "2026-06-08T04:22:13Z",
@@ -10,8 +17,8 @@
   "done_at": null,
   "evidence_refs": [],
   "id": "task_01KTJQF0WGRSJ1HX68NE8DB15D",
-  "last_event_id": "ev_01KTJQF11D7PNPC86GXXT48C4Y",
-  "last_status_changed_at": "2026-06-08T04:22:13Z",
+  "last_event_id": "ev_01KTNCNR8B0TDCPFFE3Q89HJ7P",
+  "last_status_changed_at": "2026-06-09T05:11:23Z",
   "priority": "medium",
   "relationships_out": [
     {
@@ -25,10 +32,10 @@
   "reopened_count": 0,
   "schema_version": 1,
   "short_id": "FRAC-26",
-  "status": "backlog",
+  "status": "planned",
   "tags": null,
   "title": "Audit Story page (typography + color)",
   "type": "task",
-  "updated_at": "2026-06-08T04:22:13Z",
+  "updated_at": "2026-06-09T05:11:23Z",
   "urgency": null
 }
