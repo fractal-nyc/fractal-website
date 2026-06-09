@@ -17,8 +17,8 @@
   "done_at": null,
   "evidence_refs": [],
   "id": "task_01KTJQF0WGRSJ1HX68NE8DB15D",
-  "last_event_id": "ev_01KTNCNR8B0TDCPFFE3Q89HJ7P",
-  "last_status_changed_at": "2026-06-09T05:11:23Z",
+  "last_event_id": "ev_01KTNCP3PM4VW9V721TTRVF459",
+  "last_status_changed_at": "2026-06-09T05:11:34Z",
   "priority": "medium",
   "relationships_out": [
     {
@@ -32,10 +32,10 @@
   "reopened_count": 0,
   "schema_version": 1,
   "short_id": "FRAC-26",
-  "status": "planned",
+  "status": "in_progress",
   "tags": null,
   "title": "Audit Story page (typography + color)",
   "type": "task",
-  "updated_at": "2026-06-09T05:11:23Z",
+  "updated_at": "2026-06-09T05:11:34Z",
   "urgency": null
 }
