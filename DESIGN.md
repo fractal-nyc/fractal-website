@@ -5,6 +5,7 @@ description: "Asimov-Collective editorial aesthetic for fractal-nyc — cream an
 colors:
   background: "#f8f6f0"
   foreground: "#171717"
+  foreground-light: "#333333"
   card: "#fbfaf9"
   card-foreground: "#171717"
   popover: "#fbfaf9"
@@ -117,6 +118,7 @@ The system declares **31 color tokens**: 19 surface tokens that drive the page c
 |---|---|---|
 | `background` | `#f8f6f0` | Canonical cream. See *cream-math note* below. |
 | `foreground` | `#171717` | Canonical charcoal. Dominant text color. See *charcoal drift note*. |
+| `foreground-light` | `#333333` | Softer charcoal for secondary body voice (asides, supporting prose). Barely-perceptible step down from canonical charcoal — used as a hierarchy hint, not as muted/disabled. Different role from `muted-foreground` which is tuned for cream surfaces specifically. FRAC-33. |
 | `card` | `#fbfaf9` | `--card: 40 25% 98%`. Slightly raised cream for card surfaces. |
 | `card-foreground` | `#171717` | |
 | `popover` | `#fbfaf9` | Same as `card`. |
