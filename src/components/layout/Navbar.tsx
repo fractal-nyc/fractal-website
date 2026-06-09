@@ -224,7 +224,7 @@ export function Navbar() {
                   </span>
                   <span
                     className="font-serif block italic"
-                    style={{ fontSize: "27px", textTransform: "none", fontWeight: 100 }}
+                    style={{ fontSize: "clamp(14px, 2.63vw, 25px)", textTransform: "none", fontWeight: 100 }}
                   >
                     Collective
                   </span>
@@ -279,7 +279,7 @@ export function Navbar() {
                   </span>
                   <span
                     className="font-serif block italic"
-                    style={{ fontSize: "30px", textTransform: "none", fontWeight: 100 }}
+                    style={{ fontSize: "clamp(16px, 3.22vw, 29px)", textTransform: "none", fontWeight: 100 }}
                   >
                     Collective
                   </span>
@@ -301,10 +301,13 @@ export function Navbar() {
                   ))}
                 </nav>
                 <button
-                  className="z-50 relative p-2 -mr-2"
+                  type="button"
+                  aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
+                  aria-expanded={mobileMenuOpen}
+                  className="z-50 relative cursor-pointer transition-opacity duration-200 hover:opacity-70 active:opacity-90 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-offset-2 focus-visible:ring-offset-background rounded-md flex items-center justify-center p-3 -mr-3"
                   onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
                 >
-                  {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+                  {mobileMenuOpen ? <X size={32} /> : <Menu size={32} />}
                 </button>
               </div>
             </div>
@@ -321,16 +324,19 @@ export function Navbar() {
                   </span>
                   <span
                     className="font-serif block italic"
-                    style={{ fontSize: "22px", textTransform: "none", fontWeight: 100 }}
+                    style={{ fontSize: "21px", textTransform: "none", fontWeight: 100 }}
                   >
                     Collective
                   </span>
                 </Link>
                 <button
-                  className="z-50 relative p-2 -mr-2"
+                  type="button"
+                  aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
+                  aria-expanded={mobileMenuOpen}
+                  className="z-50 relative cursor-pointer transition-opacity duration-200 hover:opacity-70 active:opacity-90 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-offset-2 focus-visible:ring-offset-background rounded-md flex items-center justify-center p-3 -mr-3"
                   onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
                 >
-                  {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+                  {mobileMenuOpen ? <X size={32} /> : <Menu size={32} />}
                 </button>
               </div>
             </div>
@@ -353,10 +359,13 @@ export function Navbar() {
               </span>
             </Link>
             <button
-              className="z-50 relative p-2 -mr-2"
+              type="button"
+              aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
+              aria-expanded={mobileMenuOpen}
+              className="z-50 relative cursor-pointer transition-opacity duration-200 hover:opacity-70 active:opacity-90 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-offset-2 focus-visible:ring-offset-background rounded-md flex items-center justify-center p-3 -mr-3"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             >
-              {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+              {mobileMenuOpen ? <X size={32} /> : <Menu size={32} />}
             </button>
           </div>
         )}
@@ -394,7 +403,7 @@ export function Navbar() {
                   setLocation(link.href);
                   setMobileMenuOpen(false);
                 }}
-                className="flex items-center gap-5 min-h-[56px] py-3 border-b border-foreground/10 hover:bg-foreground/5 transition-colors text-left"
+                className="flex items-center gap-5 min-h-[56px] py-3 border-b border-foreground/10 cursor-pointer hover:bg-foreground/5 active:bg-foreground/10 transition-colors text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-foreground"
                 style={{ borderLeft: `3px solid ${link.color}`, paddingLeft: "16px" }}
               >
                 <span
