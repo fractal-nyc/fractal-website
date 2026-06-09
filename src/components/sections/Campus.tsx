@@ -184,7 +184,7 @@ export function Campus() {
   return (
     <section id="campus" className="text-background">
       {/* Hero */}
-      <div className="min-h-screen flex flex-col items-center justify-start pt-16 md:pt-24 w-full">
+      <div className="min-h-screen flex flex-col items-center justify-start pt-16 md:pt-24 pb-16 md:pb-24 w-full">
         <div className="px-6 md:px-[4.5%] w-full">
           <FadeIn>
             <SectorHeader letter="C" name="Campus" color="var(--color-house-campus-deep)" />
