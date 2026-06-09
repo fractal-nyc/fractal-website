@@ -1,0 +1,32 @@
+{
+  "assigned_to": null,
+  "branch_links": [],
+  "comment_count": 1,
+  "complexity": null,
+  "created_at": "2026-06-09T04:18:57Z",
+  "created_by": "agent:claude-opus-4-7-orchestrator",
+  "custom_fields": {},
+  "description": "Codifies two design rules from FRAC-25 review: quotes \u2192 .text-subtitle (visual contrast via display font); asides/bylines/role labels \u2192 new .text-aside utility (italic Inter body voice). Andrew Rose + Jake Zegil anecdotes migrate from .text-body to .text-subtitle. Nietzsche pull quote drops dead 'italic' modifier. 7 italic-aside sites (Want a reduced rate, Andrew/Jake/Nietzsche bylines, event host CTA, bio role labels, P.S.) migrate to .text-aside.",
+  "done_at": "2026-06-09T04:29:12Z",
+  "evidence_refs": [
+    {
+      "id": "ev_01KTNA8GWM1ZKQ4PHMRW1WKPSV",
+      "role": "review",
+      "source_type": "comment"
+    }
+  ],
+  "id": "task_01KTN9NRESRC0VM745JW1ZX0P0",
+  "last_event_id": "ev_01KTNA8H3EFD78HE1XSRXMTVAR",
+  "last_status_changed_at": "2026-06-09T04:29:12Z",
+  "priority": "medium",
+  "relationships_out": [],
+  "reopened_count": 0,
+  "schema_version": 1,
+  "short_id": "FRAC-45",
+  "status": "done",
+  "tags": null,
+  "title": "Add .text-aside utility; migrate Campus quote passages to .text-subtitle and italic asides/bylines/P.S. to .text-aside",
+  "type": "task",
+  "updated_at": "2026-06-09T04:29:12Z",
+  "urgency": null
+}

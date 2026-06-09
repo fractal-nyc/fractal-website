@@ -237,7 +237,7 @@ FRAC-51 introduces a Tailwind-aligned semantic scale delivered as utility classe
 | Utility | Rendering | Tailwind size |
 |---|---|---|
 | `.text-display` | upright, weight 300, uppercase, tracking 0.04em, leading 1.1 | `text-5xl md:text-7xl` |
-| `.text-title` | italic, **mixed-case**, tracking 0.04em | `text-3xl md:text-5xl` |
+| `.text-title` | italic, weight 350, **mixed-case**, tracking 0.04em | `text-3xl md:text-5xl` |
 | `.text-subtitle` | upright, weight 300, **mixed-case**, tracking 0.04em | `text-xl md:text-2xl` |
 
 `.text-title` and `.text-subtitle` are mixed-case by default — they pin `text-transform: none` themselves so call sites don't need a `normal-case` modifier. The global `h1, h2, h3, h4, h5, h6` rule sets only Fraunces + italic + tracking (no case), so bare h-tags inherit the browser default; utilities own their own case. FRAC-46.
@@ -248,6 +248,9 @@ FRAC-51 introduces a Tailwind-aligned semantic scale delivered as utility classe
 |---|---|---|
 | `.text-body` | weight 400, normal-case | `text-base` |
 | `.text-body-lead` | weight 300, normal-case, leading 1.7 | `text-lg` |
+| `.text-aside` | weight 400, italic, normal-case, leading-relaxed | `text-base` |
+
+`.text-aside` is the canonical home for editorial italic voice — bylines, attributions, role labels, parenthetical asides, P.S. footer notes. Pairs with `.text-subtitle` on quoted passages: the quote text uses `.text-subtitle` for display contrast; the byline uses `.text-aside` for the italic personal-voice signal. FRAC-47.
 
 **Chrome tier (JetBrains Mono)**
 

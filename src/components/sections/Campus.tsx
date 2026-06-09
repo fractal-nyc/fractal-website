@@ -215,7 +215,7 @@ export function Campus() {
                   </PrimaryButton>
                 </div>
               </div>
-              <p className="text-xs md:text-sm text-house-campus-light-foreground/70 italic text-center">
+              <p className="text-aside text-xs md:text-sm text-house-campus-light-foreground/70 text-center">
                 Want a reduced rate? Let us know. We want the space to be accessible to all.
               </p>
             </div>
@@ -351,9 +351,9 @@ export function Campus() {
           <h2 className="text-title mb-6 normal-case">
             More than a WeWork…
           </h2>
-          <div className="space-y-6 text-body text-house-campus-light-foreground/90 leading-relaxed max-w-3xl">
+          <div className="space-y-6 text-subtitle text-house-campus-light-foreground/90 leading-relaxed max-w-3xl">
             <p>
-              When I was building my first startup, I'd eat my Chipotle bowl in the WeWork kitchen
+              "When I was building my first startup, I'd eat my Chipotle bowl in the WeWork kitchen
               and eavesdrop on conversations about "optimizing engagement metrics through
               synergistic strategies".
             </p>
@@ -362,9 +362,9 @@ export function Campus() {
               Fractal Campus is a sanctuary for serious, experimental tinkerers. Our relationships
               here matter, and you can trust that we are conspiring with everyone in the building
               to push your work forward. We're building a startup community the way we've always
-              wanted — as a home away from home.
+              wanted — as a home away from home."
             </p>
-            <p className="text-house-campus-light-foreground/70 italic">— Andrew Rose, Fractal Campus co-founder</p>
+            <p className="text-aside text-house-campus-light-foreground/70">— Andrew Rose, Fractal Campus co-founder</p>
           </div>
           <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-start items-center">
             <PrimaryButton href={FLOWGLAD_MEMBERSHIP_URL}>
@@ -400,9 +400,9 @@ export function Campus() {
           <h2 className="text-title mb-6 normal-case">
             What's it like to be here?
           </h2>
-          <div className="space-y-6 text-body text-house-campus-light-foreground/90 leading-relaxed max-w-3xl">
+          <div className="space-y-6 text-subtitle text-house-campus-light-foreground/90 leading-relaxed max-w-3xl">
             <p>
-              Imagine waking up every day to work on projects and companies you burn for, beside
+              "Imagine waking up every day to work on projects and companies you burn for, beside
               people who motivate you, in a workplace dedicated to people who love their work.
             </p>
             <p>
@@ -414,9 +414,9 @@ export function Campus() {
             </p>
             <p>
               Fractal Campus is the best place in the world for you to do your most ambitious
-              work… no matter how old you are:
+              work… no matter how old you are:"
             </p>
-            <p className="text-house-campus-light-foreground/70 italic">Co-founder (and uncle) Jake Zegil</p>
+            <p className="text-aside text-house-campus-light-foreground/70">— Co-founder (and uncle) Jake Zegil</p>
           </div>
           <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-start items-center">
             <PrimaryButton href={FLOWGLAD_MEMBERSHIP_URL}>
@@ -450,7 +450,7 @@ export function Campus() {
           <div className="mt-10 mb-6 flex flex-col sm:flex-row gap-4 justify-start items-center">
             <PrimaryButton href={LUMA_URL}>Join events at Fractal Campus</PrimaryButton>
           </div>
-          <p className="mt-4 text-sm md:text-base text-house-campus-light-foreground/70 italic font-light leading-relaxed max-w-3xl">
+          <p className="mt-4 text-aside text-house-campus-light-foreground/70 max-w-3xl">
             Want to host an event here?{" "}
             <InlineLink href={MERLINS_EVENTS_MAILTO} external={false}>
               Email Merlin's Place
@@ -497,14 +497,14 @@ export function Campus() {
             …and a short walk to McCarren Park
           </h2>
           <blockquote className="border-l-2 border-house-campus-light-foreground/30 pl-6 my-6 max-w-3xl">
-            <p className="text-subtitle italic text-house-campus-light-foreground/90 leading-relaxed normal-case">
+            <p className="text-subtitle text-house-campus-light-foreground/90 leading-relaxed normal-case">
               "All truly great thoughts are conceived while walking."
             </p>
-            <footer className="mt-3 text-body text-house-campus-light-foreground/70">
+            <footer className="mt-3 text-aside text-house-campus-light-foreground/70">
               — Friedrich Nietzsche
             </footer>
           </blockquote>
-          <p className="text-body text-house-campus-light-foreground/90 leading-relaxed max-w-3xl">
+          <p className="text-aside text-house-campus-light-foreground/90 max-w-3xl">
             For more, check out our{" "}
             <InlineLink href={PAMPAM_URL}>PamPam map</InlineLink> of our favorite spots to eat,
             drink, and explore nearby!
@@ -529,7 +529,7 @@ export function Campus() {
                   <p className="text-subtitle text-house-campus-light-foreground normal-case">
                     {bio.name}
                   </p>
-                  <p className="text-sm text-house-campus-light-foreground/70 italic">{bio.role}</p>
+                  <p className="text-aside text-sm text-house-campus-light-foreground/70">{bio.role}</p>
                 </div>
                 <div className="flex flex-wrap gap-4 text-body text-house-campus-light-foreground/80">
                   {bio.links.map((link, idx) => (
@@ -567,7 +567,7 @@ export function Campus() {
             </PrimaryButton>
           </div>
 
-          <p className="text-body text-house-campus-light-foreground/70 leading-relaxed max-w-3xl">
+          <p className="text-aside text-house-campus-light-foreground/70 max-w-3xl">
             P.S. Need to manage or cancel your membership?{" "}
             <InlineLink href={STRIPE_BILLING_URL}>You can do that here</InlineLink>.
           </p>

@@ -196,6 +196,7 @@
   .text-title {
     @apply font-serif text-3xl md:text-5xl;
     font-style: italic;
+    font-weight: 350;
     text-transform: none;
     letter-spacing: 0.04em;
   }
@@ -220,6 +221,17 @@
     font-weight: 300;
     text-transform: none;
     line-height: 1.7;
+  }
+
+  /* Aside tier — italic Inter weight 400 normal-case text-base
+     leading-relaxed. The canonical home for editorial italic voice:
+     bylines, attributions, role labels, parenthetical asides, P.S.
+     footer notes. Distinguished from .text-body by italic. FRAC-47. */
+  .text-aside {
+    @apply font-sans text-base leading-relaxed;
+    font-style: italic;
+    font-weight: 400;
+    text-transform: none;
   }
 
   /* Chrome tier (JetBrains Mono, uppercase, widest tracking) */
