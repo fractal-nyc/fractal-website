@@ -158,7 +158,7 @@ function PrimaryButton({
   return (
     <Button
       asChild
-      className={cn(widthClass, "bg-black/20 hover:bg-black/30 text-center", wrapClass)}
+      className={cn(widthClass, "bg-foreground/20 hover:bg-foreground/30 text-center", wrapClass)}
     >
       <a href={href} {...externalProps}>
         {children}
@@ -170,7 +170,7 @@ function PrimaryButton({
 function PhotoPlaceholder({ caption }: { caption: string }) {
   return (
     <div className="flex flex-col gap-3">
-      <div className="aspect-[4/5] md:aspect-square w-full bg-white/5 border border-white/10 flex items-center justify-center">
+      <div className="aspect-[4/5] md:aspect-square w-full bg-house-campus-light-foreground/5 border border-house-campus-light-foreground/10 text-house-campus-light-foreground flex items-center justify-center">
         <span className="text-label text-house-campus-light-foreground/40">Photo</span>
       </div>
       <p className="text-xs md:text-sm text-house-campus-light-foreground/70 font-light leading-relaxed">
@@ -187,7 +187,7 @@ export function Campus() {
       <div className="min-h-screen flex flex-col items-center justify-start pt-16 md:pt-24 w-full">
         <div className="px-6 md:px-[4.5%] w-full">
           <FadeIn>
-            <SectorHeader letter="C" name="Campus" color="#1A3A2E" />
+            <SectorHeader letter="C" name="Campus" color="var(--color-house-campus-deep)" />
           </FadeIn>
 
           <FadeIn>
@@ -496,7 +496,7 @@ export function Campus() {
           <h2 className="text-title mb-6 normal-case">
             …and a short walk to McCarren Park
           </h2>
-          <blockquote className="border-l-2 border-white/30 pl-6 my-6 max-w-3xl">
+          <blockquote className="border-l-2 border-house-campus-light-foreground/30 pl-6 my-6 max-w-3xl">
             <p className="text-lg md:text-xl font-serif italic text-house-campus-light-foreground/90 leading-relaxed normal-case">
               "All truly great thoughts are conceived while walking."
             </p>
