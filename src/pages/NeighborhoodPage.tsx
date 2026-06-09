@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 
 export function NeighborhoodPage() {
   return (
-    <main className="relative min-h-screen text-foreground selection:bg-foreground selection:text-background" style={{ backgroundColor: "#889460" }}>
+    <main className="relative min-h-screen bg-house-visit-light text-house-visit-light-foreground selection:bg-foreground selection:text-background">
       <FractalPattern color="#4A5A30" />
       <div className="relative z-10">
       <Navbar />
