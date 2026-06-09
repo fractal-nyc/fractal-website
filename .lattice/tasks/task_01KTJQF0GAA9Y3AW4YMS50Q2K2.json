@@ -1,17 +1,30 @@
 {
   "assigned_to": null,
-  "branch_links": [],
-  "comment_count": 0,
+  "branch_links": [
+    {
+      "branch": "frac-24-audit-campus",
+      "linked_at": "2026-06-09T02:43:00Z",
+      "linked_by": "agent:claude-opus-4-7-orchestrator",
+      "repo": null
+    }
+  ],
+  "comment_count": 2,
   "complexity": null,
   "created_at": "2026-06-08T04:22:13Z",
   "created_by": "agent:claude-opus-4-7-orchestrator",
   "custom_fields": {},
   "description": null,
-  "done_at": null,
-  "evidence_refs": [],
+  "done_at": "2026-06-09T03:06:54Z",
+  "evidence_refs": [
+    {
+      "id": "ev_01KTN5HQFNN8C0RM4C1B0DCG8X",
+      "role": "review",
+      "source_type": "comment"
+    }
+  ],
   "id": "task_01KTJQF0GAA9Y3AW4YMS50Q2K2",
-  "last_event_id": "ev_01KTJQF0N5HSM7AH2Q8DCBFXA3",
-  "last_status_changed_at": "2026-06-08T04:22:13Z",
+  "last_event_id": "ev_01KTN5HT9CVCKT4VVQ87J7EQ2V",
+  "last_status_changed_at": "2026-06-09T03:06:54Z",
   "priority": "medium",
   "relationships_out": [
     {
@@ -25,10 +38,10 @@
   "reopened_count": 0,
   "schema_version": 1,
   "short_id": "FRAC-24",
-  "status": "backlog",
+  "status": "done",
   "tags": null,
   "title": "Audit Campus page (typography + color)",
   "type": "task",
-  "updated_at": "2026-06-08T04:22:13Z",
+  "updated_at": "2026-06-09T03:06:54Z",
   "urgency": null
 }
