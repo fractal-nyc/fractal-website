@@ -1,6 +1,13 @@
 {
   "assigned_to": null,
-  "branch_links": [],
+  "branch_links": [
+    {
+      "branch": "frac-56-57-crystal-events",
+      "linked_at": "2026-06-09T19:06:32Z",
+      "linked_by": "agent:claude-opus-4-7-impl",
+      "repo": null
+    }
+  ],
   "comment_count": 0,
   "complexity": null,
   "created_at": "2026-06-09T18:06:44Z",
@@ -10,17 +17,17 @@
   "done_at": null,
   "evidence_refs": [],
   "id": "task_01KTPS1F96EYDW6X97BGY7B9N0",
-  "last_event_id": "ev_01KTPW49JHKHKCGYNB744QXHXZ",
-  "last_status_changed_at": "2026-06-09T19:00:42Z",
+  "last_event_id": "ev_01KTPWEZAAV8MQX0341YP53G21",
+  "last_status_changed_at": "2026-06-09T19:06:32Z",
   "priority": "medium",
   "relationships_out": [],
   "reopened_count": 0,
   "schema_version": 1,
   "short_id": "FRAC-56",
-  "status": "planned",
+  "status": "review",
   "tags": null,
   "title": "Campus page: add Crystal contact email \u2014 top-of-page badge + 'First time here?' visitor CTA",
   "type": "task",
-  "updated_at": "2026-06-09T19:00:42Z",
+  "updated_at": "2026-06-09T19:06:32Z",
   "urgency": null
 }

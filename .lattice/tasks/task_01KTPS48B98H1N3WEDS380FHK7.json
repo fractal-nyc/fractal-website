@@ -1,7 +1,14 @@
 {
   "assigned_to": null,
-  "branch_links": [],
-  "comment_count": 0,
+  "branch_links": [
+    {
+      "branch": "frac-56-57-crystal-events",
+      "linked_at": "2026-06-09T19:06:32Z",
+      "linked_by": "agent:claude-opus-4-7-impl",
+      "repo": null
+    }
+  ],
+  "comment_count": 1,
   "complexity": null,
   "created_at": "2026-06-09T18:08:15Z",
   "created_by": "agent:claude-opus-4-7",
@@ -10,8 +17,8 @@
   "done_at": null,
   "evidence_refs": [],
   "id": "task_01KTPS48B98H1N3WEDS380FHK7",
-  "last_event_id": "ev_01KTPW49MVWTEF1J2QM6KJ339A",
-  "last_status_changed_at": "2026-06-09T19:00:42Z",
+  "last_event_id": "ev_01KTPWEZF5KR4DK3K69B2GN6ZG",
+  "last_status_changed_at": "2026-06-09T19:06:32Z",
   "priority": "medium",
   "relationships_out": [
     {
@@ -25,10 +32,10 @@
   "reopened_count": 0,
   "schema_version": 1,
   "short_id": "FRAC-57",
-  "status": "planned",
+  "status": "review",
   "tags": null,
   "title": "Campus + Events pages: add event-hosting copy with Luma calendar link + Crystal contact",
   "type": "task",
-  "updated_at": "2026-06-09T19:00:42Z",
+  "updated_at": "2026-06-09T19:06:32Z",
   "urgency": null
 }
