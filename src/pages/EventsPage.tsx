@@ -59,7 +59,7 @@ export function EventsPage() {
               Host an event in our space
             </p>
             <div className="flex flex-col gap-6 items-center mb-12 md:grid md:grid-cols-[auto_auto] md:gap-x-4 md:gap-y-4 md:items-center md:justify-center md:max-w-4xl md:mx-auto">
-              <p className="text-body text-foreground/90 leading-relaxed text-center md:text-right">
+              <p className="text-subtitle text-foreground/90 leading-relaxed text-center md:text-right">
                 To host a free event, add it directly to our:
               </p>
               <Button asChild className="max-w-xs w-full text-center">
@@ -71,8 +71,8 @@ export function EventsPage() {
                   Luma calendar
                 </a>
               </Button>
-              <p className="text-body text-foreground/90 leading-relaxed text-center md:text-right">
-                To host a paid event: email:
+              <p className="text-subtitle text-foreground/90 leading-relaxed text-center md:text-right">
+                To host a paid event email:
               </p>
               <Button asChild className="max-w-xs w-full text-center">
                 <a href={CRYSTAL_MAILTO}>crystal@fractalnyc.com</a>
