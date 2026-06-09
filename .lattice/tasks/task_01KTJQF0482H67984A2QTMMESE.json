@@ -1,17 +1,30 @@
 {
   "assigned_to": null,
-  "branch_links": [],
-  "comment_count": 0,
+  "branch_links": [
+    {
+      "branch": "frac-22-audit-home",
+      "linked_at": "2026-06-09T02:06:35Z",
+      "linked_by": "agent:claude-opus-4-7-orchestrator",
+      "repo": null
+    }
+  ],
+  "comment_count": 2,
   "complexity": null,
   "created_at": "2026-06-08T04:22:12Z",
   "created_by": "agent:claude-opus-4-7-orchestrator",
   "custom_fields": {},
   "description": null,
-  "done_at": null,
-  "evidence_refs": [],
+  "done_at": "2026-06-09T02:24:00Z",
+  "evidence_refs": [
+    {
+      "id": "ev_01KTN335AFK9EP7E68VC7PPXS6",
+      "role": "review",
+      "source_type": "comment"
+    }
+  ],
   "id": "task_01KTJQF0482H67984A2QTMMESE",
-  "last_event_id": "ev_01KTJQF09410PM2CX7TXH6BMNQ",
-  "last_status_changed_at": "2026-06-08T04:22:12Z",
+  "last_event_id": "ev_01KTN338M3N5BDVDZGNMR1W8VS",
+  "last_status_changed_at": "2026-06-09T02:24:00Z",
   "priority": "medium",
   "relationships_out": [
     {
@@ -25,10 +38,10 @@
   "reopened_count": 0,
   "schema_version": 1,
   "short_id": "FRAC-22",
-  "status": "backlog",
+  "status": "done",
   "tags": null,
   "title": "Audit Home page (typography + color)",
   "type": "task",
-  "updated_at": "2026-06-08T04:22:13Z",
+  "updated_at": "2026-06-09T02:24:00Z",
   "urgency": null
 }

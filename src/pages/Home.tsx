@@ -22,7 +22,7 @@ export function Home() {
       {/* FRAC-161: <HouseBannerGrid /> hidden on home. */}
 
       {/* Golden Age Protocol */}
-      <section className="bg-background px-[4.5%] py-40 md:py-60">
+      <section className="bg-background text-foreground px-[4.5%] py-40 md:py-60">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16 items-start">
           <FadeIn>
             <h2
@@ -32,7 +32,7 @@ export function Home() {
             </h2>
           </FadeIn>
           <FadeIn delay={0.15}>
-            <div className="font-mono text-sm md:text-base leading-relaxed text-foreground/80 space-y-6 uppercase font-thin" style={{ fontStyle: "normal" }}>
+            <div className="text-body-display text-foreground/80 space-y-6" style={{ fontStyle: "normal" }}>
               <p>
                 From the{" "}
                 <a

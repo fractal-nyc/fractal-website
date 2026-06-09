@@ -262,13 +262,21 @@ FRAC-51 introduces a Tailwind-aligned semantic scale delivered as utility classe
 
 `.text-eyebrow`, `.text-label`, and `.text-meta` are deliberately three names for the same rendering — the *meaning* differs at the call site (overline label vs. form label vs. inline metadata), and keeping three names lets future authors signal intent without forcing a rendering decision today.
 
-**Control tier (JetBrains Mono, normal-case)**
+**Body-display tier (JetBrains Mono, uppercase, weight 100)**
 
 | Utility | Rendering | Tailwind size |
 |---|---|---|
-| `.text-control` | mono, weight 400, normal-case, normal tracking | `text-base` |
+| `.text-body-display` | mono, weight 100, uppercase, normal tracking, relaxed leading | `text-sm md:text-base` |
 
-`.text-control` exists because the chrome tier's `uppercase + text-sm` breaks input UX: uppercase forces typed text into uppercase, and `text-sm` (14px) triggers iOS zoom-on-focus. `.text-control` keeps the mono family identity of the chrome tier while sizing up to `text-base` (16px = iOS no-zoom threshold) and dropping the case/tracking transforms. Use on `<input>`, `<textarea>`, `<select>`, and other typeable controls. Named `.text-control` rather than `.text-input` because the codebase declares `--color-input` as a theme color token (for input borders), which makes Tailwind v4 auto-generate a `text-input` color utility — a name collision that would override `color` on any element it touched.
+`.text-body-display` is the body tier rendered as display chrome — editorial / manifesto / protocol prose where body-length passages should carry the chrome tier's mono-uppercase identity but read as paragraphs. Distinguished from `.text-control` by weight (100 vs 400) and responsive sizing (`text-control` is flat `text-base`). Used today by the Home page's Golden Age Protocol section. Resolves the FRAC-22 audit GAP for that pattern. FRAC-45.
+
+**Control tier (JetBrains Mono, uppercase)**
+
+| Utility | Rendering | Tailwind size |
+|---|---|---|
+| `.text-control` | mono, weight 400, uppercase, normal tracking | `text-base` |
+
+`.text-control` keeps the chrome tier's mono + uppercase identity but sizes up to `text-base` (16px = iOS no-zoom threshold) and drops the wide tracking (chrome's `0.1em` looks wrong on typed text). Typed text renders uppercase by design — the all-caps chrome aesthetic wins over case-preserving typed input. Use on `<input>`, `<textarea>`, `<select>`, and other typeable controls. Named `.text-control` rather than `.text-input` because the codebase declares `--color-input` as a theme color token (for input borders), which makes Tailwind v4 auto-generate a `text-input` color utility — a name collision that would override `color` on any element it touched. FRAC-41 introduced; FRAC-44 set case to uppercase per user review.
 
 **Button (2 variants in `src/components/ui/button.tsx`)**
 

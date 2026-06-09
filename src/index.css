@@ -244,17 +244,31 @@
     letter-spacing: 0.1em;
   }
 
-  /* Control tier (JetBrains Mono, normal-case, no tracking, text-base for
-     iOS no-zoom). The chrome tier's uppercase + text-sm breaks input UX
-     (forces typed text uppercase, triggers iOS zoom-on-focus), so input
-     controls get their own role-based utility. Named .text-control rather
-     than .text-input to avoid colliding with Tailwind v4's auto-generated
-     `text-input` color utility (the codebase declares --color-input as a
-     theme token for input borders). FRAC-41. */
+  /* Body-display tier — JetBrains Mono uppercase weight 100 responsive
+     text-sm → text-base, normal tracking, relaxed leading. Body-tier
+     rendered as display chrome: editorial / manifesto / protocol prose
+     where body-length passages should carry the chrome tier's mono-
+     uppercase identity but read as paragraphs. Distinguished from
+     .text-control by weight (100 vs 400) and responsive sizing.
+     Resolves the FRAC-22 Home audit GAP. FRAC-45. */
+  .text-body-display {
+    @apply font-mono text-sm md:text-base uppercase font-thin leading-relaxed;
+  }
+
+  /* Control tier (JetBrains Mono, uppercase, no tracking, text-base for
+     iOS no-zoom). Keeps the chrome tier's mono + uppercase identity but
+     sizes up to text-base (16px = iOS no-zoom threshold) and drops the
+     wide tracking (chrome's 0.1em looks wrong on typed text). Typed text
+     renders uppercase by design — the all-caps chrome aesthetic wins
+     over case-preserving typed input. Named .text-control rather than
+     .text-input to avoid colliding with Tailwind v4's auto-generated
+     `text-input` color utility (the codebase declares --color-input as
+     a theme token for input borders). FRAC-41 introduced; FRAC-44 set
+     case=uppercase. */
   .text-control {
     @apply font-mono text-base;
     font-weight: 400;
-    text-transform: none;
+    text-transform: uppercase;
     letter-spacing: normal;
   }
 

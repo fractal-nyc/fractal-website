@@ -22,7 +22,7 @@
   "relationships_out": [],
   "reopened_count": 0,
   "schema_version": 1,
-  "short_id": "FRAC-45",
+  "short_id": "FRAC-47",
   "status": "done",
   "tags": null,
   "title": "Add .text-aside utility; migrate Campus quote passages to .text-subtitle and italic asides/bylines/P.S. to .text-aside",
