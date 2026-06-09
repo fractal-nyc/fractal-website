@@ -8,8 +8,6 @@ const LUMA_EVENTS_URL = "https://lu.ma/nyc-tech";
 const FRACTAL_U_URL = "https://fractaluniversity.substack.com/";
 const STRIPE_FULLTIME_URL = "https://buy.stripe.com/4gM5kDckk5r008p3B608g0L";
 const STRIPE_PARTTIME_URL = "https://buy.stripe.com/eVq4gzckk06G3kB1sY08g0G";
-const FLOWGLAD_DAYPASS_URL =
-  "https://app.flowglad.com/price/vrnt_19pxxXOzdUd3xiBVilFYB/purchase";
 const GOOGLE_MAPS_URL =
   "https://www.google.com/maps/place/111+Conselyea+St,+Brooklyn,+NY+11211/";
 const PAMPAM_URL = "https://www.pampam.city/p/3hItQdj7pnuUtEkU4p7I";
@@ -79,24 +77,62 @@ const teamBios = [
 ];
 
 const amenities = [
-  "24/7 hot desk access",
   "Stocked kitchen w/ espresso machine",
   "3D printer and tool library",
   "Cozy lounge for relaxing and chatting",
-  "Private startup offices",
   "Soundproof phone booths",
   "Rooftop coworking (with wifi!)",
   "Free near-daily tech events",
 ];
 
-const photoCaptions = [
-  "Did we mention we had 5000 sq. ft of private rooftop? We have 5000 sq. ft of private rooftop.",
-  "A full kitchen, with an island",
-  "Seating, seating, and more seating",
-  "Nice and clean",
-  "Felix doesn't live here, but he does love it here.",
-  "Parth and Norman proving that cozy engineers are productive engineers",
-  "Roomy private office or large meeting room",
+const campusPhotos = [
+  {
+    src: "/images/campus/rooftop.webp",
+    alt: "Fractal Campus private rooftop deck in Williamsburg",
+    caption:
+      "Did we mention we had 5000 sq. ft of private rooftop? We have 5000 sq. ft of private rooftop.",
+  },
+  {
+    src: "/images/campus/kitchen.webp",
+    alt: "Fractal Campus kitchen",
+    caption: "A full kitchen, with an island",
+  },
+  {
+    src: "/images/campus/coworking-space.webp",
+    alt: "Fractal Campus coworking floor",
+    caption: "Open coworking space with room to spread out",
+  },
+  {
+    src: "/images/campus/seating.webp",
+    alt: "Lounge seating at Fractal Campus",
+    caption: "Seating, seating, and more seating",
+  },
+  {
+    src: "/images/campus/large-call-booths.webp",
+    alt: "Large call booths at Fractal Campus",
+    caption: "Large call booths for meetings and focused calls",
+  },
+  {
+    src: "/images/campus/small-call-booths.webp",
+    alt: "Small call booths at Fractal Campus",
+    caption: "Small call booths for quick one-on-ones",
+  },
+  {
+    src: "/images/campus/parth-and-norman-cozy.webp",
+    alt: "Two members working side-by-side at Fractal Campus",
+    caption:
+      "Parth and Norman proving that cozy engineers are productive engineers",
+  },
+  {
+    src: "/images/campus/private-office.avif",
+    alt: "Private office at Fractal Campus",
+    caption: "Roomy private office or large meeting room",
+  },
+  {
+    src: "/images/campus/bathroom.webp",
+    alt: "Bathroom at Fractal Campus",
+    caption: "Nice and clean",
+  },
 ];
 
 const eventTypes = [
@@ -176,41 +212,43 @@ function MembershipTiers({ showLeadIn = false }: { showLeadIn?: boolean }) {
           We offer two kinds of membership:
         </p>
       )}
-      <div className="flex flex-col md:flex-row gap-6 md:gap-4 items-stretch w-full">
-        <div className="flex flex-col gap-2 flex-1">
-          <div>
-            <p className="text-subtitle text-background normal-case">Full-time</p>
-            <p className="text-body text-background/80">$300/mo</p>
-            <p className="text-aside text-background/70 normal-case">
-              Unlimited 24/7 access
-            </p>
-          </div>
-          <PrimaryButton href={STRIPE_FULLTIME_URL} fullWidth>
-            Sign up here
-          </PrimaryButton>
-        </div>
-        <div className="flex flex-col gap-2 flex-1">
-          <div>
-            <p className="text-subtitle text-background normal-case">Part-time</p>
-            <p className="text-body text-background/80">$150/mo</p>
-            <p className="text-aside text-background/70 normal-case">
-              Up to 50 hr per week
-            </p>
-          </div>
-          <PrimaryButton href={STRIPE_PARTTIME_URL} fullWidth>
-            Sign up here
-          </PrimaryButton>
-        </div>
+      <div className="flex flex-col md:flex-row gap-4 items-stretch w-full">
+        <PrimaryButton href={STRIPE_FULLTIME_URL} fullWidth>
+          <span className="flex flex-col items-center gap-1">
+            <span>Full time membership</span>
+            <span className="opacity-80">24/7 access $300/mo</span>
+          </span>
+        </PrimaryButton>
+        <PrimaryButton href={STRIPE_PARTTIME_URL} fullWidth>
+          <span className="flex flex-col items-center gap-1">
+            <span>Part time membership</span>
+            <span className="opacity-80">50 hr/wk $150/mo</span>
+          </span>
+        </PrimaryButton>
       </div>
     </div>
   );
 }
 
-function PhotoPlaceholder({ caption }: { caption: string }) {
+function CampusPhoto({
+  src,
+  alt,
+  caption,
+}: {
+  src: string;
+  alt: string;
+  caption: string;
+}) {
   return (
     <div className="flex flex-col gap-3">
-      <div className="aspect-[4/5] md:aspect-square w-full bg-background/5 border border-background/10 text-background flex items-center justify-center">
-        <span className="text-label text-background/40">Photo</span>
+      <div className="aspect-[4/5] md:aspect-square w-full overflow-hidden border border-background/10 bg-background/5">
+        <img
+          src={src}
+          alt={alt}
+          loading="lazy"
+          decoding="async"
+          className="h-full w-full object-cover"
+        />
       </div>
       <p className="text-body text-background/70 leading-relaxed">
         {caption}
@@ -234,7 +272,7 @@ export function Campus() {
               <p
                 className="text-display text-background mb-4 text-center"
               >
-                Fractal Campus
+                Be Ambitious at Fractal Campus
               </p>
               <p className="text-subtitle text-background/80 mb-8 normal-case">
                 <InlineLink href={GOOGLE_MAPS_URL}>
@@ -246,18 +284,13 @@ export function Campus() {
                   Visit by joining us for an event
                 </PrimaryButton>
                 <MembershipTiers />
-                <PrimaryButton href={FLOWGLAD_DAYPASS_URL} fullWidth>
-                  Day Pass — $40
-                </PrimaryButton>
               </div>
               <p className="text-aside text-xs md:text-sm text-background/70 text-center">
-                Want a reduced rate? Let us know. We want the space to be accessible to all.
-              </p>
-              <p className="text-aside text-xs md:text-sm text-background/70 text-center mt-4">
-                ✉️{" "}
+                First time here? Drop by for free! Contact Crystal (
                 <InlineLink href={CRYSTAL_MAILTO} external={false}>
                   crystal@fractalnyc.com
                 </InlineLink>
+                ) for a guided tour.
               </p>
             </div>
           </FadeIn>
@@ -271,7 +304,7 @@ export function Campus() {
             <p className="text-title leading-tight mb-8 normal-case">
               A <span className="italic">campus</span> in the heart of Williamsburg.
             </p>
-            <div className="space-y-6 text-body text-background/90 leading-relaxed">
+            <div className="space-y-6 text-body-lead text-background/90">
               <p>
                 The Fractal Campus is a meeting place in the heart of Williamsburg to do your
                 most ambitious work. We offer 4000+ square feet of both shared office space and
@@ -279,7 +312,10 @@ export function Campus() {
                 roof deck.
               </p>
             </div>
-            <ul className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-3 text-body text-background/90">
+            <p className="mt-8 text-body text-background/90">
+              All members have access to:
+            </p>
+            <ul className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-3 text-body text-background/90">
               {amenities.map((item) => (
                 <li key={item} className="flex gap-3">
                   <span aria-hidden className="text-background/50">—</span>
@@ -473,11 +509,6 @@ export function Campus() {
             </div>
             <div className="mt-10 flex flex-col gap-6">
               <MembershipTiers showLeadIn />
-              <div className="flex flex-col sm:flex-row gap-4 justify-start items-center">
-                <PrimaryButton href={FLOWGLAD_DAYPASS_URL}>
-                  Or I want to purchase a Day Pass for $40!
-                </PrimaryButton>
-              </div>
             </div>
           </div>
         </FadeIn>
@@ -494,12 +525,18 @@ export function Campus() {
               to do so throughout winter, with an eye towards creativity, focus, and sunny vibes.
             </p>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-12">
-            {photoCaptions.map((caption) => (
-              <PhotoPlaceholder key={caption} caption={caption} />
-            ))}
-          </div>
         </FadeIn>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-12">
+          {campusPhotos.map((photo, i) => (
+            <FadeIn key={photo.src} delay={i * 0.05}>
+              <CampusPhoto
+                src={photo.src}
+                alt={photo.alt}
+                caption={photo.caption}
+              />
+            </FadeIn>
+          ))}
+        </div>
       </div>
 
       {/* What's it like */}
@@ -529,11 +566,6 @@ export function Campus() {
             </div>
             <div className="mt-10 flex flex-col gap-6">
               <MembershipTiers />
-              <div className="flex flex-col sm:flex-row gap-4 justify-start items-center">
-                <PrimaryButton href={FLOWGLAD_DAYPASS_URL}>
-                  Or I'm interested in a day pass! — $40
-                </PrimaryButton>
-              </div>
             </div>
           </div>
         </FadeIn>
@@ -692,11 +724,6 @@ export function Campus() {
 
             <div className="flex flex-col gap-6 mb-10">
               <MembershipTiers />
-              <div className="flex flex-col sm:flex-row gap-4 justify-start items-center">
-                <PrimaryButton href={FLOWGLAD_DAYPASS_URL}>
-                  Just want a day pass — $40
-                </PrimaryButton>
-              </div>
             </div>
 
             <p className="text-aside text-background/70">
