@@ -11,7 +11,7 @@ import { FractalPattern } from "@/components/ui/FractalPattern";
 export function LabPage() {
   const filter = useArchiveFilter();
   return (
-    <main className="relative min-h-screen bg-house-publications-light text-house-publications-light-foreground selection:bg-foreground selection:text-background">
+    <main className="relative min-h-screen bg-house-publications-light text-background selection:bg-foreground selection:text-background">
       <FractalPattern color="#C44878" />
       <div className="relative z-10">
       <Navbar />

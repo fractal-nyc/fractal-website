@@ -36,7 +36,7 @@
   --color-input: hsl(var(--input));
   --color-ring: hsl(var(--ring));
 
-  /* House palette tokens (FRAC-21, FRAC-25, FRAC-29, FRAC-33, FRAC-35). Static brand hexes —
+  /* House palette tokens (FRAC-21, FRAC-25, FRAC-29, FRAC-33, FRAC-35, FRAC-49). Static brand hexes —
      declared directly without the hsl(var(...)) indirection used by surface
      tokens above, because house colors do not theme-swap (no dark mode per
      FRAC-30). See DESIGN.md → House palette values for the full set.
@@ -44,14 +44,11 @@
      Text on a house surface is `text-background` (cream) or `text-foreground`
      (charcoal) directly — no per-house *-foreground sibling tokens. Cream
      and charcoal are page-agnostic. The FRAC-42 paired-foreground convention
-     has been retired; existing pages that still reference it (Publications,
-     Campus) will migrate per-page as those pages are touched. Publications +
-     Campus foreground siblings remain declared below so unmigrated source
-     keeps compiling. */
+     has been fully retired (FRAC-49 migrated Lab; the Campus sibling
+     siblings remain declared below until Campus.tsx is swept — last
+     consumer). */
   --color-house-publications-light: #E870A0;
   --color-house-publications-deep: #C44878;
-  --color-house-publications-light-foreground: var(--color-background);
-  --color-house-publications-deep-foreground: var(--color-background);
 
   --color-house-campus-light: #2E6B4A;
   --color-house-campus-deep: #1A3A2E;
