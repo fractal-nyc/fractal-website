@@ -35,21 +35,22 @@
   --color-input: hsl(var(--input));
   --color-ring: hsl(var(--ring));
 
-  /* House palette tokens (FRAC-21, FRAC-25) + paired foregrounds (FRAC-42).
+  /* House palette tokens (FRAC-21, FRAC-25, FRAC-29) + paired foregrounds (FRAC-42).
      Static brand hexes — declared directly without the hsl(var(...))
      indirection used by surface tokens above, because house colors do
      not theme-swap (no dark mode per FRAC-30) and the indirection
      would add no value. See DESIGN.md → House palette values for the
      full set; FRAC-21 lands the Publications pair, FRAC-25 lands the
-     Campus pair (the remaining 4 pairs land in their respective
-     per-house Apply tasks).
+     Campus pair, FRAC-29 lands the Education pair (the remaining 3
+     pairs land in their respective per-house Apply tasks).
 
      Each house surface ships an explicit *-foreground sibling per the
      shadcn/Material-3 pairing convention (FRAC-42). Today every
      declared foreground sibling resolves to cream; see DESIGN.md
      → Surface foreground pairing for the rule and the four canonical
-     pairs. FRAC-25 is the first Apply task to declare both surface
-     and paired-foreground siblings together from day one. */
+     pairs. FRAC-25 was the first Apply task to declare both surface
+     and paired-foreground siblings together from day one; FRAC-29
+     continues that convention for Education. */
   --color-house-publications-light: #E870A0;
   --color-house-publications-deep: #C44878;
   --color-house-publications-light-foreground: var(--color-background);
@@ -59,6 +60,11 @@
   --color-house-campus-deep: #1A3A2E;
   --color-house-campus-light-foreground: var(--color-background);
   --color-house-campus-deep-foreground: var(--color-background);
+
+  --color-house-education-light: #B52828;
+  --color-house-education-deep: #5C1010;
+  --color-house-education-light-foreground: var(--color-background);
+  --color-house-education-deep-foreground: var(--color-background);
 
   --radius-sm: 0.25rem;
   --radius-md: 0.5rem;
