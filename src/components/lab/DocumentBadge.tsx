@@ -59,7 +59,7 @@ export function DocumentBadge({ document, className = "" }: DocumentBadgeProps) 
         transition-all duration-200 ease-out
         hover:scale-[1.02] hover:shadow-lg hover:border-house-publications-deep/40
         focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-house-publications-deep/40
-        ${isFeatured ? "p-6 md:p-8" : "p-5 md:p-6"}
+        ${isFeatured ? "p-6 md:p-8" : "p-6 md:p-6"}
         ${className}
       `}
     >
