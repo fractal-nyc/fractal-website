@@ -10,8 +10,8 @@
   "done_at": null,
   "evidence_refs": [],
   "id": "task_01KTJQF2F11F49M5XXNWJQ5RX4",
-  "last_event_id": "ev_01KTJQF2P9Z7761GNX00HV4V53",
-  "last_status_changed_at": "2026-06-08T04:22:15Z",
+  "last_event_id": "ev_01KTNDAR483K6Z2NEAF0YKD290",
+  "last_status_changed_at": "2026-06-09T05:22:51Z",
   "priority": "medium",
   "relationships_out": [
     {
@@ -32,10 +32,10 @@
   "reopened_count": 0,
   "schema_version": 1,
   "short_id": "FRAC-35",
-  "status": "backlog",
+  "status": "in_planning",
   "tags": null,
   "title": "Apply Events page audit findings",
   "type": "task",
-  "updated_at": "2026-06-08T04:22:15Z",
+  "updated_at": "2026-06-09T05:22:51Z",
   "urgency": null
 }
