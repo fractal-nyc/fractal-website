@@ -12,7 +12,6 @@ const GOOGLE_MAPS_URL =
   "https://www.google.com/maps/place/111+Conselyea+St,+Brooklyn,+NY+11211/";
 const PAMPAM_URL = "https://www.pampam.city/p/3hItQdj7pnuUtEkU4p7I";
 const FRACTAL_ACCELERATOR_URL = "https://www.fractalaccelerator.com/";
-const MERLINS_URL = "https://merlins.place/";
 const FRACTAL_BOOTCAMP_URL = "https://fractalbootcamp.com/";
 const STRIPE_BILLING_URL = "https://billing.stripe.com/p/login/7sI8zddAWdabfYc144";
 const CONTACT_ANDREW_MAILTO = "mailto:ajroberts0417@gmail.com";
@@ -270,7 +269,7 @@ export function Campus() {
           <FadeIn>
             <div className="text-center max-w-4xl mx-auto">
               <p
-                className="text-display text-background mb-4 text-center"
+                className="font-serif not-italic font-light text-3xl md:text-4xl tracking-[0.04em] uppercase leading-[1.1] text-background mb-4 text-center"
               >
                 Be Ambitious at Fractal Campus
               </p>
@@ -285,7 +284,7 @@ export function Campus() {
                 </PrimaryButton>
                 <MembershipTiers />
               </div>
-              <p className="text-aside text-xs md:text-sm text-background/70 text-center">
+              <p className="text-body-lead text-background/70 text-center">
                 First time here? Drop by for free! Contact Crystal (
                 <InlineLink href={CRYSTAL_MAILTO} external={false}>
                   crystal@fractalnyc.com
@@ -365,7 +364,7 @@ export function Campus() {
                 <InlineLink href={LUMA_EVENTS_URL}>5+ events we host per week</InlineLink>
               </li>
             </ul>
-            <p className="mt-8 text-body text-background/90 leading-relaxed">
+            <p className="mt-8 text-body-lead text-background/90">
               First time here? Drop by for free! Contact Crystal (
               <InlineLink href={CRYSTAL_MAILTO} external={false}>
                 crystal@fractalnyc.com
@@ -385,10 +384,10 @@ export function Campus() {
         <FadeIn>
           <div className="max-w-3xl mx-auto">
             <h2 className="text-title mb-6 normal-case">
-              <span aria-hidden>⚡ </span>AI Accelerator
+              AI Accelerator
             </h2>
             <div className="space-y-6 text-body text-background/90 leading-relaxed">
-              <p>
+              <p className="text-body-lead text-background/90">
                 We run an AI training program that teaches ambitious professionals to
                 master AI. No prior programming experience is needed. Our program runs
                 every 6 weeks, starting in summer 2026.
@@ -519,7 +518,7 @@ export function Campus() {
         <FadeIn>
           <div className="max-w-3xl mx-auto mb-12">
             <h2 className="text-title mb-6">Meet the Space</h2>
-            <p className="text-body text-background/90 leading-relaxed">
+            <p className="text-body-lead text-background/90">
               4200 sq ft of open working space, kitchen, phone booths, and large meeting rooms. Oh,
               and 5000 sq. ft of sunny rooftop. We're re-decorating the space now, and will continue
               to do so throughout winter, with an eye towards creativity, focus, and sunny vibes.
@@ -596,39 +595,20 @@ export function Campus() {
             <div className="mt-8 space-y-4 text-body text-background/90 leading-relaxed">
               <p>
                 Our community hosts events nearly every day. See upcoming events on our{" "}
-                <InlineLink href={LUMA_EVENTS_URL}>Luma calendar</InlineLink> 🎉
+                <InlineLink href={LUMA_EVENTS_URL}>Luma calendar</InlineLink>
               </p>
               <p>Anyone can host an event in our space, even non-members:</p>
               <p>
-                🆓 To host a free event, add it directly to our{" "}
+                To host a free event, add it directly to our{" "}
                 <InlineLink href={LUMA_EVENTS_URL}>Luma calendar</InlineLink>
               </p>
               <p>
-                💰 To host a paid event, email{" "}
+                To host a paid event, email{" "}
                 <InlineLink href={CRYSTAL_MAILTO} external={false}>
                   crystal@fractalnyc.com
                 </InlineLink>
               </p>
             </div>
-          </div>
-        </FadeIn>
-      </div>
-
-      {/* Merlin's Place */}
-      <div className="max-w-7xl mx-auto px-6 md:px-[4.5%] pb-24 md:pb-32">
-        <FadeIn>
-          <div className="max-w-3xl mx-auto">
-            <h2 className="text-title mb-6 normal-case">
-              Merlin's Place
-            </h2>
-            <p className="text-body text-background/90 leading-relaxed mb-8">
-              Merlin's Place is our communal living room — a Brooklyn loft that
-              hundreds of neighbors share as a third space. It's where so many of
-              our classes, dinners, hangouts, and friendships start.
-            </p>
-            <PrimaryButton href="https://merlins.place/">
-              Visit Merlin's Place
-            </PrimaryButton>
           </div>
         </FadeIn>
       </div>
@@ -756,7 +736,7 @@ export function Campus() {
                 Fractal is made up of 15+ affiliated co-living houses and has spawned a bunch of fun
                 projects, including{" "}
                 <InlineLink href={FRACTAL_U_URL}>Fractal University</InlineLink>, third spaces like{" "}
-                <InlineLink href={MERLINS_URL}>Merlin's Place</InlineLink>, and of course{" "}
+                <InlineLink href="https://merlins.place/">Merlin's Place</InlineLink>, and of course{" "}
                 <InlineLink href="/campus" external={false}>
                   Fractal Campus
                 </InlineLink>{" "}
