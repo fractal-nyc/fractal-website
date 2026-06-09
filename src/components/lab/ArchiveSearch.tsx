@@ -103,17 +103,15 @@ export function ArchiveSearch({ value, onChange }: ArchiveSearchProps) {
           at end-of-text, restored from commit 1ba8aa2. Reuses the
           surviving .animate-blink utility (with FRAC-28 reduced-motion
           guard). Decorative — aria-hidden + pointer-events-none. */}
-      {isFocused && (
-        <span
-          aria-hidden="true"
-          className="absolute inline-block w-[9px] h-[18px] bg-foreground/70 animate-blink pointer-events-none"
-          style={{
-            left: overlayLeft,
-            top: "50%",
-            transform: "translateY(-50%)",
-          }}
-        />
-      )}
+      <span
+        aria-hidden="true"
+        className="absolute inline-block w-[9px] h-[18px] bg-foreground/70 animate-blink pointer-events-none"
+        style={{
+          left: overlayLeft,
+          top: "50%",
+          transform: "translateY(-50%)",
+        }}
+      />
 
       {/* Clear button — only visible when there's a query */}
       {value.length > 0 && (

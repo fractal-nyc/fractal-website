@@ -215,17 +215,15 @@ export function Hero() {
                 block at end-of-text, restored from commit 1ba8aa2. Reuses
                 the surviving .animate-blink utility (with FRAC-28 reduced-
                 motion guard) and is purely decorative. */}
-            {isFocused && (
-              <span
-                aria-hidden="true"
-                className="absolute inline-block w-[9px] h-[18px] bg-foreground/70 animate-blink pointer-events-none"
-                style={{
-                  left: 32 + caretLeft,
-                  top: "50%",
-                  transform: "translateY(-50%)",
-                }}
-              />
-            )}
+            <span
+              aria-hidden="true"
+              className="absolute inline-block w-[9px] h-[18px] bg-foreground/70 animate-blink pointer-events-none"
+              style={{
+                left: 32 + caretLeft,
+                top: "50%",
+                transform: "translateY(-50%)",
+              }}
+            />
           </div>
 
           {/* Dropdown */}
