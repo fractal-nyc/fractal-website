@@ -8,7 +8,7 @@ export function LiberalArts() {
   return (
     <section id="new-liberal-arts" className="flex flex-col items-center pt-16 pb-24 md:pt-24 overflow-x-hidden text-house-education-deep-foreground">
       <div className="w-full px-6 md:px-[4.5%] text-center">
-        <SectorHeader letter="E" name="Education" color="#C41E20" />
+        <SectorHeader letter="E" name="Education" color="var(--color-house-education-light)" />
         <FadeIn>
           <p className="text-display mb-4 md:mb-6 text-center">
             Tech, Entrepreneurship, Rhetoric, Civics
