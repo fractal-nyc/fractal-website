@@ -48,7 +48,7 @@ export function EventsPage() {
               href={LUMA_EVENTS_URL}
               target="_blank"
               rel="noopener noreferrer"
-              className="block max-w-3xl mx-auto mb-12 font-mono text-base text-foreground/90 leading-relaxed text-center underline decoration-foreground/40 hover:decoration-foreground transition-colors"
+              className="block max-w-3xl mx-auto mb-12 text-body-display text-foreground/90 text-center underline decoration-foreground/40 hover:decoration-foreground transition-colors"
             >
               Our community hosts events nearly every day. See upcoming events on our Luma calendar →
             </a>
