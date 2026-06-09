@@ -8,26 +8,32 @@
       "repo": null
     }
   ],
-  "comment_count": 1,
+  "comment_count": 2,
   "complexity": null,
   "created_at": "2026-06-09T04:34:24Z",
   "created_by": "agent:claude-opus-4-7-orchestrator",
   "custom_fields": {},
   "description": "Container widths on the Campus page feel cramped \u2014 the body copy blocks that are left-aligned (the 'More than a WeWork' anecdote, the 'What's it like' section, the bio cluster, etc.) sit inside max-w-3xl which is constraining them more than necessary at md+ viewports. Combined with the outer px-6 md:px-[4.5%] padding on the section wrappers, the readable column ends up narrower than feels right. Scope: (1) investigate which constraint dominates at 375/768/1024/1280px \u2014 likely some combination of max-w-3xl on content blocks, max-w-7xl on section wrappers, and px-[4.5%] outer padding; (2) define a sitewide canonical max content width for left-aligned body prose (options: max-w-4xl, max-w-5xl, or custom) and codify in DESIGN.md; (3) audit + apply across Campus, Story, Lab, NLA, Political Club, Visit, Events, People, Protocol, Home \u2014 anywhere max-w-3xl is used on a left-aligned body block; (4) reduce section-wrapper side padding if that's also part of the issue. Out of scope: centered hero text widths (those follow a different rule). Mobile-first: verify 375px still reads correctly. Acceptance: consistent left-aligned body container width across all pages; canonical 'body container max-width' rule in DESIGN.md; no 375px regression. Slot in after FRAC-25 Campus apply lands \u2014 separate PR from typography/color migrations.",
-  "done_at": null,
-  "evidence_refs": [],
+  "done_at": "2026-06-09T18:40:03Z",
+  "evidence_refs": [
+    {
+      "id": "ev_01KTPTYBNRH5SFK23553XKSPYP",
+      "role": "review",
+      "source_type": "comment"
+    }
+  ],
   "id": "task_01KTNAJ1BTKEDV16FGWKYAYXJY",
-  "last_event_id": "ev_01KTPTRGPPCQ5MZ6TJ1J6F9ZP3",
-  "last_status_changed_at": "2026-06-09T18:36:48Z",
+  "last_event_id": "ev_01KTPTYFGK49TM64QEZRHA3WK2",
+  "last_status_changed_at": "2026-06-09T18:40:03Z",
   "priority": "medium",
   "relationships_out": [],
   "reopened_count": 0,
   "schema_version": 1,
   "short_id": "FRAC-48",
-  "status": "review",
+  "status": "done",
   "tags": null,
   "title": "Reduce side margins and expand left-aligned body containers on Campus (likely sitewide)",
   "type": "task",
-  "updated_at": "2026-06-09T18:36:48Z",
+  "updated_at": "2026-06-09T18:40:03Z",
   "urgency": null
 }
