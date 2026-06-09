@@ -10,8 +10,8 @@
   "done_at": null,
   "evidence_refs": [],
   "id": "task_01KTJQF0YX7V5688XP73BVXZPS",
-  "last_event_id": "ev_01KTJQF167MVM39TQE3NNKBDKZ",
-  "last_status_changed_at": "2026-06-08T04:22:13Z",
+  "last_event_id": "ev_01KTNDDX2ZWDVDM003B4BCTDJN",
+  "last_status_changed_at": "2026-06-09T05:24:34Z",
   "priority": "medium",
   "relationships_out": [
     {
@@ -32,10 +32,10 @@
   "reopened_count": 0,
   "schema_version": 1,
   "short_id": "FRAC-27",
-  "status": "backlog",
+  "status": "in_progress",
   "tags": null,
   "title": "Apply Story page audit findings",
   "type": "task",
-  "updated_at": "2026-06-08T04:22:13Z",
+  "updated_at": "2026-06-09T05:24:34Z",
   "urgency": null
 }
