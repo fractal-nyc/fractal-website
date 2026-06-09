@@ -1,6 +1,13 @@
 {
   "assigned_to": null,
-  "branch_links": [],
+  "branch_links": [
+    {
+      "branch": "frac-34-audit-events",
+      "linked_at": "2026-06-09T05:07:51Z",
+      "linked_by": "agent:claude-opus-4-7-frac-34-planner",
+      "repo": null
+    }
+  ],
   "comment_count": 0,
   "complexity": null,
   "created_at": "2026-06-08T04:22:15Z",
@@ -10,8 +17,8 @@
   "done_at": null,
   "evidence_refs": [],
   "id": "task_01KTJQF2CJGDM07KB79GC14QQN",
-  "last_event_id": "ev_01KTJQF2HHAVQDCQB9DDXKCAS6",
-  "last_status_changed_at": "2026-06-08T04:22:15Z",
+  "last_event_id": "ev_01KTNCQXV0SJH923BE1SCWEEPV",
+  "last_status_changed_at": "2026-06-09T05:12:34Z",
   "priority": "medium",
   "relationships_out": [
     {
@@ -25,10 +32,10 @@
   "reopened_count": 0,
   "schema_version": 1,
   "short_id": "FRAC-34",
-  "status": "backlog",
+  "status": "planned",
   "tags": null,
   "title": "Audit Events page (typography + color)",
   "type": "task",
-  "updated_at": "2026-06-08T04:22:15Z",
+  "updated_at": "2026-06-09T05:12:34Z",
   "urgency": null
 }
