@@ -1,3 +1,4 @@
+import * as React from "react";
 import { render, screen } from "@testing-library/react";
 import { describe, it, expect, vi } from "vitest";
 
@@ -132,10 +133,28 @@ describe("CTA link button styling (FRAC-86 regression)", () => {
     // The Button base styles render the inline-flex CTA chrome on the
     // forwarded element.
     expect(link!.className).toContain("inline-flex");
-    // The default variant supplies the bordered, translucent CTA surface
-    // (preserved across the FRAC-86 fake-button → Button migration).
-    expect(link!.className).toContain("border-foreground/20");
-    expect(link!.className).toContain("bg-foreground/[0.03]");
+    // The default variant supplies the frosted CTA surface (FRAC-52: cream
+    // tinted glass + accent border via --btn-accent, preserved across the
+    // FRAC-86 fake-button → Button migration).
+    expect(link!.className).toContain("bg-[rgba(242,234,216,0.08)]");
+    expect(link!.className).toContain("[border-color:var(--btn-accent,currentColor)]");
+  });
+
+  it("should propagate --btn-accent from a parent <main> to the rendered Button border class", () => {
+    // FRAC-52: pages set `--btn-accent` on <main> to colorize the Button's
+    // border + Mandelbrot corners. jsdom doesn't compute CSS custom property
+    // resolution, so we assert the class reference (the CSS engine in the
+    // browser resolves the var() at paint time).
+    const { container } = render(
+      <main style={{ "--btn-accent": "#FF0000" } as React.CSSProperties}>
+        <Button>Accented</Button>
+      </main>,
+    );
+    const button = container.querySelector("button");
+    expect(button).toBeTruthy();
+    // The button still references the custom property via its border-color
+    // class — page-level <main style="--btn-accent: ..."> cascades through.
+    expect(button!.className).toContain("[border-color:var(--btn-accent,currentColor)]");
   });
 
   it("should render four Mandelbrot corner decorations on the CTA <a>", () => {

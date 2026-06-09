@@ -1,3 +1,4 @@
+import type { CSSProperties } from "react";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { SectorHeader } from "@/components/layout/SectorHeader";
@@ -193,7 +194,10 @@ function TalkCard({ talk }: { talk: TalkItem }) {
 
 export function StoryPage() {
   return (
-    <main className="relative min-h-screen text-foreground selection:bg-foreground selection:text-background" style={{ backgroundColor: "#D4BA58" }}>
+    <main
+      className="relative min-h-screen text-foreground selection:bg-foreground selection:text-background"
+      style={{ backgroundColor: "#D4BA58", "--btn-accent": "#8A7A20" } as CSSProperties}
+    >
       <FractalPattern color="#8A7A20" />
       <div className="relative z-10">
       <Navbar />

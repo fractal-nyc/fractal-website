@@ -1,3 +1,4 @@
+import type { CSSProperties } from "react";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { SectorHeader } from "@/components/layout/SectorHeader";
@@ -7,7 +8,10 @@ import { Button } from "@/components/ui/button";
 
 export function PoliticalClubPage() {
   return (
-    <main className="relative min-h-screen text-white selection:bg-white selection:text-[#6E1830]" style={{ backgroundColor: "#6E1830" }}>
+    <main
+      className="relative min-h-screen text-white selection:bg-white selection:text-[#6E1830]"
+      style={{ backgroundColor: "#6E1830", "--btn-accent": "#C83858" } as CSSProperties}
+    >
       <FractalPattern color="#C83858" />
       <div className="relative z-10">
       <Navbar />

@@ -40,10 +40,18 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        // Default: bordered, translucent surface — the shipped CTA look.
-        // Mandelbrot corners are rendered separately below.
+        // Default (FRAC-52): frosted-glass surface ported from Renoverse's
+        // .btn--frosted recipe. The border + corner Mandelbrots take the
+        // house accent via `--btn-accent` (set on each house page's <main>);
+        // unset pages fall back to `currentColor`. Text inherits the page's
+        // body color via text-current. Cream tint (rgba(242,234,216,...)) is
+        // neutral against every house background and reads as a subtle
+        // translucent fill on dark surfaces, and as a border-only chrome on
+        // cream surfaces — both intentional.
         default:
-          "border border-foreground/20 bg-foreground/[0.03] text-foreground hover:bg-foreground/10",
+          "border bg-[rgba(242,234,216,0.08)] backdrop-blur-md " +
+          "[border-color:var(--btn-accent,currentColor)] " +
+          "text-current hover:bg-[rgba(242,234,216,0.16)]",
         // Outline: same border, no corners. For secondary or compact uses.
         outline:
           "border border-current bg-transparent text-foreground hover:bg-foreground/5",
@@ -113,31 +121,40 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     // className/ref while still rendering the corners. The corners must be
     // siblings of the original child *inside* the slotted element — which
     // Radix Slot achieves by cloning children into the asChild element.
+    //
+    // FRAC-52: corner spans inherit the page's house accent (via
+    // `--btn-accent`) rather than the button text color. MandelbrotIcon's
+    // SVGs use fill="currentColor", so we set color on each corner span
+    // directly. Each span keeps its own absolute positioning + rotation;
+    // wrapping all four in a single coloring parent would break those styles.
+    const accentColorStyle: React.CSSProperties = {
+      color: "var(--btn-accent, currentColor)",
+    };
     const corners = showCorners ? (
       <>
         <span
-          style={cornerStyle(true, true, "135deg")}
+          style={{ ...cornerStyle(true, true, "135deg"), ...accentColorStyle }}
           className="[&_svg]:!size-auto"
           aria-hidden
         >
           <MandelbrotIcon size={20} opacity={0.2} />
         </span>
         <span
-          style={cornerStyle(true, false, "225deg")}
+          style={{ ...cornerStyle(true, false, "225deg"), ...accentColorStyle }}
           className="[&_svg]:!size-auto"
           aria-hidden
         >
           <MandelbrotIcon size={20} opacity={0.2} />
         </span>
         <span
-          style={cornerStyle(false, false, "315deg")}
+          style={{ ...cornerStyle(false, false, "315deg"), ...accentColorStyle }}
           className="[&_svg]:!size-auto"
           aria-hidden
         >
           <MandelbrotIcon size={20} opacity={0.2} />
         </span>
         <span
-          style={cornerStyle(false, true, "45deg")}
+          style={{ ...cornerStyle(false, true, "45deg"), ...accentColorStyle }}
           className="[&_svg]:!size-auto"
           aria-hidden
         >

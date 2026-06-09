@@ -1,3 +1,4 @@
+import type { CSSProperties } from "react";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { SectorHeader } from "@/components/layout/SectorHeader";
@@ -11,7 +12,10 @@ import { FractalPattern } from "@/components/ui/FractalPattern";
 export function LabPage() {
   const filter = useArchiveFilter();
   return (
-    <main className="relative min-h-screen bg-house-publications-light text-background selection:bg-foreground selection:text-background">
+    <main
+      className="relative min-h-screen bg-house-publications-light text-background selection:bg-foreground selection:text-background"
+      style={{ "--btn-accent": "var(--color-house-publications-deep)" } as CSSProperties}
+    >
       <FractalPattern color="#C44878" />
       <div className="relative z-10">
       <Navbar />
