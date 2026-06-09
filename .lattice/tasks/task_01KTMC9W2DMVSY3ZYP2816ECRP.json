@@ -1,0 +1,34 @@
+{
+  "assigned_to": null,
+  "branch_links": [],
+  "comment_count": 1,
+  "complexity": null,
+  "created_at": "2026-06-08T19:45:39Z",
+  "created_by": "agent:claude-opus-4-7-orchestrator",
+  "custom_fields": {},
+  "description": null,
+  "done_at": "2026-06-09T17:58:34Z",
+  "evidence_refs": [],
+  "id": "task_01KTMC9W2DMVSY3ZYP2816ECRP",
+  "last_event_id": "ev_01KTPRJGX66D6XE26MKTP5FB1N",
+  "last_status_changed_at": "2026-06-09T17:58:34Z",
+  "priority": "medium",
+  "relationships_out": [
+    {
+      "created_at": "2026-06-08T19:45:39Z",
+      "created_by": "agent:claude-opus-4-7-orchestrator",
+      "note": null,
+      "target_task_id": "task_01KTJNZXCYD9VJXKRMZ5K3FYRZ",
+      "type": "subtask_of"
+    }
+  ],
+  "reopened_count": 0,
+  "schema_version": 1,
+  "short_id": "FRAC-40",
+  "status": "done",
+  "tags": null,
+  "title": "Sitewide cleanup: delete Pretext components after all per-page Apply tasks migrate their callsites",
+  "type": "task",
+  "updated_at": "2026-06-09T17:58:34Z",
+  "urgency": null
+}
