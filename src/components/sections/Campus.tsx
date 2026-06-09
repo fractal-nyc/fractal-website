@@ -271,7 +271,7 @@ export function Campus() {
               <p
                 className="text-display text-background mb-4 text-center"
               >
-                Be Ambitious at Fractal Campus
+                Be Ambitious
               </p>
               <p className="text-subtitle text-background/80 mb-8 normal-case">
                 <InlineLink href={GOOGLE_MAPS_URL}>
@@ -364,13 +364,6 @@ export function Campus() {
                 <InlineLink href={LUMA_EVENTS_URL}>5+ events we host per week</InlineLink>
               </li>
             </ul>
-            <p className="mt-8 text-body-lead text-background/90">
-              First time here? Drop by for free! Contact Crystal (
-              <InlineLink href={CRYSTAL_MAILTO} external={false}>
-                crystal@fractalnyc.com
-              </InlineLink>
-              ) for a guided tour.
-            </p>
             <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-start items-center">
               <PrimaryButton href={FRACTAL_ACCELERATOR_URL}>Fractal Accelerator</PrimaryButton>
               <PrimaryButton href={FRACTAL_U_URL}>Fractal U</PrimaryButton>
