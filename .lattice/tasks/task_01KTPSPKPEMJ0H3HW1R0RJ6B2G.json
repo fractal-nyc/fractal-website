@@ -1,26 +1,39 @@
 {
   "assigned_to": null,
-  "branch_links": [],
-  "comment_count": 1,
+  "branch_links": [
+    {
+      "branch": "frac-59-story-png-diagram",
+      "linked_at": "2026-06-09T19:05:09Z",
+      "linked_by": "agent:claude-opus-4-7-impl",
+      "repo": null
+    }
+  ],
+  "comment_count": 3,
   "complexity": null,
   "created_at": "2026-06-09T18:18:17Z",
   "created_by": "agent:claude-opus-4-7",
   "custom_fields": {},
   "description": "On the Story page, replace the existing SVG diagram (the Fractal NYC five-pillar diagram showing Events / Community-run University / Fractal Tech / Venues / Housing Network arranged around a central Fractal NYC node) with a PNG version of the same diagram.\n\nReason: the current SVG diagram scales oddly on mobile (likely because internal text/positioning isn't fluidly responsive). The PNG is a flat raster \u2014 it will scale predictably with object-fit / width constraints and avoid the mobile rendering glitch.\n\nSource image: /Users/fractalos/Desktop/fractal nyc transparent.png (transparent background \u2014 should sit cleanly on Story page background).\n\nImplementation steps:\n1. Copy the source PNG into the project's public assets (e.g., public/images/ or wherever Story-page assets live \u2014 match existing conventions).\n2. Locate the current SVG diagram component/element on the Story page.\n3. Replace it with an <img> (or Next.js <Image>) pointing at the new PNG, with appropriate alt text ('Fractal NYC neighborhood campus diagram \u2014 five pillars: Events, Community-run University, Fractal Tech, Venues, Housing Network').\n4. Constrain max-width so it sits centered and readable on desktop without being huge; full-width with mx-auto on mobile.\n5. Delete the SVG component / file if no longer used.\n\nAcceptance: (a) PNG renders on Story page in place of SVG; (b) scales cleanly at 375px (no oddly-cropped text or layout drift); (c) scales cleanly at desktop (not pixelated \u2014 source is high-res); (d) alt text present; (e) old SVG removed if dead.",
-  "done_at": null,
-  "evidence_refs": [],
+  "done_at": "2026-06-09T19:08:48Z",
+  "evidence_refs": [
+    {
+      "id": "ev_01KTPWK16DWBEK0TSYNHP0E72F",
+      "role": "review",
+      "source_type": "comment"
+    }
+  ],
   "id": "task_01KTPSPKPEMJ0H3HW1R0RJ6B2G",
-  "last_event_id": "ev_01KTPW4Y21N10K4PVYQMMMH0FZ",
-  "last_status_changed_at": "2026-06-09T19:01:03Z",
+  "last_event_id": "ev_01KTPWK46R1P26D0W6PD49ZNSQ",
+  "last_status_changed_at": "2026-06-09T19:08:48Z",
   "priority": "medium",
   "relationships_out": [],
   "reopened_count": 0,
   "schema_version": 1,
   "short_id": "FRAC-59",
-  "status": "planned",
+  "status": "done",
   "tags": null,
   "title": "Story page: replace SVG diagram with PNG image that scales correctly on mobile",
   "type": "task",
-  "updated_at": "2026-06-09T19:01:03Z",
+  "updated_at": "2026-06-09T19:08:48Z",
   "urgency": null
 }
