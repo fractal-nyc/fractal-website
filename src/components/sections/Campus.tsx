@@ -6,8 +6,8 @@ import { cn } from "@/lib/utils";
 const LUMA_URL = "https://luma.com/nyc-tech";
 const LUMA_EVENTS_URL = "https://lu.ma/nyc-tech";
 const FRACTAL_U_URL = "https://fractaluniversity.substack.com/";
-const FLOWGLAD_MEMBERSHIP_URL =
-  "https://app.flowglad.com/price/vrnt_G3G0SI2sWu0cdE0GBVxKE/purchase";
+const STRIPE_FULLTIME_URL = "https://buy.stripe.com/4gM5kDckk5r008p3B608g0L";
+const STRIPE_PARTTIME_URL = "https://buy.stripe.com/eVq4gzckk06G3kB1sY08g0G";
 const FLOWGLAD_DAYPASS_URL =
   "https://app.flowglad.com/price/vrnt_19pxxXOzdUd3xiBVilFYB/purchase";
 const GOOGLE_MAPS_URL =
@@ -167,6 +167,44 @@ function PrimaryButton({
   );
 }
 
+function MembershipTiers({ showLeadIn = false }: { showLeadIn?: boolean }) {
+  return (
+    <div className="w-full">
+      {showLeadIn && (
+        <p className="text-body text-background/90 leading-relaxed mb-4">
+          We offer two kinds of membership:
+        </p>
+      )}
+      <div className="flex flex-col md:flex-row gap-6 md:gap-4 items-stretch w-full">
+        <div className="flex flex-col gap-2 flex-1">
+          <div>
+            <p className="text-subtitle text-background normal-case">Full-time</p>
+            <p className="text-body text-background/80">$300/mo</p>
+            <p className="text-aside text-background/70 normal-case">
+              Unlimited 24/7 access
+            </p>
+          </div>
+          <PrimaryButton href={STRIPE_FULLTIME_URL} fullWidth>
+            Sign up here
+          </PrimaryButton>
+        </div>
+        <div className="flex flex-col gap-2 flex-1">
+          <div>
+            <p className="text-subtitle text-background normal-case">Part-time</p>
+            <p className="text-body text-background/80">$150/mo</p>
+            <p className="text-aside text-background/70 normal-case">
+              Up to 50 hr per week
+            </p>
+          </div>
+          <PrimaryButton href={STRIPE_PARTTIME_URL} fullWidth>
+            Sign up here
+          </PrimaryButton>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function PhotoPlaceholder({ caption }: { caption: string }) {
   return (
     <div className="flex flex-col gap-3">
@@ -206,14 +244,10 @@ export function Campus() {
                 <PrimaryButton href={LUMA_URL} fullWidth>
                   Visit by joining us for an event
                 </PrimaryButton>
-                <div className="flex flex-col md:flex-row gap-4 w-full items-center justify-center">
-                  <PrimaryButton href={FLOWGLAD_MEMBERSHIP_URL} fullWidth>
-                    Co-work with us — $300/mo
-                  </PrimaryButton>
-                  <PrimaryButton href={FLOWGLAD_DAYPASS_URL} fullWidth>
-                    Day Pass — $40
-                  </PrimaryButton>
-                </div>
+                <MembershipTiers />
+                <PrimaryButton href={FLOWGLAD_DAYPASS_URL} fullWidth>
+                  Day Pass — $40
+                </PrimaryButton>
               </div>
               <p className="text-aside text-xs md:text-sm text-background/70 text-center">
                 Want a reduced rate? Let us know. We want the space to be accessible to all.
@@ -373,13 +407,13 @@ export function Campus() {
               </p>
               <p className="text-aside text-background/70">— Andrew Rose, Fractal Campus co-founder</p>
             </div>
-            <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-start items-center">
-              <PrimaryButton href={FLOWGLAD_MEMBERSHIP_URL}>
-                I'm in, I want to become a member! ($300/mo)
-              </PrimaryButton>
-              <PrimaryButton href={FLOWGLAD_DAYPASS_URL}>
-                Or I want to purchase a Day Pass for $40!
-              </PrimaryButton>
+            <div className="mt-10 flex flex-col gap-6">
+              <MembershipTiers showLeadIn />
+              <div className="flex flex-col sm:flex-row gap-4 justify-start items-center">
+                <PrimaryButton href={FLOWGLAD_DAYPASS_URL}>
+                  Or I want to purchase a Day Pass for $40!
+                </PrimaryButton>
+              </div>
             </div>
           </div>
         </FadeIn>
@@ -429,13 +463,13 @@ export function Campus() {
               </p>
               <p className="text-aside text-background/70">— Co-founder (and uncle) Jake Zegil</p>
             </div>
-            <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-start items-center">
-              <PrimaryButton href={FLOWGLAD_MEMBERSHIP_URL}>
-                You've inspired me, I'm up for membership! — $300/mo
-              </PrimaryButton>
-              <PrimaryButton href={FLOWGLAD_DAYPASS_URL}>
-                Or I'm interested in a day pass! — $40
-              </PrimaryButton>
+            <div className="mt-10 flex flex-col gap-6">
+              <MembershipTiers />
+              <div className="flex flex-col sm:flex-row gap-4 justify-start items-center">
+                <PrimaryButton href={FLOWGLAD_DAYPASS_URL}>
+                  Or I'm interested in a day pass! — $40
+                </PrimaryButton>
+              </div>
             </div>
           </div>
         </FadeIn>
@@ -581,13 +615,13 @@ export function Campus() {
               <p>It's dangerous to build alone! Join us:</p>
             </div>
 
-            <div className="flex flex-col sm:flex-row gap-4 justify-start items-center mb-10">
-              <PrimaryButton href={FLOWGLAD_MEMBERSHIP_URL}>
-                Become a coworking member — $300/mo
-              </PrimaryButton>
-              <PrimaryButton href={FLOWGLAD_DAYPASS_URL}>
-                Just want a day pass — $40
-              </PrimaryButton>
+            <div className="flex flex-col gap-6 mb-10">
+              <MembershipTiers />
+              <div className="flex flex-col sm:flex-row gap-4 justify-start items-center">
+                <PrimaryButton href={FLOWGLAD_DAYPASS_URL}>
+                  Just want a day pass — $40
+                </PrimaryButton>
+              </div>
             </div>
 
             <p className="text-aside text-background/70">
