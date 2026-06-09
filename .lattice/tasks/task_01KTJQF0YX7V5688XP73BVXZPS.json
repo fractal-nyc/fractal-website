@@ -1,17 +1,23 @@
 {
   "assigned_to": null,
   "branch_links": [],
-  "comment_count": 0,
+  "comment_count": 2,
   "complexity": null,
   "created_at": "2026-06-08T04:22:13Z",
   "created_by": "agent:claude-opus-4-7-orchestrator",
   "custom_fields": {},
   "description": null,
-  "done_at": null,
-  "evidence_refs": [],
+  "done_at": "2026-06-09T05:28:44Z",
+  "evidence_refs": [
+    {
+      "id": "ev_01KTNDNEX0DC7TMZA2BCYC3MXC",
+      "role": "review",
+      "source_type": "comment"
+    }
+  ],
   "id": "task_01KTJQF0YX7V5688XP73BVXZPS",
-  "last_event_id": "ev_01KTJQF167MVM39TQE3NNKBDKZ",
-  "last_status_changed_at": "2026-06-08T04:22:13Z",
+  "last_event_id": "ev_01KTNDNHD5KC5BMFBTW6WCF0AB",
+  "last_status_changed_at": "2026-06-09T05:28:44Z",
   "priority": "medium",
   "relationships_out": [
     {
@@ -32,10 +38,10 @@
   "reopened_count": 0,
   "schema_version": 1,
   "short_id": "FRAC-27",
-  "status": "backlog",
+  "status": "done",
   "tags": null,
   "title": "Apply Story page audit findings",
   "type": "task",
-  "updated_at": "2026-06-08T04:22:13Z",
+  "updated_at": "2026-06-09T05:28:44Z",
   "urgency": null
 }
