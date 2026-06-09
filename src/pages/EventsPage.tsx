@@ -48,7 +48,7 @@ export function EventsPage() {
               href={LUMA_EVENTS_URL}
               target="_blank"
               rel="noopener noreferrer"
-              className="block max-w-3xl mx-auto mb-12 text-body text-foreground/90 leading-relaxed text-center underline decoration-foreground/40 hover:decoration-foreground transition-colors"
+              className="block max-w-3xl mx-auto mb-12 text-label text-foreground/90 text-center underline decoration-foreground/40 hover:decoration-foreground transition-colors"
             >
               Our community hosts events nearly every day. See upcoming events on our Luma calendar →
             </a>
@@ -58,29 +58,25 @@ export function EventsPage() {
             <p className="text-display mb-6 text-center">
               Host an event in our space
             </p>
-            <div className="flex flex-col gap-6 justify-center items-center mb-12">
-              <div className="flex flex-col gap-3 items-center">
-                <p className="text-subtitle text-foreground/90 leading-relaxed text-center">
-                  To host a free event, add it directly to our:
-                </p>
-                <Button asChild className="max-w-xs w-full text-center">
-                  <a
-                    href={LUMA_EVENTS_URL}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    Luma calendar
-                  </a>
-                </Button>
-              </div>
-              <div className="flex flex-col gap-3 items-center">
-                <p className="text-subtitle text-foreground/90 leading-relaxed text-center">
-                  To host a paid event: email:
-                </p>
-                <Button asChild className="max-w-xs w-full text-center">
-                  <a href={CRYSTAL_MAILTO}>crystal@fractalnyc.com</a>
-                </Button>
-              </div>
+            <div className="flex flex-col gap-6 items-center mb-12 md:grid md:grid-cols-[auto_auto] md:gap-x-4 md:gap-y-4 md:items-center md:justify-center md:max-w-4xl md:mx-auto">
+              <p className="text-subtitle text-foreground/90 leading-relaxed text-center md:text-right">
+                To host a free event, add it directly to our:
+              </p>
+              <Button asChild className="max-w-xs w-full text-center">
+                <a
+                  href={LUMA_EVENTS_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Luma calendar
+                </a>
+              </Button>
+              <p className="text-subtitle text-foreground/90 leading-relaxed text-center md:text-right">
+                To host a paid event email:
+              </p>
+              <Button asChild className="max-w-xs w-full text-center">
+                <a href={CRYSTAL_MAILTO}>crystal@fractalnyc.com</a>
+              </Button>
             </div>
           </FadeIn>
 
