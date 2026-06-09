@@ -442,20 +442,36 @@ function usePerFaceOctahedronGeometry(radius: number) {
       nonIndexed.addGroup(i * 3, 3, i);
     }
 
-    // Compute UVs for each face — map each triangle to fill the full texture
-    // Using a simple equilateral-like mapping: v0→(0.5,1), v1→(0,0), v2→(1,0)
+    // Compute UVs for each face — map each triangle so that the POLE vertex
+    // (±Y, |y| ≈ radius) receives UV (0.5, 1.0) ("top of photo"), and the two
+    // equator vertices (y ≈ 0) receive (0, 0) and (1, 0). This makes every
+    // photo's top edge point AWAY from the equator: upper-half faces point up
+    // toward +Y; lower-half faces point down toward -Y. See FRAC-66.
     const uvs = new Float32Array(vertexCount * 2);
     for (let f = 0; f < faceCount; f++) {
       const base2 = f * 3 * 2;
-      // vertex 0 of triangle → top center
-      uvs[base2 + 0] = 0.5;
-      uvs[base2 + 1] = 1.0;
-      // vertex 1 → bottom left
-      uvs[base2 + 2] = 0.0;
-      uvs[base2 + 3] = 0.0;
-      // vertex 2 → bottom right
-      uvs[base2 + 4] = 1.0;
-      uvs[base2 + 5] = 0.0;
+      // Identify the pole vertex of this triangle: the one with |y| > 0.5
+      // (the pole is at y = ±radius; equator verts have y = 0).
+      const ys: [number, number, number] = [
+        posAttr.getY(3 * f),
+        posAttr.getY(3 * f + 1),
+        posAttr.getY(3 * f + 2),
+      ];
+      const poleIdx = ys.findIndex((y) => Math.abs(y) > 0.5);
+      // The two equator vertex slots (deterministic order: lower index first).
+      const equatorVerts = [0, 1, 2].filter((i) => i !== poleIdx);
+      const uvForTri: Array<[number, number]> = [
+        [0, 0],
+        [0, 0],
+        [0, 0],
+      ];
+      uvForTri[poleIdx] = [0.5, 1.0];
+      uvForTri[equatorVerts[0]] = [0.0, 0.0];
+      uvForTri[equatorVerts[1]] = [1.0, 0.0];
+      for (let v = 0; v < 3; v++) {
+        uvs[base2 + v * 2] = uvForTri[v][0];
+        uvs[base2 + v * 2 + 1] = uvForTri[v][1];
+      }
     }
     nonIndexed.setAttribute("uv", new THREE.BufferAttribute(uvs, 2));
 
