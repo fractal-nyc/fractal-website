@@ -8,7 +8,7 @@ export function LiberalArts() {
       <div className="w-full px-6 md:px-[4.5%] text-center">
         <SectorHeader letter="E" name="Education" color="var(--color-house-education-light)" />
         <FadeIn>
-          <p className="text-display max-md:text-3xl mb-4 md:mb-6 text-center">
+          <p className="font-serif not-italic font-light text-3xl md:text-7xl tracking-[0.04em] uppercase leading-[1.1] mb-4 md:mb-6 text-center">
             Tech, Entrepreneurship, Rhetoric, Civics
           </p>
         </FadeIn>
