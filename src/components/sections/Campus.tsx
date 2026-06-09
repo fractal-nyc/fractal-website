@@ -144,10 +144,11 @@ function PrimaryButton({
   const externalProps = external
     ? { target: "_blank" as const, rel: "noopener noreferrer" }
     : {};
-  // Campus-specific tint: darker translucent black instead of the default
-  // foreground/[0.03] — preserves the shipped Campus look against the green
-  // Campus background. The Button base styles handle border, padding,
-  // uppercase mono, focus-visible, and corner decorations.
+  // FRAC-52: Campus inherits the sitewide frost recipe (cream-tinted glass +
+  // accent border via `--btn-accent` set on CampusPage's <main>). The old
+  // Campus-specific `bg-foreground/20 hover:bg-foreground/30` override has
+  // been dropped — the cream tint reads cleanly against the green Campus
+  // background and matches every other house page.
   const widthClass = fullWidth ? "w-full" : "max-w-xs w-full";
   // FRAC-53: Long membership/day-pass labels (up to 53 chars) overflow the
   // max-w-xs container at the 375px mobile baseline. Default wrap=true lets
@@ -158,7 +159,7 @@ function PrimaryButton({
   return (
     <Button
       asChild
-      className={cn(widthClass, "bg-foreground/20 hover:bg-foreground/30 text-center", wrapClass)}
+      className={cn(widthClass, "text-center", wrapClass)}
     >
       <a href={href} {...externalProps}>
         {children}

@@ -40,10 +40,23 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        // Default: bordered, translucent surface — the shipped CTA look.
-        // Mandelbrot corners are rendered separately below.
+        // Default (FRAC-52): frosted-glass surface ported from Renoverse's
+        // .btn--frosted recipe. The border + corner Mandelbrots take the
+        // house accent via `--btn-accent` (set on each house page's <main>);
+        // unset pages fall back to `currentColor`. Text inherits the page's
+        // body color via text-current. Cream tint (rgba(242,234,216,...)) is
+        // neutral against every house background and reads as a subtle
+        // translucent fill on dark surfaces, and as a border-only chrome on
+        // cream surfaces — both intentional.
         default:
-          "border border-foreground/20 bg-foreground/[0.03] text-foreground hover:bg-foreground/10",
+          "border bg-[var(--btn-accent,currentColor)] " +
+          "[backdrop-filter:blur(6px)] [-webkit-backdrop-filter:blur(6px)] " +
+          "[isolation:isolate] [transform:translateZ(0)] " +
+          "[border-color:var(--btn-accent,currentColor)] " +
+          "text-white " +
+          "shadow-[0_8px_24px_-12px_rgba(11,26,43,0.18)] " +
+          "hover:bg-[var(--btn-fill,rgba(242,234,216,0.16))] " +
+          "hover:text-[var(--btn-text,var(--btn-accent,currentColor))]",
         // Outline: same border, no corners. For secondary or compact uses.
         outline:
           "border border-current bg-transparent text-foreground hover:bg-foreground/5",
@@ -100,6 +113,24 @@ const cornerStyle = (
 // Small size skips them too — they look crowded at xs padding.
 const variantsWithCorners = new Set(["default"]);
 
+// FRAC-52: Paper-grain overlay ported from Renoverse's .fx-grain--warm
+// (shared/effects.css). Tiled 320×320 SVG fractal-noise; the baseFrequency /
+// numOctaves / seed values are part of Renoverse's brand fingerprint — don't
+// drift them. Rendered as a sibling of the corner Mandelbrots inside the
+// frosted default variant.
+const PAPER_GRAIN_BG =
+  "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='320'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' seed='7' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.96 0 0 0 0 0.93 0 0 0 0 0.85 0 0 0 0 0.9 0'/%3E%3C/filter%3E%3Crect width='320' height='320' filter='url(%23n)'/%3E%3C/svg%3E\")";
+
+const grainStyle: React.CSSProperties = {
+  position: "absolute",
+  inset: 0,
+  pointerEvents: "none",
+  backgroundImage: PAPER_GRAIN_BG,
+  backgroundSize: "320px 320px",
+  mixBlendMode: "overlay",
+  opacity: 0.35,
+};
+
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant, size, asChild = false, children, ...props }, ref) => {
     const Comp = asChild ? Slot : "button";
@@ -113,35 +144,41 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     // className/ref while still rendering the corners. The corners must be
     // siblings of the original child *inside* the slotted element — which
     // Radix Slot achieves by cloning children into the asChild element.
+    //
+    // FRAC-52: corner spans inherit the button's current text color (which is
+    // accent at rest, white on hover). MandelbrotIcon's SVGs use
+    // fill="currentColor", so spans + icons just cascade naturally — no
+    // per-span color override needed.
     const corners = showCorners ? (
       <>
+        <span style={grainStyle} aria-hidden />
         <span
           style={cornerStyle(true, true, "135deg")}
           className="[&_svg]:!size-auto"
           aria-hidden
         >
-          <MandelbrotIcon size={20} opacity={0.2} />
+          <MandelbrotIcon size={20} opacity={0.8} />
         </span>
         <span
           style={cornerStyle(true, false, "225deg")}
           className="[&_svg]:!size-auto"
           aria-hidden
         >
-          <MandelbrotIcon size={20} opacity={0.2} />
+          <MandelbrotIcon size={20} opacity={0.8} />
         </span>
         <span
           style={cornerStyle(false, false, "315deg")}
           className="[&_svg]:!size-auto"
           aria-hidden
         >
-          <MandelbrotIcon size={20} opacity={0.2} />
+          <MandelbrotIcon size={20} opacity={0.8} />
         </span>
         <span
           style={cornerStyle(false, true, "45deg")}
           className="[&_svg]:!size-auto"
           aria-hidden
         >
-          <MandelbrotIcon size={20} opacity={0.2} />
+          <MandelbrotIcon size={20} opacity={0.8} />
         </span>
       </>
     ) : null;

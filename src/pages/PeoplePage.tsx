@@ -1,3 +1,4 @@
+import type { CSSProperties } from "react";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { SectorHeader } from "@/components/layout/SectorHeader";
@@ -9,7 +10,10 @@ import { Button } from "@/components/ui/button";
 
 export function PeoplePage() {
   return (
-    <main className="relative min-h-screen text-foreground selection:bg-foreground selection:text-background" style={{ backgroundColor: "#C49040" }}>
+    <main
+      className="relative min-h-screen text-foreground selection:bg-foreground selection:text-background"
+      style={{ backgroundColor: "#C49040", "--btn-accent": "#B65D19" } as CSSProperties}
+    >
       <FractalPattern color="#B65D19" />
       <div className="relative z-10">
       <Navbar />

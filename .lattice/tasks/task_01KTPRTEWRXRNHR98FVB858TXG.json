@@ -1,26 +1,39 @@
 {
   "assigned_to": null,
-  "branch_links": [],
-  "comment_count": 2,
+  "branch_links": [
+    {
+      "branch": "frac-52-button-frost-accents",
+      "linked_at": "2026-06-09T19:34:33Z",
+      "linked_by": "agent:claude-opus-4-7-impl",
+      "repo": null
+    }
+  ],
+  "comment_count": 4,
   "complexity": null,
   "created_at": "2026-06-09T18:02:54Z",
   "created_by": "agent:claude-opus-4-7",
   "custom_fields": {},
   "description": "Major sitewide button restyle, three parts:\n\n(1) FROST EFFECT \u2014 apply a frosted-glass effect to buttons and navbar buttons. Reference implementation lives in the Renoverse AI repository at ~/Dev/renoverse-ai-website (and possibly ~/Dev/renoverse-site / ~/Dev/renoverse-prototype). Look at their button component definitions and navbar component definitions \u2014 port the backdrop-blur + translucent background + subtle border treatment into Fractal's Button primitives. Should work over any house background.\n\n(2) HOUSE-ACCENT DECORATIVE BORDER + MANDELBROTS \u2014 the decorative border around buttons and the corner Mandelbrot PNGs should take the house's highlight/accent color (the non-background color on each house page \u2014 same color as the Jacquard letter and eyebrow at the top of each page). This makes the buttons pop against the page background. Each house already has a per-house accent palette (see FRAC-37); reuse those tokens. Buttons in shared/sitewide contexts (footer, home) need a sensible default \u2014 probably the cream/foreground default.\n\n(3) DEFAULT TEXT COLOR MATCHES PAGE \u2014 for now, button text should default to the same color as the body text on that page (whichever of foreground/background the page uses). I.e., if a page is on a dark background with cream text, button text is cream. Don't introduce a separate button-text token yet \u2014 just inherit the page's text color.\n\nAcceptance: (a) buttons sitewide have the frost effect; (b) decorative borders + corner Mandelbrots on each house page take that house's accent color; (c) button text matches body text color on each page; (d) navbar buttons get the frost effect too; (e) mobile 375px still legible; (f) verify on Story, NLA, Political Club, Visit, Events, Lab, Campus, Home, Protocol.",
-  "done_at": null,
-  "evidence_refs": [],
+  "done_at": "2026-06-09T19:37:46Z",
+  "evidence_refs": [
+    {
+      "id": "ev_01KTPY82Z4REDJHWH7WPZS3TXD",
+      "role": "review",
+      "source_type": "comment"
+    }
+  ],
   "id": "task_01KTPRTEWRXRNHR98FVB858TXG",
-  "last_event_id": "ev_01KTPXPZBSCWARKCFCQ48DWW47",
-  "last_status_changed_at": "2026-06-09T19:26:47Z",
+  "last_event_id": "ev_01KTPY85PP4VBDYXYZR893HV45",
+  "last_status_changed_at": "2026-06-09T19:37:46Z",
   "priority": "medium",
   "relationships_out": [],
   "reopened_count": 0,
   "schema_version": 1,
   "short_id": "FRAC-52",
-  "status": "planned",
+  "status": "done",
   "tags": null,
   "title": "Button overhaul: frost effect + house-accent decorations + page-matched text color",
   "type": "task",
-  "updated_at": "2026-06-09T19:28:23Z",
+  "updated_at": "2026-06-09T19:37:46Z",
   "urgency": null
 }

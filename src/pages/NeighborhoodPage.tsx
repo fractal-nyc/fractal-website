@@ -1,3 +1,4 @@
+import type { CSSProperties } from "react";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { SectorHeader } from "@/components/layout/SectorHeader";
@@ -8,7 +9,10 @@ import { Button } from "@/components/ui/button";
 
 export function NeighborhoodPage() {
   return (
-    <main className="relative min-h-screen bg-house-visit-light text-foreground selection:bg-foreground selection:text-background">
+    <main
+      className="relative min-h-screen bg-house-visit-light text-foreground selection:bg-foreground selection:text-background"
+      style={{ "--btn-accent": "var(--color-house-visit-deep)" } as CSSProperties}
+    >
       <FractalPattern color="#4A5A30" />
       <div className="relative z-10">
       <Navbar />
