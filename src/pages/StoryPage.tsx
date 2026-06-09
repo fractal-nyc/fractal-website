@@ -6,8 +6,6 @@ import { PhotoGallery } from "@/components/gallery/PhotoGallery";
 import { gallerySections } from "@/data/storyPhotos";
 import { FadeIn } from "@/components/ui/FadeIn";
 import { FractalPattern } from "@/components/ui/FractalPattern";
-import { PretextParagraph } from "@/components/pretext/PretextParagraph";
-import { TEXT_SIZES, FONTS } from "@/lib/pretext";
 import { ArrowUpRight, Megaphone, Mic, Newspaper } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
@@ -176,12 +174,9 @@ function TalkCard({ talk }: { talk: TalkItem }) {
       </p>
 
       {/* Description */}
-      <PretextParagraph
-        size={TEXT_SIZES.base}
-        className="text-foreground mt-3"
-      >
+      <p className="text-body-lead text-foreground mt-3">
         {talk.description}
-      </PretextParagraph>
+      </p>
 
       {/* Accent bar at bottom */}
       <div
@@ -221,13 +216,9 @@ export function StoryPage() {
         <section className="flex flex-col items-center justify-start pt-8 md:pt-12 pb-16 md:pb-24">
           <div className="max-w-6xl mx-auto px-6 md:px-[4.5%]">
             <FadeIn>
-              <PretextParagraph
-                size={TEXT_SIZES.lg}
-                font={FONTS.body}
-                className="text-foreground font-light max-w-5xl mx-auto text-center text-pretty mb-12"
-              >
-                {"Fractal was originally dreamed up by Andrew and Priya Rose. They were later joined by many co-conspirators. If you're interested in Fractal's story and where we see it going, you might like the following talks and podcasts."}
-              </PretextParagraph>
+              <p className="text-body-lead text-foreground max-w-5xl mx-auto text-center text-pretty mb-12">
+                Fractal was originally dreamed up by Andrew and Priya Rose. They were later joined by many co-conspirators. If you're interested in Fractal's story and where we see it going, you might like the following talks and podcasts.
+              </p>
             </FadeIn>
 
             {/* Talk cards grid */}
