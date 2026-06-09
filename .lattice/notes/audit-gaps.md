@@ -30,3 +30,10 @@ tokens here. The register is a human-decision queue, not a system change.
   Proposed system change: add a body-mono utility tier (e.g., .text-body-mono / .text-body-mono-lead) sized to the TEXT_SIZES bridge (sm=12px, base=13px, lg=15px), OR re-author Pretext to consume Tailwind body utilities instead of TEXT_SIZES px constants.
   Page: lab
   Date: 2026-06-08
+
+- src/pages/Home.tsx:35 — <div className="font-mono text-sm md:text-base leading-relaxed text-foreground/80 space-y-6 uppercase font-thin" style={{ fontStyle: "normal" }}> the "Golden Age Protocol" prose wrapper rendering three <p> children with five inline <a> links (JBM uppercase, weight 100, responsive text-sm → text-base)
+  Nearest-fit chosen: .text-eyebrow
+  Why it didn't fit: Chrome-tier rendering (JBM uppercase) at body-passage length and responsive sizing. .text-eyebrow / .text-label / .text-meta are all single-size text-sm at weight 500 with tracking 0.1em — wrong weight (100 vs 500), wrong responsive size (text-sm→text-base vs flat text-sm), missing tracking. No canonical body utility uses mono uppercase at weight 100.
+  Proposed system change: add a body-mono-uppercase utility tier (e.g., .text-body-mono-uppercase or a thin variant of .text-body-lead with the JBM family + uppercase transform + responsive text-sm md:text-base + weight 100), OR revisit whether the Golden Age Protocol prose should drop the mono/uppercase treatment in favor of a canonical body utility (e.g., .text-body-lead) — this is an editorial-voice decision the audit cannot make alone.
+  Page: home
+  Date: 2026-06-08
