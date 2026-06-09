@@ -117,7 +117,7 @@ export function Hero() {
   const noResults = query.trim().length > 1 && flatResults.length === 0;
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center pt-20 overflow-hidden bg-background">
+    <section className="relative min-h-screen flex items-center justify-center pt-20 overflow-hidden bg-background text-foreground">
       {/* FRAC-33: Keyboard skip-nav for the hero octahedron.
           The 3D nav nodes are only reachable via pointer events on the
           R3F mesh — keyboard users have no path. This parallel nav is
@@ -130,7 +130,7 @@ export function Hero() {
         aria-label="Hero navigation (keyboard)"
         className="sr-only-focusable absolute top-2 left-2 z-50"
       >
-        <ul className="flex flex-col gap-1 bg-background border border-foreground p-3 font-mono text-xs uppercase tracking-wider">
+        <ul className="flex flex-col gap-1 bg-background text-foreground border border-foreground p-3 text-eyebrow">
           {OUTER_NAV_NODES.map((node) => (
             <li key={node.route}>
               <a
@@ -191,7 +191,7 @@ export function Hero() {
               // FRAC-43: native caret suppressed — overlay span below renders
               // the thick blinking cursor restored from commit 1ba8aa2.
               style={{ caretColor: "transparent" }}
-              className="w-full text-label text-foreground/60 border border-foreground/20 rounded-md bg-background/90 backdrop-blur-sm placeholder:text-foreground/60 outline-none transition-all duration-200 focus:border-foreground/40 focus:text-foreground/80 h-[30px] pl-8 pr-3"
+              className="w-full text-control text-foreground/60 border border-foreground/20 rounded-md bg-background/90 backdrop-blur-sm placeholder:text-foreground/60 outline-none transition-all duration-200 focus:border-foreground/40 focus:text-foreground/80 h-[30px] pl-8 pr-3"
             />
             {/* FRAC-43: hidden mirror — its offsetWidth drives the caret's
                 left offset. Same typography class as the input so width
@@ -199,7 +199,7 @@ export function Hero() {
             <span
               ref={mirrorRef}
               aria-hidden="true"
-              className="text-label"
+              className="text-control"
               style={{
                 position: "absolute",
                 visibility: "hidden",
@@ -237,7 +237,7 @@ export function Hero() {
               id={listboxId}
               role="listbox"
               aria-label="Search results"
-              className="absolute bottom-full left-0 mb-1 w-full bg-background/95 backdrop-blur-sm border border-foreground/20 rounded-md overflow-hidden shadow-lg max-h-[60vh] overflow-y-auto"
+              className="absolute bottom-full left-0 mb-1 w-full bg-background/95 text-foreground backdrop-blur-sm border border-foreground/20 rounded-md overflow-hidden shadow-lg max-h-[60vh] overflow-y-auto"
             >
               {noResults && (
                 <div className="text-meta text-foreground/60 text-center px-3 py-3">
@@ -275,7 +275,7 @@ export function Hero() {
                             <ArrowUpRight className="h-3 w-3 opacity-40 shrink-0" />
                           )}
                         </div>
-                        <div className="text-xs text-foreground/60 truncate mt-0.5">
+                        <div className="text-meta text-xs text-foreground/60 truncate mt-0.5">
                           {result.subtitle}
                         </div>
                       </div>
