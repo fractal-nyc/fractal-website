@@ -214,24 +214,24 @@ export function Navbar() {
             {/* Mobile + tablet navbar — shown at < 1024px (lg). */}
             <div className="lg:hidden px-6 pt-5 pb-3">
               {/* Top row: Fractal logo + blurb */}
-              <div className="flex items-start gap-3">
+              <div className="flex items-center gap-3">
                 <Link href="/" className="tracking-tighter shrink-0 leading-[0.9] text-center">
                   <span
                     className="block"
-                    style={{ fontFamily: "'Jacquard 24', system-ui", fontSize: "clamp(24px, 4.5vw, 42px)" }}
+                    style={{ fontFamily: "'Jacquard 24', system-ui", fontSize: "clamp(32px, 6vw, 42px)" }}
                   >
                     Fractal
                   </span>
                   <span
                     className="font-serif block italic"
-                    style={{ fontSize: "clamp(14px, 2.63vw, 25px)", textTransform: "none", fontWeight: 100 }}
+                    style={{ fontSize: "clamp(18px, 3.5vw, 25px)", textTransform: "none", fontWeight: 100 }}
                   >
                     Collective
                   </span>
                 </Link>
                 <p
                   className="font-mono uppercase font-thin text-justify flex-1"
-                  style={{ fontSize: "8px", lineHeight: 1.35, letterSpacing: "0.01em", paddingTop: "8px" }}
+                  style={{ fontSize: "8px", lineHeight: 1.35, letterSpacing: "0.01em" }}
                 >
                   {RIGHT_TEXT}
                 </p>
