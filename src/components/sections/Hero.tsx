@@ -191,7 +191,7 @@ export function Hero() {
               // FRAC-43: native caret suppressed — overlay span below renders
               // the thick blinking cursor restored from commit 1ba8aa2.
               style={{ caretColor: "transparent" }}
-              className="w-full text-label text-foreground/60 border border-foreground/20 rounded-md bg-background/90 backdrop-blur-sm placeholder:text-foreground/60 outline-none transition-all duration-200 focus:border-foreground/40 focus:text-foreground/80 h-[30px] pl-8 pr-3"
+              className="w-full text-control text-foreground/60 border border-foreground/20 rounded-md bg-background/90 backdrop-blur-sm placeholder:text-foreground/60 outline-none transition-all duration-200 focus:border-foreground/40 focus:text-foreground/80 h-[30px] pl-8 pr-3"
             />
             {/* FRAC-43: hidden mirror — its offsetWidth drives the caret's
                 left offset. Same typography class as the input so width
@@ -199,7 +199,7 @@ export function Hero() {
             <span
               ref={mirrorRef}
               aria-hidden="true"
-              className="text-label"
+              className="text-control"
               style={{
                 position: "absolute",
                 visibility: "hidden",
@@ -275,7 +275,7 @@ export function Hero() {
                             <ArrowUpRight className="h-3 w-3 opacity-40 shrink-0" />
                           )}
                         </div>
-                        <div className="text-xs text-foreground/60 truncate mt-0.5">
+                        <div className="text-meta text-xs text-foreground/60 truncate mt-0.5">
                           {result.subtitle}
                         </div>
                       </div>
