@@ -8,17 +8,23 @@
       "repo": null
     }
   ],
-  "comment_count": 1,
+  "comment_count": 2,
   "complexity": null,
   "created_at": "2026-06-09T18:08:15Z",
   "created_by": "agent:claude-opus-4-7",
   "custom_fields": {},
   "description": "Add the following event-hosting copy to BOTH the Campus page and the Events page (planner to find the right placement on each):\n\n---\nOur community hosts events nearly every day. See upcoming events on our Luma calendar \ud83c\udf89\n\nAnyone can host an event in our space, even non-members:\n\n\ud83c\udd93 To host a free event, add it directly to our Luma calendar\n\n\ud83d\udcb0 To host a paid event, email crystal@fractalnyc.com\n---\n\nLinks:\n- 'Luma calendar' should hyperlink to the Fractal NYC Luma calendar URL \u2014 reuse the URL already embedded on the Events page (FRAC-166 added the Luma embed; pull the URL from there).\n- 'crystal@fractalnyc.com' should be a mailto: link.\n\nPlacement:\n- Events page: natural fit near the top or above the embedded calendar \u2014 frames the calendar.\n- Campus page: planner to find the right section \u2014 likely near the existing events / audiences cluster. Coordinate with FRAC-54 (AI Accelerator section), FRAC-55 (membership tiers), FRAC-56 (Crystal contact) to avoid overlapping copy or duplicating the crystal@fractalnyc.com mention.\n\nRelationships:\n- depends_on: FRAC-166 (Luma embed established the URL)\n- related_to: FRAC-56 (also mentions Crystal email \u2014 dedupe/coordinate)\n- related_to: the rest of the Campus cluster (FRAC-51, 53, 54, 55)\n\nAcceptance: (a) copy renders on both Campus and Events; (b) 'Luma calendar' phrase is a working hyperlink (same URL both pages); (c) crystal@fractalnyc.com is a mailto link on both pages; (d) emojis render correctly; (e) mobile-first: legible at 375px on both pages; (f) no duplicated Crystal contact treatment on Campus (coordinate with FRAC-56).",
-  "done_at": null,
-  "evidence_refs": [],
+  "done_at": "2026-06-09T19:08:50Z",
+  "evidence_refs": [
+    {
+      "id": "ev_01KTPWJYHM1QTPTSZXS2RH566T",
+      "role": "review",
+      "source_type": "comment"
+    }
+  ],
   "id": "task_01KTPS48B98H1N3WEDS380FHK7",
-  "last_event_id": "ev_01KTPWEZF5KR4DK3K69B2GN6ZG",
-  "last_status_changed_at": "2026-06-09T19:06:32Z",
+  "last_event_id": "ev_01KTPWK5GRV1T79GKVH3EKZRDZ",
+  "last_status_changed_at": "2026-06-09T19:08:50Z",
   "priority": "medium",
   "relationships_out": [
     {
@@ -32,10 +38,10 @@
   "reopened_count": 0,
   "schema_version": 1,
   "short_id": "FRAC-57",
-  "status": "review",
+  "status": "done",
   "tags": null,
   "title": "Campus + Events pages: add event-hosting copy with Luma calendar link + Crystal contact",
   "type": "task",
-  "updated_at": "2026-06-09T19:06:32Z",
+  "updated_at": "2026-06-09T19:08:50Z",
   "urgency": null
 }
