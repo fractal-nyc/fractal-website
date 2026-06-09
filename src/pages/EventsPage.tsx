@@ -6,6 +6,9 @@ import { FractalPattern } from "@/components/ui/FractalPattern";
 import { CornerDecorations } from "@/components/ui/MandelbrotCorners";
 import { Button } from "@/components/ui/button";
 
+const LUMA_EVENTS_URL = "https://lu.ma/nyc-tech";
+const CRYSTAL_MAILTO = "mailto:crystal@fractalnyc.com";
+
 export function EventsPage() {
   return (
     <main className="relative min-h-screen bg-house-events-light text-foreground selection:bg-foreground selection:text-background">
@@ -20,6 +23,41 @@ export function EventsPage() {
             <p className="text-display mb-6 text-center">
               Join Tech Events
             </p>
+            <div className="max-w-3xl mx-auto mb-8 space-y-4 text-body text-foreground/90 leading-relaxed text-left">
+              <p>
+                Our community hosts events nearly every day. See upcoming events on our{" "}
+                <a
+                  href={LUMA_EVENTS_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="underline decoration-foreground/40 hover:decoration-foreground transition-colors"
+                >
+                  Luma calendar
+                </a>{" "}
+                🎉
+              </p>
+              <p>Anyone can host an event in our space, even non-members:</p>
+              <p>
+                🆓 To host a free event, add it directly to our{" "}
+                <a
+                  href={LUMA_EVENTS_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="underline decoration-foreground/40 hover:decoration-foreground transition-colors"
+                >
+                  Luma calendar
+                </a>
+              </p>
+              <p>
+                💰 To host a paid event, email{" "}
+                <a
+                  href={CRYSTAL_MAILTO}
+                  className="underline decoration-foreground/40 hover:decoration-foreground transition-colors"
+                >
+                  crystal@fractalnyc.com
+                </a>
+              </p>
+            </div>
             {/*
               Luma embed: slug-based URL `https://lu.ma/embed/calendar/nyc-tech/events`.
               If Luma ever rejects this path, replace with the canonical calendar-UUID
