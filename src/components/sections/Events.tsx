@@ -2,12 +2,12 @@ import { FadeIn } from "@/components/ui/FadeIn";
 
 export function Events() {
   return (
-    <section className="py-24 md:py-40 bg-background" id="events">
+    <section className="py-24 md:py-40 bg-background text-foreground" id="events">
       <div className="max-w-7xl mx-auto px-[4.5%]">
         <FadeIn>
           <div className="mb-20 md:mb-32">
             <h2 className="text-eyebrow text-muted-foreground mb-4">Events</h2>
-            <p className="text-3xl md:text-5xl font-serif max-w-2xl leading-tight normal-case">
+            <p className="text-title max-w-2xl leading-tight">
               Come <span className="italic normal-case">hang out</span> with us.
             </p>
           </div>
@@ -18,7 +18,7 @@ export function Events() {
             href="https://luma.com/nyc-tech"
             target="_blank"
             rel="noopener noreferrer"
-            className="block overflow-hidden bg-muted relative group"
+            className="block overflow-hidden bg-muted text-muted-foreground relative group"
           >
             <div className="aspect-[1200/629] overflow-hidden">
               <img
