@@ -160,3 +160,5 @@ low — copy + links, one constant addition per file, two insertion points. No n
 - Click `crystal@fractalnyc.com` on both pages — opens mail client.
 - Verify Campus events-section layout still works after replacing the Merlin's aside.
 - `npm run lint` / typecheck clean.
+
+## Reset 2026-06-09 by agent:claude-opus-4-7-impl

@@ -6,6 +6,9 @@ import { FractalPattern } from "@/components/ui/FractalPattern";
 import { CornerDecorations } from "@/components/ui/MandelbrotCorners";
 import { Button } from "@/components/ui/button";
 
+const LUMA_EVENTS_URL = "https://lu.ma/nyc-tech";
+const CRYSTAL_MAILTO = "mailto:crystal@fractalnyc.com";
+
 export function EventsPage() {
   return (
     <main className="relative min-h-screen bg-house-events-light text-foreground selection:bg-foreground selection:text-background">
@@ -37,23 +40,43 @@ export function EventsPage() {
                 referrerPolicy="no-referrer-when-downgrade"
               />
             </div>
-            <a
-              href="https://luma.com/nyc-tech"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-meta inline-block mb-12 opacity-70 hover:opacity-100 transition-opacity duration-300"
-            >
-              Open calendar in new tab →
-            </a>
+            <p className="max-w-3xl mx-auto mb-12 text-body text-foreground/90 leading-relaxed text-center">
+              Our community hosts events nearly every day. See upcoming events on our{" "}
+              <a
+                href={LUMA_EVENTS_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline decoration-foreground/40 hover:decoration-foreground transition-colors"
+              >
+                Luma calendar
+              </a>{" "}
+              →
+            </p>
           </FadeIn>
 
           <FadeIn delay={0.25}>
             <p className="text-display mb-6 text-center">
               Host Our Next Event
             </p>
-            <Button asChild className="max-w-xs w-full mb-12 text-center">
-              <a href="mailto:events@merlins.place">Email Merlin's Place</a>
-            </Button>
+            <div className="max-w-3xl mx-auto mb-6 space-y-3 text-subtitle text-foreground/90 leading-relaxed text-center">
+              <p>Anyone can host an event in our space, even non-members:</p>
+              <p>🆓 To host a free event, add it directly to our Luma calendar</p>
+              <p>💰 To host a paid event, email crystal@fractalnyc.com</p>
+            </div>
+            <div className="flex flex-col md:flex-row gap-3 justify-center items-center mb-12">
+              <Button asChild className="max-w-xs w-full text-center">
+                <a
+                  href={LUMA_EVENTS_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Luma calendar
+                </a>
+              </Button>
+              <Button asChild className="max-w-xs w-full text-center">
+                <a href={CRYSTAL_MAILTO}>Email Crystal</a>
+              </Button>
+            </div>
           </FadeIn>
 
           <FadeIn delay={0.3}>

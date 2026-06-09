@@ -18,8 +18,8 @@ const MERLINS_URL = "https://merlins.place/";
 const FRACTAL_BOOTCAMP_URL = "https://fractalbootcamp.com/";
 const STRIPE_BILLING_URL = "https://billing.stripe.com/p/login/7sI8zddAWdabfYc144";
 const CONTACT_ANDREW_MAILTO = "mailto:ajroberts0417@gmail.com";
-const MERLINS_EVENTS_MAILTO = "mailto:events@merlins.place";
 const HELLO_FRACTAL_MAILTO = "mailto:hello@fractaltech.xyz";
+const CRYSTAL_MAILTO = "mailto:crystal@fractalnyc.com";
 
 const inlineLinkClass =
   "underline decoration-background/40 hover:decoration-background transition-colors";
@@ -252,6 +252,12 @@ export function Campus() {
               <p className="text-aside text-xs md:text-sm text-background/70 text-center">
                 Want a reduced rate? Let us know. We want the space to be accessible to all.
               </p>
+              <p className="text-aside text-xs md:text-sm text-background/70 text-center mt-4">
+                ✉️{" "}
+                <InlineLink href={CRYSTAL_MAILTO} external={false}>
+                  crystal@fractalnyc.com
+                </InlineLink>
+              </p>
             </div>
           </FadeIn>
         </div>
@@ -322,6 +328,13 @@ export function Campus() {
                 <InlineLink href={LUMA_EVENTS_URL}>5+ events we host per week</InlineLink>
               </li>
             </ul>
+            <p className="mt-8 text-body text-background/90 leading-relaxed">
+              First time here? Drop by for free! Contact Crystal (
+              <InlineLink href={CRYSTAL_MAILTO} external={false}>
+                crystal@fractalnyc.com
+              </InlineLink>
+              ) for a guided tour.
+            </p>
             <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-start items-center">
               <PrimaryButton href={FRACTAL_ACCELERATOR_URL}>Fractal Accelerator</PrimaryButton>
               <PrimaryButton href={FRACTAL_U_URL}>Fractal U</PrimaryButton>
@@ -547,12 +560,23 @@ export function Campus() {
             <div className="mt-10 mb-6 flex flex-col sm:flex-row gap-4 justify-start items-center">
               <PrimaryButton href={LUMA_URL}>Join events at Fractal Campus</PrimaryButton>
             </div>
-            <p className="mt-4 text-aside text-background/70">
-              Want to host an event here?{" "}
-              <InlineLink href={MERLINS_EVENTS_MAILTO} external={false}>
-                Email Merlin's Place
-              </InlineLink>
-            </p>
+            <div className="mt-8 space-y-4 text-body text-background/90 leading-relaxed">
+              <p>
+                Our community hosts events nearly every day. See upcoming events on our{" "}
+                <InlineLink href={LUMA_EVENTS_URL}>Luma calendar</InlineLink> 🎉
+              </p>
+              <p>Anyone can host an event in our space, even non-members:</p>
+              <p>
+                🆓 To host a free event, add it directly to our{" "}
+                <InlineLink href={LUMA_EVENTS_URL}>Luma calendar</InlineLink>
+              </p>
+              <p>
+                💰 To host a paid event, email{" "}
+                <InlineLink href={CRYSTAL_MAILTO} external={false}>
+                  crystal@fractalnyc.com
+                </InlineLink>
+              </p>
+            </div>
           </div>
         </FadeIn>
       </div>
