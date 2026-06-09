@@ -185,7 +185,7 @@
 
   /* Display tier (Fraunces) */
   .text-display {
-    @apply font-serif text-5xl md:text-7xl;
+    @apply font-serif text-4xl md:text-7xl;
     font-style: normal;
     font-weight: 300;
     text-transform: uppercase;
