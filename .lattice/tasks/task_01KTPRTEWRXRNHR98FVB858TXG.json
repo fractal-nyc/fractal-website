@@ -1,7 +1,14 @@
 {
   "assigned_to": null,
-  "branch_links": [],
-  "comment_count": 2,
+  "branch_links": [
+    {
+      "branch": "frac-52-button-frost-accents",
+      "linked_at": "2026-06-09T19:34:33Z",
+      "linked_by": "agent:claude-opus-4-7-impl",
+      "repo": null
+    }
+  ],
+  "comment_count": 3,
   "complexity": null,
   "created_at": "2026-06-09T18:02:54Z",
   "created_by": "agent:claude-opus-4-7",
@@ -10,17 +17,17 @@
   "done_at": null,
   "evidence_refs": [],
   "id": "task_01KTPRTEWRXRNHR98FVB858TXG",
-  "last_event_id": "ev_01KTPXPZBSCWARKCFCQ48DWW47",
-  "last_status_changed_at": "2026-06-09T19:26:47Z",
+  "last_event_id": "ev_01KTPY291KR3J7Y0F05Y7AAKYB",
+  "last_status_changed_at": "2026-06-09T19:34:33Z",
   "priority": "medium",
   "relationships_out": [],
   "reopened_count": 0,
   "schema_version": 1,
   "short_id": "FRAC-52",
-  "status": "planned",
+  "status": "review",
   "tags": null,
   "title": "Button overhaul: frost effect + house-accent decorations + page-matched text color",
   "type": "task",
-  "updated_at": "2026-06-09T19:28:23Z",
+  "updated_at": "2026-06-09T19:34:33Z",
   "urgency": null
 }
