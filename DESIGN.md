@@ -352,6 +352,17 @@ No `rounded.full` is declared — pill / circular shapes are handled with Tailwi
 
 The Button `default` variant places four `MandelbrotIcon` glyphs at `4px` insets from each corner, sized `20px`, opacity `0.2`, rotated to face the container center (`src/components/ui/button.tsx:99-147`). This is the brand shape signature for primary CTAs. It is not modelable in the `components:` schema (no decorative-glyph slot exists), so it lives in prose. Outline / ghost / link variants and the `sm` / `icon` sizes skip the corners.
 
+### Mandelbrot corners on text containers
+
+The reusable `MandelbrotCorners` / `CornerDecorations` wrapper (`src/components/ui/MandelbrotCorners.tsx`) renders the same four-glyph motif around any container — a Note card, a DocumentBadge, an iframe panel. Each glyph is absolutely positioned at a small inset from its corner and occupies an `inset + iconSize` square. **Invariant:** when the wrapped container holds text, its padding on every side (including mobile) must be greater than or equal to `inset + iconSize` for the chosen `size`. Below that, the glyph rectangle intrudes into the content box and overlaps the first/last lines of copy. Apply this at every breakpoint — desktop padding usually clears the bound; mobile padding is where this fails.
+
+| `size` | inset | icon | safe-padding (min) |
+|---|---|---|---|
+| `xs` | 4px | 20px | **24px** (`p-6`) |
+| `sm` | 6px | 30px | **36px** (`p-9`) |
+| `md` | 8px | 45px | **53px** (`p-14`) |
+| `lg` | 10px | 60px | **70px** (`p-16`+) |
+
 ### Pennant clip-path (HouseBanner)
 
 HouseBanner uses a CSS clip-path V-notch shape — `polygon(0% 0%, 100% 0%, 100% 100%, 50% 85%, 0% 100%)` (`src/components/house/HouseBanner.tsx:110-111`). The result reads as a downward-pointing pennant. A second MandelbrotIcon sits outside the clip-path centered at the V-notch tip on the cream page background. Not a token; lives in prose.

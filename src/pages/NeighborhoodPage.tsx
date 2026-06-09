@@ -28,7 +28,24 @@ export function NeighborhoodPage() {
             </FadeIn>
 
             <FadeIn delay={0.15}>
-              <MandelbrotCorners size="sm" opacity={0.15} className="border border-foreground/20 rounded-md px-6 py-5 md:px-10 md:py-8 mb-3 md:mb-10 bg-foreground/[0.03] text-foreground text-left max-w-xl mx-auto">
+              <div className="mb-6 md:mb-10">
+                <p className="text-subtitle text-foreground mb-3 md:mb-4">
+                  Want to visit? Fill out this form.
+                </p>
+                <Button asChild className="max-w-xs w-full text-center">
+                  <a
+                    href="https://airtable.com/appDkSh1TsmjHzacK/shrbrfFHeMTcSJ9dd"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Visitor Form
+                  </a>
+                </Button>
+              </div>
+            </FadeIn>
+
+            <FadeIn delay={0.15}>
+              <MandelbrotCorners size="sm" opacity={0.15} className="border border-foreground/20 rounded-md p-9 md:px-10 md:py-8 mb-3 md:mb-10 bg-foreground/[0.03] text-foreground text-left max-w-xl mx-auto">
                 <p className="text-eyebrow text-foreground mb-2 md:mb-3">
                   Note
                 </p>
@@ -49,23 +66,6 @@ export function NeighborhoodPage() {
                   </ol>
                 </div>
               </MandelbrotCorners>
-            </FadeIn>
-
-            <FadeIn delay={0.15}>
-              <div>
-                <p className="text-subtitle text-foreground mb-3 md:mb-4">
-                  Want to visit? Fill out this form.
-                </p>
-                <Button asChild className="max-w-xs w-full text-center">
-                  <a
-                    href="https://airtable.com/appDkSh1TsmjHzacK/shrbrfFHeMTcSJ9dd"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    Visitor Form
-                  </a>
-                </Button>
-              </div>
             </FadeIn>
           </div>
         </section>

@@ -50,6 +50,18 @@ const corners = [
  *   <MandelbrotCorners as="section" size="lg" className="py-24 bg-muted">
  *     ...content...
  *   </MandelbrotCorners>
+ *
+ * Safe-padding invariant (mandatory for text containers):
+ *   Each corner glyph occupies an `inset + iconSize` square measured from the
+ *   container corner. The wrapper's padding on every side MUST be greater than
+ *   or equal to `inset + iconSize` for the chosen `size`, or text will collide
+ *   with the glyphs. Per-size minimums:
+ *     - size="xs": inset 4px + icon 20px  -> min padding 24px (p-6)
+ *     - size="sm": inset 6px + icon 30px  -> min padding 36px (p-9)
+ *     - size="md": inset 8px + icon 45px  -> min padding 53px (p-14)
+ *     - size="lg": inset 10px + icon 60px -> min padding 70px (p-16+)
+ *   Apply at every breakpoint — mobile is where this most often fails.
+ *   See DESIGN.md > "Mandelbrot corners on text containers".
  */
 /**
  * Standalone corner decorations — drop inside any `relative` container.
