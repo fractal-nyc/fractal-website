@@ -30,3 +30,10 @@ tokens here. The register is a human-decision queue, not a system change.
   Proposed system change: add a body-mono utility tier (e.g., .text-body-mono / .text-body-mono-lead) sized to the TEXT_SIZES bridge (sm=12px, base=13px, lg=15px), OR re-author Pretext to consume Tailwind body utilities instead of TEXT_SIZES px constants.
   Page: lab
   Date: 2026-06-08
+
+- src/components/sections/Campus.tsx:218 — <p className="text-xs md:text-sm text-white/70 italic text-center">Want a reduced rate? Let us know.</p> (italic-aside cluster: lines 218, 367, 419, 453, 532, 570 — small italic Inter body text serving editorial-aside / byline / sub-CTA roles on the Campus page)
+  Nearest-fit chosen: .text-body
+  Why it didn't fit: Italic Inter body at sub-base sizing (text-xs/text-sm at line 218; text-base at the bylines and prose asides). No canonical body utility is italic. .text-body and .text-body-lead are both upright; the display tier (.text-title, .text-subtitle) is italic but at display sizes (text-3xl+, text-xl+), too large for these inline asides.
+  Proposed system change: add a body-aside italic tier (e.g., .text-body-aside or .text-body-note) sized to the existing body scale (text-sm or text-base) at Inter italic weight 400, with optional text-center variant. Alternative: codify the .font-serif italic rule as a body utility for short prose asides — though this would conflict with the existing Fraunces-implies-italic rule on .font-serif, so a dedicated italic-aside utility is cleaner.
+  Page: campus
+  Date: 2026-06-08
