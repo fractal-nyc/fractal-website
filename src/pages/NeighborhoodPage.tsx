@@ -28,7 +28,7 @@ export function NeighborhoodPage() {
             </FadeIn>
 
             <FadeIn delay={0.15}>
-              <div>
+              <div className="mb-6 md:mb-10">
                 <p className="text-subtitle text-foreground mb-3 md:mb-4">
                   Want to visit? Fill out this form.
                 </p>
