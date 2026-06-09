@@ -17,8 +17,8 @@
   "done_at": null,
   "evidence_refs": [],
   "id": "task_01KTJQF18KEMXAQJ51JBNKJS24",
-  "last_event_id": "ev_01KTNCDJEAPBT6QQV53SV37RTN",
-  "last_status_changed_at": "2026-06-09T05:06:53Z",
+  "last_event_id": "ev_01KTNCW1B2DFEY5WV6PT5M3GQM",
+  "last_status_changed_at": "2026-06-09T05:14:49Z",
   "priority": "medium",
   "relationships_out": [
     {
@@ -32,10 +32,10 @@
   "reopened_count": 0,
   "schema_version": 1,
   "short_id": "FRAC-28",
-  "status": "in_planning",
+  "status": "in_progress",
   "tags": null,
   "title": "Audit New Liberal Arts page (typography + color)",
   "type": "task",
-  "updated_at": "2026-06-09T05:06:55Z",
+  "updated_at": "2026-06-09T05:14:49Z",
   "urgency": null
 }
