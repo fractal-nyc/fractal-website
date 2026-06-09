@@ -58,7 +58,7 @@ export function EventsPage() {
             <p className="text-display mb-6 text-center">
               Host Our Next Event
             </p>
-            <div className="max-w-3xl mx-auto mb-6 space-y-3 text-body text-foreground/90 leading-relaxed text-left">
+            <div className="max-w-3xl mx-auto mb-6 space-y-3 text-subtitle text-foreground/90 leading-relaxed text-center">
               <p>Anyone can host an event in our space, even non-members:</p>
               <p>🆓 To host a free event, add it directly to our Luma calendar</p>
               <p>💰 To host a paid event, email crystal@fractalnyc.com</p>
