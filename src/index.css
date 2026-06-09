@@ -36,7 +36,7 @@
   --color-input: hsl(var(--input));
   --color-ring: hsl(var(--ring));
 
-  /* House palette tokens (FRAC-21, FRAC-25, FRAC-29, FRAC-33). Static brand hexes —
+  /* House palette tokens (FRAC-21, FRAC-25, FRAC-29, FRAC-33, FRAC-35). Static brand hexes —
      declared directly without the hsl(var(...)) indirection used by surface
      tokens above, because house colors do not theme-swap (no dark mode per
      FRAC-30). See DESIGN.md → House palette values for the full set.
@@ -63,6 +63,9 @@
 
   --color-house-visit-light: #889460;
   --color-house-visit-deep: #4A5A30;
+
+  --color-house-events-light: #D4857A;
+  --color-house-events-deep: #C13B2A;
 
   --radius-sm: 0.25rem;
   --radius-md: 0.5rem;
