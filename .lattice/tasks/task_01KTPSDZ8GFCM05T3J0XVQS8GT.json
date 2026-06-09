@@ -8,17 +8,23 @@
       "repo": null
     }
   ],
-  "comment_count": 2,
+  "comment_count": 3,
   "complexity": null,
   "created_at": "2026-06-09T18:13:34Z",
   "created_by": "agent:claude-opus-4-7",
   "custom_fields": {},
   "description": "On the Campus page, increase the vertical padding/margin between the hero/title block (the centered 'C' Jacquard letter + 'Campus' eyebrow + 'Fractal Campus' heading + address + 'Visit by joining us for an event' button + 'Co-work with us / Day Pass' button row) and the FIRST body content section that follows below it.\n\nCurrently the hero block ends with the button cluster and the 'Want a reduced rate?' aside, then the next body section starts directly underneath with too little breathing room.\n\nThe hero block lives inside: <div class='min-h-screen flex flex-col items-center justify-start pt-16 md:pt-24 w-full'>...\n\nPlanner: identify the first body div that follows the hero, add appropriate vertical spacing (mt-* on the next section, or pb-* / mb-* on the hero container, whichever is the canonical pattern on the site). Match the rhythm used between other sections on Campus.\n\nMobile-first: verify the spacing reads correctly at 375px (don't over-pad mobile).\n\nRelationship to FRAC-48: this is a tightly-scoped spacing fix that can ship independently of the broader 'center body containers / canonical max-width' rework \u2014 but the planner should sanity-check that the fix doesn't conflict with what FRAC-48 will codify.\n\nAcceptance: (a) noticeable, intentional breathing room between hero block and first body section on Campus; (b) consistent rhythm with other section breaks on Campus; (c) 375px mobile + desktop both look correct; (d) no other pages affected (unless the spacing comes from a shared component, in which case planner flags it).",
-  "done_at": null,
-  "evidence_refs": [],
+  "done_at": "2026-06-09T18:39:59Z",
+  "evidence_refs": [
+    {
+      "id": "ev_01KTPTY9B6RR7E25XDFPNGB5HT",
+      "role": "review",
+      "source_type": "comment"
+    }
+  ],
   "id": "task_01KTPSDZ8GFCM05T3J0XVQS8GT",
-  "last_event_id": "ev_01KTPTQ2T5NC4GSTBB4WZAJRNH",
-  "last_status_changed_at": "2026-06-09T18:36:01Z",
+  "last_event_id": "ev_01KTPTYBWA1FVFVDN2HBGZ93G2",
+  "last_status_changed_at": "2026-06-09T18:39:59Z",
   "priority": "medium",
   "relationships_out": [
     {
@@ -32,10 +38,10 @@
   "reopened_count": 0,
   "schema_version": 1,
   "short_id": "FRAC-58",
-  "status": "review",
+  "status": "done",
   "tags": null,
   "title": "Campus page: add spacing between hero title block and first body section",
   "type": "task",
-  "updated_at": "2026-06-09T18:36:01Z",
+  "updated_at": "2026-06-09T18:39:59Z",
   "urgency": null
 }
