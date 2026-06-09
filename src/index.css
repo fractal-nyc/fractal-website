@@ -35,23 +35,30 @@
   --color-input: hsl(var(--input));
   --color-ring: hsl(var(--ring));
 
-  /* House palette tokens (FRAC-21) + paired foregrounds (FRAC-42).
+  /* House palette tokens (FRAC-21, FRAC-25) + paired foregrounds (FRAC-42).
      Static brand hexes — declared directly without the hsl(var(...))
      indirection used by surface tokens above, because house colors do
      not theme-swap (no dark mode per FRAC-30) and the indirection
      would add no value. See DESIGN.md → House palette values for the
-     full set; FRAC-21 lands only the Publications pair (the remaining
-     5 pairs land in their respective per-house Apply tasks).
+     full set; FRAC-21 lands the Publications pair, FRAC-25 lands the
+     Campus pair (the remaining 4 pairs land in their respective
+     per-house Apply tasks).
 
      Each house surface ships an explicit *-foreground sibling per the
-     shadcn/Material-3 pairing convention (FRAC-42). Today both
-     Publications foreground siblings resolve to cream; see DESIGN.md
+     shadcn/Material-3 pairing convention (FRAC-42). Today every
+     declared foreground sibling resolves to cream; see DESIGN.md
      → Surface foreground pairing for the rule and the four canonical
-     pairs. */
+     pairs. FRAC-25 is the first Apply task to declare both surface
+     and paired-foreground siblings together from day one. */
   --color-house-publications-light: #E870A0;
   --color-house-publications-deep: #C44878;
   --color-house-publications-light-foreground: var(--color-background);
   --color-house-publications-deep-foreground: var(--color-background);
+
+  --color-house-campus-light: #2E6B4A;
+  --color-house-campus-deep: #1A3A2E;
+  --color-house-campus-light-foreground: var(--color-background);
+  --color-house-campus-deep-foreground: var(--color-background);
 
   --radius-sm: 0.25rem;
   --radius-md: 0.5rem;
@@ -103,11 +110,15 @@
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.03'/%3E%3C/svg%3E");
   }
 
-  /* Serif headings: neobrutalist Fraunces — uppercase italic */
+  /* Serif headings: Fraunces italic with editorial tracking. Case is NOT
+     pinned globally — utilities (.text-display, .text-title, etc.) declare
+     their own text-transform so call sites don't need per-site overrides.
+     FRAC-46 dropped the global uppercase rule because it forced every
+     mixed-case utility to add a normal-case modifier on every call site
+     and silently uppercased the ones that forgot. */
   h1, h2, h3, h4, h5, h6 {
     @apply font-serif font-normal italic;
     letter-spacing: 0.04em;
-    text-transform: uppercase;
   }
 
   /* Fraunces body text inherits uppercase from body; Jacquard keeps none */
@@ -185,6 +196,8 @@
   .text-title {
     @apply font-serif text-3xl md:text-5xl;
     font-style: italic;
+    font-weight: 350;
+    text-transform: none;
     letter-spacing: 0.04em;
   }
 
@@ -192,6 +205,7 @@
     @apply font-serif text-xl md:text-2xl;
     font-style: normal;
     font-weight: 300;
+    text-transform: none;
     letter-spacing: 0.04em;
   }
 
@@ -207,6 +221,17 @@
     font-weight: 300;
     text-transform: none;
     line-height: 1.7;
+  }
+
+  /* Aside tier — italic Inter weight 400 normal-case text-base
+     leading-relaxed. The canonical home for editorial italic voice:
+     bylines, attributions, role labels, parenthetical asides, P.S.
+     footer notes. Distinguished from .text-body by italic. FRAC-47. */
+  .text-aside {
+    @apply font-sans text-base leading-relaxed;
+    font-style: italic;
+    font-weight: 400;
+    text-transform: none;
   }
 
   /* Chrome tier (JetBrains Mono, uppercase, widest tracking) */
