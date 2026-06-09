@@ -269,7 +269,7 @@ export function Campus() {
           <FadeIn>
             <div className="text-center max-w-4xl mx-auto">
               <p
-                className="font-serif not-italic font-light text-3xl md:text-4xl tracking-[0.04em] uppercase leading-[1.1] text-background mb-4 text-center"
+                className="text-display text-background mb-4 text-center"
               >
                 Be Ambitious at Fractal Campus
               </p>
