@@ -44,3 +44,10 @@ tokens here. The register is a human-decision queue, not a system change.
   Proposed system change: add a body-aside italic tier (e.g., .text-body-aside or .text-body-note) sized to the existing body scale (text-sm or text-base) at Inter italic weight 400, with optional text-center variant. Alternative: codify the .font-serif italic rule as a body utility for short prose asides — though this would conflict with the existing Fraunces-implies-italic rule on .font-serif, so a dedicated italic-aside utility is cleaner. Resolved by FRAC-47 (added .text-aside tier; migrated all 7+ italic-aside sites + applied quote rule to Campus passages).
   Page: campus
   Date: 2026-06-08
+
+- src/pages/NeighborhoodPage.tsx:54 — <PretextParagraph size={TEXT_SIZES.sm} className="text-white mb-3 md:mb-4">{"Want to visit? Fill out this form."}</PretextParagraph> rendered as inline-styled <p>/<div> (JBM 12px weight 400)
+  Nearest-fit chosen: .text-body
+  Why it didn't fit: No canonical body utility uses mono and no canonical body utility sizes at 12px. .text-body is Inter text-base (16px) weight 400; .text-body-lead is Inter text-lg (18px) weight 300. Pretext always renders via FONTS.body (JetBrains Mono) at inline px sizes from TEXT_SIZES, which sits outside the Inter-only body tier and outside the Tailwind size scale. Folds into the sitewide Pretext gap first logged for LabPage:58 (FRAC-20); Visit's call site differs only in size step (TEXT_SIZES.sm = 12px vs. Lab's TEXT_SIZES.base = 13px).
+  Proposed system change: add a body-mono utility tier (e.g., .text-body-mono / .text-body-mono-sm / .text-body-mono-lead) sized to the TEXT_SIZES bridge (sm=12px, base=13px, lg=15px), OR re-author Pretext to consume Tailwind body utilities instead of TEXT_SIZES px constants. Both proposals are upstream of the Lab gap entry; Visit's entry sharpens the size-step argument because the sitewide pattern now spans two Pretext size steps.
+  Page: visit
+  Date: 2026-06-09

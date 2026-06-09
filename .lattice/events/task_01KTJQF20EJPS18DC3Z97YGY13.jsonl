@@ -3,3 +3,4 @@
 {"actor":"agent:claude-opus-4-7-frac-32-planner","data":{"branch":"frac-32-audit-visit"},"id":"ev_01KTNCECXGW3VYXM1TKCN55BQ5","schema_version":1,"task_id":"task_01KTJQF20EJPS18DC3Z97YGY13","ts":"2026-06-09T05:07:22Z","type":"branch_linked"}
 {"actor":"agent:claude-opus-4-7-frac-32-planner","data":{"from":"backlog","to":"in_planning"},"id":"ev_01KTNCECZQMP4H6NPT65XSSJJQ","schema_version":1,"task_id":"task_01KTJQF20EJPS18DC3Z97YGY13","ts":"2026-06-09T05:07:22Z","type":"status_changed"}
 {"actor":"agent:claude-opus-4-7-frac-32-planner","data":{"from":"in_planning","to":"planned"},"id":"ev_01KTNCNJP8MPC8WTSBQH3GBJEZ","schema_version":1,"task_id":"task_01KTJQF20EJPS18DC3Z97YGY13","ts":"2026-06-09T05:11:17Z","type":"status_changed"}
+{"actor":"agent:claude-opus-4-7-frac-32-impl","data":{"from":"planned","to":"in_progress"},"id":"ev_01KTNCWEP9ZEXYSYQAM8G5N2WX","schema_version":1,"task_id":"task_01KTJQF20EJPS18DC3Z97YGY13","ts":"2026-06-09T05:15:02Z","type":"status_changed"}
