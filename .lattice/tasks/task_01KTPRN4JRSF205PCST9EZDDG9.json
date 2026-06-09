@@ -1,26 +1,33 @@
 {
   "assigned_to": null,
-  "branch_links": [],
+  "branch_links": [
+    {
+      "branch": "frac-51-53-54-ai-accelerator",
+      "linked_at": "2026-06-09T19:05:32Z",
+      "linked_by": "agent:claude-opus-4-7-impl",
+      "repo": null
+    }
+  ],
   "comment_count": 0,
   "complexity": null,
   "created_at": "2026-06-09T18:00:00Z",
   "created_by": "agent:claude-opus-4-7",
   "custom_fields": {},
   "description": "On the Campus page, the text 'Fractal AI Accelerator participants' should be a hyperlink pointing to https://www.fractalaccelerator.com/. Open in new tab (target=_blank rel=noopener noreferrer) per existing external-link convention on the page. Acceptance: clicking the phrase opens the accelerator site; mobile and desktop both render the link styling consistently with other external links on Campus.",
-  "done_at": null,
+  "done_at": "2026-06-09T19:08:33Z",
   "evidence_refs": [],
   "id": "task_01KTPRN4JRSF205PCST9EZDDG9",
-  "last_event_id": "ev_01KTPW487QCCZZX8275VSX6S9Z",
-  "last_status_changed_at": "2026-06-09T19:00:41Z",
+  "last_event_id": "ev_01KTPWJNFSG5B4FGYKY82A335Y",
+  "last_status_changed_at": "2026-06-09T19:08:33Z",
   "priority": "medium",
   "relationships_out": [],
   "reopened_count": 0,
   "schema_version": 1,
   "short_id": "FRAC-51",
-  "status": "planned",
+  "status": "done",
   "tags": null,
   "title": "Campus page: link 'Fractal AI Accelerator participants' to https://www.fractalaccelerator.com/",
   "type": "task",
-  "updated_at": "2026-06-09T19:00:41Z",
+  "updated_at": "2026-06-09T19:08:33Z",
   "urgency": null
 }

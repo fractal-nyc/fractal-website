@@ -13,7 +13,7 @@ const FLOWGLAD_DAYPASS_URL =
 const GOOGLE_MAPS_URL =
   "https://www.google.com/maps/place/111+Conselyea+St,+Brooklyn,+NY+11211/";
 const PAMPAM_URL = "https://www.pampam.city/p/3hItQdj7pnuUtEkU4p7I";
-const ACCELERATOR_URL = "/";
+const FRACTAL_ACCELERATOR_URL = "https://www.fractalaccelerator.com/";
 const MERLINS_URL = "https://merlins.place/";
 const FRACTAL_BOOTCAMP_URL = "https://fractalbootcamp.com/";
 const STRIPE_BILLING_URL = "https://billing.stripe.com/p/login/7sI8zddAWdabfYc144";
@@ -294,7 +294,7 @@ export function Campus() {
             <ul className="space-y-5 text-body text-background/90 leading-relaxed">
               <li>
                 <strong className="font-semibold text-background">
-                  <InlineLink href={ACCELERATOR_URL} external={false}>
+                  <InlineLink href={FRACTAL_ACCELERATOR_URL}>
                     Fractal AI Accelerator participants
                   </InlineLink>
                 </strong>
@@ -323,7 +323,57 @@ export function Campus() {
               </li>
             </ul>
             <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-start items-center">
+              <PrimaryButton href={FRACTAL_ACCELERATOR_URL}>Fractal Accelerator</PrimaryButton>
               <PrimaryButton href={FRACTAL_U_URL}>Fractal U</PrimaryButton>
+            </div>
+          </div>
+        </FadeIn>
+      </div>
+
+      {/* AI Accelerator */}
+      <div className="max-w-7xl mx-auto px-6 md:px-[4.5%] pb-24 md:pb-32">
+        <FadeIn>
+          <div className="max-w-3xl mx-auto">
+            <h2 className="text-title mb-6 normal-case">
+              <span aria-hidden>⚡ </span>AI Accelerator
+            </h2>
+            <div className="space-y-6 text-body text-background/90 leading-relaxed">
+              <p>
+                We run an AI training program that teaches ambitious professionals to
+                master AI. No prior programming experience is needed. Our program runs
+                every 6 weeks, starting in summer 2026.
+              </p>
+              <p>Our program teaches you how to:</p>
+            </div>
+            <ul className="mt-6 space-y-5 text-body text-background/90 leading-relaxed">
+              <li className="flex gap-3">
+                <span aria-hidden className="text-background/50">—</span>
+                <span>
+                  Ship real personal software — tools, dashboards, automations, and
+                  workflows — starting from nothing but a plain-language description
+                  of what you want
+                </span>
+              </li>
+              <li className="flex gap-3">
+                <span aria-hidden className="text-background/50">—</span>
+                <span>
+                  Build an AI agent that knows your work, learns your preferences,
+                  and takes action across your email, calendar, and the rest of your
+                  apps
+                </span>
+              </li>
+              <li className="flex gap-3">
+                <span aria-hidden className="text-background/50">—</span>
+                <span>
+                  Set up a computer that keeps working when you walk away, with
+                  agents running in the background and reachable from your phone
+                </span>
+              </li>
+            </ul>
+            <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-start items-center">
+              <PrimaryButton href={FRACTAL_ACCELERATOR_URL}>
+                Apply to the AI Accelerator
+              </PrimaryButton>
             </div>
           </div>
         </FadeIn>
@@ -365,7 +415,7 @@ export function Campus() {
                 We prioritize intentional community: you'll share space, meals, conversations, and
                 ideate with small companies, talented founders, designers, and engineers from all
                 over New York City, as well as be motivated by working alongside our{" "}
-                <InlineLink href={ACCELERATOR_URL} external={false}>
+                <InlineLink href={FRACTAL_ACCELERATOR_URL}>
                   Fractal AI Accelerator cohorts
                 </InlineLink>
                 .
