@@ -271,7 +271,7 @@ export function Campus() {
               <p
                 className="text-display text-background mb-4 text-center"
               >
-                Be Ambitious
+                Be Ambitious with Us
               </p>
               <p className="text-subtitle text-background/80 mb-8 normal-case">
                 <InlineLink href={GOOGLE_MAPS_URL}>
