@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 
 export function LiberalArts() {
   return (
-    <section id="new-liberal-arts" className="flex flex-col items-center pt-16 pb-24 md:pt-24 overflow-x-hidden" style={{ color: "#fff" }}>
+    <section id="new-liberal-arts" className="flex flex-col items-center pt-16 pb-24 md:pt-24 overflow-x-hidden text-house-education-deep-foreground">
       <div className="w-full px-6 md:px-[4.5%] text-center">
         <SectorHeader letter="E" name="Education" color="#C41E20" />
         <FadeIn>
@@ -17,7 +17,7 @@ export function LiberalArts() {
         <FadeIn>
           <PretextParagraph
             size={TEXT_SIZES.lg}
-            className="text-white/90 mb-8"
+            className="text-house-education-deep-foreground/90 mb-8"
           >
             {"More information on the Education house launch coming June 2026"}
           </PretextParagraph>
@@ -28,7 +28,7 @@ export function LiberalArts() {
             <h3 className="text-subtitle mb-6 normal-case">Fractal U</h3>
             <PretextParagraph
               size={TEXT_SIZES.lg}
-              className="text-white/90 mb-8"
+              className="text-house-education-deep-foreground/90 mb-8"
             >
               {"Fractal University offers in-person, community sections of world-class courses, for fun. We have courses in AI, computer science, friendship + community, NYC government, cooking, mind-body sciences, and more."}
             </PretextParagraph>
@@ -56,13 +56,13 @@ export function LiberalArts() {
 
             <PretextParagraph
               size={TEXT_SIZES.lg}
-              className="text-white/90 mb-6"
+              className="text-house-education-deep-foreground/90 mb-6"
             >
               {"We aim to democratize enjoyable, community education and public research culture by creating an easily replicable model for a decentralized university \u2014 and the economic, social, and creative opportunities they create."}
             </PretextParagraph>
             <PretextParagraph
               size={TEXT_SIZES.lg}
-              className="text-white/90"
+              className="text-house-education-deep-foreground/90"
             >
               {"The dream is 100s of writers, artists, and scientists and 1000s of great works to emerge from this program \u2014 but we are really in it just for the love of the game."}
             </PretextParagraph>
