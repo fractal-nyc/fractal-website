@@ -5,8 +5,8 @@ import { FractalPattern } from "@/components/ui/FractalPattern";
 
 export function LiberalArtsPage() {
   return (
-    <main className="relative min-h-screen text-white selection:bg-white selection:text-[#5C1010]" style={{ backgroundColor: "#5C1010" }}>
-      <FractalPattern color="#B52828" />
+    <main className="relative min-h-screen bg-house-education-deep text-background selection:bg-foreground selection:text-background">
+      <FractalPattern color="#C41E20" />
       <div className="relative z-10">
         <Navbar />
         <LiberalArts />

@@ -78,7 +78,7 @@ function PillarCard({ pillar }: { pillar: Pillar }) {
           {pillar.title}
         </h3>
       </div>
-      <ul className="space-y-1 text-xs md:text-sm leading-snug text-foreground/90">
+      <ul className="space-y-1 text-body leading-snug text-foreground/90">
         {pillar.stats.map((stat) => (
           <li key={stat} className="flex gap-2">
             <span aria-hidden className="opacity-60">
@@ -106,10 +106,10 @@ function CenterNode({ compact = false }: { compact?: boolean }) {
       }}
     >
       <div className="px-4">
-        <div className="font-serif text-lg md:text-xl leading-tight tracking-tight normal-case">
+        <div className="text-subtitle italic leading-tight normal-case">
           Fractal NYC
         </div>
-        <div className="text-[10px] md:text-xs mt-2 opacity-80 leading-snug">
+        <div className="text-meta text-[10px] md:text-xs mt-2 opacity-80 leading-snug">
           A neighborhood campus
           <br />
           founded in 2021

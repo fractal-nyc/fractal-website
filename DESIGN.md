@@ -5,6 +5,7 @@ description: "Asimov-Collective editorial aesthetic for fractal-nyc — cream an
 colors:
   background: "#f8f6f0"
   foreground: "#171717"
+  foreground-light: "#333333"
   card: "#fbfaf9"
   card-foreground: "#171717"
   popover: "#fbfaf9"
@@ -28,7 +29,7 @@ colors:
   house-events-deep: "#C13B2A"
   house-campus-light: "#2E6B4A"
   house-campus-deep: "#1A3A2E"
-  house-education-light: "#B52828"
+  house-education-light: "#C41E20"
   house-education-deep: "#5C1010"
   house-political-club-light: "#C83858"
   house-political-club-deep: "#6E1830"
@@ -117,6 +118,7 @@ The system declares **31 color tokens**: 19 surface tokens that drive the page c
 |---|---|---|
 | `background` | `#f8f6f0` | Canonical cream. See *cream-math note* below. |
 | `foreground` | `#171717` | Canonical charcoal. Dominant text color. See *charcoal drift note*. |
+| `foreground-light` | `#333333` | Softer charcoal for secondary body voice (asides, supporting prose). Barely-perceptible step down from canonical charcoal — used as a hierarchy hint, not as muted/disabled. Different role from `muted-foreground` which is tuned for cream surfaces specifically. FRAC-33. |
 | `card` | `#fbfaf9` | `--card: 40 25% 98%`. Slightly raised cream for card surfaces. |
 | `card-foreground` | `#171717` | |
 | `popover` | `#fbfaf9` | Same as `card`. |
@@ -160,7 +162,7 @@ Verified against `src/data/houses.ts` at HEAD. The `HOUSES[id].palette: { light,
 | `house-events-deep` | `#C13B2A` |
 | `house-campus-light` | `#2E6B4A` |
 | `house-campus-deep` | `#1A3A2E` |
-| `house-education-light` | `#B52828` |
+| `house-education-light` | `#C41E20` |
 | `house-education-deep` | `#5C1010` |
 | `house-political-club-light` | `#C83858` |
 | `house-political-club-deep` | `#6E1830` |
@@ -187,22 +189,20 @@ Two canonical text colors carry the entire site: `foreground` (`#171717` charcoa
 
 ### Surface foreground pairing
 
-Every surface token has a paired foreground token. Authors who reach for a surface utility (`bg-*`) on a container reach for the matching foreground utility (`text-*`) on the same node — never relying on the page-level text-color cascade to "still be correct" inside a nested surface. This is the same convention shadcn/ui and Material 3 use, adapted to the four surface families this system declares.
+Cream and charcoal are the only text-color tokens — `text-background` (cream `#f8f6f0`) and `text-foreground` (charcoal `#171717`). They are page-agnostic. There are no per-house `*-foreground` sibling tokens. Authors reaching for a house surface (`bg-house-*`) pair it with `text-background` or `text-foreground` directly on the same node — explicit, never trusting the page-level cascade to "still be correct" inside a nested surface.
 
-The four canonical pairs:
+The four canonical pairings:
 
-| Surface | Pair | Source of the foreground |
-|---|---|---|
-| Neutral light (cream) | `bg-background` + `text-foreground` | Implicit — `--color-foreground` already exists. No new token. |
-| Neutral dark (charcoal as surface) | `bg-foreground` + `text-background` | Implicit inverse — `--color-background` already exists. No new token. |
-| House light | `bg-house-{slug}-light` + `text-house-{slug}-light-foreground` | New sibling token per house. |
-| House deep | `bg-house-{slug}-deep` + `text-house-{slug}-deep-foreground` | New sibling token per house. |
+| Surface | Pair |
+|---|---|
+| Cream | `bg-background` + `text-foreground` |
+| Charcoal | `bg-foreground` + `text-background` |
+| House light (saturated) | `bg-house-{slug}-light` + `text-background` |
+| House deep (saturated) | `bg-house-{slug}-deep` + `text-background` |
 
-For every house pair declared today, the light- and deep-foreground siblings resolve to `var(--color-background)` (cream). Cream on saturated house surfaces is the editorial voice; the foreground tokens exist to make the pairing explicit at the call site, not to vary the value.
+Cream-on-saturated-house is the editorial default. A nested cream surface inside a house page (`bg-house-publications-light` → `bg-background`) re-asserts `text-foreground` on the inner surface so text doesn't inherit cream-from-cascade and render cream-on-cream. (FRAC-21 review caught this regression with the DocumentBadge `h3` rendering invisible at 375px — the explicit-pairing rule prevents it.)
 
-**Why explicit foreground tokens on saturated surfaces?** Surfaces compose. A cream-card-on-house-page chain (`bg-house-publications-light` → `bg-background`) breaks if the inner surface omits its paired foreground: text inside the card inherits `text-background` from the cascade and renders cream-on-cream. The paired token forces every surface to re-assert its own voice, which is the only way nested surfaces compose correctly. (FRAC-21 review caught exactly this regression — DocumentBadge `h3` titles rendered invisible at 375px.)
-
-**Out of scope today:** Only the Publications pair has its foreground siblings declared (FRAC-42, after FRAC-21). The other five houses' siblings land with their respective per-house Apply tasks; the pairing rule applies to them ahead of declaration.
+**Migration note (NLA palette tweak, 2026-06-09):** The earlier FRAC-42 codification introduced per-house `*-light-foreground` and `*-deep-foreground` sibling tokens (every one resolving to `var(--color-background)`). Those siblings have been retired in favor of using `text-background` directly. New Liberal Arts is the first page migrated. Publications and Campus pages still reference the old `*-foreground` utilities; their declarations remain in `index.css` for now and will be cleaned up as those pages are touched. Do not introduce new `*-foreground` siblings.
 
 ### Charcoal drift note
 
