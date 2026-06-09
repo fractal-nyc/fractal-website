@@ -10,8 +10,8 @@
   "done_at": null,
   "evidence_refs": [],
   "id": "task_01KTPS48B98H1N3WEDS380FHK7",
-  "last_event_id": "ev_01KTPS4CE3CQ1W1BM9A2E71VCQ",
-  "last_status_changed_at": "2026-06-09T18:08:15Z",
+  "last_event_id": "ev_01KTPW49MVWTEF1J2QM6KJ339A",
+  "last_status_changed_at": "2026-06-09T19:00:42Z",
   "priority": "medium",
   "relationships_out": [
     {
@@ -25,10 +25,10 @@
   "reopened_count": 0,
   "schema_version": 1,
   "short_id": "FRAC-57",
-  "status": "backlog",
+  "status": "planned",
   "tags": null,
   "title": "Campus + Events pages: add event-hosting copy with Luma calendar link + Crystal contact",
   "type": "task",
-  "updated_at": "2026-06-09T18:08:19Z",
+  "updated_at": "2026-06-09T19:00:42Z",
   "urgency": null
 }

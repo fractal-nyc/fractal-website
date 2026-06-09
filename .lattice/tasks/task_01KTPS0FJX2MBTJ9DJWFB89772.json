@@ -1,7 +1,7 @@
 {
   "assigned_to": null,
   "branch_links": [],
-  "comment_count": 2,
+  "comment_count": 3,
   "complexity": null,
   "created_at": "2026-06-09T18:06:12Z",
   "created_by": "agent:claude-opus-4-7",
@@ -10,8 +10,8 @@
   "done_at": null,
   "evidence_refs": [],
   "id": "task_01KTPS0FJX2MBTJ9DJWFB89772",
-  "last_event_id": "ev_01KTPS2XYW2SMD8A0JZVP35ETG",
-  "last_status_changed_at": "2026-06-09T18:06:12Z",
+  "last_event_id": "ev_01KTPW0S2EJD417Y8P7PQ7KTV9",
+  "last_status_changed_at": "2026-06-09T18:58:47Z",
   "priority": "medium",
   "relationships_out": [
     {
@@ -25,10 +25,10 @@
   "reopened_count": 0,
   "schema_version": 1,
   "short_id": "FRAC-55",
-  "status": "backlog",
+  "status": "planned",
   "tags": null,
   "title": "Campus page: update membership buttons \u2014 Full-time $300/mo + Part-time $150/mo",
   "type": "task",
-  "updated_at": "2026-06-09T18:07:32Z",
+  "updated_at": "2026-06-09T18:58:47Z",
   "urgency": null
 }

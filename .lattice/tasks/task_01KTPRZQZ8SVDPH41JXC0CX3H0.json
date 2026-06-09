@@ -10,8 +10,8 @@
   "done_at": null,
   "evidence_refs": [],
   "id": "task_01KTPRZQZ8SVDPH41JXC0CX3H0",
-  "last_event_id": "ev_01KTPRZVGJ6GG3G3N9GDNHVWBC",
-  "last_status_changed_at": "2026-06-09T18:05:47Z",
+  "last_event_id": "ev_01KTPW49FC2BMTR6STQ5XMZ9GV",
+  "last_status_changed_at": "2026-06-09T19:00:42Z",
   "priority": "medium",
   "relationships_out": [
     {
@@ -32,10 +32,10 @@
   "reopened_count": 0,
   "schema_version": 1,
   "short_id": "FRAC-54",
-  "status": "backlog",
+  "status": "planned",
   "tags": null,
   "title": "Campus page: add AI Accelerator content section",
   "type": "task",
-  "updated_at": "2026-06-09T18:05:51Z",
+  "updated_at": "2026-06-09T19:00:42Z",
   "urgency": null
 }

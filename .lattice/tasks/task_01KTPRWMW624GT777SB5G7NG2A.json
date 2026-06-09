@@ -10,8 +10,8 @@
   "done_at": null,
   "evidence_refs": [],
   "id": "task_01KTPRWMW624GT777SB5G7NG2A",
-  "last_event_id": "ev_01KTPRWRYKFR30DM07Z93218QX",
-  "last_status_changed_at": "2026-06-09T18:04:06Z",
+  "last_event_id": "ev_01KTPW48QEWFBF85T7FFVTDQ04",
+  "last_status_changed_at": "2026-06-09T19:00:41Z",
   "priority": "medium",
   "relationships_out": [
     {
@@ -25,10 +25,10 @@
   "reopened_count": 0,
   "schema_version": 1,
   "short_id": "FRAC-53",
-  "status": "backlog",
+  "status": "planned",
   "tags": null,
   "title": "Campus page: add Fractal Accelerator button in audiences section linking to https://www.fractalaccelerator.com/",
   "type": "task",
-  "updated_at": "2026-06-09T18:04:10Z",
+  "updated_at": "2026-06-09T19:00:41Z",
   "urgency": null
 }
