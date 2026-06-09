@@ -6,7 +6,7 @@ export function OriginStory() {
     <section className="py-10 md:py-16 overflow-hidden" id="story">
       <div className="max-w-5xl mx-auto px-[4.5%]">
         <FadeIn>
-          <div className="space-y-4 text-sm md:text-base font-light">
+          <div className="space-y-4 text-body">
             <p>
               A {"\u201C"}fractal{"\u201D"} {"\u2013"} aka a {"\u201C"}neighborhood campus{"\u201D"} {"\u2013"} is a social template (like a {"\u201C"}church,{"\u201D"} {"\u201C"}college,{"\u201D"} or {"\u201C"}kibbutz{"\u201D"}).
             </p>
