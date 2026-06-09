@@ -1,17 +1,30 @@
 {
   "assigned_to": null,
-  "branch_links": [],
-  "comment_count": 0,
+  "branch_links": [
+    {
+      "branch": "frac-28-audit-new-liberal-arts",
+      "linked_at": "2026-06-09T05:06:55Z",
+      "linked_by": "agent:claude-opus-4-7-frac-28-planner",
+      "repo": null
+    }
+  ],
+  "comment_count": 1,
   "complexity": null,
   "created_at": "2026-06-08T04:22:14Z",
   "created_by": "agent:claude-opus-4-7-orchestrator",
   "custom_fields": {},
   "description": null,
-  "done_at": null,
-  "evidence_refs": [],
+  "done_at": "2026-06-09T05:18:08Z",
+  "evidence_refs": [
+    {
+      "id": "ev_01KTND21PJ7WHJY81RJSMCQ4FG",
+      "role": "review",
+      "source_type": "comment"
+    }
+  ],
   "id": "task_01KTJQF18KEMXAQJ51JBNKJS24",
-  "last_event_id": "ev_01KTJQF1DFA4FZG3G6JWGZ5Z47",
-  "last_status_changed_at": "2026-06-08T04:22:14Z",
+  "last_event_id": "ev_01KTND24HYBYV96N5ZBA1G0DZT",
+  "last_status_changed_at": "2026-06-09T05:18:08Z",
   "priority": "medium",
   "relationships_out": [
     {
@@ -25,10 +38,10 @@
   "reopened_count": 0,
   "schema_version": 1,
   "short_id": "FRAC-28",
-  "status": "backlog",
+  "status": "done",
   "tags": null,
   "title": "Audit New Liberal Arts page (typography + color)",
   "type": "task",
-  "updated_at": "2026-06-08T04:22:14Z",
+  "updated_at": "2026-06-09T05:18:08Z",
   "urgency": null
 }
