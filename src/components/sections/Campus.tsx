@@ -22,7 +22,7 @@ const MERLINS_EVENTS_MAILTO = "mailto:events@merlins.place";
 const HELLO_FRACTAL_MAILTO = "mailto:hello@fractaltech.xyz";
 
 const inlineLinkClass =
-  "underline decoration-house-campus-light-foreground/40 hover:decoration-house-campus-light-foreground transition-colors";
+  "underline decoration-background/40 hover:decoration-background transition-colors";
 
 function InlineLink({
   href,
@@ -170,10 +170,10 @@ function PrimaryButton({
 function PhotoPlaceholder({ caption }: { caption: string }) {
   return (
     <div className="flex flex-col gap-3">
-      <div className="aspect-[4/5] md:aspect-square w-full bg-house-campus-light-foreground/5 border border-house-campus-light-foreground/10 text-house-campus-light-foreground flex items-center justify-center">
-        <span className="text-label text-house-campus-light-foreground/40">Photo</span>
+      <div className="aspect-[4/5] md:aspect-square w-full bg-background/5 border border-background/10 text-background flex items-center justify-center">
+        <span className="text-label text-background/40">Photo</span>
       </div>
-      <p className="text-body text-house-campus-light-foreground/70 leading-relaxed">
+      <p className="text-body text-background/70 leading-relaxed">
         {caption}
       </p>
     </div>
@@ -182,7 +182,7 @@ function PhotoPlaceholder({ caption }: { caption: string }) {
 
 export function Campus() {
   return (
-    <section id="campus" className="text-house-campus-light-foreground">
+    <section id="campus" className="text-background">
       {/* Hero */}
       <div className="min-h-screen flex flex-col items-center justify-start pt-16 md:pt-24 w-full">
         <div className="px-6 md:px-[4.5%] w-full">
@@ -193,11 +193,11 @@ export function Campus() {
           <FadeIn>
             <div className="text-center max-w-4xl mx-auto">
               <p
-                className="text-display text-house-campus-light-foreground mb-4 text-center"
+                className="text-display text-background mb-4 text-center"
               >
                 Fractal Campus
               </p>
-              <p className="text-subtitle text-house-campus-light-foreground/80 mb-8 normal-case">
+              <p className="text-subtitle text-background/80 mb-8 normal-case">
                 <InlineLink href={GOOGLE_MAPS_URL}>
                   111 Conselyea St, Brooklyn, NY
                 </InlineLink>
@@ -215,7 +215,7 @@ export function Campus() {
                   </PrimaryButton>
                 </div>
               </div>
-              <p className="text-aside text-xs md:text-sm text-house-campus-light-foreground/70 text-center">
+              <p className="text-aside text-xs md:text-sm text-background/70 text-center">
                 Want a reduced rate? Let us know. We want the space to be accessible to all.
               </p>
             </div>
@@ -230,7 +230,7 @@ export function Campus() {
             <p className="text-title leading-tight mb-8 normal-case">
               A <span className="italic">campus</span> in the heart of Williamsburg.
             </p>
-            <div className="space-y-6 text-body text-house-campus-light-foreground/90 leading-relaxed">
+            <div className="space-y-6 text-body text-background/90 leading-relaxed">
               <p>
                 The Fractal Campus is a meeting place in the heart of Williamsburg to do your
                 most ambitious work. We offer 4000+ square feet of both shared office space and
@@ -238,10 +238,10 @@ export function Campus() {
                 roof deck.
               </p>
             </div>
-            <ul className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-3 text-body text-house-campus-light-foreground/90">
+            <ul className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-3 text-body text-background/90">
               {amenities.map((item) => (
                 <li key={item} className="flex gap-3">
-                  <span aria-hidden className="text-house-campus-light-foreground/50">—</span>
+                  <span aria-hidden className="text-background/50">—</span>
                   <span>{item}</span>
                 </li>
               ))}
@@ -256,21 +256,21 @@ export function Campus() {
           <h2 className="text-title mb-8 normal-case">
             Fractal Campus serves four audiences
           </h2>
-          <ul className="space-y-5 text-body text-house-campus-light-foreground/90 leading-relaxed max-w-3xl">
+          <ul className="space-y-5 text-body text-background/90 leading-relaxed max-w-3xl">
             <li>
-              <strong className="font-semibold text-house-campus-light-foreground">
+              <strong className="font-semibold text-background">
                 <InlineLink href={ACCELERATOR_URL} external={false}>
                   Fractal AI Accelerator participants
                 </InlineLink>
               </strong>
             </li>
             <li>
-              <strong className="font-semibold text-house-campus-light-foreground">
+              <strong className="font-semibold text-background">
                 <a
                   href={FRACTAL_U_URL}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="underline decoration-house-campus-light-foreground/40 hover:decoration-house-campus-light-foreground transition-colors"
+                  className="underline decoration-background/40 hover:decoration-background transition-colors"
                 >
                   Fractal U
                 </a>{" "}
@@ -279,11 +279,11 @@ export function Campus() {
               — participants in a class held on Campus
             </li>
             <li>
-              <strong className="font-semibold text-house-campus-light-foreground">Members</strong>, who have 24/7 access
+              <strong className="font-semibold text-background">Members</strong>, who have 24/7 access
               to our space for coworking and projects
             </li>
             <li>
-              <strong className="font-semibold text-house-campus-light-foreground">Guests</strong> coming to one of the{" "}
+              <strong className="font-semibold text-background">Guests</strong> coming to one of the{" "}
               <InlineLink href={LUMA_EVENTS_URL}>5+ events we host per week</InlineLink>
             </li>
           </ul>
@@ -299,7 +299,7 @@ export function Campus() {
           <h2 className="text-title mb-6 normal-case">
             A place to get shit done…
           </h2>
-          <div className="space-y-6 text-body text-house-campus-light-foreground/90 leading-relaxed max-w-3xl">
+          <div className="space-y-6 text-body text-background/90 leading-relaxed max-w-3xl">
             <p>
               Fractal Campus is a curated community. Companies and members that work from the
               Campus have earnest intentions and a firm grip on reality. When we're not doing
@@ -321,7 +321,7 @@ export function Campus() {
           <h2 className="text-title mb-6 normal-case">
             …and have a good time doing it.
           </h2>
-          <div className="space-y-6 text-body text-house-campus-light-foreground/90 leading-relaxed max-w-3xl">
+          <div className="space-y-6 text-body text-background/90 leading-relaxed max-w-3xl">
             <p>
               We prioritize intentional community: you'll share space, meals, conversations, and
               ideate with small companies, talented founders, designers, and engineers from all
@@ -351,7 +351,7 @@ export function Campus() {
           <h2 className="text-title mb-6 normal-case">
             More than a WeWork…
           </h2>
-          <div className="space-y-6 text-subtitle text-house-campus-light-foreground/90 leading-relaxed max-w-3xl">
+          <div className="space-y-6 text-subtitle text-background/90 leading-relaxed max-w-3xl">
             <p>
               "When I was building my first startup, I'd eat my Chipotle bowl in the WeWork kitchen
               and eavesdrop on conversations about "optimizing engagement metrics through
@@ -364,7 +364,7 @@ export function Campus() {
               to push your work forward. We're building a startup community the way we've always
               wanted — as a home away from home."
             </p>
-            <p className="text-aside text-house-campus-light-foreground/70">— Andrew Rose, Fractal Campus co-founder</p>
+            <p className="text-aside text-background/70">— Andrew Rose, Fractal Campus co-founder</p>
           </div>
           <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-start items-center">
             <PrimaryButton href={FLOWGLAD_MEMBERSHIP_URL}>
@@ -381,7 +381,7 @@ export function Campus() {
       <div className="max-w-7xl mx-auto px-6 md:px-[4.5%] pb-24 md:pb-32">
         <FadeIn>
           <h2 className="text-title mb-6">Meet the Space</h2>
-          <p className="text-body text-house-campus-light-foreground/90 leading-relaxed max-w-3xl mb-12">
+          <p className="text-body text-background/90 leading-relaxed max-w-3xl mb-12">
             4200 sq ft of open working space, kitchen, phone booths, and large meeting rooms. Oh,
             and 5000 sq. ft of sunny rooftop. We're re-decorating the space now, and will continue
             to do so throughout winter, with an eye towards creativity, focus, and sunny vibes.
@@ -400,7 +400,7 @@ export function Campus() {
           <h2 className="text-title mb-6 normal-case">
             What's it like to be here?
           </h2>
-          <div className="space-y-6 text-subtitle text-house-campus-light-foreground/90 leading-relaxed max-w-3xl">
+          <div className="space-y-6 text-subtitle text-background/90 leading-relaxed max-w-3xl">
             <p>
               "Imagine waking up every day to work on projects and companies you burn for, beside
               people who motivate you, in a workplace dedicated to people who love their work.
@@ -416,7 +416,7 @@ export function Campus() {
               Fractal Campus is the best place in the world for you to do your most ambitious
               work… no matter how old you are:"
             </p>
-            <p className="text-aside text-house-campus-light-foreground/70">— Co-founder (and uncle) Jake Zegil</p>
+            <p className="text-aside text-background/70">— Co-founder (and uncle) Jake Zegil</p>
           </div>
           <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-start items-center">
             <PrimaryButton href={FLOWGLAD_MEMBERSHIP_URL}>
@@ -433,24 +433,24 @@ export function Campus() {
       <div className="max-w-7xl mx-auto px-6 md:px-[4.5%] pb-24 md:pb-32">
         <FadeIn>
           <h2 className="text-title mb-6">Events</h2>
-          <p className="text-body text-house-campus-light-foreground/90 leading-relaxed max-w-3xl mb-8">
+          <p className="text-body text-background/90 leading-relaxed max-w-3xl mb-8">
             Types of events we've hosted at the Fractal Campus so far:
           </p>
-          <ul className="space-y-5 text-body text-house-campus-light-foreground/90 leading-relaxed max-w-3xl">
+          <ul className="space-y-5 text-body text-background/90 leading-relaxed max-w-3xl">
             {eventTypes.map((event) => (
               <li key={event.name}>
-                <strong className="font-semibold text-house-campus-light-foreground">{event.name}:</strong>{" "}
+                <strong className="font-semibold text-background">{event.name}:</strong>{" "}
                 {event.description}
               </li>
             ))}
           </ul>
-          <p className="mt-8 text-body text-house-campus-light-foreground/90 leading-relaxed max-w-3xl">
+          <p className="mt-8 text-body text-background/90 leading-relaxed max-w-3xl">
             And many more — seriously, we've hosted almost one event per day we've been open!
           </p>
           <div className="mt-10 mb-6 flex flex-col sm:flex-row gap-4 justify-start items-center">
             <PrimaryButton href={LUMA_URL}>Join events at Fractal Campus</PrimaryButton>
           </div>
-          <p className="mt-4 text-aside text-house-campus-light-foreground/70 max-w-3xl">
+          <p className="mt-4 text-aside text-background/70 max-w-3xl">
             Want to host an event here?{" "}
             <InlineLink href={MERLINS_EVENTS_MAILTO} external={false}>
               Email Merlin's Place
@@ -465,7 +465,7 @@ export function Campus() {
           <h2 className="text-title mb-6 normal-case">
             Merlin's Place
           </h2>
-          <p className="text-body text-house-campus-light-foreground/90 leading-relaxed max-w-3xl mb-8">
+          <p className="text-body text-background/90 leading-relaxed max-w-3xl mb-8">
             Merlin's Place is our communal living room — a Brooklyn loft that
             hundreds of neighbors share as a third space. It's where so many of
             our classes, dinners, hangouts, and friendships start.
@@ -482,7 +482,7 @@ export function Campus() {
           <h2 className="text-title mb-6 normal-case">
             Our little corner in Williamsburg
           </h2>
-          <p className="text-body text-house-campus-light-foreground/90 leading-relaxed max-w-3xl">
+          <p className="text-body text-background/90 leading-relaxed max-w-3xl">
             We're in the heart of Williamsburg, a few blocks away from the commercial hotspot
             Bedford Avenue. You'll have easy access to great eats, cafes, and transit to
             Manhattan.
@@ -496,15 +496,15 @@ export function Campus() {
           <h2 className="text-title mb-6 normal-case">
             …and a short walk to McCarren Park
           </h2>
-          <blockquote className="border-l-2 border-house-campus-light-foreground/30 pl-6 my-6 max-w-3xl">
-            <p className="text-subtitle text-house-campus-light-foreground/90 leading-relaxed normal-case">
+          <blockquote className="border-l-2 border-background/30 pl-6 my-6 max-w-3xl">
+            <p className="text-subtitle text-background/90 leading-relaxed normal-case">
               "All truly great thoughts are conceived while walking."
             </p>
-            <footer className="mt-3 text-aside text-house-campus-light-foreground/70">
+            <footer className="mt-3 text-aside text-background/70">
               — Friedrich Nietzsche
             </footer>
           </blockquote>
-          <p className="text-aside text-house-campus-light-foreground/90 max-w-3xl">
+          <p className="text-aside text-background/90 max-w-3xl">
             For more, check out our{" "}
             <InlineLink href={PAMPAM_URL}>PamPam map</InlineLink> of our favorite spots to eat,
             drink, and explore nearby!
@@ -516,7 +516,7 @@ export function Campus() {
       <div className="max-w-7xl mx-auto px-6 md:px-[4.5%] pb-24 md:pb-32">
         <FadeIn>
           <h2 className="text-title mb-6">Build with us.</h2>
-          <p className="text-body text-house-campus-light-foreground/90 leading-relaxed max-w-3xl mb-10">
+          <p className="text-body text-background/90 leading-relaxed max-w-3xl mb-10">
             <InlineLink href={HELLO_FRACTAL_MAILTO} external={false}>
               hello@fractaltech.xyz
             </InlineLink>
@@ -526,28 +526,28 @@ export function Campus() {
             {teamBios.map((bio) => (
               <div key={bio.name} className="flex flex-col gap-3">
                 <div>
-                  <p className="text-subtitle text-house-campus-light-foreground normal-case">
+                  <p className="text-subtitle text-background normal-case">
                     {bio.name}
                   </p>
-                  <p className="text-aside text-sm text-house-campus-light-foreground/70">{bio.role}</p>
+                  <p className="text-aside text-sm text-background/70">{bio.role}</p>
                 </div>
-                <div className="flex flex-wrap gap-4 text-body text-house-campus-light-foreground/80">
+                <div className="flex flex-wrap gap-4 text-body text-background/80">
                   {bio.links.map((link, idx) => (
                     <span key={link.href} className="flex items-center gap-4">
-                      {idx > 0 && <span aria-hidden className="text-house-campus-light-foreground/30">·</span>}
+                      {idx > 0 && <span aria-hidden className="text-background/30">·</span>}
                       <InlineLink href={link.href}>{link.label}</InlineLink>
                     </span>
                   ))}
                 </div>
-                <p className="text-body text-house-campus-light-foreground/90 leading-relaxed">
-                  <span className="text-house-campus-light-foreground/60">Previously: </span>
+                <p className="text-body text-background/90 leading-relaxed">
+                  <span className="text-background/60">Previously: </span>
                   {bio.previously}
                 </p>
               </div>
             ))}
           </div>
 
-          <div className="max-w-3xl space-y-6 text-body text-house-campus-light-foreground/90 leading-relaxed mb-10">
+          <div className="max-w-3xl space-y-6 text-body text-background/90 leading-relaxed mb-10">
             <p>
               We built Fractal Campus to raise the aspirations of every founder and engineer
               looking for community. Instead of working solo, we want our members to find
@@ -567,7 +567,7 @@ export function Campus() {
             </PrimaryButton>
           </div>
 
-          <p className="text-aside text-house-campus-light-foreground/70 max-w-3xl">
+          <p className="text-aside text-background/70 max-w-3xl">
             P.S. Need to manage or cancel your membership?{" "}
             <InlineLink href={STRIPE_BILLING_URL}>You can do that here</InlineLink>.
           </p>
@@ -580,9 +580,9 @@ export function Campus() {
           <h2 className="text-title mb-6 normal-case">
             …by the way, what's Fractal?
           </h2>
-          <div className="space-y-6 text-body text-house-campus-light-foreground/90 leading-relaxed max-w-3xl">
+          <div className="space-y-6 text-body text-background/90 leading-relaxed max-w-3xl">
             <p>
-              <strong className="font-semibold text-house-campus-light-foreground">
+              <strong className="font-semibold text-background">
                 <InlineLink href="/" external={false}>
                   Fractal
                 </InlineLink>

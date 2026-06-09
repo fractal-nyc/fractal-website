@@ -202,7 +202,7 @@ The four canonical pairings:
 
 Cream-on-saturated-house is the editorial default. A nested cream surface inside a house page (`bg-house-publications-light` → `bg-background`) re-asserts `text-foreground` on the inner surface so text doesn't inherit cream-from-cascade and render cream-on-cream. (FRAC-21 review caught this regression with the DocumentBadge `h3` rendering invisible at 375px — the explicit-pairing rule prevents it.)
 
-**Migration note (NLA palette tweak, 2026-06-09):** The earlier FRAC-42 codification introduced per-house `*-light-foreground` and `*-deep-foreground` sibling tokens (every one resolving to `var(--color-background)`). Those siblings have been retired in favor of using `text-background` directly. New Liberal Arts is the first page migrated. Publications and Campus pages still reference the old `*-foreground` utilities; their declarations remain in `index.css` for now and will be cleaned up as those pages are touched. Do not introduce new `*-foreground` siblings.
+**History (FRAC-29 → FRAC-50, 2026-06-09):** An earlier FRAC-42 codification introduced per-house `*-light-foreground` and `*-deep-foreground` sibling tokens (every one resolving to `var(--color-background)`). FRAC-29 retired the convention in favor of `text-background` directly; FRAC-33 / FRAC-35 / FRAC-49 / FRAC-50 swept the remaining consumers (Education, Visit, Events, Publications/Lab, Campus). No `*-foreground` siblings remain in `index.css` and none should be reintroduced.
 
 ### Charcoal drift note
 
