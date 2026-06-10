@@ -1,0 +1,33 @@
+{
+  "assigned_to": null,
+  "branch_links": [
+    {
+      "branch": "frac-182-campus-banner-svg",
+      "linked_at": "2026-06-10T02:19:38Z",
+      "linked_by": "agent:claude-opus-4-7",
+      "repo": null
+    }
+  ],
+  "comment_count": 0,
+  "complexity": null,
+  "created_at": "2026-06-10T02:14:25Z",
+  "created_by": "agent:claude-opus-4-7",
+  "custom_fields": {},
+  "description": "Wire ~/Desktop/campus-banner-final.svg into the live site. The SVG is one complete pennant \u2014 dark-green house color (#1A3A2E), V-notch bottom, elliptical Mandelbrot pocket cut from the fill, an arc 'CAMPUS' tagline at top, and a centered Gothic 'C' monogram \u2014 all baked in (viewBox 122.72 \u00d7 354.12).\\n\\nWiring (in HouseBanner for the campus variant):\\n  - Replace the campus.jpeg photo layer with this SVG over the house color.\\n  - Remove the now-duplicate live HTML 'C' monogram + tagline (the SVG bakes them in).\\n\\nPlacement: only the campus page, only for now. Two banners flank the sides of the screen (left + right), as shown in the user-provided desktop and mobile mockups. The Mandelbrot pocket inside the SVG is vertically aligned with the bottom axis of the banner points (already baked in via the SVG mask). The big centered 'C' between the banners is the existing SectorHeader.\\n\\nMust preserve from the prior CSS version:\\n  - Drop shadow (use filter:drop-shadow so it follows the V-notch \u2014 same pattern as FRAC-140 on the grid).\\n  - Hover animation (scale + drop shadow lift).\\n\\nMobile-first: 375px baseline. On phones the flanking banners must not crowd the centered content.",
+  "done_at": null,
+  "evidence_refs": [],
+  "id": "task_01KTQMYEHCRE7ZXH22PNT5HPEP",
+  "last_event_id": "ev_01KTQNG025KRWT8QJ06N2YGMKP",
+  "last_status_changed_at": "2026-06-10T02:24:00Z",
+  "priority": "high",
+  "relationships_out": [],
+  "reopened_count": 0,
+  "schema_version": 1,
+  "short_id": "FRAC-182",
+  "status": "review",
+  "tags": null,
+  "title": "Campus page flanking banners with new SVG art (C monogram + Mandelbrot pocket baked in)",
+  "type": "task",
+  "updated_at": "2026-06-10T02:24:00Z",
+  "urgency": null
+}

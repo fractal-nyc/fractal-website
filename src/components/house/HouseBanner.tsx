@@ -1,4 +1,5 @@
 import type { House } from "@/data/houses";
+import { CampusBannerSVG } from "./CampusBannerSVG";
 import { MandelbrotIcon } from "./MandelbrotIcon";
 
 // ---------------------------------------------------------------------------
@@ -88,6 +89,20 @@ export function HouseBanner({
   const letterColor = house.palette.deep;
   const textColor = isDark(bgColor) ? "#ffffff" : "hsl(var(--foreground))";
   const bannerImage = BANNER_IMAGES[house.id];
+
+  // Campus: the full pennant (V-notch, dark-green fill, Mandelbrot pocket,
+  // "CAMPUS" arc, centered "C") is baked into one SVG. Skip the photo layer,
+  // outer clip-path, HTML monogram, HTML tagline, and outer Mandelbrot icon —
+  // CampusBannerSVG provides them.
+  if (house.id === "campus") {
+    return (
+      <div
+        className={`relative ${className} ${isGrid ? "aspect-[1/3]" : "aspect-[3/4] max-w-2xl mx-auto"}`}
+      >
+        <CampusBannerSVG />
+      </div>
+    );
+  }
 
   return (
     <div className={`relative ${className}`}>
