@@ -13,7 +13,8 @@
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
     "build:hero-bg": "node scripts/build-hero-bg.mjs",
-    "build:favicon": "node scripts/build-favicon.mjs"
+    "build:favicon": "node scripts/build-favicon.mjs",
+    "build:banners": "node scripts/compress-banners.mjs"
   },
   "dependencies": {
     "@chenglou/pretext": "^0.0.3",

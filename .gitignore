@@ -28,5 +28,9 @@ Thumbs.db
 .cache/
 .local/
 
-# Image source masters (regenerate via pnpm build:hero-bg, etc.)
+# Image source masters (regenerate via pnpm build:hero-bg, build:banners, etc.)
+# Compressed AVIF/WebP outputs are committed; raw PNG sources are not.
 assets-src/
+public/images/banners/*.png
+public/images/banners/* brand photo.*
+public/images/banners/*_brand_photo.*
