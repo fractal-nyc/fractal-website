@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 export function LiberalArts() {
   return (
     <section id="new-liberal-arts" className="flex flex-col items-center pt-16 pb-24 md:pt-24 overflow-x-hidden text-background">
-      <div className="w-full px-6 md:px-[4.5%] text-center">
+      <div className="w-full px-6 md:px-[22%] text-center">
         <SectorHeader letter="E" name="Education" color="var(--color-house-education-light)" />
         <FadeIn>
           <p className="font-serif not-italic font-light text-3xl md:text-7xl tracking-[0.04em] uppercase leading-[1.1] mb-4 md:mb-6 text-center">

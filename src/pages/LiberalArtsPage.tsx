@@ -3,6 +3,7 @@ import { Navbar } from "@/components/layout/Navbar";
 import { LiberalArts } from "@/components/sections/LiberalArts";
 import { Footer } from "@/components/layout/Footer";
 import { FractalPattern } from "@/components/ui/FractalPattern";
+import { EducationBannerSVG } from "@/components/house/EducationBannerSVG";
 
 export function LiberalArtsPage() {
   return (
@@ -13,7 +14,21 @@ export function LiberalArtsPage() {
       <FractalPattern color="#C41E20" />
       <div className="relative z-10">
         <Navbar />
-        <LiberalArts />
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-x-4 sm:inset-x-8 md:inset-x-12 lg:inset-x-16 top-28 md:top-36 z-0 hidden md:flex md:justify-between"
+          style={{ height: "min(72vh, 660px)" }}
+        >
+          <div className="pointer-events-auto h-full w-[24%] md:w-[16%] max-w-[210px]">
+            <EducationBannerSVG />
+          </div>
+          <div className="pointer-events-auto h-full w-[24%] md:w-[16%] max-w-[210px]">
+            <EducationBannerSVG />
+          </div>
+        </div>
+        <div className="relative z-10">
+          <LiberalArts />
+        </div>
         <Footer />
       </div>
     </main>

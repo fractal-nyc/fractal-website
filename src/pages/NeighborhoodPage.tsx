@@ -6,6 +6,7 @@ import { FadeIn } from "@/components/ui/FadeIn";
 import { FractalPattern } from "@/components/ui/FractalPattern";
 import { MandelbrotCorners } from "@/components/ui/MandelbrotCorners";
 import { Button } from "@/components/ui/button";
+import { VisitBannerSVG } from "@/components/house/VisitBannerSVG";
 
 export function NeighborhoodPage() {
   return (
@@ -16,9 +17,21 @@ export function NeighborhoodPage() {
       <FractalPattern color="#4A5A30" />
       <div className="relative z-10">
       <Navbar />
-      <div className="min-h-screen flex flex-col items-center justify-start pt-16 md:pt-24 pb-32 md:pb-48 w-full">
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-4 sm:inset-x-8 md:inset-x-12 lg:inset-x-16 top-28 md:top-36 z-0 hidden md:flex md:justify-between"
+        style={{ height: "min(72vh, 660px)" }}
+      >
+        <div className="pointer-events-auto h-full w-[24%] md:w-[16%] max-w-[210px]">
+          <VisitBannerSVG />
+        </div>
+        <div className="pointer-events-auto h-full w-[24%] md:w-[16%] max-w-[210px]">
+          <VisitBannerSVG />
+        </div>
+      </div>
+      <div className="relative z-10 min-h-screen flex flex-col items-center justify-start pt-16 md:pt-24 pb-32 md:pb-48 w-full">
         <section className="w-full">
-          <div className="px-6 md:px-[4.5%] text-center">
+          <div className="px-6 md:px-[22%] text-center">
             <SectorHeader letter="V" name="Visit" color="var(--color-house-visit-deep)" />
 
             <FadeIn>

@@ -8,6 +8,7 @@ import { DocumentGrid } from "@/components/lab/DocumentGrid";
 import { ArchiveToolbar } from "@/components/lab/ArchiveToolbar";
 import { useArchiveFilter } from "@/hooks/use-archive-filter";
 import { FractalPattern } from "@/components/ui/FractalPattern";
+import { PublicationsBannerSVG } from "@/components/house/PublicationsBannerSVG";
 
 export function LabPage() {
   const filter = useArchiveFilter();
@@ -19,10 +20,22 @@ export function LabPage() {
       <FractalPattern color="#C44878" />
       <div className="relative z-10">
       <Navbar />
-      <div>
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-4 sm:inset-x-8 md:inset-x-12 lg:inset-x-16 top-28 md:top-36 z-0 hidden md:flex md:justify-between"
+        style={{ height: "min(72vh, 660px)" }}
+      >
+        <div className="pointer-events-auto h-full w-[24%] md:w-[16%] max-w-[210px]">
+          <PublicationsBannerSVG />
+        </div>
+        <div className="pointer-events-auto h-full w-[24%] md:w-[16%] max-w-[210px]">
+          <PublicationsBannerSVG />
+        </div>
+      </div>
+      <div className="relative z-10">
         {/* Publications heading + description */}
         <section className="flex flex-col items-center justify-start pt-16 md:pt-24 pb-12 md:pb-20 w-full">
-          <div className="px-6 md:px-[4.5%] w-full">
+          <div className="px-6 md:px-[22%] w-full">
             <SectorHeader letter="P" name="Publications" color="var(--color-house-publications-deep)" />
             <FadeIn delay={0.1}>
               <div className="text-center">
