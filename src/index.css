@@ -327,33 +327,3 @@
   }
 }
 
-/* FRAC-182: campus pennant — on-hover only. Vertical rolling wave: 3D rotateX
-   oscillation around the top-pinned edge sends a "billow" down the length of
-   the pennant (top tilts forward, then back, while the tail trails). Multiple
-   keyframe stops at varied amplitudes mimic a wave rolling through fabric
-   rather than a simple back-and-forth flap. */
-@keyframes campus-banner-roll {
-  0%   { transform: perspective(700px) rotateX(0deg); }
-  15%  { transform: perspective(700px) rotateX(12deg); }
-  35%  { transform: perspective(700px) rotateX(-6deg); }
-  55%  { transform: perspective(700px) rotateX(9deg); }
-  75%  { transform: perspective(700px) rotateX(-4deg); }
-  100% { transform: perspective(700px) rotateX(0deg); }
-}
-
-.campus-banner-wave {
-  transform-origin: 50% 0%;
-  transform-style: preserve-3d;
-  transition: filter 300ms ease;
-  will-change: transform, filter;
-}
-
-.campus-banner-wave:hover {
-  animation: campus-banner-roll 1.8s ease-in-out infinite;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .campus-banner-wave:hover {
-    animation: none;
-  }
-}
