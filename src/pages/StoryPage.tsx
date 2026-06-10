@@ -203,32 +203,27 @@ export function StoryPage() {
       <Navbar />
       <div>
         {/* Story heading + origin narrative + diagram */}
-        <section className="flex flex-col items-center justify-start pt-16 md:pt-24">
-          <div className="max-w-6xl mx-auto px-6 md:px-[4.5%] w-full">
+        <section className="relative flex flex-col items-center justify-start pt-16 md:pt-24">
+          {/* Flanking favicon diamonds — decorative brand framing that mirrors
+              the house-banner flanking pattern: an absolute, pointer-events-none
+              layer pinned to the page edges (inset matches CampusPage) so it
+              never constrains the heading's width — the heading keeps the same
+              content margin as the banner pages. Desktop-only, like the banner
+              layer; on mobile the heading stays full-bleed. */}
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-x-4 sm:inset-x-8 md:inset-x-12 lg:inset-x-16 top-24 md:top-32 z-0 hidden md:flex items-center justify-between"
+            style={{ height: "min(46vh, 380px)" }}
+          >
+            <img src="/favicon.svg" alt="" className="w-[18%] lg:w-[16%] max-w-[300px] h-auto" />
+            <img src="/favicon.svg" alt="" className="w-[18%] lg:w-[16%] max-w-[300px] h-auto" />
+          </div>
+          <div className="relative z-10 max-w-6xl mx-auto px-6 md:px-[4.5%] w-full">
             <SectorHeader letter="S" name="Story" color="#8A7A20" />
             <FadeIn>
-              {/* Hero heading flanked by the Fractal favicon diamond on each
-                  side — purely decorative brand framing. In-flow flex row so it
-                  flanks at every viewport: small on mobile, bold on desktop.
-                  shrink-0 keeps the diamonds from collapsing while the heading
-                  takes the remaining width. */}
-              <div className="flex items-center justify-center gap-3 md:gap-10 mb-12">
-                <img
-                  src="/favicon.svg"
-                  alt=""
-                  aria-hidden="true"
-                  className="shrink-0 w-10 sm:w-20 md:w-36 lg:w-44 h-auto"
-                />
-                <p className="text-display text-center">
-                  From a Single Apartment to a Neighborhood Campus
-                </p>
-                <img
-                  src="/favicon.svg"
-                  alt=""
-                  aria-hidden="true"
-                  className="shrink-0 w-10 sm:w-20 md:w-36 lg:w-44 h-auto"
-                />
-              </div>
+              <p className="text-display mb-12 text-center">
+                From a Single Apartment to a Neighborhood Campus
+              </p>
             </FadeIn>
           </div>
         </section>
