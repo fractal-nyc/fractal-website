@@ -1,0 +1,39 @@
+{
+  "assigned_to": null,
+  "branch_links": [
+    {
+      "branch": "frac-179-octahedron-face-photos",
+      "linked_at": "2026-06-10T00:43:01Z",
+      "linked_by": "agent:claude-opus-4-7-impl-179",
+      "repo": null
+    }
+  ],
+  "comment_count": 2,
+  "complexity": null,
+  "created_at": "2026-06-09T23:44:15Z",
+  "created_by": "agent:claude-opus-4-7",
+  "custom_fields": {},
+  "description": "User will drop new per-face photos into /public/images/banners/ to replace the current campus/events/lab/neighborhood/new-liberal-arts/people/political-club/story JPEGs used as the 8 octahedron face textures in OctahedronHero.tsx (see FRAC-117 for original per-face texture wiring). Filenames + face mapping TBD when user provides files.",
+  "done_at": "2026-06-10T00:45:38Z",
+  "evidence_refs": [
+    {
+      "id": "ev_01KTQFVS0J1A7ZK99KC26GVSFP",
+      "role": "review",
+      "source_type": "comment"
+    }
+  ],
+  "id": "task_01KTQCBFWYYMZG3E3WZ0C26FZB",
+  "last_event_id": "ev_01KTQFVWMY2BR61DCCHVXMT81C",
+  "last_status_changed_at": "2026-06-10T00:45:38Z",
+  "priority": "medium",
+  "relationships_out": [],
+  "reopened_count": 0,
+  "schema_version": 1,
+  "short_id": "FRAC-179",
+  "status": "done",
+  "tags": null,
+  "title": "Replace octahedron face textures with new photos",
+  "type": "task",
+  "updated_at": "2026-06-10T00:45:38Z",
+  "urgency": null
+}

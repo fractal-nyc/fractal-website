@@ -1,0 +1,44 @@
+{
+  "assigned_to": null,
+  "branch_links": [
+    {
+      "branch": "frac-64-65-visit-note",
+      "linked_at": "2026-06-09T23:03:56Z",
+      "linked_by": "agent:claude-opus-4-7-orchestrator",
+      "repo": null
+    }
+  ],
+  "comment_count": 4,
+  "complexity": null,
+  "created_at": "2026-06-09T20:08:47Z",
+  "created_by": "agent:claude-opus-4-7-orchestrator",
+  "custom_fields": {},
+  "description": "Currently the layout is: Note -> 'Want to visit?' CTA + button. Should be: 'Want to visit?' CTA + button -> Note. Just swap the vertical order so the CTA is the primary attention-grabber and the note sits beneath it as supporting content. Scope: locate the section (likely on the campus or visit-related page) and reorder the two blocks in markup. Verify on both mobile and desktop that spacing/padding still reads correctly after the swap. Acceptance: 'Want to visit?' heading + button appear above the note block; visual hierarchy reads CTA-first; spacing intact at all breakpoints.",
+  "done_at": "2026-06-09T23:10:29Z",
+  "evidence_refs": [
+    {
+      "id": "ev_01KTQA37ECPZ8PH9S9ACVCB85R",
+      "role": "review",
+      "source_type": "comment"
+    },
+    {
+      "id": "ev_01KTQADN3RHSZ2QJMV4TFC9DA1",
+      "role": "review",
+      "source_type": "comment"
+    }
+  ],
+  "id": "task_01KTQ00YQ6M3GHET16ZZ8QKGHA",
+  "last_event_id": "ev_01KTQADN64JN7WCK1ZRT5EEG49",
+  "last_status_changed_at": "2026-06-09T23:10:29Z",
+  "priority": "medium",
+  "relationships_out": [],
+  "reopened_count": 1,
+  "schema_version": 1,
+  "short_id": "FRAC-65",
+  "status": "done",
+  "tags": null,
+  "title": "Flip order: 'Want to visit?' button should appear above the note, not below",
+  "type": "task",
+  "updated_at": "2026-06-09T23:10:29Z",
+  "urgency": null
+}

@@ -1,0 +1,39 @@
+{
+  "assigned_to": null,
+  "branch_links": [
+    {
+      "branch": "frac-177-hero-bg-compression",
+      "linked_at": "2026-06-10T00:37:11Z",
+      "linked_by": "agent:claude-opus-4-7-impl-177",
+      "repo": null
+    }
+  ],
+  "comment_count": 2,
+  "complexity": null,
+  "created_at": "2026-06-09T23:44:09Z",
+  "created_by": "agent:claude-opus-4-7",
+  "custom_fields": {},
+  "description": "User will drop a new background image into /public/images/ to replace the current low-quality hero-bg.png (1.4MB, used in Hero section). Update the asset path / references and verify rendering on mobile + desktop. Filename TBD when user provides the file.",
+  "done_at": "2026-06-10T00:39:32Z",
+  "evidence_refs": [
+    {
+      "id": "ev_01KTQFGJ1A0H7QGNCT1DBF1FWV",
+      "role": "review",
+      "source_type": "comment"
+    }
+  ],
+  "id": "task_01KTQCB9C2X2VWHGNWV6E8AJMR",
+  "last_event_id": "ev_01KTQFGPH06P286DXRPNTXS7JP",
+  "last_status_changed_at": "2026-06-10T00:39:32Z",
+  "priority": "medium",
+  "relationships_out": [],
+  "reopened_count": 0,
+  "schema_version": 1,
+  "short_id": "FRAC-177",
+  "status": "done",
+  "tags": null,
+  "title": "Replace hero background photo with higher-quality version",
+  "type": "task",
+  "updated_at": "2026-06-10T00:39:32Z",
+  "urgency": null
+}

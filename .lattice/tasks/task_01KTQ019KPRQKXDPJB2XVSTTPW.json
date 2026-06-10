@@ -1,0 +1,39 @@
+{
+  "assigned_to": null,
+  "branch_links": [
+    {
+      "branch": "frac-67-search-cursor-continuous",
+      "linked_at": "2026-06-09T21:25:24Z",
+      "linked_by": "agent:claude-opus-4-7-orchestrator",
+      "repo": null
+    }
+  ],
+  "comment_count": 1,
+  "complexity": null,
+  "created_at": "2026-06-09T20:08:58Z",
+  "created_by": "agent:claude-opus-4-7-orchestrator",
+  "custom_fields": {},
+  "description": "Currently the blinking/animating cursor inside the search input only animates while the input is focused/active. User wants the cursor animation to play CONTINUOUSLY \u2014 even when the user hasn't clicked into the search bar \u2014 to draw attention to the search affordance. Applies to BOTH: (1) home page search bar, (2) publications page search bar. Scope: locate the search input components and the cursor animation logic (likely a pseudo-element or a wrapper span with a CSS animation gated on :focus or a focused state). Remove the focus-gating so the animation runs unconditionally. Verify the animation doesn't conflict with the real text caret when the user actually types. Acceptance: cursor animation is visible on page load on both home and publications pages without the user interacting; still behaves correctly once the user starts typing.",
+  "done_at": "2026-06-09T21:26:29Z",
+  "evidence_refs": [
+    {
+      "id": "ev_01KTQ4F4801QDYCQCNX6SKRFPK",
+      "role": "review",
+      "source_type": "comment"
+    }
+  ],
+  "id": "task_01KTQ019KPRQKXDPJB2XVSTTPW",
+  "last_event_id": "ev_01KTQ4F6YDXBWH7E1715R6FS4Q",
+  "last_status_changed_at": "2026-06-09T21:26:29Z",
+  "priority": "medium",
+  "relationships_out": [],
+  "reopened_count": 0,
+  "schema_version": 1,
+  "short_id": "FRAC-67",
+  "status": "done",
+  "tags": null,
+  "title": "Search bar cursor animation: keep animating even when not focused (home + publications)",
+  "type": "task",
+  "updated_at": "2026-06-09T21:26:29Z",
+  "urgency": null
+}

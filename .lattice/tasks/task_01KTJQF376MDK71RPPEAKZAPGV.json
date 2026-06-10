@@ -7,11 +7,11 @@
   "created_by": "agent:claude-opus-4-7-orchestrator",
   "custom_fields": {},
   "description": null,
-  "done_at": null,
+  "done_at": "2026-06-09T20:57:50Z",
   "evidence_refs": [],
   "id": "task_01KTJQF376MDK71RPPEAKZAPGV",
-  "last_event_id": "ev_01KTJQF3EGKX2B670VH856XC7D",
-  "last_status_changed_at": "2026-06-08T04:22:16Z",
+  "last_event_id": "ev_01KTQ2TR93QGMTPV355Z5M0YSW",
+  "last_status_changed_at": "2026-06-09T20:57:50Z",
   "priority": "medium",
   "relationships_out": [
     {
@@ -32,10 +32,10 @@
   "reopened_count": 0,
   "schema_version": 1,
   "short_id": "FRAC-39",
-  "status": "backlog",
+  "status": "done",
   "tags": null,
   "title": "Apply Protocol page audit findings",
   "type": "task",
-  "updated_at": "2026-06-08T04:22:16Z",
+  "updated_at": "2026-06-09T20:57:50Z",
   "urgency": null
 }
