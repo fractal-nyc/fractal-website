@@ -196,15 +196,29 @@ export function StoryPage() {
   return (
     <main
       className="relative min-h-screen text-foreground selection:bg-foreground selection:text-background"
-      style={{ backgroundColor: "#D4BA58", "--btn-accent": "#8A7A20" } as CSSProperties}
+      style={{ backgroundColor: "#DFCA7A", "--btn-accent": "#8A7A20" } as CSSProperties}
     >
       <FractalPattern color="#8A7A20" />
       <div className="relative z-10">
       <Navbar />
       <div>
         {/* Story heading + origin narrative + diagram */}
-        <section className="flex flex-col items-center justify-start pt-16 md:pt-24">
-          <div className="max-w-6xl mx-auto px-6 md:px-[4.5%] w-full">
+        <section className="relative flex flex-col items-center justify-start pt-16 md:pt-24">
+          {/* Flanking favicon diamonds — decorative brand framing that mirrors
+              the house-banner flanking pattern: an absolute, pointer-events-none
+              layer pinned to the page edges (inset matches CampusPage) so it
+              never constrains the heading's width — the heading keeps the same
+              content margin as the banner pages. Desktop-only, like the banner
+              layer; on mobile the heading stays full-bleed. */}
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-x-4 sm:inset-x-8 md:inset-x-12 lg:inset-x-16 top-24 md:top-32 z-0 hidden md:flex items-center justify-between"
+            style={{ height: "min(46vh, 380px)" }}
+          >
+            <img src="/favicon.svg" alt="" className="w-[18%] lg:w-[16%] max-w-[300px] h-auto" />
+            <img src="/favicon.svg" alt="" className="w-[18%] lg:w-[16%] max-w-[300px] h-auto" />
+          </div>
+          <div className="relative z-10 max-w-6xl mx-auto px-6 md:px-[4.5%] w-full">
             <SectorHeader letter="S" name="Story" color="#8A7A20" />
             <FadeIn>
               <p className="text-display mb-12 text-center">

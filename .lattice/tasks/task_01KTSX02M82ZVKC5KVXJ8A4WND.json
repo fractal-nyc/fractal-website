@@ -1,0 +1,33 @@
+{
+  "assigned_to": null,
+  "branch_links": [
+    {
+      "branch": "frac-188-new-story-diagram",
+      "linked_at": "2026-06-10T23:13:46Z",
+      "linked_by": "agent:claude-opus-4-orchestrator",
+      "repo": null
+    }
+  ],
+  "comment_count": 0,
+  "complexity": null,
+  "created_at": "2026-06-10T23:13:36Z",
+  "created_by": "agent:claude-opus-4-orchestrator",
+  "custom_fields": {},
+  "description": null,
+  "done_at": null,
+  "evidence_refs": [],
+  "id": "task_01KTSX02M82ZVKC5KVXJ8A4WND",
+  "last_event_id": "ev_01KTSX198DDBQD96PJBV0EFQTT",
+  "last_status_changed_at": "2026-06-10T23:14:15Z",
+  "priority": "medium",
+  "relationships_out": [],
+  "reopened_count": 0,
+  "schema_version": 1,
+  "short_id": "FRAC-188",
+  "status": "in_progress",
+  "tags": null,
+  "title": "Replace Fractal NYC diagram on Story page with new octagon diagram",
+  "type": "task",
+  "updated_at": "2026-06-10T23:14:15Z",
+  "urgency": null
+}
