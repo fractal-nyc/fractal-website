@@ -1,0 +1,47 @@
+{
+  "assigned_to": null,
+  "branch_links": [
+    {
+      "branch": "frac-184-banners-events-visit-education",
+      "linked_at": "2026-06-10T06:57:18Z",
+      "linked_by": "agent:claude-opus-4-impl",
+      "repo": null
+    }
+  ],
+  "comment_count": 2,
+  "complexity": null,
+  "created_at": "2026-06-10T06:56:33Z",
+  "created_by": "agent:claude-opus-4-orchestrator",
+  "custom_fields": {},
+  "description": "Banners added in FRAC-184 (PR #223) overlap with hero text and the Luma iframe on the events, visit, and education pages because those pages have full-width content (unlike CampusPage where the OctahedronHero is narrow). User chose 'constrain page content width' \u2014 keep banners at campus-page scale, but add horizontal padding on md+ so content stays inside the banner-free zone. Also hide banners on mobile (<md) where there isn't enough viewport room for both.",
+  "done_at": "2026-06-10T08:30:53Z",
+  "evidence_refs": [
+    {
+      "id": "ev_01KTRAFRSDZCGYB1RVA8YDCZF2",
+      "role": "review",
+      "source_type": "comment"
+    }
+  ],
+  "id": "task_01KTR5319S0Q1X7TMC18XPWHVZ",
+  "last_event_id": "ev_01KTRAFS06TEQZCMW1FR73364K",
+  "last_status_changed_at": "2026-06-10T08:30:53Z",
+  "priority": "medium",
+  "relationships_out": [
+    {
+      "created_at": "2026-06-10T06:56:41Z",
+      "created_by": "agent:claude-opus-4-orchestrator",
+      "note": null,
+      "target_task_id": "task_01KTR47S307QRCHQS9V2J9SY8X",
+      "type": "related_to"
+    }
+  ],
+  "reopened_count": 0,
+  "schema_version": 1,
+  "short_id": "FRAC-185",
+  "status": "done",
+  "tags": null,
+  "title": "Fix banner/content overlap on events, visit, education pages (FRAC-184 follow-up)",
+  "type": "task",
+  "updated_at": "2026-06-10T08:30:53Z",
+  "urgency": null
+}
