@@ -27,12 +27,12 @@ function isDark(hex: string): boolean {
 // ---------------------------------------------------------------------------
 
 const BANNER_IMAGES: Record<string, string> = {
-  lab:          "/images/banners/lab.jpeg",
-  forum:        "/images/banners/political-club.jpeg",
-  neighborhood: "/images/banners/neighborhood.jpeg",
-  school:       "/images/banners/new-liberal-arts.jpeg",
-  campus:       "/images/banners/campus.jpeg",
-  events:       "/images/banners/events.jpeg",
+  lab:          "/images/banners/lab.webp",
+  forum:        "/images/banners/political-club.webp",
+  neighborhood: "/images/banners/neighborhood.webp",
+  school:       "/images/banners/new-liberal-arts.webp",
+  campus:       "/images/banners/campus.webp",
+  events:       "/images/banners/events.webp",
 };
 
 // ---------------------------------------------------------------------------

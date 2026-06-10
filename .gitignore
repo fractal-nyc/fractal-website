@@ -27,3 +27,9 @@ Thumbs.db
 # Replit (legacy)
 .cache/
 .local/
+
+# Source brand photos — compressed WebP is committed; raw PNGs are not
+assets-src/
+public/images/banners/*.png
+public/images/banners/* brand photo.*
+public/images/banners/*_brand_photo.*

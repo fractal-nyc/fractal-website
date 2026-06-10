@@ -377,14 +377,14 @@ function StreamingCrossConnections({
 // skipped because the section was hidden from nav; user later confirmed the
 // face should still show its photo. Geometry stays intact (8 triangular faces).
 const FACE_BANNER_IMAGES: Record<string, string> = {
-  story:        "/images/banners/story.jpeg",
-  campus:       "/images/banners/campus.jpeg",
-  neighborhood: "/images/banners/neighborhood.jpeg",
-  events:       "/images/banners/events.jpeg",
-  school:       "/images/banners/new-liberal-arts.jpeg",
-  forum:        "/images/banners/political-club.jpeg",
-  lab:          "/images/banners/lab.jpeg",
-  people:       "/images/banners/people.jpeg",
+  story:        "/images/banners/story.webp",
+  campus:       "/images/banners/campus.webp",
+  neighborhood: "/images/banners/neighborhood.webp",
+  events:       "/images/banners/events.webp",
+  school:       "/images/banners/new-liberal-arts.webp",
+  forum:        "/images/banners/political-club.webp",
+  lab:          "/images/banners/lab.webp",
+  people:       "/images/banners/people.webp",
 };
 
 // Section colors. House-backed faces derive from canonical palette pairs
