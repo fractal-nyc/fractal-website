@@ -1,3 +1,4 @@
+import { Link } from "wouter";
 import { MandelbrotIcon } from "@/components/house/MandelbrotIcon";
 
 const DISCORD_LINK = "https://discord.com/invite/vugp6Nza";
@@ -61,9 +62,11 @@ export function Footer() {
         </div>
 
         <div className="relative z-10 flex flex-col items-center gap-4 text-center px-6">
-          {/* Fractal — camelCase, italic */}
-          <div
-            className="select-none"
+          {/* Fractal — links back to the home page from any inner page. */}
+          <Link
+            href="/"
+            aria-label="Fractal — back to home"
+            className="select-none cursor-pointer transition-opacity duration-200 hover:opacity-75 focus-visible:outline-none focus-visible:opacity-75"
             style={{
               fontFamily: "'Jacquard 24', system-ui",
               fontSize: "clamp(64px, 15vw, 160px)",
@@ -73,7 +76,7 @@ export function Footer() {
             }}
           >
             Fractal
-          </div>
+          </Link>
 
           {/* Tagline */}
           <p
