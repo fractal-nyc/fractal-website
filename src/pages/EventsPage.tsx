@@ -109,6 +109,22 @@ export function EventsPage() {
           </FadeIn>
         </section>
       </div>
+      {/* Mobile-only flanking pennants — bold moment before the footer.
+          Desktop uses the absolute `hidden md:flex` layer above; this block is
+          `flex md:hidden` and sits in normal flow. Each pennant gets an explicit
+          aspect-ratio (SVG viewBox ~123:368) so `h-full w-full` on the inner
+          <img> resolves without a fixed-height ancestor. */}
+      <div
+        aria-hidden="true"
+        className="flex md:hidden items-end justify-center gap-3 px-3 pt-8 pb-12"
+      >
+        <div className="w-[45%] aspect-[123/368]">
+          <EventsBannerSVG />
+        </div>
+        <div className="w-[45%] aspect-[123/368]">
+          <EventsBannerSVG />
+        </div>
+      </div>
       <Footer />
       </div>
     </main>
