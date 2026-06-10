@@ -1,0 +1,12 @@
+<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+  <!-- 4 triangle faces of the front-facing diamond -->
+  <polygon points="16,3 16,16 3,16" fill="#C13B2A"/>
+  <polygon points="16,3 29,16 16,16" fill="#C41E20"/>
+  <polygon points="3,16 16,16 16,29" fill="#2E6B4A"/>
+  <polygon points="16,16 29,16 16,29" fill="#E870A0"/>
+  <!-- charcoal outline: diamond perimeter + 2 diagonals -->
+  <path d="M16 3 L29 16 L16 29 L3 16 Z M3 16 L29 16 M16 3 L16 29"
+        stroke="#171717" stroke-width="1.5"
+        stroke-linejoin="round" stroke-linecap="round"
+        fill="none"/>
+</svg>
