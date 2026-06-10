@@ -6,7 +6,11 @@ import { Search, User, FileText, MapPin, Hash, ArrowUpRight, LayoutGrid } from "
 // FractalCityScene are pointer-only, so we render a parallel
 // sr-only-focusable list of the same routes here. Tabbing into the
 // hero brings the list into view; Enter follows each route.
-import { OUTER_NAV_NODES } from "@/components/three/OctahedronHero";
+// FRAC-181: import from the three-free heroNavNodes module rather than from
+// OctahedronHero — the latter statically imports three + @react-three/* and
+// would otherwise drag the 900 KB three-vendor chunk onto the entry chunk,
+// defeating the lazy FractalCityScene split.
+import { OUTER_NAV_NODES } from "@/components/three/heroNavNodes";
 
 const FractalCityScene = lazy(() =>
   import("@/components/three/FractalCityScene").then((m) => ({

@@ -1,4 +1,7 @@
-@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,100..900;1,9..144,100..900&family=Inter:wght@300;400;500;600;700&family=Jacquard+24&family=JetBrains+Mono:wght@100;200;300;400;500;600;700&display=swap');
+/* FRAC-181: font load moved to a <link rel="stylesheet"> in index.html so the
+   browser discovers the font CSS during HTML parse instead of waiting for
+   index.css to download + parse first. Removed the discover→download chain
+   that was adding ~200–500 ms to first text paint on phones. See index.html. */
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
 

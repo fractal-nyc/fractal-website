@@ -10,6 +10,15 @@
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- FRAC-181: font CSS loaded here (not via @import in src/index.css) so
+         the browser can issue the request during HTML parse instead of waiting
+         for index.css to download + parse. Trimmed weight/axis ranges:
+           - Fraunces: collapsed from 100..900 to 300..500 (no font-bold or
+             heavier paired with font-serif anywhere in src/).
+           - Inter: 300;400;500;600 (600 kept for shadcn UI primitives).
+           - JetBrains Mono: 100;400;500 (no bolder weights in use).
+           - Jacquard 24: single weight, unchanged. -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..500;1,9..144,300..500&family=Inter:wght@300;400;500;600&family=Jacquard+24&family=JetBrains+Mono:wght@100;400;500&display=swap">
   </head>
   <body>
     <div id="root"></div>

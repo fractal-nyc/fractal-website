@@ -104,29 +104,13 @@ export function useTapHandlers(onTap: () => void) {
 // geometry still reads as complete (6 vertices, 6 nodes); Political Club
 // remains hidden from the navbar.
 
-interface NavNode {
-  label: string;
-  route: string;
-  color: string;
-  vertexIndex: number;
-}
-
-// FRAC-33: exported so the FractalCityScene wrapper can render a
-// keyboard-accessible skip-nav with the same routes (a parallel path
-// for keyboard users, since the 3D nav nodes are pointer-only).
-export const OUTER_NAV_NODES: NavNode[] = [
-  { label: "Visit",          route: "/neighborhood",     color: housePalette("neighborhood"), vertexIndex: 3 },
-  { label: "Events",         route: "/events",           color: housePalette("events"),       vertexIndex: 2 },
-  { label: "Campus",         route: "/campus",           color: housePalette("campus"),       vertexIndex: 0 },
-  { label: "Education",      route: "/new-liberal-arts", color: housePalette("school"),       vertexIndex: 1 },
-  { label: "Publications",   route: "/lab",              color: housePalette("lab"),          vertexIndex: 5 },
-  // FRAC-47: Story nav node at vertex 4 — fully active, navigates to /story.
-  // Replaces the FRAC-36 Political Club "Coming Soon" placeholder (Political
-  // Club stays hidden from Navbar per FRAC-161). Color matches Navbar Story
-  // link and StoryPage STORY_COLOR (#D4BA58); Story is not a House so the
-  // hex is literal rather than a palette ref.
-  { label: "Story",          route: "/story",            color: "#D4BA58",                       vertexIndex: 4 },
-];
+// FRAC-181: OUTER_NAV_NODES + NavNode moved to heroNavNodes.ts (three-free)
+// so Hero.tsx can import them without dragging the three.js chunk onto the
+// entry chunk. Re-exported here for back-compat with anything still
+// importing from this module. The internal rendering loop near the bottom
+// of this file imports them below.
+export { OUTER_NAV_NODES, type NavNode } from "./heroNavNodes";
+import { OUTER_NAV_NODES, type NavNode } from "./heroNavNodes";
 
 // ---------------------------------------------------------------------------
 // Octahedron vertex generation
