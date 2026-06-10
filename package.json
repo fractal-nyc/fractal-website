@@ -12,6 +12,7 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
+    "build:hero-bg": "node scripts/build-hero-bg.mjs",
     "build:favicon": "node scripts/build-favicon.mjs"
   },
   "dependencies": {
