@@ -1,6 +1,13 @@
 {
   "assigned_to": null,
-  "branch_links": [],
+  "branch_links": [
+    {
+      "branch": "frac-181-perf-launch",
+      "linked_at": "2026-06-10T02:24:36Z",
+      "linked_by": "agent:claude-opus-4-7",
+      "repo": null
+    }
+  ],
   "comment_count": 0,
   "complexity": null,
   "created_at": "2026-06-10T02:14:17Z",
@@ -10,17 +17,17 @@
   "done_at": null,
   "evidence_refs": [],
   "id": "task_01KTQMY6GF95MRMBMZEDXKBMJ6",
-  "last_event_id": "ev_01KTQN79G535KZ76E41QB172WA",
-  "last_status_changed_at": "2026-06-10T02:19:15Z",
+  "last_event_id": "ev_01KTQNH2TT48R95VDQFQQYJRVA",
+  "last_status_changed_at": "2026-06-10T02:24:36Z",
   "priority": "high",
   "relationships_out": [],
   "reopened_count": 0,
   "schema_version": 1,
   "short_id": "FRAC-181",
-  "status": "planned",
+  "status": "in_progress",
   "tags": null,
   "title": "Home page loading optimization \u2014 pristine production perf",
   "type": "task",
-  "updated_at": "2026-06-10T02:19:15Z",
+  "updated_at": "2026-06-10T02:24:36Z",
   "urgency": null
 }

@@ -15,19 +15,22 @@ export function CampusPage() {
       <div className="relative z-10">
         <Navbar />
         {/* Flanking pennants over the hero region — purely decorative, never
-            block central content (pointer-events:none). Sized as a % of
-            viewport so they scale cleanly mobile→desktop without media-query
-            breakpoints. Top offset clears the navbar. */}
+            block central content. The outer flex layer is pointer-events:none
+            so clicks fall through to the buttons beneath; each pennant
+            re-enables pointer-events on itself so hover lift works. Sized as a
+            % of viewport so they scale cleanly without media-query
+            breakpoints; horizontal inset gives them breathing room from the
+            screen edge. */}
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute inset-x-0 top-16 md:top-24 z-0 flex justify-between"
-          style={{ height: "min(70vh, 600px)" }}
+          className="pointer-events-none absolute inset-x-4 sm:inset-x-8 md:inset-x-12 lg:inset-x-16 top-20 md:top-28 z-0 flex justify-between"
+          style={{ height: "min(82vh, 760px)" }}
         >
-          <div className="pointer-events-auto h-full w-[22%] md:w-[14%] max-w-[180px]">
+          <div className="pointer-events-auto h-full w-[30%] md:w-[20%] max-w-[260px]">
             <CampusBannerSVG />
           </div>
-          <div className="pointer-events-auto h-full w-[22%] md:w-[14%] max-w-[180px]">
-            <CampusBannerSVG mirrored />
+          <div className="pointer-events-auto h-full w-[30%] md:w-[20%] max-w-[260px]">
+            <CampusBannerSVG />
           </div>
         </div>
         <div className="relative z-10">
