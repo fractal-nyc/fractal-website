@@ -327,26 +327,33 @@
   }
 }
 
-/* FRAC-182: campus pennant wave on hover. transform-origin anchored at the top
-   so the banner sways from the imaginary flagpole pin (like fabric pinned at
-   its top edge), not the center. Rotate + skewY together fake the cloth ripple
-   of a real flag in light wind. */
-@keyframes campus-banner-wave {
-  0%, 100% { transform: rotate(-2deg) skewY(-0.6deg); }
-  50%      { transform: rotate(2deg)  skewY(0.6deg); }
+/* FRAC-182: campus pennant wave. Always-on idle sway so the page feels alive
+   (the wind never stops); on hover, the breeze picks up — faster cycle, larger
+   amplitude. transform-origin anchored at the top so the pennant sways from
+   the imaginary flagpole pin. Rotate + skewY together fake cloth ripple. */
+@keyframes campus-banner-wave-idle {
+  0%, 100% { transform: rotate(-1.5deg) skewY(-0.5deg); }
+  50%      { transform: rotate(1.5deg)  skewY(0.5deg); }
+}
+
+@keyframes campus-banner-wave-gust {
+  0%, 100% { transform: rotate(-3deg) skewY(-1deg) scale(1.02); }
+  50%      { transform: rotate(3deg)  skewY(1deg)  scale(1.02); }
 }
 
 .campus-banner-wave {
   transform-origin: 50% 0%;
   transition: filter 300ms ease;
   will-change: transform, filter;
+  animation: campus-banner-wave-idle 5s ease-in-out infinite;
 }
 
 .campus-banner-wave:hover {
-  animation: campus-banner-wave 1.8s ease-in-out infinite;
+  animation: campus-banner-wave-gust 1.6s ease-in-out infinite;
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .campus-banner-wave,
   .campus-banner-wave:hover {
     animation: none;
   }
