@@ -326,3 +326,28 @@
     opacity: 1;
   }
 }
+
+/* FRAC-182: campus pennant wave on hover. transform-origin anchored at the top
+   so the banner sways from the imaginary flagpole pin (like fabric pinned at
+   its top edge), not the center. Rotate + skewY together fake the cloth ripple
+   of a real flag in light wind. */
+@keyframes campus-banner-wave {
+  0%, 100% { transform: rotate(-2deg) skewY(-0.6deg); }
+  50%      { transform: rotate(2deg)  skewY(0.6deg); }
+}
+
+.campus-banner-wave {
+  transform-origin: 50% 0%;
+  transition: filter 300ms ease;
+  will-change: transform, filter;
+}
+
+.campus-banner-wave:hover {
+  animation: campus-banner-wave 1.8s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .campus-banner-wave:hover {
+    animation: none;
+  }
+}
