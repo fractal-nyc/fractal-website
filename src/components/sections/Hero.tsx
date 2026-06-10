@@ -296,19 +296,41 @@ export function Hero() {
         </div>
       </div>
 
-      {/* Skyline background */}
-      <div
-        className="absolute inset-0 z-0 pointer-events-none overflow-hidden"
-      >
-        <img
-          src={`${import.meta.env.BASE_URL}images/skyline4.png`}
-          alt="NYC skyline illustration"
-          className="w-full h-full object-cover object-bottom"
-          style={{
-            opacity: 0.15,
-            transform: "translate(2.75%, -8%) scale(1.35)",
-          }}
-        />
+      {/* Hero background — responsive variants from FRAC-177 */}
+      <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
+        <picture>
+          <source
+            type="image/avif"
+            srcSet={`
+              ${import.meta.env.BASE_URL}images/hero/fractal-background-640.avif 640w,
+              ${import.meta.env.BASE_URL}images/hero/fractal-background-1280.avif 1280w,
+              ${import.meta.env.BASE_URL}images/hero/fractal-background-1920.avif 1920w,
+              ${import.meta.env.BASE_URL}images/hero/fractal-background-2560.avif 2560w
+            `}
+            sizes="100vw"
+          />
+          <source
+            type="image/webp"
+            srcSet={`
+              ${import.meta.env.BASE_URL}images/hero/fractal-background-640.webp 640w,
+              ${import.meta.env.BASE_URL}images/hero/fractal-background-1280.webp 1280w,
+              ${import.meta.env.BASE_URL}images/hero/fractal-background-1920.webp 1920w,
+              ${import.meta.env.BASE_URL}images/hero/fractal-background-2560.webp 2560w
+            `}
+            sizes="100vw"
+          />
+          <img
+            src={`${import.meta.env.BASE_URL}images/hero/fractal-background-fallback.png`}
+            alt="NYC skyline backdrop"
+            className="w-full h-full object-cover object-bottom"
+            style={{
+              opacity: 0.15,
+              transform: "translate(2.75%, -8%) scale(1.35)",
+            }}
+            loading="eager"
+            fetchPriority="high"
+          />
+        </picture>
       </div>
 
     </section>
