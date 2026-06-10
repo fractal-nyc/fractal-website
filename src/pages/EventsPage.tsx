@@ -22,7 +22,7 @@ export function EventsPage() {
       <Navbar />
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-x-4 sm:inset-x-8 md:inset-x-12 lg:inset-x-16 top-28 md:top-36 z-0 flex justify-between"
+        className="pointer-events-none absolute inset-x-4 sm:inset-x-8 md:inset-x-12 lg:inset-x-16 top-28 md:top-36 z-0 hidden md:flex md:justify-between"
         style={{ height: "min(72vh, 660px)" }}
       >
         <div className="pointer-events-auto h-full w-[24%] md:w-[16%] max-w-[210px]">
@@ -33,7 +33,7 @@ export function EventsPage() {
         </div>
       </div>
       <div className="relative z-10 min-h-screen flex flex-col items-center justify-start pt-16 md:pt-24 pb-32 md:pb-48 w-full">
-        <section className="w-full px-6 md:px-[4.5%] text-center">
+        <section className="w-full px-6 md:px-[22%] text-center">
           <SectorHeader letter="E" name="Events" color="var(--color-house-events-deep)" />
 
           <FadeIn delay={0.1}>

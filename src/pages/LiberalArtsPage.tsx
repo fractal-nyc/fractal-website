@@ -16,7 +16,7 @@ export function LiberalArtsPage() {
         <Navbar />
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute inset-x-4 sm:inset-x-8 md:inset-x-12 lg:inset-x-16 top-28 md:top-36 z-0 flex justify-between"
+          className="pointer-events-none absolute inset-x-4 sm:inset-x-8 md:inset-x-12 lg:inset-x-16 top-28 md:top-36 z-0 hidden md:flex md:justify-between"
           style={{ height: "min(72vh, 660px)" }}
         >
           <div className="pointer-events-auto h-full w-[24%] md:w-[16%] max-w-[210px]">
