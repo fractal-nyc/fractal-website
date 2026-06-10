@@ -27,3 +27,6 @@ Thumbs.db
 # Replit (legacy)
 .cache/
 .local/
+
+# Image source masters (regenerate via pnpm build:hero-bg, etc.)
+assets-src/
