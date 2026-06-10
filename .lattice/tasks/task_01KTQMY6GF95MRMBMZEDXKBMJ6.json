@@ -8,26 +8,32 @@
       "repo": null
     }
   ],
-  "comment_count": 0,
+  "comment_count": 2,
   "complexity": null,
   "created_at": "2026-06-10T02:14:17Z",
   "created_by": "agent:claude-opus-4-7",
   "custom_fields": {},
   "description": "FRAC-178 already shipped (lazy-load WebGL, dropped poster preload, narrow fonts) and home page first-paint is still unacceptable on phones. The site is about to launch as a serious business landing \u2014 first-paint must be pristine, above industry-standard. Approach: run a triple-force review (Claude + Codex + Gemini) from a senior-software-engineer perspective on the entire home page load path, then act on the consolidated findings.\\n\\nWhy: home page is the entry door for a high-stakes business launch. Sub-second first-paint on cellular phones is table stakes for a serious tech brand.\\n\\nScope: full waterfall \u2014 bundle/chunk strategy, font loading, image strategy, render-blocking CSS, third-party scripts, route hydration, WebGL hydration timing, preload/prefetch hints, cache headers, edge config, and any other levers. Mobile-first (375px / 3G baseline).",
-  "done_at": null,
-  "evidence_refs": [],
+  "done_at": "2026-06-10T03:09:43Z",
+  "evidence_refs": [
+    {
+      "id": "ev_01KTQR3PZMBAYHWC0N46BBNXK5",
+      "role": "review",
+      "source_type": "comment"
+    }
+  ],
   "id": "task_01KTQMY6GF95MRMBMZEDXKBMJ6",
-  "last_event_id": "ev_01KTQNH2TT48R95VDQFQQYJRVA",
-  "last_status_changed_at": "2026-06-10T02:24:36Z",
+  "last_event_id": "ev_01KTQR3Q3KJHDB29391NPGMN04",
+  "last_status_changed_at": "2026-06-10T03:09:43Z",
   "priority": "high",
   "relationships_out": [],
   "reopened_count": 0,
   "schema_version": 1,
   "short_id": "FRAC-181",
-  "status": "in_progress",
+  "status": "done",
   "tags": null,
   "title": "Home page loading optimization \u2014 pristine production perf",
   "type": "task",
-  "updated_at": "2026-06-10T02:24:36Z",
+  "updated_at": "2026-06-10T03:09:43Z",
   "urgency": null
 }
