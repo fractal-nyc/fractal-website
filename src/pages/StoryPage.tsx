@@ -196,7 +196,7 @@ export function StoryPage() {
   return (
     <main
       className="relative min-h-screen text-foreground selection:bg-foreground selection:text-background"
-      style={{ backgroundColor: "#D4BA58", "--btn-accent": "#8A7A20" } as CSSProperties}
+      style={{ backgroundColor: "#DFCA7A", "--btn-accent": "#8A7A20" } as CSSProperties}
     >
       <FractalPattern color="#8A7A20" />
       <div className="relative z-10">
@@ -207,9 +207,28 @@ export function StoryPage() {
           <div className="max-w-6xl mx-auto px-6 md:px-[4.5%] w-full">
             <SectorHeader letter="S" name="Story" color="#8A7A20" />
             <FadeIn>
-              <p className="text-display mb-12 text-center">
-                From a Single Apartment to a Neighborhood Campus
-              </p>
+              {/* Hero heading flanked by the Fractal favicon diamond on each
+                  side — purely decorative brand framing. In-flow flex row so it
+                  flanks at every viewport: small on mobile, bold on desktop.
+                  shrink-0 keeps the diamonds from collapsing while the heading
+                  takes the remaining width. */}
+              <div className="flex items-center justify-center gap-3 md:gap-10 mb-12">
+                <img
+                  src="/favicon.svg"
+                  alt=""
+                  aria-hidden="true"
+                  className="shrink-0 w-10 sm:w-20 md:w-36 lg:w-44 h-auto"
+                />
+                <p className="text-display text-center">
+                  From a Single Apartment to a Neighborhood Campus
+                </p>
+                <img
+                  src="/favicon.svg"
+                  alt=""
+                  aria-hidden="true"
+                  className="shrink-0 w-10 sm:w-20 md:w-36 lg:w-44 h-auto"
+                />
+              </div>
             </FadeIn>
           </div>
         </section>
