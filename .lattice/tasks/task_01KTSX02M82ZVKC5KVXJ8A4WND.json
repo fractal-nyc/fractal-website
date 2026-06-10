@@ -8,26 +8,32 @@
       "repo": null
     }
   ],
-  "comment_count": 0,
+  "comment_count": 1,
   "complexity": null,
   "created_at": "2026-06-10T23:13:36Z",
   "created_by": "agent:claude-opus-4-orchestrator",
   "custom_fields": {},
   "description": null,
-  "done_at": null,
-  "evidence_refs": [],
+  "done_at": "2026-06-10T23:51:36Z",
+  "evidence_refs": [
+    {
+      "id": "ev_01KTSZ5MVHVEMFAK715T9C2DKH",
+      "role": "review",
+      "source_type": "comment"
+    }
+  ],
   "id": "task_01KTSX02M82ZVKC5KVXJ8A4WND",
-  "last_event_id": "ev_01KTSX198DDBQD96PJBV0EFQTT",
-  "last_status_changed_at": "2026-06-10T23:14:15Z",
+  "last_event_id": "ev_01KTSZ5MY3W5T314VTNAP1HM0T",
+  "last_status_changed_at": "2026-06-10T23:51:36Z",
   "priority": "medium",
   "relationships_out": [],
   "reopened_count": 0,
   "schema_version": 1,
   "short_id": "FRAC-188",
-  "status": "in_progress",
+  "status": "done",
   "tags": null,
   "title": "Replace Fractal NYC diagram on Story page with new octagon diagram",
   "type": "task",
-  "updated_at": "2026-06-10T23:14:15Z",
+  "updated_at": "2026-06-10T23:51:36Z",
   "urgency": null
 }
