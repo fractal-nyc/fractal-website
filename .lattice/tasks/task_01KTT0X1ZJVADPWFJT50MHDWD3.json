@@ -1,0 +1,33 @@
+{
+  "assigned_to": null,
+  "branch_links": [
+    {
+      "branch": "frac-192-hero-texture-preload",
+      "linked_at": "2026-06-11T00:25:09Z",
+      "linked_by": "agent:claude-opus-4-orchestrator",
+      "repo": null
+    }
+  ],
+  "comment_count": 0,
+  "complexity": null,
+  "created_at": "2026-06-11T00:21:51Z",
+  "created_by": "agent:claude-opus-4-orchestrator",
+  "custom_fields": {},
+  "description": null,
+  "done_at": null,
+  "evidence_refs": [],
+  "id": "task_01KTT0X1ZJVADPWFJT50MHDWD3",
+  "last_event_id": "ev_01KTT17CJSH0Z10GZES8TF8KC6",
+  "last_status_changed_at": "2026-06-11T00:27:30Z",
+  "priority": "medium",
+  "relationships_out": [],
+  "reopened_count": 0,
+  "schema_version": 1,
+  "short_id": "FRAC-192",
+  "status": "in_progress",
+  "tags": null,
+  "title": "Eliminate octahedron face-texture flash on home-screen render (preload + fade-in)",
+  "type": "task",
+  "updated_at": "2026-06-11T00:27:30Z",
+  "urgency": null
+}
