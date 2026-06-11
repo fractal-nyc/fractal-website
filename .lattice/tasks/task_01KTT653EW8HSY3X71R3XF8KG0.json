@@ -1,0 +1,39 @@
+{
+  "assigned_to": null,
+  "branch_links": [
+    {
+      "branch": "frac-192-hero-texture-preload",
+      "linked_at": "2026-06-11T01:54:27Z",
+      "linked_by": "agent:claude-fable-5",
+      "repo": null
+    }
+  ],
+  "comment_count": 1,
+  "complexity": null,
+  "created_at": "2026-06-11T01:53:38Z",
+  "created_by": "agent:claude-fable-5",
+  "custom_fields": {},
+  "description": null,
+  "done_at": "2026-06-11T02:07:32Z",
+  "evidence_refs": [
+    {
+      "id": "ev_01KTT6XZ857GP32F8FC18VWJCR",
+      "role": "review",
+      "source_type": "comment"
+    }
+  ],
+  "id": "task_01KTT653EW8HSY3X71R3XF8KG0",
+  "last_event_id": "ev_01KTT6YHP04HJT8Y9EAGJ1YM7Q",
+  "last_status_changed_at": "2026-06-11T02:07:32Z",
+  "priority": "medium",
+  "relationships_out": [],
+  "reopened_count": 0,
+  "schema_version": 1,
+  "short_id": "FRAC-195",
+  "status": "done",
+  "tags": null,
+  "title": "Team-review fixes for frac-192 branch: HouseBanner CORS double-fetch, tap-target compensation, preload priorities, GPU disposal gaps, banner masters out of public/",
+  "type": "task",
+  "updated_at": "2026-06-11T02:07:32Z",
+  "urgency": null
+}

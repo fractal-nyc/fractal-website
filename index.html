@@ -8,6 +8,49 @@
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+
+    <!-- FRAC-192: preload the LCP hero background (AVIF). imagesrcset/imagesizes
+         must mirror the AVIF <source> in src/components/sections/Hero.tsx
+         (~303-338) so the preload and the <picture> pick the same candidate
+         (no double download). Browsers without AVIF ignore this type-mismatched
+         preload and fetch the WebP <source> normally.
+         BASE_URL caveat: these hard-code a leading "/" — they only match
+         Hero.tsx's import.meta.env.BASE_URL-built URLs while Vite base is "/"
+         (true today; no `base` key in vite.config.ts).
+         fetchpriority="high" mirrors the Hero <img fetchPriority="high"> it
+         feeds — without it the LCP asset queues at default image-preload
+         priority alongside the 8 banner preloads below (FRAC-195). -->
+    <link rel="preload" as="image" type="image/avif" fetchpriority="high"
+          imagesrcset="/images/hero/fractal-background-640.avif 640w, /images/hero/fractal-background-1280.avif 1280w"
+          imagesizes="100vw" />
+
+    <!-- FRAC-192: preload the 8 octahedron banner textures so the bytes are
+         fetched during HTML parse, well before the lazy three-vendor chunk +
+         Canvas mount fire TextureLoader.loadAsync. Hrefs MUST stay in sync with
+         FACE_BANNER_IMAGES in src/components/three/OctahedronHero.tsx (~363),
+         BANNER_IMAGES in src/components/house/HouseBanner.tsx (house pages
+         render six of these via <img crossOrigin="anonymous"> — its CORS mode
+         must keep matching these preloads), and with public/images/banners/.
+         Use the literal filenames
+         (new-liberal-arts.webp / political-club.webp), NOT the face keys
+         school / forum. crossorigin IS required: THREE.TextureLoader inherits
+         Loader's default crossOrigin="anonymous", so it requests these images
+         in CORS mode. A preload WITHOUT crossorigin is no-CORS and won't match
+         three's request — the browser then double-fetches every banner (FRAC-193).
+         Same-origin CORS-mode requests need no ACAO header, so anonymous is safe.
+         These are as="image" hints only; they do NOT reintroduce a three-vendor /
+         scene chunk preload (FRAC-181). Same BASE_URL="/" caveat as above.
+         fetchpriority="low": decorative octahedron textures must never contend
+         with the high-priority LCP hero preload above (FRAC-195). -->
+    <link rel="preload" as="image" type="image/webp" href="/images/banners/story.webp" crossorigin="anonymous" fetchpriority="low" />
+    <link rel="preload" as="image" type="image/webp" href="/images/banners/campus.webp" crossorigin="anonymous" fetchpriority="low" />
+    <link rel="preload" as="image" type="image/webp" href="/images/banners/neighborhood.webp" crossorigin="anonymous" fetchpriority="low" />
+    <link rel="preload" as="image" type="image/webp" href="/images/banners/events.webp" crossorigin="anonymous" fetchpriority="low" />
+    <link rel="preload" as="image" type="image/webp" href="/images/banners/new-liberal-arts.webp" crossorigin="anonymous" fetchpriority="low" />
+    <link rel="preload" as="image" type="image/webp" href="/images/banners/political-club.webp" crossorigin="anonymous" fetchpriority="low" />
+    <link rel="preload" as="image" type="image/webp" href="/images/banners/lab.webp" crossorigin="anonymous" fetchpriority="low" />
+    <link rel="preload" as="image" type="image/webp" href="/images/banners/people.webp" crossorigin="anonymous" fetchpriority="low" />
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <!-- FRAC-181: font CSS loaded here (not via @import in src/index.css) so

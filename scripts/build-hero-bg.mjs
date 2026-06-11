@@ -25,11 +25,13 @@ const SOURCE = path.join(
 const OUT_DIR = path.join(repoRoot, "public", "images", "hero");
 
 // width -> { avif: maxBytes, webp: maxBytes }
+// FRAC-194: capped at 1280w. The hero background is decorative (opacity 0.15,
+// scale 1.35); larger variants were imperceptible and 2560w AVIF was the page's
+// heaviest asset. Keep these widths in sync with the srcsets in Hero.tsx and the
+// AVIF preload imagesrcset in index.html.
 const BUDGETS = {
   640: { avif: 80 * 1024, webp: 120 * 1024 },
   1280: { avif: 150 * 1024, webp: 220 * 1024 },
-  1920: { avif: 280 * 1024, webp: 400 * 1024 },
-  2560: { avif: 400 * 1024, webp: 550 * 1024 },
 };
 const FALLBACK_PNG_MAX = 250 * 1024; // ~200 KB target, 250 KB hard ceiling
 

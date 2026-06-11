@@ -75,7 +75,7 @@ Each sub-agent should use a distinct actor ID (e.g., `agent:claude-opus-4-planne
 
 ### The Planning Gate
 
-The plan file lives at `.lattice/plans/<task_id>.md` — scaffolded on creation, empty until you fill it.
+The plan file lives at `.lattice/plans/<task_id>.md` — scaffolded on creation, empty until you fill it. **`<task_id>` is the full ULID** (e.g. `plans/task_01KTT0X1ZJVADPWFJT50MHDWD3.md`), NOT the short `FRAC-NNN` code. The CLI's scaffold-detection (which blocks `in_progress`) only reads the full-ULID file — writing your plan to `FRAC-NNN.md` leaves the real plan as scaffold and the transition fails. When spawning a planning sub-agent, pass it the exact canonical path from `lattice show <task>` (the `Plan:` line), not a `FRAC-NNN.md` guess.
 
 This is the **planning sub-agent's** job. Spawn a sub-agent whose sole purpose is to explore the codebase, understand the problem, and write the plan. It should:
 1. Read the task description and any linked context.
@@ -211,3 +211,7 @@ lattice list
 - `lattice link <task> subtask_of|depends_on|blocks <target>` — task relationships
 
 For the full CLI reference, see the `/lattice` skill.
+
+## Frontend Gotchas
+
+- **Preloading textures consumed by `THREE.TextureLoader`:** the `<link rel="preload" as="image">` MUST include `crossorigin` (anonymous). `THREE.TextureLoader` inherits `THREE.Loader`'s default `crossOrigin = "anonymous"`, so it requests images in CORS mode; a no-`crossorigin` preload is no-CORS and won't be matched — the browser silently **double-fetches** every texture (FRAC-193). Same-origin CORS-mode requests need no `Access-Control-Allow-Origin` header, so anonymous is safe. Note the inverse: a preload for an image consumed by a plain `<img>`/`<picture>` (e.g. the hero background) must NOT have `crossorigin`, or you get the same mismatch in reverse.

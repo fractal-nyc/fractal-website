@@ -1,14 +1,21 @@
 #!/usr/bin/env node
 // scripts/compress-banners.mjs
 //
-// FRAC-179: One-shot compression for the 8 octahedron face / house banner
-// brand photos. Reads raw PNGs (~1.5–2.2 MB each) from `assets-src/banners/`,
-// emits 1024x1024 WebP at quality 78 to `public/images/banners/<slug>.webp`.
+// FRAC-179 / FRAC-192: One-shot compression for the 8 octahedron face / house
+// banner brand photos. Reads raw PNGs (~1.5–2.2 MB each) and emits square WebP
+// to `public/images/banners/<slug>.webp`.
 //
-// Source PNGs are git-ignored. Drop the originals into `assets-src/banners/`
-// using the exact filenames in SOURCE_TO_OUTPUT below (spaces / underscores
-// preserved — these are the human-friendly names the user exports from
-// Figma / Photoshop without renaming).
+// FRAC-192: output is now 512x512 (was 1024x1024). A single octahedron face
+// renders well under 512 px even at 2× DPR on the largest desktop target, so
+// 1024² was ~2–4× oversized — 512² halves the preloaded bytes and cuts GPU
+// texture memory 4× with no visible softness.
+//
+// Source: `assets-src/banners/<src>` — the git-ignored master PNGs (drop
+// originals here with the exact filenames in SOURCE_TO_OUTPUT). Masters must
+// NEVER live under public/ — Vite copies everything in public/ into dist/
+// verbatim, so multi-MB masters there would ship to production (FRAC-195).
+// The masters are not committed; on a machine without assets-src/ this script
+// reports MISSING per source and exits non-zero.
 //
 // Run: `pnpm build:banners` (or `node scripts/compress-banners.mjs`).
 //
@@ -30,8 +37,23 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const ROOT = path.resolve(__dirname, "..");
 
-const SRC_DIR = path.join(ROOT, "assets-src", "banners");
+// Git-ignored masters only — no public/ fallback (see header, FRAC-195).
+const SRC_DIRS = [path.join(ROOT, "assets-src", "banners")];
 const OUT_DIR = path.join(ROOT, "public", "images", "banners");
+
+// Resolve a source filename against SRC_DIRS in priority order.
+async function resolveSource(src) {
+  for (const dir of SRC_DIRS) {
+    const candidate = path.join(dir, src);
+    try {
+      await fs.access(candidate);
+      return candidate;
+    } catch {
+      /* try next */
+    }
+  }
+  return null;
+}
 
 // face key -> { source PNG filename, output slug, optional quality override }
 // Default WebP quality is 45 (visually fine for these small octahedron faces and
@@ -54,7 +76,8 @@ const TOTAL_BUDGET    = 500 * 1024;     // 500 KB
 
 const DEFAULT_QUALITY = 45;
 const WEBP_EFFORT = 6;
-const RESIZE = { width: 1024, height: 1024, fit: "cover", position: "centre" };
+// FRAC-192: 512×512 (was 1024×1024). Faces render <512 px even at 2× DPR.
+const RESIZE = { width: 512, height: 512, fit: "cover", position: "centre" };
 
 function fmtBytes(n) {
   return `${(n / 1024).toFixed(1)} KB`;
@@ -68,13 +91,13 @@ async function main() {
   let overBudgetFaces = [];
 
   for (const { face, src, out, quality } of SOURCE_TO_OUTPUT) {
-    const srcPath = path.join(SRC_DIR, src);
     const outPath = path.join(OUT_DIR, out);
 
-    try {
-      await fs.access(srcPath);
-    } catch {
-      console.error(`MISSING source: ${srcPath}`);
+    const srcPath = await resolveSource(src);
+    if (!srcPath) {
+      console.error(
+        `MISSING source "${src}" in any of: ${SRC_DIRS.join(", ")}`,
+      );
       process.exitCode = 1;
       continue;
     }

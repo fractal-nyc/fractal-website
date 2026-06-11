@@ -303,13 +303,15 @@ export function Hero() {
       {/* Hero background — responsive variants from FRAC-177 */}
       <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
         <picture>
+          {/* FRAC-194: capped at 1280w. The background is decorative (opacity
+              0.15, scale 1.35) — larger variants are imperceptible and the 2560w
+              AVIF was the page's heaviest asset (242 KB). Keep srcset in sync with
+              the AVIF preload in index.html and BUDGETS in scripts/build-hero-bg.mjs. */}
           <source
             type="image/avif"
             srcSet={`
               ${import.meta.env.BASE_URL}images/hero/fractal-background-640.avif 640w,
-              ${import.meta.env.BASE_URL}images/hero/fractal-background-1280.avif 1280w,
-              ${import.meta.env.BASE_URL}images/hero/fractal-background-1920.avif 1920w,
-              ${import.meta.env.BASE_URL}images/hero/fractal-background-2560.avif 2560w
+              ${import.meta.env.BASE_URL}images/hero/fractal-background-1280.avif 1280w
             `}
             sizes="100vw"
           />
@@ -317,9 +319,7 @@ export function Hero() {
             type="image/webp"
             srcSet={`
               ${import.meta.env.BASE_URL}images/hero/fractal-background-640.webp 640w,
-              ${import.meta.env.BASE_URL}images/hero/fractal-background-1280.webp 1280w,
-              ${import.meta.env.BASE_URL}images/hero/fractal-background-1920.webp 1920w,
-              ${import.meta.env.BASE_URL}images/hero/fractal-background-2560.webp 2560w
+              ${import.meta.env.BASE_URL}images/hero/fractal-background-1280.webp 1280w
             `}
             sizes="100vw"
           />

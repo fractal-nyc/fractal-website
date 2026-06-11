@@ -360,6 +360,14 @@ function StreamingCrossConnections({
 // FRAC-20: `forum` (Political Club) banner restored. Earlier (FRAC-5) it was
 // skipped because the section was hidden from nav; user later confirmed the
 // face should still show its photo. Geometry stays intact (8 triangular faces).
+//
+// FRAC-192: these 8 paths are ALSO preloaded as <link rel="preload" as="image">
+// in index.html <head>, AND six of them are rendered by the house-page banner
+// (src/components/house/HouseBanner.tsx BANNER_IMAGES). Keep all three lists
+// in sync — if you add/remove/rename a banner here, update the index.html
+// preload tags and HouseBanner.tsx too. All consumers must stay CORS-mode
+// (TextureLoader is anonymous by default; HouseBanner's <img> sets
+// crossOrigin) so the single CORS preload serves every route (FRAC-193/195).
 const FACE_BANNER_IMAGES: Record<string, string> = {
   story:        "/images/banners/story.webp",
   campus:       "/images/banners/campus.webp",
@@ -407,7 +415,7 @@ const FACE_SECTION_MAP: (string | null)[] = [
  * different materials (textured or solid color) to each.
  */
 function usePerFaceOctahedronGeometry(radius: number) {
-  return useMemo(() => {
+  const geometry = useMemo(() => {
     const base = new THREE.OctahedronGeometry(radius, 0);
 
     // Ensure non-indexed so each face has its own vertices.
@@ -461,38 +469,100 @@ function usePerFaceOctahedronGeometry(radius: number) {
 
     return nonIndexed;
   }, [radius]);
+
+  // GPU leak guard: dispose the buffer geometry when the component unmounts
+  // (or radius changes). The "no leaks across route changes" criterion
+  // (FRAC-192) covered materials/textures but not these geometries — and the
+  // two-shell design doubled the geometry count (FRAC-195 review fix).
+  useEffect(() => {
+    return () => {
+      geometry.dispose();
+    };
+  }, [geometry]);
+
+  return geometry;
 }
 
 /**
- * Build the array of 8 materials (one per face) — textured where a banner
- * image has loaded, solid-color placeholder otherwise.
+ * FRAC-192: opacity fade-in for banner textures.
  *
- * FRAC-127 Cycle 2: this hook used to call `useLoader(THREE.TextureLoader, ...)`
- * for all 8 banners. That suspends until every texture downloads, and
- * react-three-fiber's <Canvas> delays the FIRST WebGL frame flush until
- * every suspending child resolves — regardless of nested <Suspense>
- * boundaries inside the Canvas tree (empirically confirmed in Cycle 1,
- * PR #100). On Slow 3G that means ~50s of blank canvas before ANY part of
- * the scene (wireframes, edges, nav nodes, streaming text) renders.
+ * The center octahedron is drawn as TWO concentric meshes:
+ *   1. A solid-color placeholder shell (opaque, all 8 faces, always visible
+ *      from frame 0). This is the graceful state: a face whose texture hasn't
+ *      arrived (or permanently failed) shows its FACE_SECTION_COLORS color.
+ *   2. A slightly-larger textured shell whose 8 face materials are
+ *      `transparent` and ramp opacity 0→1 when their banner texture arrives,
+ *      cross-dissolving the photo in over the solid backdrop instead of a hard
+ *      color→photo cut.
  *
- * The fix: bypass React Suspense entirely. Use `THREE.TextureLoader.loadAsync()`
- * inside `useEffect`, store resolved textures in `useState`, and build the
- * materials array every render — solid-color `MeshBasicMaterial` for keys
- * without a texture yet, textured `MeshBasicMaterial` once the texture
- * arrives. The center octahedron now renders in frame 0 with placeholder
- * colored faces, and upgrades to textured faces in a subsequent paint when
- * each JPEG/PNG finishes downloading.
+ * Returned to the component:
+ *   - `placeholderMaterials`: 8 opaque solid-color materials (stable refs).
+ *   - `texturedMaterials`: 8 materials for the textured shell. A face with no
+ *     texture yet gets a transparent, non-drawing material (opacity 0,
+ *     colorWrite off) so the backdrop shows through; once its texture loads it
+ *     is swapped for a textured material that fades in.
+ *   - `fadeRefs`: the live array the component's useFrame lerps. Each textured
+ *     material is created exactly ONCE (in the loader callback, stashed in a
+ *     ref) so an in-flight tween is never reset by a re-render — the old code's
+ *     useMemo rebuilt all 8 materials on every texture arrival, which would
+ *     restart any opacity already ramping on the other faces.
+ *
+ * Preserves FRAC-35 (sRGB), FRAC-41 (plain texture, no overlay/tint),
+ * FRAC-127 (no Suspense — async load, solid faces render in frame 0).
  */
+type TexturedFace = {
+  /** Live material on the textured shell for this face slot. */
+  mat: THREE.MeshBasicMaterial;
+  /** Has the banner texture arrived for this face? (drives the fade). */
+  hasTexture: boolean;
+};
+
 function usePerFaceMaterials() {
-  const [textures, setTextures] = useState<Record<string, THREE.Texture>>({});
+  const [, forceRender] = useState(0);
+
+  // Stable solid-color placeholder shell materials (created once). Each face
+  // slot maps through FACE_SECTION_MAP to its section color.
+  const placeholderMaterials = useMemo(
+    () =>
+      FACE_SECTION_MAP.map((sectionKey) => {
+        const color = sectionKey
+          ? FACE_SECTION_COLORS[sectionKey] ?? "#c4a265"
+          : "#c4a265";
+        return new THREE.MeshBasicMaterial({ color, side: THREE.FrontSide });
+      }),
+    [],
+  );
+
+  // Textured shell: one live material per face slot. Starts as a transparent,
+  // non-drawing material; upgraded in place (slot swapped) when the texture
+  // loads. Held in a ref so re-renders never recreate an in-flight material.
+  const texturedFacesRef = useRef<TexturedFace[] | null>(null);
+  if (texturedFacesRef.current === null) {
+    texturedFacesRef.current = FACE_SECTION_MAP.map(() => {
+      // Transparent placeholder for the textured shell — draws nothing so the
+      // solid backdrop shows through until (and unless) a texture arrives.
+      const mat = new THREE.MeshBasicMaterial({
+        side: THREE.FrontSide,
+        transparent: true,
+        opacity: 0,
+        depthWrite: false,
+      });
+      mat.colorWrite = false; // never paints while empty
+      return { mat, hasTexture: false };
+    });
+  }
 
   useEffect(() => {
     let cancelled = false;
     const loader = new THREE.TextureLoader();
+    const faces = texturedFacesRef.current!;
+    // Track materials we create so we can dispose them on unmount (GPU leak
+    // guard across route changes — Hero unmounts on navigation, FRAC-192).
+    const created: THREE.MeshBasicMaterial[] = [];
 
     // Load each banner independently — a slow one shouldn't hold back faster
-    // ones. Each resolution triggers a state update that upgrades the single
-    // corresponding face from solid-color placeholder to textured.
+    // ones. Each resolution swaps the corresponding face's textured-shell
+    // material to a fading textured material and forces a re-render.
     for (const [key, path] of Object.entries(FACE_BANNER_IMAGES)) {
       loader
         .loadAsync(path)
@@ -503,14 +573,36 @@ function usePerFaceMaterials() {
           }
           // FRAC-35: tag as sRGB so the renderer doesn't apply a linear→sRGB
           // shift that brightens JPEGs. Three.js r152+ defaults color textures
-          // to NoColorSpace (linear); without this flag the JPEG color data
-          // gets double-gamma-corrected on output, washing the photos out.
+          // to NoColorSpace (linear); without this flag the color data gets
+          // double-gamma-corrected on output, washing the photos out.
           tex.colorSpace = THREE.SRGBColorSpace;
-          setTextures((prev) => ({ ...prev, [key]: tex }));
+
+          // FRAC-41: plain texture rendering — no overlay/tint material.
+          // transparent + opacity 0 so the useFrame lerp can dissolve it in
+          // over the solid backdrop.
+          const texturedMat = new THREE.MeshBasicMaterial({
+            map: tex,
+            side: THREE.FrontSide,
+            transparent: true,
+            opacity: 0,
+            depthWrite: false,
+          });
+          created.push(texturedMat);
+
+          // Swap this material into every face slot mapped to this section.
+          for (let i = 0; i < FACE_SECTION_MAP.length; i++) {
+            if (FACE_SECTION_MAP[i] === key) {
+              const prev = faces[i].mat;
+              faces[i] = { mat: texturedMat, hasTexture: true };
+              prev.dispose();
+            }
+          }
+          forceRender((n) => n + 1);
         })
         .catch((err) => {
           // Swallow individual texture failures — the face stays in its
-          // solid-color placeholder state, which is a graceful degradation.
+          // solid-color placeholder state (the textured slot keeps drawing
+          // nothing), which is a graceful degradation.
           // eslint-disable-next-line no-console
           console.warn(`[OctahedronHero] Failed to load banner ${path}:`, err);
         });
@@ -518,36 +610,42 @@ function usePerFaceMaterials() {
 
     return () => {
       cancelled = true;
+      // Dispose textured materials + their textures, and the transparent
+      // placeholders, to avoid GPU leaks when Hero unmounts on navigation.
+      for (const mat of created) {
+        mat.map?.dispose();
+        mat.dispose();
+      }
+      for (const face of texturedFacesRef.current ?? []) {
+        face.mat.map?.dispose();
+        face.mat.dispose();
+      }
+      // Also dispose the 8 solid placeholder-shell materials — they were the
+      // gap in the original FRAC-192 cleanup ("no leaks" criterion). Their
+      // identity is stable (useMemo with [] deps), so referencing them from
+      // this []-dep effect is safe (FRAC-195 review fix).
+      for (const mat of placeholderMaterials) {
+        mat.dispose();
+      }
     };
   }, []);
 
-  return useMemo(() => {
-    return FACE_SECTION_MAP.map((sectionKey) => {
-      if (!sectionKey) {
-        return new THREE.MeshBasicMaterial({ color: "#c4a265" });
-      }
-
-      const tex = textures[sectionKey];
-      const color = FACE_SECTION_COLORS[sectionKey] ?? "#c4a265";
-
-      if (tex) {
-        // FRAC-41: revert FRAC-39/40 overlay tinting. Plain texture rendering;
-        // brightening will be handled at the source-JPEG layer separately.
-        return new THREE.MeshBasicMaterial({
-          map: tex,
-          side: THREE.FrontSide,
-        });
-      }
-
-      // Solid-color placeholder face — rendered in frame 0 while the banner
-      // texture is still downloading (or permanently, if the load failed).
-      return new THREE.MeshBasicMaterial({
-        color,
-        side: THREE.FrontSide,
-      });
-    });
-  }, [textures]);
+  return {
+    placeholderMaterials,
+    texturedFaces: texturedFacesRef.current,
+  };
 }
+
+// Opacity-ramp speed: opacity += (1 - opacity) * min(1, delta * FADE_K).
+// k≈9 gives a ~300 ms dissolve feel.
+const FADE_K = 9;
+
+// Center-group scale: resting / hover-breathing targets. The whole group
+// (both visible shells AND the invisible hit target) scales together via
+// groupRef, so the hit-target geometry compensates with 1/CENTER_REST_SCALE
+// below — keep these as the single source for both. (FRAC-195 review fix.)
+const CENTER_REST_SCALE = 0.9;
+const CENTER_HOVER_SCALE = 0.95;
 
 function CenterOctahedron({
   onNavigate,
@@ -555,23 +653,61 @@ function CenterOctahedron({
   onNavigate: (route: string) => void;
 }) {
   const [hovered, setHovered] = useState(false);
-  const meshRef = useRef<THREE.Mesh>(null);
+  const groupRef = useRef<THREE.Group>(null);
   const geometry = usePerFaceOctahedronGeometry(1);
-  const materials = usePerFaceMaterials();
+  // Textured shell sits at a marginally larger radius (1.001) than the solid
+  // backdrop (1.0) so it occludes cleanly without z-fighting (FRAC-192).
+  const texturedGeometry = usePerFaceOctahedronGeometry(1.001);
+  const { placeholderMaterials, texturedFaces } = usePerFaceMaterials();
   const prefersReducedMotion = usePrefersReducedMotion();
+
+  const placeholderMatArray = placeholderMaterials;
+  // Re-derived every render (cheap 8-element map). NOT memoized: the
+  // texturedFaces ref array has a stable identity and its slots are swapped
+  // imperatively when a texture arrives, so a memo keyed on its identity would
+  // return a stale array. usePerFaceMaterials forces a re-render on each
+  // texture arrival, and this fresh map picks up the new material.
+  const texturedMatArray = texturedFaces.map((f) => f.mat);
+
+  // FRAC-192: drive the per-face opacity dissolve. For each face whose texture
+  // has arrived, lerp its material opacity toward 1; settle to exactly 1 and
+  // drop the alpha-blend cost once it's effectively opaque. FRAC-28: reduced
+  // motion → snap to fully-shown instantly (no animation).
+  useFrame((_, delta) => {
+    for (const face of texturedFaces) {
+      if (!face.hasTexture) continue;
+      const mat = face.mat;
+      if (mat.opacity >= 1) continue;
+
+      if (prefersReducedMotion) {
+        mat.opacity = 1;
+      } else {
+        mat.opacity += (1 - mat.opacity) * Math.min(1, delta * FADE_K);
+      }
+
+      if (mat.opacity >= 0.999) {
+        mat.opacity = 1;
+        // Fully opaque now: stop alpha-blending and re-enable depth writes so
+        // the shell behaves like a normal opaque surface.
+        mat.transparent = false;
+        mat.depthWrite = true;
+        mat.needsUpdate = true;
+      }
+    }
+  });
 
   // FRAC-28: when reduced motion is requested, lock the center octahedron at
   // its neutral resting scale (0.9). The hover scale-up is purely decorative
   // breathing — skipping it keeps the surface still without affecting layout.
   useFrame(() => {
-    if (!meshRef.current) return;
+    if (!groupRef.current) return;
     if (prefersReducedMotion) {
-      meshRef.current.scale.setScalar(0.9);
+      groupRef.current.scale.setScalar(CENTER_REST_SCALE);
       return;
     }
-    const target = hovered ? 0.95 : 0.9;
-    const s = meshRef.current.scale.x;
-    meshRef.current.scale.setScalar(s + (target - s) * 0.1);
+    const target = hovered ? CENTER_HOVER_SCALE : CENTER_REST_SCALE;
+    const s = groupRef.current.scale.x;
+    groupRef.current.scale.setScalar(s + (target - s) * 0.1);
   });
 
   // FRAC-124: Use tap-vs-drag discriminator instead of onClick so vertical
@@ -581,22 +717,33 @@ function CenterOctahedron({
   });
 
   return (
-    <group>
-      {/* Visible center octahedron with per-face textures */}
-      <mesh ref={meshRef} geometry={geometry} material={materials}>
+    <group ref={groupRef}>
+      {/* FRAC-192: solid-color placeholder shell (opaque, radius 1) — always
+          visible from frame 0. A face whose banner texture hasn't arrived (or
+          permanently failed) shows its section color here. */}
+      <mesh geometry={geometry} material={placeholderMatArray}>
         {hovered && (
           <Html center distanceFactor={8} style={{ pointerEvents: "none" }}>
             <div style={tooltipStyle("hsl(var(--foreground))")}>The Protocol</div>
           </Html>
         )}
       </mesh>
+      {/* FRAC-192: textured shell (radius 1.001, marginally larger to avoid
+          z-fighting). Each face's material is transparent and fades opacity
+          0→1 as its banner texture arrives, cross-dissolving the photo in over
+          the solid backdrop instead of a hard color→photo cut. */}
+      <mesh geometry={texturedGeometry} material={texturedMatArray} />
       {/* Invisible hit target — uses an octahedron geometry that matches the
-          visible model shape exactly (FRAC-144 fix). Previously this was a
-          sphere of radius 1.15 (FRAC-79's enlargement) which extended well
-          beyond the visible octahedron and intercepted taps that should
-          have hit the surrounding nav nodes. Matching the visible shape
-          (radius 1, same as the rendered octahedron) means the center is
-          tappable wherever it's drawn but doesn't dominate empty space. */}
+          visible model shape (FRAC-144 fix). Previously this was a sphere of
+          radius 1.15 (FRAC-79's enlargement) which extended well beyond the
+          visible octahedron and intercepted taps that should have hit the
+          surrounding nav nodes.
+          Radius compensation (FRAC-195): this mesh lives inside the scaled
+          group, so a radius-1 geometry would shrink to an effective 0.9 at
+          rest — a ~19% tap-area loss vs the pre-FRAC-192 layout where the hit
+          mesh sat unscaled at radius 1.0. Dividing by CENTER_REST_SCALE
+          restores the same effective world-space tap radius (1.0 at rest,
+          ~1.06 during the decorative hover scale-up). */}
       <mesh
         {...tapHandlers}
         onPointerOver={(e: ThreeEvent<PointerEvent>) => {
@@ -609,7 +756,7 @@ function CenterOctahedron({
           document.body.style.cursor = "auto";
         }}
       >
-        <octahedronGeometry args={[1, 0]} />
+        <octahedronGeometry args={[1 / CENTER_REST_SCALE, 0]} />
         <meshBasicMaterial visible={false} />
       </mesh>
     </group>
