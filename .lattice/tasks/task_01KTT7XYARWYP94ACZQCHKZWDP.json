@@ -1,0 +1,33 @@
+{
+  "assigned_to": null,
+  "branch_links": [
+    {
+      "branch": "frac-197-story-favicon-tweak",
+      "linked_at": "2026-06-11T02:25:19Z",
+      "linked_by": "agent:claude-fable-5",
+      "repo": null
+    }
+  ],
+  "comment_count": 0,
+  "complexity": null,
+  "created_at": "2026-06-11T02:24:40Z",
+  "created_by": "agent:claude-fable-5",
+  "custom_fields": {},
+  "description": null,
+  "done_at": null,
+  "evidence_refs": [],
+  "id": "task_01KTT7XYARWYP94ACZQCHKZWDP",
+  "last_event_id": "ev_01KTT7Z3P71QMA8C1CSDTA8PMV",
+  "last_status_changed_at": "2026-06-11T02:25:18Z",
+  "priority": "medium",
+  "relationships_out": [],
+  "reopened_count": 0,
+  "schema_version": 1,
+  "short_id": "FRAC-197",
+  "status": "in_progress",
+  "tags": null,
+  "title": "Story page: nudge flanking favicon diamonds down and shrink slightly",
+  "type": "task",
+  "updated_at": "2026-06-11T02:25:19Z",
+  "urgency": null
+}

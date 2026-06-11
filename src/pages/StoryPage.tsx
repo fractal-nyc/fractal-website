@@ -212,11 +212,11 @@ export function StoryPage() {
               layer; on mobile the heading stays full-bleed. */}
           <div
             aria-hidden="true"
-            className="pointer-events-none absolute inset-x-4 sm:inset-x-8 md:inset-x-12 lg:inset-x-16 top-24 md:top-32 z-0 hidden md:flex items-center justify-between"
+            className="pointer-events-none absolute inset-x-4 sm:inset-x-8 md:inset-x-12 lg:inset-x-16 top-28 md:top-40 z-0 hidden md:flex items-center justify-between"
             style={{ height: "min(46vh, 380px)" }}
           >
-            <img src="/favicon.svg" alt="" className="w-[18%] lg:w-[16%] max-w-[300px] h-auto" />
-            <img src="/favicon.svg" alt="" className="w-[18%] lg:w-[16%] max-w-[300px] h-auto" />
+            <img src="/favicon.svg" alt="" className="w-[16%] lg:w-[14%] max-w-[260px] h-auto" />
+            <img src="/favicon.svg" alt="" className="w-[16%] lg:w-[14%] max-w-[260px] h-auto" />
           </div>
           <div className="relative z-10 max-w-6xl mx-auto px-6 md:px-[4.5%] w-full">
             <SectorHeader letter="S" name="Story" color="#8A7A20" />
