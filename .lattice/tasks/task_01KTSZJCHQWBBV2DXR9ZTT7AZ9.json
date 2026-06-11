@@ -1,0 +1,33 @@
+{
+  "assigned_to": null,
+  "branch_links": [
+    {
+      "branch": "frac-190-events-banner-redesign",
+      "linked_at": "2026-06-10T23:58:33Z",
+      "linked_by": "agent:claude-opus-4-orchestrator",
+      "repo": null
+    }
+  ],
+  "comment_count": 0,
+  "complexity": null,
+  "created_at": "2026-06-10T23:58:33Z",
+  "created_by": "agent:claude-opus-4-orchestrator",
+  "custom_fields": {},
+  "description": null,
+  "done_at": null,
+  "evidence_refs": [],
+  "id": "task_01KTSZJCHQWBBV2DXR9ZTT7AZ9",
+  "last_event_id": "ev_01KTSZSHGG7A7HR2S7V3P0MQWH",
+  "last_status_changed_at": "2026-06-11T00:02:27Z",
+  "priority": "medium",
+  "relationships_out": [],
+  "reopened_count": 0,
+  "schema_version": 1,
+  "short_id": "FRAC-190",
+  "status": "review",
+  "tags": null,
+  "title": "Update Events banner SVG to new design, re-add EVENTS wordmark text",
+  "type": "task",
+  "updated_at": "2026-06-11T00:02:27Z",
+  "urgency": null
+}
