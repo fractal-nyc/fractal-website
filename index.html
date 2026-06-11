@@ -27,18 +27,21 @@
          FACE_BANNER_IMAGES in src/components/three/OctahedronHero.tsx (~363) and
          with public/images/banners/. Use the literal filenames
          (new-liberal-arts.webp / political-club.webp), NOT the face keys
-         school / forum. No crossorigin: TextureLoader fetches same-origin,
-         non-CORS — a mismatched crossorigin would double-fetch. These are
-         as="image" hints only; they do NOT reintroduce a three-vendor / scene
-         chunk preload (FRAC-181). Same BASE_URL="/" caveat as above applies. -->
-    <link rel="preload" as="image" type="image/webp" href="/images/banners/story.webp" />
-    <link rel="preload" as="image" type="image/webp" href="/images/banners/campus.webp" />
-    <link rel="preload" as="image" type="image/webp" href="/images/banners/neighborhood.webp" />
-    <link rel="preload" as="image" type="image/webp" href="/images/banners/events.webp" />
-    <link rel="preload" as="image" type="image/webp" href="/images/banners/new-liberal-arts.webp" />
-    <link rel="preload" as="image" type="image/webp" href="/images/banners/political-club.webp" />
-    <link rel="preload" as="image" type="image/webp" href="/images/banners/lab.webp" />
-    <link rel="preload" as="image" type="image/webp" href="/images/banners/people.webp" />
+         school / forum. crossorigin IS required: THREE.TextureLoader inherits
+         Loader's default crossOrigin="anonymous", so it requests these images
+         in CORS mode. A preload WITHOUT crossorigin is no-CORS and won't match
+         three's request — the browser then double-fetches every banner (FRAC-193).
+         Same-origin CORS-mode requests need no ACAO header, so anonymous is safe.
+         These are as="image" hints only; they do NOT reintroduce a three-vendor /
+         scene chunk preload (FRAC-181). Same BASE_URL="/" caveat as above. -->
+    <link rel="preload" as="image" type="image/webp" href="/images/banners/story.webp" crossorigin="anonymous" />
+    <link rel="preload" as="image" type="image/webp" href="/images/banners/campus.webp" crossorigin="anonymous" />
+    <link rel="preload" as="image" type="image/webp" href="/images/banners/neighborhood.webp" crossorigin="anonymous" />
+    <link rel="preload" as="image" type="image/webp" href="/images/banners/events.webp" crossorigin="anonymous" />
+    <link rel="preload" as="image" type="image/webp" href="/images/banners/new-liberal-arts.webp" crossorigin="anonymous" />
+    <link rel="preload" as="image" type="image/webp" href="/images/banners/political-club.webp" crossorigin="anonymous" />
+    <link rel="preload" as="image" type="image/webp" href="/images/banners/lab.webp" crossorigin="anonymous" />
+    <link rel="preload" as="image" type="image/webp" href="/images/banners/people.webp" crossorigin="anonymous" />
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
