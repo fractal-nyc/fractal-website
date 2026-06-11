@@ -3,37 +3,37 @@
   "branch_links": [
     {
       "branch": "frac-192-hero-texture-preload",
-      "linked_at": "2026-06-11T00:25:09Z",
+      "linked_at": "2026-06-11T00:45:43Z",
       "linked_by": "agent:claude-opus-4-orchestrator",
       "repo": null
     }
   ],
   "comment_count": 1,
   "complexity": null,
-  "created_at": "2026-06-11T00:21:51Z",
+  "created_at": "2026-06-11T00:44:33Z",
   "created_by": "agent:claude-opus-4-orchestrator",
   "custom_fields": {},
   "description": null,
-  "done_at": "2026-06-11T00:38:04Z",
+  "done_at": "2026-06-11T00:46:21Z",
   "evidence_refs": [
     {
-      "id": "ev_01KTT1STVNGG67BN7C2480YC6C",
+      "id": "ev_01KTT29XPY2Q633CQQ51Q10N0A",
       "role": "review",
       "source_type": "comment"
     }
   ],
-  "id": "task_01KTT0X1ZJVADPWFJT50MHDWD3",
-  "last_event_id": "ev_01KTT1TQR1GSNDMD18TE61X4A8",
-  "last_status_changed_at": "2026-06-11T00:38:04Z",
+  "id": "task_01KTT26KV75GY7VM7P83VC8NR3",
+  "last_event_id": "ev_01KTT29XS66EFQ8DSDQMARV0PT",
+  "last_status_changed_at": "2026-06-11T00:46:21Z",
   "priority": "medium",
   "relationships_out": [],
   "reopened_count": 0,
   "schema_version": 1,
-  "short_id": "FRAC-192",
+  "short_id": "FRAC-193",
   "status": "done",
   "tags": null,
-  "title": "Eliminate octahedron face-texture flash on home-screen render (preload + fade-in)",
+  "title": "Fix banner-texture double-fetch: preload crossorigin mismatch with THREE.TextureLoader",
   "type": "task",
-  "updated_at": "2026-06-11T00:38:04Z",
+  "updated_at": "2026-06-11T00:46:21Z",
   "urgency": null
 }
