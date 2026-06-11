@@ -1,0 +1,33 @@
+{
+  "assigned_to": null,
+  "branch_links": [
+    {
+      "branch": "frac-191-campus-copy-margin",
+      "linked_at": "2026-06-11T00:09:56Z",
+      "linked_by": "agent:claude-opus-4-orchestrator",
+      "repo": null
+    }
+  ],
+  "comment_count": 0,
+  "complexity": null,
+  "created_at": "2026-06-11T00:09:56Z",
+  "created_by": "agent:claude-opus-4-orchestrator",
+  "custom_fields": {},
+  "description": null,
+  "done_at": null,
+  "evidence_refs": [],
+  "id": "task_01KTT0771EXEV3FWNNYF2TF83D",
+  "last_event_id": "ev_01KTT09V0X6Y0QNMRSNWKW6FMW",
+  "last_status_changed_at": "2026-06-11T00:11:22Z",
+  "priority": "medium",
+  "relationships_out": [],
+  "reopened_count": 0,
+  "schema_version": 1,
+  "short_id": "FRAC-191",
+  "status": "review",
+  "tags": null,
+  "title": "Campus page: remove membership lead-in line, fix cofounder bios margin",
+  "type": "task",
+  "updated_at": "2026-06-11T00:11:22Z",
+  "urgency": null
+}
