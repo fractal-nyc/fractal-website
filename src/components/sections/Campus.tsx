@@ -203,14 +203,9 @@ function PrimaryButton({
   );
 }
 
-function MembershipTiers({ showLeadIn = false }: { showLeadIn?: boolean }) {
+function MembershipTiers() {
   return (
     <div className="w-full">
-      {showLeadIn && (
-        <p className="text-body text-background/90 leading-relaxed mb-4">
-          We offer two kinds of membership:
-        </p>
-      )}
       <div className="flex flex-col md:flex-row gap-4 items-stretch w-full">
         <PrimaryButton href={STRIPE_FULLTIME_URL} fullWidth>
           <span className="flex flex-col items-center gap-1">
@@ -500,7 +495,7 @@ export function Campus() {
               <p className="text-aside text-background/70">— Andrew Rose, Fractal Campus co-founder</p>
             </div>
             <div className="mt-10 flex flex-col gap-6">
-              <MembershipTiers showLeadIn />
+              <MembershipTiers />
             </div>
           </div>
         </FadeIn>
@@ -658,7 +653,7 @@ export function Campus() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-12 max-w-4xl mx-auto mb-12">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-12 max-w-3xl mx-auto mb-12">
             {teamBios.map((bio) => (
               <div key={bio.name} className="flex flex-col gap-3">
                 <div>
