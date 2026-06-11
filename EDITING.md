@@ -54,14 +54,14 @@ If step 5 fails, tell Claude what's wrong — one round of correction is usually
   - Section links are derived from `houses.ts` plus hard-coded Story and People entries.
 - **Footer** — `src/components/layout/Footer.tsx`
   - Discord CTA (*"If you're in NYC and would like to introduce yourself…"*), Discord invite URL, *"New York City"*, `hello@fractalnyc.com`, wordmark + *"New York City Collective"*, copyright line.
-- **Browser tab title & head metadata** — `index.html`. Also holds the font loading and image preloads (see [Asset swaps](#asset-swaps)).
+- **Browser tab title & head metadata** — `index.html`. Also holds the font loading and image preloads (see [Asset swaps](#pattern-e--asset-swaps)).
 
 ### Homepage (`/` — `src/pages/Home.tsx`)
 
 - **Hero** — the 3D octahedron scene with search box.
   - Search placeholder *"Explore Fractal…"*: `src/components/sections/Hero.tsx`.
   - Octahedron face images: `public/images/banners/` (mapped in `src/components/three/OctahedronHero.tsx`).
-  - Background image: `public/images/hero/` (see [Asset swaps](#asset-swaps)).
+  - Background image: `public/images/hero/` (see [Asset swaps](#pattern-e--asset-swaps)).
 - **"A Golden Age Protocol"** — headline and three paragraphs (Founding Fathers… scenius…) inline in `src/pages/Home.tsx`.
 
 ### Story (`/story` — `src/pages/StoryPage.tsx`)
@@ -128,7 +128,7 @@ To add a person: ask Claude to add an entry to the `PEOPLE` array with name, rol
 
 ### Pattern C — Add a publication to the archive
 
-> In `src/data/lab-documents.ts`, add a new document following the existing entry shape: title **"[title]"**, authors **["person-id"]**, description **"[1–2 sentences]"**, url **"[link]"**, category **"[substack/essay/podcast/talk/video]"**, tags **["…"]**. Author ids must match `PEOPLE` ids in `src/data/houses.ts`.
+> In `src/data/lab-documents.ts`, add a new document following the existing entry shape: title **"[title]"**, authors **["person-id"]**, description **"[1–2 sentences]"**, url **"[link]"**, category **"[substack/essay/podcast/talk/video/social/project]"**, tags **["…"]**. Author ids must match `PEOPLE` ids in `src/data/houses.ts`.
 
 **Verify:** open `/lab` and search for the new title.
 
@@ -142,8 +142,8 @@ To add a person: ask Claude to add an entry to the `PEOPLE` array with name, rol
 
 - **Campus photo:** drop the new image in `public/images/campus/`, then ask Claude to update the matching entry (src, alt, caption) in the `campusPhotos` array in `src/components/sections/Campus.tsx`.
 - **Story photo:** drop the image in `public/images/story/` and ask Claude to add/update the entry in `src/data/storyPhotos.ts`.
-- **Octahedron banner image:** replace the file in `public/images/banners/` **keeping the same filename** — the filenames are referenced in `src/components/three/OctahedronHero.tsx`, `src/components/house/HouseBanner.tsx`, *and* the preload tags in `index.html`, which must all stay in sync. Tell Claude if you want a new filename so it updates all three.
-- **Hero background:** replace `assets-src/fractal-background-source.png`, then run `pnpm build:hero-bg` to regenerate the responsive variants in `public/images/hero/` — don't hand-replace them.
+- **Octahedron banner image:** drop the master PNG in `assets-src/banners/` **keeping the existing source filename** (listed in `scripts/compress-banners.mjs`), then run `pnpm build:banners` to regenerate the compressed `public/images/banners/*.webp` — don't hand-replace those. The output filenames are referenced in `src/components/three/OctahedronHero.tsx`, `src/components/house/HouseBanner.tsx`, *and* the preload tags in `index.html`, which must all stay in sync — tell Claude if you want a new filename so it updates all three.
+- **Hero background:** replace `assets-src/hero/fractal-background-source.png`, then run `pnpm build:hero-bg` to regenerate the responsive variants in `public/images/hero/` — don't hand-replace them.
 
 ---
 
