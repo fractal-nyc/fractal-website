@@ -10,11 +10,12 @@
 // 1024² was ~2–4× oversized — 512² halves the preloaded bytes and cuts GPU
 // texture memory 4× with no visible softness.
 //
-// Source resolution (first hit wins):
-//   1. `assets-src/banners/<src>` — the git-ignored master PNGs (preferred;
-//      drop originals here with the exact filenames in SOURCE_TO_OUTPUT).
-//   2. `public/images/banners/<src>` — committed PNG masters that already live
-//      alongside the webp outputs (used when assets-src/ isn't present).
+// Source: `assets-src/banners/<src>` — the git-ignored master PNGs (drop
+// originals here with the exact filenames in SOURCE_TO_OUTPUT). Masters must
+// NEVER live under public/ — Vite copies everything in public/ into dist/
+// verbatim, so multi-MB masters there would ship to production (FRAC-195).
+// The masters are not committed; on a machine without assets-src/ this script
+// reports MISSING per source and exits non-zero.
 //
 // Run: `pnpm build:banners` (or `node scripts/compress-banners.mjs`).
 //
@@ -36,12 +37,8 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const ROOT = path.resolve(__dirname, "..");
 
-// Preferred source dir (git-ignored masters), then the committed public dir as
-// a fallback so the script runs even without assets-src/ present (FRAC-192).
-const SRC_DIRS = [
-  path.join(ROOT, "assets-src", "banners"),
-  path.join(ROOT, "public", "images", "banners"),
-];
+// Git-ignored masters only — no public/ fallback (see header, FRAC-195).
+const SRC_DIRS = [path.join(ROOT, "assets-src", "banners")];
 const OUT_DIR = path.join(ROOT, "public", "images", "banners");
 
 // Resolve a source filename against SRC_DIRS in priority order.

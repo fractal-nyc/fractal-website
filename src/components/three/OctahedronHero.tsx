@@ -362,8 +362,12 @@ function StreamingCrossConnections({
 // face should still show its photo. Geometry stays intact (8 triangular faces).
 //
 // FRAC-192: these 8 paths are ALSO preloaded as <link rel="preload" as="image">
-// in index.html <head>. Keep both lists in sync — if you add/remove/rename a
-// banner here, update the index.html preload tags too.
+// in index.html <head>, AND six of them are rendered by the house-page banner
+// (src/components/house/HouseBanner.tsx BANNER_IMAGES). Keep all three lists
+// in sync — if you add/remove/rename a banner here, update the index.html
+// preload tags and HouseBanner.tsx too. All consumers must stay CORS-mode
+// (TextureLoader is anonymous by default; HouseBanner's <img> sets
+// crossOrigin) so the single CORS preload serves every route (FRAC-193/195).
 const FACE_BANNER_IMAGES: Record<string, string> = {
   story:        "/images/banners/story.webp",
   campus:       "/images/banners/campus.webp",
@@ -411,7 +415,7 @@ const FACE_SECTION_MAP: (string | null)[] = [
  * different materials (textured or solid color) to each.
  */
 function usePerFaceOctahedronGeometry(radius: number) {
-  return useMemo(() => {
+  const geometry = useMemo(() => {
     const base = new THREE.OctahedronGeometry(radius, 0);
 
     // Ensure non-indexed so each face has its own vertices.
@@ -465,6 +469,18 @@ function usePerFaceOctahedronGeometry(radius: number) {
 
     return nonIndexed;
   }, [radius]);
+
+  // GPU leak guard: dispose the buffer geometry when the component unmounts
+  // (or radius changes). The "no leaks across route changes" criterion
+  // (FRAC-192) covered materials/textures but not these geometries — and the
+  // two-shell design doubled the geometry count (FRAC-195 review fix).
+  useEffect(() => {
+    return () => {
+      geometry.dispose();
+    };
+  }, [geometry]);
+
+  return geometry;
 }
 
 /**
@@ -604,6 +620,13 @@ function usePerFaceMaterials() {
         face.mat.map?.dispose();
         face.mat.dispose();
       }
+      // Also dispose the 8 solid placeholder-shell materials — they were the
+      // gap in the original FRAC-192 cleanup ("no leaks" criterion). Their
+      // identity is stable (useMemo with [] deps), so referencing them from
+      // this []-dep effect is safe (FRAC-195 review fix).
+      for (const mat of placeholderMaterials) {
+        mat.dispose();
+      }
     };
   }, []);
 
@@ -616,6 +639,13 @@ function usePerFaceMaterials() {
 // Opacity-ramp speed: opacity += (1 - opacity) * min(1, delta * FADE_K).
 // k≈9 gives a ~300 ms dissolve feel.
 const FADE_K = 9;
+
+// Center-group scale: resting / hover-breathing targets. The whole group
+// (both visible shells AND the invisible hit target) scales together via
+// groupRef, so the hit-target geometry compensates with 1/CENTER_REST_SCALE
+// below — keep these as the single source for both. (FRAC-195 review fix.)
+const CENTER_REST_SCALE = 0.9;
+const CENTER_HOVER_SCALE = 0.95;
 
 function CenterOctahedron({
   onNavigate,
@@ -672,10 +702,10 @@ function CenterOctahedron({
   useFrame(() => {
     if (!groupRef.current) return;
     if (prefersReducedMotion) {
-      groupRef.current.scale.setScalar(0.9);
+      groupRef.current.scale.setScalar(CENTER_REST_SCALE);
       return;
     }
-    const target = hovered ? 0.95 : 0.9;
+    const target = hovered ? CENTER_HOVER_SCALE : CENTER_REST_SCALE;
     const s = groupRef.current.scale.x;
     groupRef.current.scale.setScalar(s + (target - s) * 0.1);
   });
@@ -704,12 +734,16 @@ function CenterOctahedron({
           the solid backdrop instead of a hard color→photo cut. */}
       <mesh geometry={texturedGeometry} material={texturedMatArray} />
       {/* Invisible hit target — uses an octahedron geometry that matches the
-          visible model shape exactly (FRAC-144 fix). Previously this was a
-          sphere of radius 1.15 (FRAC-79's enlargement) which extended well
-          beyond the visible octahedron and intercepted taps that should
-          have hit the surrounding nav nodes. Matching the visible shape
-          (radius 1, same as the rendered octahedron) means the center is
-          tappable wherever it's drawn but doesn't dominate empty space. */}
+          visible model shape (FRAC-144 fix). Previously this was a sphere of
+          radius 1.15 (FRAC-79's enlargement) which extended well beyond the
+          visible octahedron and intercepted taps that should have hit the
+          surrounding nav nodes.
+          Radius compensation (FRAC-195): this mesh lives inside the scaled
+          group, so a radius-1 geometry would shrink to an effective 0.9 at
+          rest — a ~19% tap-area loss vs the pre-FRAC-192 layout where the hit
+          mesh sat unscaled at radius 1.0. Dividing by CENTER_REST_SCALE
+          restores the same effective world-space tap radius (1.0 at rest,
+          ~1.06 during the decorative hover scale-up). */}
       <mesh
         {...tapHandlers}
         onPointerOver={(e: ThreeEvent<PointerEvent>) => {
@@ -722,7 +756,7 @@ function CenterOctahedron({
           document.body.style.cursor = "auto";
         }}
       >
-        <octahedronGeometry args={[1, 0]} />
+        <octahedronGeometry args={[1 / CENTER_REST_SCALE, 0]} />
         <meshBasicMaterial visible={false} />
       </mesh>
     </group>

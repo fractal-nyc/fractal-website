@@ -27,6 +27,12 @@ function isDark(hex: string): boolean {
 // Duochrome background images — only 4 of 6 houses have images
 // ---------------------------------------------------------------------------
 
+// These paths are a subset of the banners preloaded (CORS-mode) in index.html
+// and textured onto the octahedron via FACE_BANNER_IMAGES in
+// src/components/three/OctahedronHero.tsx. Keep all three lists in sync, and
+// keep the <img> below crossOrigin="anonymous" so it matches the preload's
+// request mode — a plain no-CORS <img> wouldn't reuse the preload and every
+// banner would download twice on house routes (FRAC-193/195).
 const BANNER_IMAGES: Record<string, string> = {
   lab:          "/images/banners/lab.webp",
   forum:        "/images/banners/political-club.webp",
@@ -126,6 +132,7 @@ export function HouseBanner({
               src={bannerImage}
               alt=""
               aria-hidden="true"
+              crossOrigin="anonymous"
               className="absolute inset-0 h-full w-full object-cover object-center"
             />
             {/* Semi-transparent overlay to keep text readable */}
