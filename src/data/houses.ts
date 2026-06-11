@@ -201,7 +201,6 @@ export const PEOPLE: Person[] = [
       twitter: "jannaaar",
       website: "https://parallax.haus",
     },
-    avatar: "/images/julianna.png",
   },
 ];
 
