@@ -98,15 +98,16 @@ components:
 
 ## Overview
 
-Fractal NYC is a six-house editorial site in the Asimov-Collective key: warm cream surface, deep charcoal voice, oversized italic Fraunces headings, monospace body text, Jacquard 24 display accents, and a subtle noise texture on the page background for a tactile, slightly printed feel. The Hogwarts-six-houses framing from the PRD treats each section of the site (Visit, Events, Campus, Education, Political Club, Publications) as a house with its own `{light, deep}` palette pair; the global voice stays charcoal-on-cream and each house tints its own pages from there.
+Fractal NYC is an editorial site in a warm-print key: cream surfaces, charcoal type, oversized italic Fraunces headings, a JetBrains Mono body, Jacquard 24 display accents, and a subtle noise texture that gives the page a faintly printed feel. There is one color scheme — surfaces are always cream, type is always charcoal.
 
-Three deliberate constraints sit at the foundation of this system:
+The site is organized as six themed houses — Visit, Events, Campus, Education, Political Club, Publications — each owning a `{light, deep}` color pair. The global voice stays charcoal-on-cream; each house tints its own pages from its pair.
 
-1. **Mobile-first, 375px baseline.** Every page and component is designed at a phone first. Wider viewports are progressive enhancement. The PRD calls this non-negotiable.
-2. **No dark mode.** The `.dark` token block was deleted (FRAC-30); we are not planning a dark scheme. Surfaces are always cream, type is always charcoal.
-3. **Charcoal-on-cream is the voice, not a brand accent.** `colors.primary` is the dominant text color (`#171717`), not a saturated brand hue. This deliberately trips the `@google/design.md` `missing-primary` lint as a warning — see **Linting Notes**.
+Two foundations:
 
-The Political Club house is hidden from the OctahedronHero 3D scene, the Navbar, and the banner grid via the `hideFromNavbar` / `hideFromBanners` flags on `houses.ts`. It is reachable by direct route. Vertex 4 of the octahedron — previously a Political Club "Coming Soon" placeholder — is now the Story nav node (FRAC-47).
+1. **Mobile-first, 375px baseline.** Every page and component is designed at phone width first. Wider viewports are progressive enhancement.
+2. **Charcoal is the voice.** `colors.primary` is the dominant text color (`#171717`), an editorial charcoal rather than a saturated brand hue. Hierarchy comes from typography, color contrast, and whitespace; house colors provide scoped accents.
+
+Political Club is reachable by direct route (`/political-club`) but hidden from the navbar and banner grid via the `hideFromNavbar` / `hideFromBanners` flags in `src/data/houses.ts`.
 
 ## Colors
 
@@ -114,34 +115,30 @@ The system declares **31 color tokens**: 19 surface tokens that drive the page c
 
 ### Surface palette
 
-| Token | Hex | Source / role |
+| Token | Hex | Role |
 |---|---|---|
-| `background` | `#f8f6f0` | Canonical cream. See *cream-math note* below. |
-| `foreground` | `#171717` | Canonical charcoal. Dominant text color. See *charcoal drift note*. |
-| `foreground-light` | `#333333` | Softer charcoal for secondary body voice (asides, supporting prose). Barely-perceptible step down from canonical charcoal — used as a hierarchy hint, not as muted/disabled. Different role from `muted-foreground` which is tuned for cream surfaces specifically. FRAC-33. |
-| `card` | `#fbfaf9` | `--card: 40 25% 98%`. Slightly raised cream for card surfaces. |
-| `card-foreground` | `#171717` | |
-| `popover` | `#fbfaf9` | Same as `card`. |
-| `popover-foreground` | `#171717` | |
-| `primary` | `#171717` | Charcoal — see primary-is-charcoal note below. |
+| `background` | `#f8f6f0` | Canonical cream. The page surface. |
+| `foreground` | `#171717` | Canonical charcoal. Dominant text color. |
+| `foreground-light` | `#333333` | Softer charcoal for secondary body voice (asides, supporting prose). A hierarchy hint, one step down from canonical charcoal. |
+| `card` / `popover` | `#fbfaf9` | Slightly raised cream for card and popover surfaces. |
+| `card-foreground` / `popover-foreground` | `#171717` | |
+| `primary` | `#171717` | Charcoal — the voice, not a brand accent. |
 | `primary-foreground` | `#f8f6f0` | Cream on charcoal (e.g. inverted button states). |
-| `secondary` | `#e8e6e3` | Warm putty, used for muted chrome. |
+| `secondary` / `muted` | `#e8e6e3` | Warm putty for muted chrome. |
 | `secondary-foreground` | `#171717` | |
-| `muted` | `#e8e6e3` | Same as `secondary` — the system has a tight neutral palette. |
-| `muted-foreground` | `#525252` | FRAC-33 lifted this to 32% lightness for WCAG AA 4.5:1 against cream (~5.5:1 actual). |
+| `muted-foreground` | `#525252` | Muted text tuned for WCAG AA contrast on cream. |
 | `accent` | `#e5e2dc` | Slightly warmer neutral for subtle accent fills. |
 | `accent-foreground` | `#171717` | |
-| `destructive` | `#ef4343` | Tailwind-flavored red for destructive actions. |
+| `destructive` | `#ef4343` | Red for destructive actions. |
 | `destructive-foreground` | `#f8f6f0` | |
-| `border` | `#dddad5` | Visible-but-soft border for editorial structure. |
-| `input` | `#dddad5` | Same as `border`. |
+| `border` / `input` | `#dddad5` | Visible-but-soft border for editorial structure. |
 | `ring` | `#171717` | Focus ring is canonical charcoal. |
 
-### House mapping
+### Houses
 
-Each house has both an internal data-model `id` (used in routes and `houses.ts`) and a human-facing `displayName`. **DESIGN.md house tokens use `displayName` slugs**, lowercase and kebab-cased, so an agent reading the spec can map directly from product UI labels back to tokens without consulting the data model:
+Each house has an internal data-model `id` (used in routes and `src/data/houses.ts`) and a human-facing display name. House tokens use the display-name slug, so UI labels map directly to tokens:
 
-| Internal ID (`houses.ts`) | Display name | Token slug prefix |
+| Internal ID | Display name | Token slug prefix |
 |---|---|---|
 | `neighborhood` | Visit | `house-visit-{light,deep}` |
 | `events` | Events | `house-events-{light,deep}` |
@@ -149,10 +146,6 @@ Each house has both an internal data-model `id` (used in routes and `houses.ts`)
 | `school` | Education | `house-education-{light,deep}` |
 | `forum` | Political Club | `house-political-club-{light,deep}` |
 | `lab` | Publications | `house-publications-{light,deep}` |
-
-### House palette values
-
-Verified against `src/data/houses.ts` at HEAD. The `HOUSES[id].palette: { light, deep }` field is the single source of truth for house color; the pre-FRAC-24 single-color `color` field was removed in FRAC-50.
 
 | Token | Hex |
 |---|---|
@@ -169,29 +162,13 @@ Verified against `src/data/houses.ts` at HEAD. The `HOUSES[id].palette: { light,
 | `house-publications-light` | `#E870A0` |
 | `house-publications-deep` | `#C44878` |
 
-### The forum/school page-bg inversion
+`HOUSES[id].palette: { light, deep }` in `src/data/houses.ts` is the single source of truth for house color, and each house has exactly two colors — the pair is the unit.
 
-Most houses use `{light}` as the page background with `{deep}` as the accent for the monogram letter and headings. **Political Club (`forum`) and Education (`school`) invert this**: their page background is `{deep}` and the lighter shade is the accent. The HouseBanner grid does **not** invert (it always uses `{light}` as the banner background); the inversion is a per-page rule applied in `PoliticalClubPage.tsx` and `LiberalArtsPage.tsx`. This is not encoded in the token system — it is a page-level decision.
+**Scope:** house colors live on their own house's pages. On a house's page, its pair may color display headings, the monogram letter, eyebrows, focus rings, and chrome. Most houses use `{light}` as the page background and `{deep}` as the accent; **Political Club and Education invert** (page background `{deep}`, accent `{light}`) — a per-page decision applied in `PoliticalClubPage.tsx` and `LiberalArtsPage.tsx`. The HouseBanner grid always uses `{light}` as the banner background.
 
-### Primary is charcoal — not a brand accent
+### Surface + text pairings
 
-`colors.primary` is `#171717`. This is the dominant text color, not a saturated brand hue. The site's voice is charcoal-on-cream and we treat charcoal as the load-bearing color. We accept the `@google/design.md` `missing-primary` lint warning as deliberate — see **Linting Notes**. Do not introduce a `brand` or `text-default` token to "fix" the warning; the warning is the correct read of an unconventional but intentional choice.
-
-### Lab/Publications uses palette pinks; the old `#6B4C9A` is dead
-
-Lab/Publications (internal id `lab`, displayName `Publications`) has exactly two canonical color tokens — `house-publications-light` (`#E870A0`) and `house-publications-deep` (`#C44878`). The legacy `#6B4C9A` purple was removed from `src/components/lab/*` in FRAC-34 (consumers) and from `src/data/houses.ts` in FRAC-50 (the deprecated `color` field itself). Lab uses its palette pinks for accents; **no third color is canonical**. Do not declare a `house-publications-accent` or `lab-purple` token.
-
-### Text foregrounds
-
-Two canonical text colors carry the entire site: `foreground` (`#171717` charcoal) and `background` (`#f8f6f0` cream). Charcoal is the default voice on cream surfaces; cream is the default voice on charcoal or saturated house backgrounds. The absence of a white or gray text token is the canonical statement that the system does not use them.
-
-**House colors for display and highlight.** On a house's own page, that house's `{light, deep}` pair is permitted as text color for display headings and highlight chrome — Jacquard monogram letters, accent labels, focus rings, eyebrow text on the house's own bg. House colors do not cross page boundaries; the Lab page may use `house-publications-{light,deep}` but not `house-events-light`.
-
-### Surface foreground pairing
-
-Cream and charcoal are the only text-color tokens — `text-background` (cream `#f8f6f0`) and `text-foreground` (charcoal `#171717`). They are page-agnostic. There are no per-house `*-foreground` sibling tokens. Authors reaching for a house surface (`bg-house-*`) pair it with `text-background` or `text-foreground` directly on the same node — explicit, never trusting the page-level cascade to "still be correct" inside a nested surface.
-
-The four canonical pairings:
+Two text colors carry the entire site: charcoal (`text-foreground`) on light surfaces, cream (`text-background`) on charcoal or saturated house surfaces. The four canonical pairings:
 
 | Surface | Pair |
 |---|---|
@@ -200,57 +177,42 @@ The four canonical pairings:
 | House light (saturated) | `bg-house-{slug}-light` + `text-background` |
 | House deep (saturated) | `bg-house-{slug}-deep` + `text-background` |
 
-Cream-on-saturated-house is the editorial default. A nested cream surface inside a house page (`bg-house-publications-light` → `bg-background`) re-asserts `text-foreground` on the inner surface so text doesn't inherit cream-from-cascade and render cream-on-cream. (FRAC-21 review caught this regression with the DocumentBadge `h3` rendering invisible at 375px — the explicit-pairing rule prevents it.)
-
-**History (FRAC-29 → FRAC-50, 2026-06-09):** An earlier FRAC-42 codification introduced per-house `*-light-foreground` and `*-deep-foreground` sibling tokens (every one resolving to `var(--color-background)`). FRAC-29 retired the convention in favor of `text-background` directly; FRAC-33 / FRAC-35 / FRAC-49 / FRAC-50 swept the remaining consumers (Education, Visit, Events, Publications/Lab, Campus). No `*-foreground` siblings remain in `index.css` and none should be reintroduced.
-
-### Charcoal drift note
-
-The canonical charcoal is `#171717` (the `foreground` token). Raw `#1a1a1a` is drift; the four sites that previously used it were normalized to `hsl(var(--foreground))` in FRAC-46. Do not reintroduce raw `#1a1a1a` and do not declare a `charcoal-deep` token to legitimize drift if it appears in future code.
-
-### Cream-math note
-
-The canonical written cream is `#f8f6f0`. The `--background` CSS variable in `src/index.css` is currently `hsl(40 25% 96%)`, which converts to `#f7f6f2`. The two are visually indistinguishable but the math disagrees with the canonical hex by a hair. DESIGN.md emits the human-chosen canonical `#f8f6f0`; a follow-up task will tighten the HSL so the math produces the canonical hex. Do not "fix" this by changing the token value here.
+Set the text color explicitly on the same node as the surface. A nested cream surface inside a house page re-asserts `text-foreground` on the inner surface, so text always pairs with its actual background rather than inheriting from the page cascade.
 
 ## Typography
 
-Four type families ship; two are declared as tokens (`font-sans`, `font-mono`) and two live in prose because the system does not yet have a codified size/weight scale for them.
+Four families ship. Two are declared as tokens (`font-sans`, `font-mono`); two are display families whose rules live in global CSS.
 
-- **Inter** (declared `font-sans`). The canonical sans for body and label use. Imported at `src/index.css:1` and assigned to `--font-sans` at `src/index.css:6` (FRAC-44). New designs that reach for `font-sans` get Inter at runtime.
-- **JetBrains Mono** (declared `font-mono`). The body family today, and the long-term home for labels, UI chrome, and monospaced metadata. Used by Button via `font-mono uppercase tracking-widest`.
-- **Fraunces** (display serif, prose-only). Applied globally to `h1–h6` via `src/index.css:90-94`: `font-style: italic`, `text-transform: uppercase`, `letter-spacing: 0.04em`. The `.display-roman` utility (FRAC-31) opts a heading out of the italic rule when an upright Fraunces is needed. Not modeled as a `typography:` token because design.md's typography schema has no `textTransform` or `fontStyle` fields — italic and uppercase are the load-bearing rules and they live in prose.
-- **Jacquard 24** (display script, prose-only). Inline-styled only — used on the Navbar wordmark and the HouseBanner monogram letter. The `[style*="Jacquard"]` rule in `src/index.css:102-105` opts it out of the global uppercase + italic. No size or weight scale is codified; sizing is per-surface via `clamp()` (FRAC-29) or fixed-`px`.
+- **Inter** (`font-sans`) — the canonical sans for body and label use.
+- **JetBrains Mono** (`font-mono`) — the body family, plus labels, UI chrome, and metadata.
+- **Fraunces** — the display serif. A global rule renders `h1–h6` in italic + uppercase Fraunces with `letter-spacing: 0.04em`. The `.display-roman` utility opts a heading into upright Fraunces.
+- **Jacquard 24** — the display script, inline-styled on the Navbar wordmark and the HouseBanner monogram letter. A `[style*="Jacquard"]` rule in `src/index.css` renders it in its natural case and posture.
 
-### Global type rules (prose-only, not modelable)
-
-- `body` renders **normal-case** by default. The pre-FRAC-51 global `text-transform: uppercase` on `body` was removed; uppercase is now opt-in via `.font-serif`, the `h1–h6` rule, or one of the chrome utilities (`.text-eyebrow`, `.text-label`, `.text-meta`).
-- `h1–h6` are italic + uppercase Fraunces with `letter-spacing: 0.04em`. Use `.display-roman` for upright headings.
-- `.font-serif` also implies italic + uppercase by rule.
-- `[style*="Jacquard"]` opts out of both transforms.
+Global rules: `body` renders normal-case by default; uppercase is opt-in via the heading rule, `.font-serif`, or the chrome utilities below.
 
 ### Semantic type scale
 
-FRAC-51 introduces a Tailwind-aligned semantic scale delivered as utility classes (precedent: the existing `.display-roman` utility). Each utility maps to **one** Tailwind size — no arbitrary `text-[…]` values. Body family is Inter (FRAC-44). Body case is **normal-case**; uppercase is opt-in.
+The scale is delivered as utility classes in `src/index.css`. Each utility maps to exactly one Tailwind size.
 
 **Display tier (Fraunces)**
 
 | Utility | Rendering | Tailwind size |
 |---|---|---|
 | `.text-display` | upright, weight 300, uppercase, tracking 0.04em, leading 1.1 | `text-4xl md:text-7xl` |
-| `.text-title` | italic, weight 350, **mixed-case**, tracking 0.04em | `text-3xl md:text-5xl` |
-| `.text-subtitle` | upright, weight 300, **mixed-case**, tracking 0.04em | `text-xl md:text-2xl` |
+| `.text-title` | italic, weight 350, mixed-case, tracking 0.04em | `text-3xl md:text-5xl` |
+| `.text-subtitle` | upright, weight 300, mixed-case, tracking 0.04em | `text-xl md:text-2xl` |
 
-`.text-title` and `.text-subtitle` are mixed-case by default — they pin `text-transform: none` themselves so call sites don't need a `normal-case` modifier. The global `h1, h2, h3, h4, h5, h6` rule sets only Fraunces + italic + tracking (no case), so bare h-tags inherit the browser default; utilities own their own case. FRAC-46.
+`.text-title` and `.text-subtitle` pin `text-transform: none` themselves, so call sites get mixed-case without a modifier.
 
 **Body tier (Inter, normal-case)**
 
 | Utility | Rendering | Tailwind size |
 |---|---|---|
-| `.text-body` | weight 400, normal-case | `text-base` |
-| `.text-body-lead` | weight 300, normal-case, leading 1.7 | `text-lg` |
-| `.text-aside` | weight 400, italic, normal-case, leading-relaxed | `text-base` |
+| `.text-body` | weight 400 | `text-base` |
+| `.text-body-lead` | weight 300, leading 1.7 | `text-lg` |
+| `.text-aside` | weight 400, italic, leading-relaxed | `text-base` |
 
-`.text-aside` is the canonical home for editorial italic voice — bylines, attributions, role labels, parenthetical asides, P.S. footer notes. Pairs with `.text-subtitle` on quoted passages: the quote text uses `.text-subtitle` for display contrast; the byline uses `.text-aside` for the italic personal-voice signal. FRAC-47.
+`.text-aside` is the editorial italic voice — bylines, attributions, role labels, parenthetical asides. It pairs with `.text-subtitle` on quoted passages: the quote uses `.text-subtitle`, the byline uses `.text-aside`.
 
 **Chrome tier (JetBrains Mono)**
 
@@ -260,84 +222,77 @@ FRAC-51 introduces a Tailwind-aligned semantic scale delivered as utility classe
 | `.text-label` | identical to `.text-eyebrow` | `text-sm` |
 | `.text-meta` | identical to `.text-eyebrow` | `text-sm` |
 
-`.text-eyebrow`, `.text-label`, and `.text-meta` are deliberately three names for the same rendering — the *meaning* differs at the call site (overline label vs. form label vs. inline metadata), and keeping three names lets future authors signal intent without forcing a rendering decision today.
+Three names, one rendering — the name signals intent at the call site (overline label vs. form label vs. inline metadata).
 
-**Body-display tier (JetBrains Mono, uppercase, weight 100)**
-
-| Utility | Rendering | Tailwind size |
-|---|---|---|
-| `.text-body-display` | mono, weight 100, uppercase, normal tracking, relaxed leading | `text-sm md:text-base` |
-
-`.text-body-display` is the body tier rendered as display chrome — editorial / manifesto / protocol prose where body-length passages should carry the chrome tier's mono-uppercase identity but read as paragraphs. Distinguished from `.text-control` by weight (100 vs 400) and responsive sizing (`text-control` is flat `text-base`). Used today by the Home page's Golden Age Protocol section. Resolves the FRAC-22 audit GAP for that pattern. FRAC-45.
-
-**Control tier (JetBrains Mono, uppercase)**
+**Body-display tier (JetBrains Mono)**
 
 | Utility | Rendering | Tailwind size |
 |---|---|---|
-| `.text-control` | mono, weight 400, uppercase, normal tracking | `text-base` |
+| `.text-body-display` | mono, weight 100, uppercase, relaxed leading | `text-sm md:text-base` |
 
-`.text-control` keeps the chrome tier's mono + uppercase identity but sizes up to `text-base` (16px = iOS no-zoom threshold) and drops the wide tracking (chrome's `0.1em` looks wrong on typed text). Typed text renders uppercase by design — the all-caps chrome aesthetic wins over case-preserving typed input. Use on `<input>`, `<textarea>`, `<select>`, and other typeable controls. Named `.text-control` rather than `.text-input` because the codebase declares `--color-input` as a theme color token (for input borders), which makes Tailwind v4 auto-generate a `text-input` color utility — a name collision that would override `color` on any element it touched. FRAC-41 introduced; FRAC-44 set case to uppercase per user review.
+Body-length passages that carry the chrome tier's mono-uppercase identity but read as paragraphs — editorial / manifesto prose, e.g. the Home page's Golden Age Protocol section.
 
-**Button (2 variants in `src/components/ui/button.tsx`)**
+**Control tier (JetBrains Mono)**
+
+| Utility | Rendering | Tailwind size |
+|---|---|---|
+| `.text-control` | mono, weight 400, uppercase | `text-base` |
+
+For `<input>`, `<textarea>`, `<select>`, and other typeable controls. Sized at 16px (the iOS no-zoom threshold) with normal tracking; typed text renders uppercase by design.
+
+**Button** (`src/components/ui/button.tsx`)
 
 | Size | Padding | Type |
 |---|---|---|
 | `default` | `px-8 py-5` | `text-sm tracking-widest uppercase font-medium` |
 | `sm` | `px-4 py-2.5` | `text-xs tracking-widest uppercase font-medium` |
 
-Both Button sizes share the same JetBrains Mono / uppercase / `tracking-widest` base from the `buttonVariants` cva string.
+Both sizes share the JetBrains Mono / uppercase / `tracking-widest` base.
 
-**`.display-roman` is preserved** as the low-level escape hatch (font-style/weight/transform only, no size or tracking). `.text-display` is the full semantic preset and should be the default reach. Authors who only need to opt a heading out of italic without taking on the full display rendering can keep using `.display-roman`.
-
-**On the `typography:` YAML key:** No change. The existing `font-sans` / `font-mono` family declarations remain; the semantic size scale is not modeled in YAML because design.md's typography schema has no slots for size, letter-spacing, line-height, or text-transform. The scale above is the canonical reference and lives in prose.
+`.display-roman` remains the low-level escape hatch (posture/weight/transform only); `.text-display` is the full semantic preset and the default reach.
 
 ## Layout
 
-**Mobile-first, 375px baseline.** This is non-negotiable per the PRD. Every component must read on a phone before any consideration of wider viewports. All breakpoints are additive: write the mobile layout first, then progressively enhance.
+**Mobile-first, 375px baseline.** Write the mobile layout first; all breakpoints are additive enhancements.
 
 ### Horizontal padding
 
-- `px-6` is the mobile gutter (~30 sites in `src/`). Use it as the default page edge inset.
-- `px-[4.5%]` is the desktop page gutter (~9 sites). Used for full-bleed editorial sections where the breathing room scales with viewport width. Not a token — it is a documented convention.
+- `px-6` — the mobile gutter and default page-edge inset.
+- `px-[4.5%]` — the full-bleed editorial gutter for sections whose breathing room scales with viewport width.
 
-### Container widths
+### Containers
 
-The codebase uses 11 distinct `max-w-*` values (`max-w-xs` through `max-w-7xl`) plus the arbitrary `max-w-[800px]` and `max-w-[420px]`. There is no canonical container scale yet; consolidation is a follow-up task. Today, choose the narrowest container that fits the content.
+Choose the narrowest `max-w-*` container that fits the content.
 
 ### Vertical rhythm
 
-Editorial scale — section spacing climbs steeply from compact surfaces to golden-age section breaks:
+Section spacing climbs steeply from compact surfaces to major narrative breaks:
 
-- `py-12 md:py-20` — compact section padding (small surfaces, dense lists).
-- `py-20 md:py-32` — standard section padding.
-- `py-32 md:py-48` — feature section padding.
-- `py-40 md:py-60` — golden-age section break (used between major narrative beats).
+- `py-12 md:py-20` — compact (small surfaces, dense lists).
+- `py-20 md:py-32` — standard sections.
+- `py-32 md:py-48` — feature sections.
+- `py-40 md:py-60` — golden-age section break, between major narrative beats.
 
-Mid-range values (`py-14`, `py-16`, `py-24`, etc.) appear ad-hoc and will be consolidated when a canonical vertical-rhythm scale is adopted.
+### Spacing tokens
 
-### Spacing inventory
-
-The `spacing:` YAML key inventories the numeric tokens **actually used** in `src/` (`py-*`, `px-*`, `gap-*`, `space-y-*`, `space-x-*`). Values are the Tailwind defaults (one number → `0.25rem`). This is a *descriptive* inventory, not a *prescriptive* scale — a follow-up task will collapse the mid-range ad-hoc values into a canonical scale.
+The `spacing:` YAML key inventories the numeric Tailwind steps in use across `src/` (`py-*`, `px-*`, `gap-*`, `space-y-*`, `space-x-*`); values are the Tailwind defaults (one unit = `0.25rem`).
 
 ## Elevation & Depth
 
-The system is **near-flat**. There are no shadow tokens, no elevation system, no surface-tonal-layer scale. Visual hierarchy is conveyed by typography (oversized italic Fraunces vs. uppercase monospace body), color contrast (charcoal on cream, house deep on house light), and editorial whitespace.
+The system is **near-flat**: hierarchy is carried by typography (oversized Fraunces vs. mono body), color contrast (charcoal on cream, house deep on house light), and editorial whitespace.
 
-A few touches add tactility without depth:
+Two touches add tactility:
 
-- **Body noise.** The `body` background carries an inline `data:image/svg+xml,...` `feTurbulence` filter at opacity `0.03` (`src/index.css:86`). It is too subtle to read as "texture"; it reads as the absence of digital flatness. Not a token.
-- **`.hero-text-shadow`.** A two-layer cream-on-cream text shadow utility (`src/index.css:123-125`) used to lift hero text over photographic backgrounds. Not a token.
-- **Replit `hover-elevate` / `active-elevate-2` were removed** pre-FRAC-27. Do not reintroduce them.
+- **Body noise.** The `body` background carries an inline SVG `feTurbulence` texture at opacity `0.03` — it reads as printed paper rather than digital flatness.
+- **`.hero-text-shadow`.** A two-layer cream text-shadow utility that lifts hero text over photographic backgrounds.
 
-The only true "depth" surface is the OctahedronHero 3D scene (Three.js / R3F). It is a scene, not a token — see **Components**.
+The one true-depth surface is the OctahedronHero 3D scene — see **Components**.
 
 ## Shapes
 
-The shape language is **editorially square** with a small soft-corner radius for interactive elements. Two custom motifs add identity: the **Mandelbrot corner** on Button and the **pennant clip-path** on HouseBanner.
+The shape language is editorially square, with a small soft-corner radius for interactive elements and two signature motifs: the Mandelbrot corner and the pennant clip-path.
 
 ### Rounded scale
-
-Declared in YAML (`rounded.{sm,md,lg,xl}`). Sourced from `src/index.css:38-41`:
 
 | Token | Value |
 |---|---|
@@ -346,97 +301,54 @@ Declared in YAML (`rounded.{sm,md,lg,xl}`). Sourced from `src/index.css:38-41`:
 | `rounded.lg` | `0.75rem` |
 | `rounded.xl` | `1rem` |
 
-No `rounded.full` is declared — pill / circular shapes are handled with Tailwind's `rounded-full` utility on a per-use basis (avatar badges).
+Pill and circular shapes (avatar badges) use Tailwind's `rounded-full` per use.
 
-### Mandelbrot corner motif (Button `default`)
+### Mandelbrot corners
 
-The Button `default` variant places four `MandelbrotIcon` glyphs at `4px` insets from each corner, sized `20px`, opacity `0.2`, rotated to face the container center (`src/components/ui/button.tsx:99-147`). This is the brand shape signature for primary CTAs. It is not modelable in the `components:` schema (no decorative-glyph slot exists), so it lives in prose. Outline / ghost / link variants and the `sm` / `icon` sizes skip the corners.
+The Button `default` variant places four `MandelbrotIcon` glyphs at 4px insets from each corner — 20px, opacity 0.2, rotated to face center. This is the brand shape signature for primary CTAs; outline / ghost / link variants and the `sm` / `icon` sizes render clean.
 
-### Mandelbrot corners on text containers
+The reusable `MandelbrotCorners` wrapper (`src/components/ui/MandelbrotCorners.tsx`) puts the same motif around any container — a note card, a badge, an embed panel. **Invariant:** when the wrapped container holds text, its padding on every side, at every breakpoint, must be ≥ `inset + iconSize` so the glyphs stay clear of the copy:
 
-The reusable `MandelbrotCorners` / `CornerDecorations` wrapper (`src/components/ui/MandelbrotCorners.tsx`) renders the same four-glyph motif around any container — a Note card, a DocumentBadge, an iframe panel. Each glyph is absolutely positioned at a small inset from its corner and occupies an `inset + iconSize` square. **Invariant:** when the wrapped container holds text, its padding on every side (including mobile) must be greater than or equal to `inset + iconSize` for the chosen `size`. Below that, the glyph rectangle intrudes into the content box and overlaps the first/last lines of copy. Apply this at every breakpoint — desktop padding usually clears the bound; mobile padding is where this fails.
-
-| `size` | inset | icon | safe-padding (min) |
+| `size` | inset | icon | min padding |
 |---|---|---|---|
 | `xs` | 4px | 20px | **24px** (`p-6`) |
 | `sm` | 6px | 30px | **36px** (`p-9`) |
 | `md` | 8px | 45px | **53px** (`p-14`) |
 | `lg` | 10px | 60px | **70px** (`p-16`+) |
 
-### Pennant clip-path (HouseBanner)
+### Pennant clip-path
 
-HouseBanner uses a CSS clip-path V-notch shape — `polygon(0% 0%, 100% 0%, 100% 100%, 50% 85%, 0% 100%)` (`src/components/house/HouseBanner.tsx:110-111`). The result reads as a downward-pointing pennant. A second MandelbrotIcon sits outside the clip-path centered at the V-notch tip on the cream page background. Not a token; lives in prose.
-
-### Octahedron geometry (prose, for traceability only)
-
-OctahedronHero renders an 8-face octahedron with each face mapped to one section of the site. The face order is locked at `campus, events, lab, school, neighborhood, people, forum, story` (`src/components/three/OctahedronHero.tsx:410-419`). This is presentation logic, not a token — recorded here so future agents do not re-derive it.
+HouseBanner is clipped to a downward-pointing pennant — `polygon(0% 0%, 100% 0%, 100% 100%, 50% 85%, 0% 100%)` — with a MandelbrotIcon centered at the V-notch tip on the cream page background behind it.
 
 ## Components
 
-Five components are modeled in the `components:` YAML block. Four more are documented in prose only because they exceed design.md's closed component property set.
+Five components are modeled in the `components:` YAML block; the rest are described here in prose.
 
 ### YAML-modeled
 
-**`button-default`** — bordered, translucent surface. Default size is `px-8 py-5 text-sm` (`1.25rem 2rem` padding, body text size). Carries the four Mandelbrot corners (prose-only — no decorative-glyph slot in the spec). Border: `border-foreground/20` (prose-only — no `border` slot). Hover: `bg-foreground/10`. Focus-visible: `ring-2 ring-foreground ring-offset-2 ring-offset-background` (prose-only — no focus slot). The `backgroundColor` token reference points at `{colors.foreground}` to indicate "charcoal-tinted translucent surface"; the actual rendered fill is `bg-foreground/[0.03]`, which the spec cannot model. Smaller (`sm`) and icon sizes skip the corners because they look crowded at compact padding.
+**`button-default`** — bordered, translucent charcoal-tinted surface (`bg-foreground/[0.03]`, `border-foreground/20`) with the four Mandelbrot corners. Padding `px-8 py-5`. Hover `bg-foreground/10`; focus-visible ring in canonical charcoal.
 
-**`button-outline`** — same `1.25rem 2rem` padding, transparent background, `border border-current`, no Mandelbrot corners, `hover:bg-foreground/5`. For secondary or compact uses.
+**`button-outline`** — same padding, transparent background, `border border-current`, no corner glyphs. Hover `bg-foreground/5`. For secondary or compact uses.
 
-**`button-ghost`** — no chrome, no background, no border. Hover affords interaction via `hover:underline underline-offset-4`. Used for tertiary actions.
+**`button-ghost`** — no chrome; hover affords interaction via `hover:underline underline-offset-4`. For tertiary actions.
 
-**`button-link`** — inline text-action style for sitting inside prose. The compound variant in `buttonVariants` strips padding to `px-0 py-0` regardless of size. `underline underline-offset-4`, `hover:text-foreground/80`.
+**`button-link`** — inline text action for sitting inside prose. Zero padding, `underline underline-offset-4`, hover `text-foreground/80`.
 
-**`house-banner`** — the pennant-shaped V-notch card used in the 6-house grid (`variant="grid"`, `aspect-[1/3]`) and on individual house pages (`variant="full"`, `aspect-[3/4] max-w-2xl mx-auto`). The YAML entry encodes a representative pairing — `house-events-light` / `house-events-deep` — because design.md cannot express "the background and text color are swapped per house at runtime." The actual `bgColor` is `house.palette.light` and `letterColor` is `house.palette.deep`, both read directly from the House passed in (`HouseBanner.tsx`). The banner overlay opacity is `0.45` for most houses and `0.30` for `school` so the red letters stay readable over the Liberal Arts photo. An `isDark()` luminance helper drives the body text color; this is not modelable. The monogram letter (Jacquard 24, inline-styled) is per-house: `N E C LA PC L`.
+**`house-banner`** — the pennant-shaped card used in the house grid (`variant="grid"`) and on house pages (`variant="full"`). At runtime the background is `house.palette.light` and the Jacquard monogram letter is `house.palette.deep`, read from the House passed in; the YAML entry encodes the Events pair as a representative example. Body text color is chosen by a luminance helper so it stays readable on every house's background.
 
 ### Prose-only
 
-- **AvatarBadge** — small circular identity chip for a person, themed by their associated house palette. Not modeled because its surface area is small and its theming runs through the house palette tokens via the data model rather than via design tokens directly.
-- **Navbar wordmark** — Jacquard 24 inline-style, sized via `clamp()` for fluid responsiveness (FRAC-29). Sizing exceeds the closed property set; not modeled.
-- **Hero combobox** — the search/filter combobox on the homepage hero. FRAC-33 ironed out combobox/listbox a11y semantics. Behavior dominates; not modeled.
-- **OctahedronHero** — the 3D octahedron scene at the homepage hero. Three.js / R3F with eight triangular faces, each carrying a section photo on a plain `MeshBasicMaterial` with `tex.colorSpace = THREE.SRGBColorSpace` for correct gamma (locked decision #7). Auto-rotation, edge-text scrolling textures, center-scale breathing, and node-scale pulses are all gated by `usePrefersReducedMotion()` (FRAC-28). Keyboard skip-nav is provided via the `.sr-only-focusable` utility (FRAC-33) so keyboard users can reach the destination routes without depending on 3D pointer events. Vertex 4 is the Story nav node (FRAC-47, replaces the FRAC-36 Political Club "Coming Soon" placeholder); Political Club remains hidden from the Navbar and banner grid and is reachable only by direct route. Motion, shaders, materials, and the face order are not tokens — they are code.
+- **AvatarBadge** — small circular identity chip for a person, themed by their house's palette via the data model.
+- **Navbar wordmark** — Jacquard 24, inline-styled, sized fluidly via `clamp()`.
+- **Hero combobox** — the search/filter combobox on the homepage hero, with full combobox/listbox a11y semantics.
+- **OctahedronHero** — the homepage 3D scene (Three.js / React Three Fiber): an eight-face octahedron, each face carrying a section photo, with auto-rotation and breathing animations all gated by `usePrefersReducedMotion()`. Keyboard users reach the destination routes via the `.sr-only-focusable` skip-nav. Face order is locked in `src/components/three/OctahedronHero.tsx`.
 
-## Do's and Don'ts
+## Do's
 
-**Do:**
-
-- Design for the 375px mobile baseline first. Every component must read on a phone before any wider-viewport consideration. The PRD says mobile-first is non-negotiable; the system enforces it.
-- Use Fraunces for headings (via the global `h1–h6` italic + uppercase rule), JetBrains Mono (`font-mono`) for labels and chrome, and Inter (`font-sans`) for body copy where the design calls for sans rather than mono.
-- Reach for semantic surface tokens (`background`, `foreground`, `card`, `border`, `muted`, `accent`) rather than raw hex values.
-- Use house palette tokens (`house-{display-slug}-{light|deep}`) inside that house's scope. Theme banners, avatars, and per-house chrome from the matching house's pair.
-- Respect the global uppercase + italic-Fraunces rule. If a heading needs Roman (upright), reach for `.display-roman`. If a block needs mixed-case, use `normal-case`.
-- Honor `prefers-reduced-motion`. Every new animation must check `usePrefersReducedMotion()` (the project-wide hook from FRAC-28) or be CSS-gated by `@media (prefers-reduced-motion: reduce)`.
-
-**Don't:**
-
-- Don't assume dark mode is present or coming. The `.dark` token block was deleted (FRAC-30); DESIGN.md declares no dark tokens.
-- Don't use raw `#1a1a1a`. That is charcoal drift; the canonical charcoal is `colors.foreground` = `#171717`.
-- Don't use raw `#6B4C9A`. That is dead Lab/Publications legacy from pre-FRAC-24. Lab/Publications uses its palette pinks (`house-publications-{light,deep}`).
-- Don't introduce house-accent tokens without adding them here first. House palettes are pairs — adding a third color requires a system-wide reason.
-- Don't promote a house color to a global accent. House colors are scoped to their house.
-- Don't apply `primary` as a saturated brand hue. Fractal NYC's primary is editorial charcoal by deliberate decision (`missing-primary` lint warning is accepted).
-- Don't add motion, shadow, or gradient tokens. The spec does not model them; they live in prose and code.
-
-## Linting Notes
-
-Pinned lint command: `npx @google/design.md@0.2.0 lint DESIGN.md`. Future spec bumps are deliberate, separate tasks — `0.2.0` is alpha-stage and breaking changes can land upstream, so pinning prevents surprise CI failures.
-
-**Front-matter `version` value.** The spec README shows `version: alpha` in examples, but the CLI also accepts a quoted SemVer-style string. This document emits `version: "0.2.0"` to match the pinned CLI version; if a future CLI rejects this we will switch to `"alpha"` and document the change here.
-
-### Lint output as of this revision
-
-`0 errors, 27 warnings, 1 info`.
-
-- **Errors:** zero. `broken-ref` does not fire — all `{colors.*}` / `{rounded.*}` / `{typography.*}` references resolve.
-- **Warnings, accepted (do not "fix"):**
-  - **2 contrast warnings.**
-    - `components.button-default` — `textColor` and `backgroundColor` both resolve to `{colors.foreground}` (charcoal/charcoal, 1.00:1). The real render is `bg-foreground/[0.03]` (3% translucent charcoal over cream) with `text-foreground` on top — high contrast in practice. The spec cannot model the alpha channel, so the lint sees charcoal-on-charcoal.
-    - `components.house-banner` — representative pair `house-events-light` over `house-events-deep` is 1.89:1. The monogram letter (`#c13b2a` on `#d4857a`) is decorative Jacquard 24 with `aria-hidden`; the visible tagline uses a luminance-derived `isDark()` text color that the spec cannot trace.
-  - **25 `orphaned-tokens` warnings.** Surface tokens that don't appear in any `components:` entry (`card`, `popover`, the matched `*-foreground` tokens, `muted`, `accent`, `destructive`, `border`, `input`, `ring`, etc.) and 10 of the 12 house tokens (only `house-events-{light,deep}` are referenced, by the representative `house-banner` entry). Acceptable because:
-    - Surface tokens are consumed by raw Tailwind utilities (`bg-card`, `text-muted-foreground`, etc.) and global CSS in `src/index.css`, not by modeled components.
-    - House tokens are runtime-swapped per house via `house.palette.{light,deep}` (`HouseBanner.tsx`); static analysis cannot trace the reference. The **Colors** mapping table is the human-readable trace.
-- **Info:** `token-summary` reports `31 colors, 2 typography scales, 4 rounding levels, 19 spacing tokens, 5 components` — matches intent.
-
-The `missing-primary` warning anticipated by the plan does **not** fire — the lint validates that a `primary` token exists, not that it carries a saturated brand hue. The charcoal-as-primary decision still stands for the system (see **Colors**), but it does not produce a lint warning. Documented here so future readers don't expect one.
-
-### Accepted divergences from shipped code (documented for the next agent)
-
-1. `colors.background = "#f8f6f0"` (canonical written cream) — current CSS `hsl(40 25% 96%)` computes to `#f7f6f2`. Follow-up task: tighten the HSL math so it produces `#f8f6f0`.
+- Design for the 375px mobile baseline first; treat every wider viewport as progressive enhancement.
+- Use Fraunces for headings (the global `h1–h6` rule supplies italic + uppercase), JetBrains Mono (`font-mono`) for labels and chrome, and Inter (`font-sans`) for sans body copy.
+- Reach for semantic surface tokens (`background`, `foreground`, `card`, `border`, `muted`, `accent`) and the semantic type utilities (`.text-display`, `.text-body`, `.text-eyebrow`, …) rather than raw values.
+- Use house tokens (`house-{slug}-{light|deep}`) inside that house's own pages, and keep each house to its two-color pair.
+- Pair every surface with its text color explicitly on the same node, per the four canonical pairings.
+- Use `.display-roman` when a heading needs upright Fraunces, and `normal-case` when a block needs mixed-case.
+- Gate every animation on `usePrefersReducedMotion()` (or an equivalent `@media (prefers-reduced-motion: reduce)` rule).

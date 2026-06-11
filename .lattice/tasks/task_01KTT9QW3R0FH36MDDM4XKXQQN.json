@@ -1,0 +1,33 @@
+{
+  "assigned_to": null,
+  "branch_links": [
+    {
+      "branch": "frac-198-repo-docs",
+      "linked_at": "2026-06-11T03:00:32Z",
+      "linked_by": "agent:claude-fable-5",
+      "repo": null
+    }
+  ],
+  "comment_count": 0,
+  "complexity": null,
+  "created_at": "2026-06-11T02:56:19Z",
+  "created_by": "agent:claude-fable-5",
+  "custom_fields": {},
+  "description": null,
+  "done_at": null,
+  "evidence_refs": [],
+  "id": "task_01KTT9QW3R0FH36MDDM4XKXQQN",
+  "last_event_id": "ev_01KTT9ZKW89NBBMYVP1D0DNEHG",
+  "last_status_changed_at": "2026-06-11T03:00:32Z",
+  "priority": "medium",
+  "relationships_out": [],
+  "reopened_count": 0,
+  "schema_version": 1,
+  "short_id": "FRAC-198",
+  "status": "in_progress",
+  "tags": null,
+  "title": "Repo docs for public editing: simplify DESIGN.md, add AGENTS.md, README.md, EDITING.md",
+  "type": "task",
+  "updated_at": "2026-06-11T03:00:32Z",
+  "urgency": null
+}
