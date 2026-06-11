@@ -212,7 +212,7 @@ export function StoryPage() {
               layer; on mobile the heading stays full-bleed. */}
           <div
             aria-hidden="true"
-            className="pointer-events-none absolute inset-x-4 sm:inset-x-8 md:inset-x-12 lg:inset-x-16 top-40 md:top-56 z-0 hidden md:flex items-center justify-between"
+            className="pointer-events-none absolute inset-x-4 sm:inset-x-8 md:inset-x-12 lg:inset-x-16 top-36 md:top-52 z-0 hidden md:flex items-center justify-between"
             style={{ height: "min(46vh, 380px)" }}
           >
             <img src="/favicon.svg" alt="" className="w-[16%] lg:w-[14%] max-w-[260px] h-auto" />
