@@ -22,7 +22,7 @@ export function Footer() {
   return (
     <footer className="relative overflow-hidden">
       {/* CTA section — black background, white text, centered */}
-      <div className="relative border-t border-border bg-foreground text-background py-12 md:py-20 overflow-hidden">
+      <div className="relative border-t border-foreground-faint bg-foreground text-background py-12 md:py-20 overflow-hidden">
         {/* Mandelbrot top corners — CTA section */}
         <div className="absolute top-4 left-4 opacity-20 pointer-events-none rotate-[135deg]">
           <MandelbrotIcon size={24} color="currentColor" className="text-background" />

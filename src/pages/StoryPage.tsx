@@ -123,7 +123,7 @@ function TalkCard({ talk }: { talk: TalkItem }) {
       target="_blank"
       rel="noopener noreferrer"
       className={`
-        group block rounded-lg border border-border bg-background text-foreground
+        group block rounded-lg border border-foreground-faint bg-background text-foreground
         transition-all duration-200 ease-out
         hover:scale-[1.02] hover:shadow-lg
         focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground
@@ -160,7 +160,7 @@ function TalkCard({ talk }: { talk: TalkItem }) {
         <ArrowUpRight
           size={16}
           strokeWidth={1.5}
-          className="text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+          className="text-foreground-muted opacity-0 group-hover:opacity-100 transition-opacity duration-200"
         />
       </div>
 

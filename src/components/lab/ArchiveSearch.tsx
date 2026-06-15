@@ -53,7 +53,7 @@ export function ArchiveSearch({ value, onChange }: ArchiveSearchProps) {
       <Search
         size={18}
         strokeWidth={1.5}
-        className="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none"
+        className="absolute left-3.5 top-1/2 -translate-y-1/2 text-foreground-muted pointer-events-none"
         aria-hidden="true"
       />
 
@@ -73,8 +73,8 @@ export function ArchiveSearch({ value, onChange }: ArchiveSearchProps) {
         className="
           w-full h-11 pl-10 pr-10
           text-control
-          bg-background border border-border rounded-lg
-          text-foreground placeholder:text-muted-foreground
+          bg-background border border-foreground-faint rounded-lg
+          text-foreground placeholder:text-foreground-muted
           transition-colors duration-200
           focus:outline-none focus:ring-2 focus:ring-house-publications-deep/40 focus:border-house-publications-deep/60
         "
@@ -122,7 +122,7 @@ export function ArchiveSearch({ value, onChange }: ArchiveSearchProps) {
           className="
             absolute right-3 top-1/2 -translate-y-1/2
             p-1 rounded-md
-            text-muted-foreground hover:text-foreground
+            text-foreground-muted hover:text-foreground
             transition-colors duration-150
             focus:outline-none focus:ring-2 focus:ring-house-publications-deep/40
           "

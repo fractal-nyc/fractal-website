@@ -5,8 +5,8 @@ description: "Asimov-Collective editorial aesthetic for fractal-nyc — cream an
 colors:
   background: "#f8f6f0"
   foreground: "#171717"
-  muted-foreground: "#525252"
-  border: "#dddad5"
+  foreground-muted: "#525252"
+  foreground-faint: "#dddad5"
   house-visit-light: "#889460"
   house-visit-deep: "#4A5A30"
   house-events-light: "#D4857A"
@@ -97,16 +97,16 @@ Political Club is reachable by direct route (`/political-club`) but hidden from 
 
 The system declares **16 color tokens**: 4 surface tokens that drive the page chrome and 12 house tokens (6 houses × `{light, deep}`) that theme each house's pages, banner, and avatar.
 
-The surface palette is deliberately lean. Charcoal is the voice (`foreground`) and cream is the page (`background`); a single softer charcoal (`muted-foreground`) carries secondary text. Neutral fills are expressed as `foreground` at low opacity (e.g. `bg-foreground/5` for the gallery image placeholder) rather than a dedicated fill token. Focus rings and text selection both use `foreground` directly. The site's color *accents* come from the house palette, not a neutral accent token. The original shadcn scaffold's unused neutrals (`card`, `popover`, `accent`, `secondary`, `primary`, `muted`, `destructive`, `input`, `ring`, and their `-foreground` pairs) were removed in FRAC-201 along with the dead components that consumed them.
+The surface palette is deliberately lean: cream (`background`) is the page, and the rest is a **single charcoal voice expressed in three weights**. Naming reflects that — `foreground` → `foreground-muted` → `foreground-faint`, darkest to faintest. Neutral fills are expressed as `foreground` at low opacity (e.g. `bg-foreground/5` for the gallery image placeholder) rather than a dedicated fill token; focus rings and text selection use `foreground` directly. The site's color *accents* come from the house palette, not a neutral accent token. The original shadcn scaffold's unused neutrals (`card`, `popover`, `accent`, `secondary`, `primary`, `muted`, `destructive`, `input`, `ring`, and their `-foreground` pairs) were removed in FRAC-201 along with the dead components that consumed them; the two surviving charcoal tints were renamed from the scaffold's `muted-foreground` / `border` into this ladder.
 
 ### Surface palette
 
 | Token | Hex | Role |
 |---|---|---|
 | `background` | `#f8f6f0` | Canonical cream. The page surface. |
-| `foreground` | `#171717` | Canonical charcoal. The voice — dominant text color, plus low-opacity neutral fills (`bg-foreground/5`), focus rings, and text selection. |
-| `muted-foreground` | `#525252` | The secondary text color — softer than `foreground` for supporting prose, asides, and metadata. Tuned for WCAG AA contrast on cream. |
-| `border` | `#dddad5` | Visible-but-soft border for editorial structure. |
+| `foreground` | `#171717` | Canonical charcoal — the voice. Dominant text color, plus low-opacity neutral fills (`bg-foreground/5`), focus rings, and text selection. |
+| `foreground-muted` | `#525252` | Mid charcoal — the secondary text color, softer than `foreground` for supporting prose, asides, and metadata. Tuned for WCAG AA contrast on cream. |
+| `foreground-faint` | `#dddad5` | Faintest charcoal — soft borders / hairlines and quiet structural dividers (the default border color). |
 
 ### Houses
 
@@ -320,7 +320,7 @@ Five components are modeled in the `components:` YAML block; the rest are descri
 
 - Design for the 375px mobile baseline first; treat every wider viewport as progressive enhancement.
 - Use Fraunces for headings (the global `h1–h6` rule supplies italic + uppercase), JetBrains Mono (`font-mono`) for labels and chrome, and Inter (`font-sans`) for sans body copy.
-- Reach for semantic surface tokens (`background`, `foreground`, `muted`, `muted-foreground`, `border`) and the semantic type utilities (`.text-display`, `.text-body`, `.text-eyebrow`, …) rather than raw values.
+- Reach for semantic surface tokens (`background`, `foreground`, `foreground-muted`, `foreground-faint`) and the semantic type utilities (`.text-display`, `.text-body`, `.text-eyebrow`, …) rather than raw values.
 - Use house tokens (`house-{slug}-{light|deep}`) inside that house's own pages, and keep each house to its two-color pair.
 - Pair every surface with its text color explicitly on the same node, per the four canonical pairings.
 - Use `.display-roman` when a heading needs upright Fraunces, and `normal-case` when a block needs mixed-case.

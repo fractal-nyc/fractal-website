@@ -17,7 +17,7 @@ export function HouseBannerGrid({ className = "" }: HouseBannerGridProps) {
       <div className="px-[4.5%]">
         {/* Section heading */}
         <FadeIn>
-          <div className="mb-8 md:mb-10 text-center border-b border-border pb-6">
+          <div className="mb-8 md:mb-10 text-center border-b border-foreground-faint pb-6">
               <h2
                 className="text-4xl md:text-7xl font-serif display-roman"
                 style={{ letterSpacing: "0.15em" }}

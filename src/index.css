@@ -13,9 +13,9 @@
   --color-background: hsl(var(--background));
   --color-foreground: hsl(var(--foreground));
 
-  --color-muted-foreground: hsl(var(--muted-foreground));
+  --color-foreground-muted: hsl(var(--foreground-muted));
 
-  --color-border: hsl(var(--border));
+  --color-foreground-faint: hsl(var(--foreground-faint));
 
   /* House palette tokens (FRAC-21, FRAC-25, FRAC-29, FRAC-33, FRAC-35, FRAC-49, FRAC-50). Static
      brand hexes — declared directly without the hsl(var(...)) indirection used
@@ -54,14 +54,14 @@
 
   /* FRAC-33: lifted from 40% to 32% lightness to reach WCAG AA 4.5:1
      contrast against the #f8f6f0 cream background (~5.5:1). */
-  --muted-foreground: 0 0% 32%;
+  --foreground-muted: 0 0% 32%;
 
-  --border: 40 10% 85%; /* Visible but soft borders for structure */
+  --foreground-faint: 40 10% 85%; /* Faintest charcoal tier — soft borders / hairlines and low-key fills */
 }
 
 @layer base {
   * {
-    @apply border-border selection:bg-foreground selection:text-background;
+    @apply border-foreground-faint selection:bg-foreground selection:text-background;
   }
 
   body {
@@ -104,7 +104,7 @@
   }
 
   .border-grid {
-    @apply border-border;
+    @apply border-foreground-faint;
     border-width: 1px;
   }
   
