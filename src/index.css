@@ -13,7 +13,6 @@
   --color-background: hsl(var(--background));
   --color-foreground: hsl(var(--foreground));
 
-  --color-muted: hsl(var(--muted));
   --color-muted-foreground: hsl(var(--muted-foreground));
 
   --color-border: hsl(var(--border));
@@ -53,7 +52,6 @@
   --background: 40 25% 96%; /* #f8f6f0 — warm off-white */
   --foreground: 0 0% 9%; /* #171717 - Deep charcoal/black */
 
-  --muted: 40 10% 90%;
   /* FRAC-33: lifted from 40% to 32% lightness to reach WCAG AA 4.5:1
      contrast against the #f8f6f0 cream background (~5.5:1). */
   --muted-foreground: 0 0% 32%;

@@ -5,7 +5,6 @@ description: "Asimov-Collective editorial aesthetic for fractal-nyc — cream an
 colors:
   background: "#f8f6f0"
   foreground: "#171717"
-  muted: "#e8e6e3"
   muted-foreground: "#525252"
   border: "#dddad5"
   house-visit-light: "#889460"
@@ -96,17 +95,16 @@ Political Club is reachable by direct route (`/political-club`) but hidden from 
 
 ## Colors
 
-The system declares **17 color tokens**: 5 surface tokens that drive the page chrome and 12 house tokens (6 houses × `{light, deep}`) that theme each house's pages, banner, and avatar.
+The system declares **16 color tokens**: 4 surface tokens that drive the page chrome and 12 house tokens (6 houses × `{light, deep}`) that theme each house's pages, banner, and avatar.
 
-The surface palette is deliberately lean. Charcoal is the voice (`foreground`) and cream is the page (`background`); a single softer charcoal (`muted-foreground`) carries secondary text. Focus rings and text selection both use `foreground` directly — there is no separate `ring` token. The site's color *accents* come from the house palette, not a neutral accent token. The original shadcn scaffold's unused neutrals (`card`, `popover`, `accent`, `secondary`, `primary`, `destructive`, `input`, `ring`, and their `-foreground` pairs) were removed in FRAC-201 along with the dead components that consumed them.
+The surface palette is deliberately lean. Charcoal is the voice (`foreground`) and cream is the page (`background`); a single softer charcoal (`muted-foreground`) carries secondary text. Neutral fills are expressed as `foreground` at low opacity (e.g. `bg-foreground/5` for the gallery image placeholder) rather than a dedicated fill token. Focus rings and text selection both use `foreground` directly. The site's color *accents* come from the house palette, not a neutral accent token. The original shadcn scaffold's unused neutrals (`card`, `popover`, `accent`, `secondary`, `primary`, `muted`, `destructive`, `input`, `ring`, and their `-foreground` pairs) were removed in FRAC-201 along with the dead components that consumed them.
 
 ### Surface palette
 
 | Token | Hex | Role |
 |---|---|---|
 | `background` | `#f8f6f0` | Canonical cream. The page surface. |
-| `foreground` | `#171717` | Canonical charcoal. The voice — dominant text color, plus the focus-ring and text-selection color. |
-| `muted` | `#e8e6e3` | Warm putty fill — the image-placeholder background behind gallery photos. |
+| `foreground` | `#171717` | Canonical charcoal. The voice — dominant text color, plus low-opacity neutral fills (`bg-foreground/5`), focus rings, and text selection. |
 | `muted-foreground` | `#525252` | The secondary text color — softer than `foreground` for supporting prose, asides, and metadata. Tuned for WCAG AA contrast on cream. |
 | `border` | `#dddad5` | Visible-but-soft border for editorial structure. |
 
