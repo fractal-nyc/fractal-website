@@ -41,14 +41,13 @@ export function EventsPage() {
               Join Tech Events
             </p>
             {/*
-              Luma embed: slug-based URL `https://lu.ma/embed/calendar/nyc-tech/events`.
-              If Luma ever rejects this path, replace with the canonical calendar-UUID
-              embed URL from luma.com/nyc-tech > Manage > Embed.
+              Luma embed: calendar-ID URL from luma.com/nyc-tech > Manage > Embed.
+              Uses the stable `cal-` calendar ID rather than the `nyc-tech` slug.
             */}
             <div className="relative w-full max-w-5xl mx-auto rounded-md overflow-hidden border border-foreground/20 bg-foreground/[0.03] h-[80vh] min-h-[600px] md:h-[850px] mb-6">
               <CornerDecorations size="xs" />
               <iframe
-                src="https://lu.ma/embed/calendar/nyc-tech/events"
+                src="https://luma.com/embed/calendar/cal-RHI1LJC6K8JRBLI/events"
                 title="Fractal Tech NYC Events Calendar"
                 className="w-full h-full"
                 style={{ border: "none" }}
