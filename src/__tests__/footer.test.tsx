@@ -65,7 +65,7 @@ describe("Footer", () => {
       render(<Footer />);
       const discordLink = screen.getByText("Discord");
       expect(discordLink.closest("a")).toBeTruthy();
-      expect(discordLink.closest("a")!.getAttribute("href")).toContain("discord.com");
+      expect(discordLink.closest("a")!.getAttribute("href")).toContain("discord.gg");
     });
 
     it('should mention #intros channel', () => {
