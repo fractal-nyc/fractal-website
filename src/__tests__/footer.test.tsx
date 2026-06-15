@@ -82,20 +82,26 @@ describe("Footer", () => {
   });
 
   // ═════════════════════════════════════════════════════════════════════
-  // Contact and location info
+  // Schedule-a-chat CTA
   // ═════════════════════════════════════════════════════════════════════
 
-  describe("Contact and location", () => {
-    it('should display "New York City"', () => {
+  describe("Schedule a chat CTA", () => {
+    it("should invite the visitor to schedule a one-on-one chat", () => {
       render(<Footer />);
-      expect(screen.getByText("New York City")).toBeTruthy();
+      expect(
+        screen.getByText(/schedule a virtual chat with/i),
+      ).toBeTruthy();
     });
 
-    it("should display the email address hello@fractalnyc.com", () => {
+    it('should link "Ian" to the Google Calendar appointment schedule', () => {
       render(<Footer />);
-      const emailLink = screen.getByText("hello@fractalnyc.com");
-      expect(emailLink).toBeTruthy();
-      expect(emailLink.closest("a")!.getAttribute("href")).toBe("mailto:hello@fractalnyc.com");
+      const ianLink = screen.getByText("Ian").closest("a");
+      expect(ianLink).toBeTruthy();
+      expect(ianLink!.getAttribute("href")).toContain(
+        "calendar.google.com/calendar/u/0/appointments/schedules/",
+      );
+      expect(ianLink!.getAttribute("target")).toBe("_blank");
+      expect(ianLink!.getAttribute("rel")).toContain("noopener");
     });
   });
 

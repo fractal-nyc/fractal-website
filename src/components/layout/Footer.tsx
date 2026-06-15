@@ -2,6 +2,8 @@ import { Link, useLocation } from "wouter";
 import { MandelbrotIcon } from "@/components/house/MandelbrotIcon";
 
 const DISCORD_LINK = "https://discord.gg/Er974gPTXe";
+const IAN_CHAT_LINK =
+  "https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ0ektkyvH1NQIxPdiKXPASm0WqwG7ee6QKJCDPIarnT5mS_WvLqDLaBb8Pk_va_YlVRXz6DRwnb";
 
 export function Footer() {
   const [location] = useLocation();
@@ -45,17 +47,19 @@ export function Footer() {
             <span className="font-medium">#intros</span>.
           </p>
 
-          <div className="flex flex-col items-center gap-2">
-            <p className="text-meta">
-              New York City
-            </p>
+          <p className="text-sm md:text-base leading-relaxed">
+            If you&rsquo;d like to learn more about Fractal and prefer a
+            one-on-one conversation, schedule a virtual chat with{" "}
             <a
-              href="mailto:hello@fractalnyc.com"
-              className="text-xs md:text-sm tracking-wide text-background/70 hover:text-background transition-colors"
+              href={IAN_CHAT_LINK}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline underline-offset-4 decoration-background/40 hover:decoration-background/80 transition-colors"
             >
-              hello@fractalnyc.com
+              Ian
             </a>
-          </div>
+            .
+          </p>
         </div>
       </div>
 
