@@ -17,8 +17,8 @@
   "done_at": null,
   "evidence_refs": [],
   "id": "task_01KV6F60YCE7R7C3TE2CNSSJ1P",
-  "last_event_id": "ev_01KV6FD5RAVEDKP4MVSS9VRTEZ",
-  "last_status_changed_at": "2026-06-15T20:26:13Z",
+  "last_event_id": "ev_01KV6FPDJ2DWPHZAS46K2R50FF",
+  "last_status_changed_at": "2026-06-15T20:31:16Z",
   "priority": "medium",
   "relationships_out": [
     {
@@ -32,10 +32,10 @@
   "reopened_count": 0,
   "schema_version": 1,
   "short_id": "FRAC-200",
-  "status": "in_progress",
+  "status": "review",
   "tags": null,
   "title": "Prune unused shadcn/Replit scaffold (ui primitives, dead providers, orphaned deps)",
   "type": "task",
-  "updated_at": "2026-06-15T20:26:13Z",
+  "updated_at": "2026-06-15T20:31:16Z",
   "urgency": null
 }
