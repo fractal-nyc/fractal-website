@@ -2,8 +2,6 @@ import { render, screen } from "@testing-library/react";
 import { describe, it, expect, vi } from "vitest";
 import { Router as WouterRouter } from "wouter";
 import { memoryLocation } from "wouter/memory-location";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { TooltipProvider } from "@radix-ui/react-tooltip";
 
 // ═══════════════════════════════════════════════════════════════════════════
 // Mocks for heavy / WebGL dependencies
@@ -44,20 +42,12 @@ import { PeoplePage } from "@/pages/PeoplePage";
 // Helper: render a page component at the given route
 // ---------------------------------------------------------------------------
 
-const queryClient = new QueryClient({
-  defaultOptions: { queries: { retry: false } },
-});
-
 function renderPage(Page: React.ComponentType, path: string) {
   const { hook } = memoryLocation({ path, static: true });
   return render(
-    <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <WouterRouter hook={hook}>
-          <Page />
-        </WouterRouter>
-      </TooltipProvider>
-    </QueryClientProvider>,
+    <WouterRouter hook={hook}>
+      <Page />
+    </WouterRouter>,
   );
 }
 
@@ -117,13 +107,9 @@ describe("FRAC-161 visibility filters", () => {
   it("Home page should NOT render the 'How Do I Get Involved' banner grid heading", () => {
     const { hook } = memoryLocation({ path: "/", static: true });
     const { container } = render(
-      <QueryClientProvider client={queryClient}>
-        <TooltipProvider>
-          <WouterRouter hook={hook}>
-            <Home />
-          </WouterRouter>
-        </TooltipProvider>
-      </QueryClientProvider>,
+      <WouterRouter hook={hook}>
+        <Home />
+      </WouterRouter>,
     );
     expect(container.textContent).not.toContain("How Do I Get Involved");
   });

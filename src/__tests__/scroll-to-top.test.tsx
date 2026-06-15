@@ -108,11 +108,6 @@ vi.mock("@/pages/not-found", () => ({
   default: () => <div data-testid="page-not-found" />,
 }));
 
-// Suppress <Toaster /> side effects — not relevant to ScrollToTop.
-vi.mock("@/components/ui/toaster", () => ({
-  Toaster: () => null,
-}));
-
 // ═══════════════════════════════════════════════════════════════════════════
 // Import App AFTER mocks are registered
 // ═══════════════════════════════════════════════════════════════════════════
