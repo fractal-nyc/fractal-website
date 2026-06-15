@@ -5,7 +5,6 @@ description: "Asimov-Collective editorial aesthetic for fractal-nyc — cream an
 colors:
   background: "#f8f6f0"
   foreground: "#171717"
-  foreground-light: "#333333"
   card: "#fbfaf9"
   card-foreground: "#171717"
   popover: "#fbfaf9"
@@ -111,7 +110,7 @@ Political Club is reachable by direct route (`/political-club`) but hidden from 
 
 ## Colors
 
-The system declares **31 color tokens**: 19 surface tokens that drive the page chrome and 12 house tokens (6 houses × `{light, deep}`) that theme each house's pages, banner, and avatar.
+The system declares **30 color tokens**: 18 surface tokens that drive the page chrome and 12 house tokens (6 houses × `{light, deep}`) that theme each house's pages, banner, and avatar.
 
 ### Surface palette
 
@@ -119,14 +118,13 @@ The system declares **31 color tokens**: 19 surface tokens that drive the page c
 |---|---|---|
 | `background` | `#f8f6f0` | Canonical cream. The page surface. |
 | `foreground` | `#171717` | Canonical charcoal. Dominant text color. |
-| `foreground-light` | `#333333` | Softer charcoal for secondary body voice (asides, supporting prose). A hierarchy hint, one step down from canonical charcoal. |
 | `card` / `popover` | `#fbfaf9` | Slightly raised cream for card and popover surfaces. |
 | `card-foreground` / `popover-foreground` | `#171717` | |
 | `primary` | `#171717` | Charcoal — the voice, not a brand accent. |
 | `primary-foreground` | `#f8f6f0` | Cream on charcoal (e.g. inverted button states). |
 | `secondary` / `muted` | `#e8e6e3` | Warm putty for muted chrome. |
 | `secondary-foreground` | `#171717` | |
-| `muted-foreground` | `#525252` | Muted text tuned for WCAG AA contrast on cream. |
+| `muted-foreground` | `#525252` | The secondary text color — softer than `foreground` for supporting prose, asides, and metadata. Tuned for WCAG AA contrast on cream. |
 | `accent` | `#e5e2dc` | Slightly warmer neutral for subtle accent fills. |
 | `accent-foreground` | `#171717` | |
 | `destructive` | `#ef4343` | Red for destructive actions. |
