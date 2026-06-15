@@ -126,7 +126,7 @@ function TalkCard({ talk }: { talk: TalkItem }) {
         group block rounded-lg border border-border bg-background text-foreground
         transition-all duration-200 ease-out
         hover:scale-[1.02] hover:shadow-lg
-        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring
+        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground
         p-5 md:p-6
       `}
       style={{

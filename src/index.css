@@ -17,8 +17,6 @@
   --color-muted-foreground: hsl(var(--muted-foreground));
 
   --color-border: hsl(var(--border));
-  --color-input: hsl(var(--input));
-  --color-ring: hsl(var(--ring));
 
   /* House palette tokens (FRAC-21, FRAC-25, FRAC-29, FRAC-33, FRAC-35, FRAC-49, FRAC-50). Static
      brand hexes — declared directly without the hsl(var(...)) indirection used
@@ -61,8 +59,6 @@
   --muted-foreground: 0 0% 32%;
 
   --border: 40 10% 85%; /* Visible but soft borders for structure */
-  --input: 40 10% 85%;
-  --ring: 0 0% 9%;
 }
 
 @layer base {
@@ -226,10 +222,10 @@
      sizes up to text-base (16px = iOS no-zoom threshold) and drops the
      wide tracking (chrome's 0.1em looks wrong on typed text). Typed text
      renders uppercase by design — the all-caps chrome aesthetic wins
-     over case-preserving typed input. Named .text-control rather than
-     .text-input to avoid colliding with Tailwind v4's auto-generated
-     `text-input` color utility (the codebase declares --color-input as
-     a theme token for input borders). FRAC-41 introduced; FRAC-44 set
+     over case-preserving typed input. Named .text-control (not .text-input)
+     because it reads better for typeable controls; this also kept it clear of
+     Tailwind v4's `text-input` color utility back when a --color-input theme
+     token existed (removed in FRAC-201). FRAC-41 introduced; FRAC-44 set
      case=uppercase. */
   .text-control {
     @apply font-mono text-base;

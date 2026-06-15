@@ -8,8 +8,6 @@ colors:
   muted: "#e8e6e3"
   muted-foreground: "#525252"
   border: "#dddad5"
-  input: "#dddad5"
-  ring: "#171717"
   house-visit-light: "#889460"
   house-visit-deep: "#4A5A30"
   house-events-light: "#D4857A"
@@ -98,20 +96,19 @@ Political Club is reachable by direct route (`/political-club`) but hidden from 
 
 ## Colors
 
-The system declares **19 color tokens**: 7 surface tokens that drive the page chrome and 12 house tokens (6 houses × `{light, deep}`) that theme each house's pages, banner, and avatar.
+The system declares **17 color tokens**: 5 surface tokens that drive the page chrome and 12 house tokens (6 houses × `{light, deep}`) that theme each house's pages, banner, and avatar.
 
-The surface palette is deliberately lean. Charcoal is the voice (`foreground`) and cream is the page (`background`); a single softer charcoal (`muted-foreground`) carries secondary text. The site's color *accents* come from the house palette, not a neutral accent token. The original shadcn scaffold's unused neutrals (`card`, `popover`, `accent`, `secondary`, `primary`, `destructive`, and their `-foreground` pairs) were removed in FRAC-201 along with the dead components that consumed them.
+The surface palette is deliberately lean. Charcoal is the voice (`foreground`) and cream is the page (`background`); a single softer charcoal (`muted-foreground`) carries secondary text. Focus rings and text selection both use `foreground` directly — there is no separate `ring` token. The site's color *accents* come from the house palette, not a neutral accent token. The original shadcn scaffold's unused neutrals (`card`, `popover`, `accent`, `secondary`, `primary`, `destructive`, `input`, `ring`, and their `-foreground` pairs) were removed in FRAC-201 along with the dead components that consumed them.
 
 ### Surface palette
 
 | Token | Hex | Role |
 |---|---|---|
 | `background` | `#f8f6f0` | Canonical cream. The page surface. |
-| `foreground` | `#171717` | Canonical charcoal. The voice — dominant text color, and the focus/selection color. |
-| `muted` | `#e8e6e3` | Warm putty fill — image-placeholder and subtle chrome backgrounds. |
+| `foreground` | `#171717` | Canonical charcoal. The voice — dominant text color, plus the focus-ring and text-selection color. |
+| `muted` | `#e8e6e3` | Warm putty fill — the image-placeholder background behind gallery photos. |
 | `muted-foreground` | `#525252` | The secondary text color — softer than `foreground` for supporting prose, asides, and metadata. Tuned for WCAG AA contrast on cream. |
-| `border` / `input` | `#dddad5` | Visible-but-soft border for editorial structure. |
-| `ring` | `#171717` | Focus ring is canonical charcoal. |
+| `border` | `#dddad5` | Visible-but-soft border for editorial structure. |
 
 ### Houses
 
