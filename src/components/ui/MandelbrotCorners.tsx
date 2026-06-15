@@ -61,7 +61,7 @@ const corners = [
  *     - size="md": inset 8px + icon 45px  -> min padding 53px (p-14)
  *     - size="lg": inset 10px + icon 60px -> min padding 70px (p-16+)
  *   Apply at every breakpoint — mobile is where this most often fails.
- *   See DESIGN.md > "Mandelbrot corners on text containers".
+ *   See DESIGN.md > "Mandelbrot corners".
  */
 /**
  * Standalone corner decorations — drop inside any `relative` container.
