@@ -5,20 +5,8 @@ description: "Asimov-Collective editorial aesthetic for fractal-nyc — cream an
 colors:
   background: "#f8f6f0"
   foreground: "#171717"
-  card: "#fbfaf9"
-  card-foreground: "#171717"
-  popover: "#fbfaf9"
-  popover-foreground: "#171717"
-  primary: "#171717"
-  primary-foreground: "#f8f6f0"
-  secondary: "#e8e6e3"
-  secondary-foreground: "#171717"
   muted: "#e8e6e3"
   muted-foreground: "#525252"
-  accent: "#e5e2dc"
-  accent-foreground: "#171717"
-  destructive: "#ef4343"
-  destructive-foreground: "#f8f6f0"
   border: "#dddad5"
   input: "#dddad5"
   ring: "#171717"
@@ -104,31 +92,24 @@ The site is organized as six themed houses — Visit, Events, Campus, Education,
 Two foundations:
 
 1. **Mobile-first, 375px baseline.** Every page and component is designed at phone width first. Wider viewports are progressive enhancement.
-2. **Charcoal is the voice.** `colors.primary` is the dominant text color (`#171717`), an editorial charcoal rather than a saturated brand hue. Hierarchy comes from typography, color contrast, and whitespace; house colors provide scoped accents.
+2. **Charcoal is the voice.** `colors.foreground` is the dominant text color (`#171717`), an editorial charcoal rather than a saturated brand hue. Hierarchy comes from typography, color contrast, and whitespace; house colors provide scoped accents.
 
 Political Club is reachable by direct route (`/political-club`) but hidden from the navbar and banner grid via the `hideFromNavbar` / `hideFromBanners` flags in `src/data/houses.ts`.
 
 ## Colors
 
-The system declares **30 color tokens**: 18 surface tokens that drive the page chrome and 12 house tokens (6 houses × `{light, deep}`) that theme each house's pages, banner, and avatar.
+The system declares **19 color tokens**: 7 surface tokens that drive the page chrome and 12 house tokens (6 houses × `{light, deep}`) that theme each house's pages, banner, and avatar.
+
+The surface palette is deliberately lean. Charcoal is the voice (`foreground`) and cream is the page (`background`); a single softer charcoal (`muted-foreground`) carries secondary text. The site's color *accents* come from the house palette, not a neutral accent token. The original shadcn scaffold's unused neutrals (`card`, `popover`, `accent`, `secondary`, `primary`, `destructive`, and their `-foreground` pairs) were removed in FRAC-201 along with the dead components that consumed them.
 
 ### Surface palette
 
 | Token | Hex | Role |
 |---|---|---|
 | `background` | `#f8f6f0` | Canonical cream. The page surface. |
-| `foreground` | `#171717` | Canonical charcoal. Dominant text color. |
-| `card` / `popover` | `#fbfaf9` | Slightly raised cream for card and popover surfaces. |
-| `card-foreground` / `popover-foreground` | `#171717` | |
-| `primary` | `#171717` | Charcoal — the voice, not a brand accent. |
-| `primary-foreground` | `#f8f6f0` | Cream on charcoal (e.g. inverted button states). |
-| `secondary` / `muted` | `#e8e6e3` | Warm putty for muted chrome. |
-| `secondary-foreground` | `#171717` | |
+| `foreground` | `#171717` | Canonical charcoal. The voice — dominant text color, and the focus/selection color. |
+| `muted` | `#e8e6e3` | Warm putty fill — image-placeholder and subtle chrome backgrounds. |
 | `muted-foreground` | `#525252` | The secondary text color — softer than `foreground` for supporting prose, asides, and metadata. Tuned for WCAG AA contrast on cream. |
-| `accent` | `#e5e2dc` | Slightly warmer neutral for subtle accent fills. |
-| `accent-foreground` | `#171717` | |
-| `destructive` | `#ef4343` | Red for destructive actions. |
-| `destructive-foreground` | `#f8f6f0` | |
 | `border` / `input` | `#dddad5` | Visible-but-soft border for editorial structure. |
 | `ring` | `#171717` | Focus ring is canonical charcoal. |
 
@@ -344,7 +325,7 @@ Five components are modeled in the `components:` YAML block; the rest are descri
 
 - Design for the 375px mobile baseline first; treat every wider viewport as progressive enhancement.
 - Use Fraunces for headings (the global `h1–h6` rule supplies italic + uppercase), JetBrains Mono (`font-mono`) for labels and chrome, and Inter (`font-sans`) for sans body copy.
-- Reach for semantic surface tokens (`background`, `foreground`, `card`, `border`, `muted`, `accent`) and the semantic type utilities (`.text-display`, `.text-body`, `.text-eyebrow`, …) rather than raw values.
+- Reach for semantic surface tokens (`background`, `foreground`, `muted`, `muted-foreground`, `border`) and the semantic type utilities (`.text-display`, `.text-body`, `.text-eyebrow`, …) rather than raw values.
 - Use house tokens (`house-{slug}-{light|deep}`) inside that house's own pages, and keep each house to its two-color pair.
 - Pair every surface with its text color explicitly on the same node, per the four canonical pairings.
 - Use `.display-roman` when a heading needs upright Fraunces, and `normal-case` when a block needs mixed-case.
