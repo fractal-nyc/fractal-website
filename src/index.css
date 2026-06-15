@@ -12,32 +12,10 @@
 
   --color-background: hsl(var(--background));
   --color-foreground: hsl(var(--foreground));
-  --color-foreground-light: #333333;
-  
-  --color-card: hsl(var(--card));
-  --color-card-foreground: hsl(var(--card-foreground));
-  
-  --color-popover: hsl(var(--popover));
-  --color-popover-foreground: hsl(var(--popover-foreground));
-  
-  --color-primary: hsl(var(--primary));
-  --color-primary-foreground: hsl(var(--primary-foreground));
-  
-  --color-secondary: hsl(var(--secondary));
-  --color-secondary-foreground: hsl(var(--secondary-foreground));
-  
-  --color-muted: hsl(var(--muted));
-  --color-muted-foreground: hsl(var(--muted-foreground));
-  
-  --color-accent: hsl(var(--accent));
-  --color-accent-foreground: hsl(var(--accent-foreground));
-  
-  --color-destructive: hsl(var(--destructive));
-  --color-destructive-foreground: hsl(var(--destructive-foreground));
-  
-  --color-border: hsl(var(--border));
-  --color-input: hsl(var(--input));
-  --color-ring: hsl(var(--ring));
+
+  --color-foreground-muted: hsl(var(--foreground-muted));
+
+  --color-foreground-faint: hsl(var(--foreground-faint));
 
   /* House palette tokens (FRAC-21, FRAC-25, FRAC-29, FRAC-33, FRAC-35, FRAC-49, FRAC-50). Static
      brand hexes — declared directly without the hsl(var(...)) indirection used
@@ -73,38 +51,17 @@
   /* Asimov Collective Aesthetic: Warm, refined, high-contrast, editorial */
   --background: 40 25% 96%; /* #f8f6f0 — warm off-white */
   --foreground: 0 0% 9%; /* #171717 - Deep charcoal/black */
-  
-  --card: 40 25% 98%;
-  --card-foreground: 0 0% 9%;
-  
-  --popover: 40 25% 98%;
-  --popover-foreground: 0 0% 9%;
-  
-  --primary: 0 0% 9%;
-  --primary-foreground: 40 25% 96%;
-  
-  --secondary: 40 10% 90%;
-  --secondary-foreground: 0 0% 9%;
-  
-  --muted: 40 10% 90%;
+
   /* FRAC-33: lifted from 40% to 32% lightness to reach WCAG AA 4.5:1
      contrast against the #f8f6f0 cream background (~5.5:1). */
-  --muted-foreground: 0 0% 32%;
-  
-  --accent: 40 15% 88%;
-  --accent-foreground: 0 0% 9%;
-  
-  --destructive: 0 84% 60%;
-  --destructive-foreground: 40 25% 96%;
-  
-  --border: 40 10% 85%; /* Visible but soft borders for structure */
-  --input: 40 10% 85%;
-  --ring: 0 0% 9%;
+  --foreground-muted: 0 0% 32%;
+
+  --foreground-faint: 40 10% 85%; /* Faintest charcoal tier — soft borders / hairlines and low-key fills */
 }
 
 @layer base {
   * {
-    @apply border-border selection:bg-primary selection:text-primary-foreground;
+    @apply border-foreground-faint selection:bg-foreground selection:text-background;
   }
 
   body {
@@ -147,7 +104,7 @@
   }
 
   .border-grid {
-    @apply border-border;
+    @apply border-foreground-faint;
     border-width: 1px;
   }
   
@@ -263,10 +220,10 @@
      sizes up to text-base (16px = iOS no-zoom threshold) and drops the
      wide tracking (chrome's 0.1em looks wrong on typed text). Typed text
      renders uppercase by design — the all-caps chrome aesthetic wins
-     over case-preserving typed input. Named .text-control rather than
-     .text-input to avoid colliding with Tailwind v4's auto-generated
-     `text-input` color utility (the codebase declares --color-input as
-     a theme token for input borders). FRAC-41 introduced; FRAC-44 set
+     over case-preserving typed input. Named .text-control (not .text-input)
+     because it reads better for typeable controls; this also kept it clear of
+     Tailwind v4's `text-input` color utility back when a --color-input theme
+     token existed (removed in FRAC-201). FRAC-41 introduced; FRAC-44 set
      case=uppercase. */
   .text-control {
     @apply font-mono text-base;

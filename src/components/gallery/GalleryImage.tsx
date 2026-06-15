@@ -21,7 +21,7 @@ export function GalleryImage({
 }: GalleryImageProps) {
   return (
     <motion.div
-      className={`overflow-hidden rounded-sm bg-muted ${className}`}
+      className={`overflow-hidden rounded-sm bg-foreground/5 ${className}`}
       whileHover={{
         scale: 1.03,
         y: -4,

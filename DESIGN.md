@@ -5,24 +5,8 @@ description: "Asimov-Collective editorial aesthetic for fractal-nyc — cream an
 colors:
   background: "#f8f6f0"
   foreground: "#171717"
-  foreground-light: "#333333"
-  card: "#fbfaf9"
-  card-foreground: "#171717"
-  popover: "#fbfaf9"
-  popover-foreground: "#171717"
-  primary: "#171717"
-  primary-foreground: "#f8f6f0"
-  secondary: "#e8e6e3"
-  secondary-foreground: "#171717"
-  muted: "#e8e6e3"
-  muted-foreground: "#525252"
-  accent: "#e5e2dc"
-  accent-foreground: "#171717"
-  destructive: "#ef4343"
-  destructive-foreground: "#f8f6f0"
-  border: "#dddad5"
-  input: "#dddad5"
-  ring: "#171717"
+  foreground-muted: "#525252"
+  foreground-faint: "#dddad5"
   house-visit-light: "#889460"
   house-visit-deep: "#4A5A30"
   house-events-light: "#D4857A"
@@ -105,34 +89,24 @@ The site is organized as six themed houses — Visit, Events, Campus, Education,
 Two foundations:
 
 1. **Mobile-first, 375px baseline.** Every page and component is designed at phone width first. Wider viewports are progressive enhancement.
-2. **Charcoal is the voice.** `colors.primary` is the dominant text color (`#171717`), an editorial charcoal rather than a saturated brand hue. Hierarchy comes from typography, color contrast, and whitespace; house colors provide scoped accents.
+2. **Charcoal is the voice.** `colors.foreground` is the dominant text color (`#171717`), an editorial charcoal rather than a saturated brand hue. Hierarchy comes from typography, color contrast, and whitespace; house colors provide scoped accents.
 
 Political Club is reachable by direct route (`/political-club`) but hidden from the navbar and banner grid via the `hideFromNavbar` / `hideFromBanners` flags in `src/data/houses.ts`.
 
 ## Colors
 
-The system declares **31 color tokens**: 19 surface tokens that drive the page chrome and 12 house tokens (6 houses × `{light, deep}`) that theme each house's pages, banner, and avatar.
+The system declares **16 color tokens**: 4 surface tokens that drive the page chrome and 12 house tokens (6 houses × `{light, deep}`) that theme each house's pages, banner, and avatar.
+
+The surface palette is deliberately lean: cream (`background`) is the page, and the rest is a **single charcoal voice expressed in three weights**. Naming reflects that — `foreground` → `foreground-muted` → `foreground-faint`, darkest to faintest. Neutral fills are expressed as `foreground` at low opacity (e.g. `bg-foreground/5` for the gallery image placeholder) rather than a dedicated fill token; focus rings and text selection use `foreground` directly. The site's color *accents* come from the house palette, not a neutral accent token. The original shadcn scaffold's unused neutrals (`card`, `popover`, `accent`, `secondary`, `primary`, `muted`, `destructive`, `input`, `ring`, and their `-foreground` pairs) were removed in FRAC-201 along with the dead components that consumed them; the two surviving charcoal tints were renamed from the scaffold's `muted-foreground` / `border` into this ladder.
 
 ### Surface palette
 
 | Token | Hex | Role |
 |---|---|---|
 | `background` | `#f8f6f0` | Canonical cream. The page surface. |
-| `foreground` | `#171717` | Canonical charcoal. Dominant text color. |
-| `foreground-light` | `#333333` | Softer charcoal for secondary body voice (asides, supporting prose). A hierarchy hint, one step down from canonical charcoal. |
-| `card` / `popover` | `#fbfaf9` | Slightly raised cream for card and popover surfaces. |
-| `card-foreground` / `popover-foreground` | `#171717` | |
-| `primary` | `#171717` | Charcoal — the voice, not a brand accent. |
-| `primary-foreground` | `#f8f6f0` | Cream on charcoal (e.g. inverted button states). |
-| `secondary` / `muted` | `#e8e6e3` | Warm putty for muted chrome. |
-| `secondary-foreground` | `#171717` | |
-| `muted-foreground` | `#525252` | Muted text tuned for WCAG AA contrast on cream. |
-| `accent` | `#e5e2dc` | Slightly warmer neutral for subtle accent fills. |
-| `accent-foreground` | `#171717` | |
-| `destructive` | `#ef4343` | Red for destructive actions. |
-| `destructive-foreground` | `#f8f6f0` | |
-| `border` / `input` | `#dddad5` | Visible-but-soft border for editorial structure. |
-| `ring` | `#171717` | Focus ring is canonical charcoal. |
+| `foreground` | `#171717` | Canonical charcoal — the voice. Dominant text color, plus low-opacity neutral fills (`bg-foreground/5`), focus rings, and text selection. |
+| `foreground-muted` | `#525252` | Mid charcoal — the secondary text color, softer than `foreground` for supporting prose, asides, and metadata. Tuned for WCAG AA contrast on cream. |
+| `foreground-faint` | `#dddad5` | Faintest charcoal — soft borders / hairlines and quiet structural dividers (the default border color). |
 
 ### Houses
 
@@ -338,7 +312,6 @@ Five components are modeled in the `components:` YAML block; the rest are descri
 
 ### Prose-only
 
-- **AvatarBadge** — small circular identity chip for a person, themed by their house's palette via the data model.
 - **Navbar wordmark** — Jacquard 24, inline-styled, sized fluidly via `clamp()`.
 - **Hero combobox** — the search/filter combobox on the homepage hero, with full combobox/listbox a11y semantics.
 - **OctahedronHero** — the homepage 3D scene (Three.js / React Three Fiber): an eight-face octahedron, each face carrying a section photo, with auto-rotation and breathing animations all gated by `usePrefersReducedMotion()`. Keyboard users reach the destination routes via the `.sr-only-focusable` skip-nav. Face order is locked in `src/components/three/OctahedronHero.tsx`.
@@ -347,7 +320,7 @@ Five components are modeled in the `components:` YAML block; the rest are descri
 
 - Design for the 375px mobile baseline first; treat every wider viewport as progressive enhancement.
 - Use Fraunces for headings (the global `h1–h6` rule supplies italic + uppercase), JetBrains Mono (`font-mono`) for labels and chrome, and Inter (`font-sans`) for sans body copy.
-- Reach for semantic surface tokens (`background`, `foreground`, `card`, `border`, `muted`, `accent`) and the semantic type utilities (`.text-display`, `.text-body`, `.text-eyebrow`, …) rather than raw values.
+- Reach for semantic surface tokens (`background`, `foreground`, `foreground-muted`, `foreground-faint`) and the semantic type utilities (`.text-display`, `.text-body`, `.text-eyebrow`, …) rather than raw values.
 - Use house tokens (`house-{slug}-{light|deep}`) inside that house's own pages, and keep each house to its two-color pair.
 - Pair every surface with its text color explicitly on the same node, per the four canonical pairings.
 - Use `.display-roman` when a heading needs upright Fraunces, and `normal-case` when a block needs mixed-case.

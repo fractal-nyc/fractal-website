@@ -55,7 +55,7 @@ export function DocumentBadge({ document, className = "" }: DocumentBadgeProps) 
       target="_blank"
       rel="noopener noreferrer"
       className={`
-        group block rounded-lg border border-border bg-background text-foreground
+        group block rounded-lg border border-foreground-faint bg-background text-foreground
         transition-all duration-200 ease-out
         hover:scale-[1.02] hover:shadow-lg hover:border-house-publications-deep/40
         focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-house-publications-deep/40
@@ -86,7 +86,7 @@ export function DocumentBadge({ document, className = "" }: DocumentBadgeProps) 
         <ArrowUpRight
           size={16}
           strokeWidth={1.5}
-          className="text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+          className="text-foreground-muted opacity-0 group-hover:opacity-100 transition-opacity duration-200"
         />
       </div>
 
@@ -96,11 +96,11 @@ export function DocumentBadge({ document, className = "" }: DocumentBadgeProps) 
       </h3>
 
       {/* Author */}
-      <p className="text-meta text-muted-foreground mt-1">{authorName}</p>
+      <p className="text-meta text-foreground-muted mt-1">{authorName}</p>
 
       {/* Description (featured only) */}
       {isFeatured && document.description && (
-        <p className="text-body text-muted-foreground mt-3 leading-relaxed">
+        <p className="text-body text-foreground-muted mt-3 leading-relaxed">
           {document.description}
         </p>
       )}

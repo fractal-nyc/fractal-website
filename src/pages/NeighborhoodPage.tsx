@@ -62,11 +62,11 @@ export function NeighborhoodPage() {
                 <p className="text-eyebrow text-foreground mb-2 md:mb-3">
                   Note
                 </p>
-                <p className="text-body leading-relaxed text-foreground-light">
+                <p className="text-body leading-relaxed text-foreground-muted">
                   Fractal is a decentralized network of apartments rather than a formal organization! So no one is in charge of sublets. The way staying here works:
                 </p>
                 <div className="flex justify-center mt-1.5 md:mt-3">
-                  <ol className="list-decimal list-inside space-y-1 md:space-y-2 text-body leading-relaxed text-foreground-light text-left">
+                  <ol className="list-decimal list-inside space-y-1 md:space-y-2 text-body leading-relaxed text-foreground-muted text-left">
                     <li>You fill out one of the forms below.</li>
                     <li>
                       An automatic message sends your info to leaseholders.

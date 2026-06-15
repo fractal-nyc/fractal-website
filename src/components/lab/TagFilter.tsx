@@ -63,8 +63,8 @@ export function TagFilter({
                   }
                 : {
                     backgroundColor: "transparent",
-                    borderColor: "var(--border)",
-                    color: "var(--muted-foreground)",
+                    borderColor: "var(--foreground-faint)",
+                    color: "var(--foreground-muted)",
                   }
             }
           >

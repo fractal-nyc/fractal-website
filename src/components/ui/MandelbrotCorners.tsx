@@ -47,7 +47,7 @@ const corners = [
  *   </MandelbrotCorners>
  *
  * Or applied directly:
- *   <MandelbrotCorners as="section" size="lg" className="py-24 bg-muted">
+ *   <MandelbrotCorners as="section" size="lg" className="py-24 bg-foreground/5">
  *     ...content...
  *   </MandelbrotCorners>
  *
