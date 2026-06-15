@@ -99,7 +99,7 @@ export function EventsPage() {
             </p>
             <Button asChild className="max-w-xs w-full text-center">
               <a
-                href="https://discord.com/invite/vugp6Nza"
+                href="https://discord.gg/Er974gPTXe"
                 target="_blank"
                 rel="noopener noreferrer"
               >

@@ -1,7 +1,7 @@
 import { Link, useLocation } from "wouter";
 import { MandelbrotIcon } from "@/components/house/MandelbrotIcon";
 
-const DISCORD_LINK = "https://discord.com/invite/vugp6Nza";
+const DISCORD_LINK = "https://discord.gg/Er974gPTXe";
 
 export function Footer() {
   const [location] = useLocation();
