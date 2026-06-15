@@ -101,9 +101,6 @@ vi.mock("@/pages/PeoplePage", () => ({
 vi.mock("@/pages/ProtocolPage", () => ({
   ProtocolPage: () => <main data-testid="page-protocol" />,
 }));
-vi.mock("@/pages/BadgePlayground", () => ({
-  BadgePlayground: () => <main data-testid="page-badge" />,
-}));
 vi.mock("@/pages/not-found", () => ({
   default: () => <div data-testid="page-not-found" />,
 }));

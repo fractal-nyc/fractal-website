@@ -336,7 +336,6 @@ Five components are modeled in the `components:` YAML block; the rest are descri
 
 ### Prose-only
 
-- **AvatarBadge** — small circular identity chip for a person, themed by their house's palette via the data model.
 - **Navbar wordmark** — Jacquard 24, inline-styled, sized fluidly via `clamp()`.
 - **Hero combobox** — the search/filter combobox on the homepage hero, with full combobox/listbox a11y semantics.
 - **OctahedronHero** — the homepage 3D scene (Three.js / React Three Fiber): an eight-face octahedron, each face carrying a section photo, with auto-rotation and breathing animations all gated by `usePrefersReducedMotion()`. Keyboard users reach the destination routes via the `.sr-only-focusable` skip-nav. Face order is locked in `src/components/three/OctahedronHero.tsx`.

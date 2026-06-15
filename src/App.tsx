@@ -11,7 +11,6 @@ import { LabPage } from "@/pages/LabPage";
 import { StoryPage } from "@/pages/StoryPage";
 import { PeoplePage } from "@/pages/PeoplePage";
 
-import { BadgePlayground } from "@/pages/BadgePlayground";
 import NotFound from "@/pages/not-found";
 
 function ScrollToTop() {
@@ -36,7 +35,6 @@ function Router() {
       <Route path="/story" component={StoryPage} />
       <Route path="/people" component={PeoplePage} />
 
-      <Route path="/playground/badge" component={BadgePlayground} />
       <Route component={NotFound} />
     </Switch>
   );
