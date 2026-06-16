@@ -9,12 +9,17 @@ import { FadeIn } from "@/components/ui/FadeIn";
 import { FractalPattern } from "@/components/ui/FractalPattern";
 import { ArrowUpRight, Megaphone, Mic, Newspaper } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
+import { SECTIONS } from "@/data/houses";
 
 // ---------------------------------------------------------------------------
-// Story accent color (matches Navbar story link)
+// Story accent color — the single gold identity accent for this cream section.
+// FRAC-205: sourced from the canonical SECTIONS.story.accent, matching the
+// Navbar Story link and the octahedron Story face. Used only as a
+// decorative accent (icon tints, hover borders, the accent bar); ALL text on
+// this page stays charcoal (text-foreground) since gold-on-cream fails WCAG.
 // ---------------------------------------------------------------------------
 
-const STORY_COLOR = "#D4BA58";
+const STORY_COLOR = SECTIONS.story.accent;
 
 // ---------------------------------------------------------------------------
 // Talk / podcast data
@@ -195,10 +200,10 @@ function TalkCard({ talk }: { talk: TalkItem }) {
 export function StoryPage() {
   return (
     <main
-      className="relative min-h-screen text-foreground selection:bg-foreground selection:text-background"
-      style={{ backgroundColor: "#DFCA7A", "--btn-accent": "#8A7A20" } as CSSProperties}
+      className="relative min-h-screen bg-background text-foreground selection:bg-foreground selection:text-background"
+      style={{ "--btn-accent": "var(--color-section-story)" } as CSSProperties}
     >
-      <FractalPattern color="#8A7A20" />
+      <FractalPattern color={STORY_COLOR} />
       <div className="relative z-10">
       <Navbar />
       <div>
@@ -219,7 +224,7 @@ export function StoryPage() {
             <img src="/favicon.svg" alt="" className="w-[16%] lg:w-[14%] max-w-[260px] h-auto" />
           </div>
           <div className="relative z-10 max-w-6xl mx-auto px-6 md:px-[4.5%] w-full">
-            <SectorHeader letter="S" name="Story" color="#8A7A20" />
+            <SectorHeader letter="S" name="Story" color="var(--color-section-story)" />
             <FadeIn>
               <p className="text-display mb-12 text-center">
                 From a Single Apartment to a Neighborhood Campus
@@ -230,8 +235,8 @@ export function StoryPage() {
 
         <OriginStory />
 
-        {/* Talks & Podcasts Section */}
-        <section className="flex flex-col items-center justify-start pt-8 md:pt-12 pb-16 md:pb-24">
+        {/* Talks & Podcasts Section — solid gold band anchors it within the cream page */}
+        <section className="relative flex flex-col items-center justify-start bg-section-story pt-16 md:pt-24 pb-16 md:pb-24">
           <div className="max-w-6xl mx-auto px-6 md:px-[4.5%]">
             <FadeIn>
               <p className="text-body-lead text-foreground max-w-5xl mx-auto text-center text-pretty mb-12">

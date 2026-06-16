@@ -4,7 +4,7 @@
 // drei + three-stdlib) onto the entry chunk. Importing from this module is
 // three-free; importing OUTER_NAV_NODES from OctahedronHero still works via a
 // re-export, but new call sites should reach in here directly.
-import { HOUSES } from "@/data/houses";
+import { HOUSES, SECTIONS } from "@/data/houses";
 
 const housePalette = (id: string, prefer: "light" | "deep" = "light"): string => {
   const palette = HOUSES.find((h) => h.id === id)?.palette;
@@ -24,5 +24,5 @@ export const OUTER_NAV_NODES: NavNode[] = [
   { label: "Campus",         route: "/campus",           color: housePalette("campus"),       vertexIndex: 0 },
   { label: "Education",      route: "/new-liberal-arts", color: housePalette("school"),       vertexIndex: 1 },
   { label: "Publications",   route: "/lab",              color: housePalette("lab"),          vertexIndex: 5 },
-  { label: "Story",          route: "/story",            color: "#D4BA58",                    vertexIndex: 4 },
+  { label: "Story",          route: "/story",            color: SECTIONS.story.accent,        vertexIndex: 4 },
 ];

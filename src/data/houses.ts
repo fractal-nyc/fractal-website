@@ -326,11 +326,21 @@ export const HOUSES: House[] = [
 // lockstep). Like houses, both consumers that need a real hex — three.js
 // (OctahedronHero) and JS string colors (Navbar) — read from here, not a CSS
 // var(). People is intentionally deferred from launch but kept tokenized and
-// launch-ready. Story is live but uses an irregular 3rd color and is handled
-// separately (out of scope for FRAC-204).
+// launch-ready.
+//
+// FRAC-205: Story is a live non-house section, but unlike People it reads as a
+// CREAM page (charcoal text) with a SINGLE gold identity accent rather than a
+// color-flooded {light,deep} pair — cream is just the shared `background`, so
+// Story only needs the one accent. Section entries are therefore HETEROGENEOUS
+// in shape: People is `{ light, deep }` (flooded), Story is `{ accent }`
+// (cream). Both consumers that need a real hex (three.js OctahedronHero +
+// heroNavNodes, Navbar JS strings) read Story's color from here. The
+// `--color-section-story` token in index.css mirrors `accent`; the
+// section-tokens-sync test keeps them in lockstep across both shapes.
 export const SECTIONS = {
   people: { light: "#C49040", deep: "#B65D19" },
-} as const satisfies Record<string, HousePalette>;
+  story: { accent: "#D4BA58" },
+} as const;
 
 // ---------------------------------------------------------------------------
 // Helper functions

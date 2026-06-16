@@ -99,8 +99,9 @@ export function useTapHandlers(onTap: () => void) {
 // navbar (FRAC-32) and its banner grid card stays hidden (FRAC-161). On the
 // hero octahedron, vertex 4 was previously the FRAC-36 "Coming Soon"
 // placeholder for Political Club. FRAC-47 converts that slot to a Story
-// node — fully active, navigable to /story, in the Story brand color
-// #D4BA58 (matches Navbar.tsx Story link + StoryPage STORY_COLOR). The
+// node — fully active, navigable to /story, in the Story identity color
+// (matches Navbar.tsx Story link + StoryPage STORY_COLOR). FRAC-205 sources
+// that color from SECTIONS.story.accent instead of a literal. The
 // geometry still reads as complete (6 vertices, 6 nodes); Political Club
 // remains hidden from the navbar.
 
@@ -381,12 +382,14 @@ const FACE_BANNER_IMAGES: Record<string, string> = {
 
 // Section colors. House-backed faces derive from canonical palette pairs
 // (FRAC-24). `people` is not a House but carries a canonical pair in SECTIONS
-// (FRAC-204) — read its real hex from there. `story` keeps a literal hex.
+// (FRAC-204) — read its real hex from there. `story` is also a non-house
+// section: FRAC-205 sources its single accent from SECTIONS.story.accent (the
+// face placeholder color shown until the banner texture loads).
 // `forum` is intentionally desaturated (muted grey-tan) to read as
 // de-emphasized — it has no nav node and no banner texture, so the literal
 // is kept as a deliberate stylistic exception rather than a palette identity.
 const FACE_SECTION_COLORS: Record<string, string> = {
-  story:        "#D4BA58",
+  story:        SECTIONS.story.accent,
   campus:       housePalette("campus"),
   neighborhood: housePalette("neighborhood"),
   events:       housePalette("events"),

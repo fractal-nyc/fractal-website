@@ -7,9 +7,11 @@ import { HOUSES, NAVBAR_HIDDEN_ROUTES, SECTIONS } from "@/data/houses";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 
 // FRAC-24: Per-link colors derive from the canonical House palette where a
-// House exists. Non-house links (Story, People) keep literal colors — there's
-// no House entry to derive from. House links default to `.light` to match
-// what each link CURRENTLY shows; Political Club uses `.deep` because the
+// House exists. Non-house links (Story, People) have no House entry, so they
+// read from the SECTIONS record instead (FRAC-204/FRAC-205): Story is a cream
+// section with a single accent (`SECTIONS.story.accent`); People is a flooded
+// section pair (`SECTIONS.people.light`). House links default to `.light` to
+// match what each link CURRENTLY shows; Political Club uses `.deep` because the
 // link's visual identity has always been the deeper burgundy.
 function houseColor(route: string, prefer: "light" | "deep" = "light"): string {
   const palette = HOUSES.find((h) => h.route === route)?.palette;
@@ -17,7 +19,7 @@ function houseColor(route: string, prefer: "light" | "deep" = "light"): string {
 }
 
 const sectionLinks = [
-  { name: "Story",          href: "/story",             color: "#D4BA58" },
+  { name: "Story",          href: "/story",             color: SECTIONS.story.accent },
   { name: "Campus",         href: "/campus",            color: houseColor("/campus") },
   { name: "Visit",          href: "/neighborhood",      color: houseColor("/neighborhood") },
   { name: "Events",         href: "/events",            color: houseColor("/events") },
