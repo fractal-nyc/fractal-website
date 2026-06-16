@@ -1,0 +1,39 @@
+{
+  "assigned_to": null,
+  "branch_links": [
+    {
+      "branch": "frac-209-typography-cleanup",
+      "linked_at": "2026-06-16T21:53:57Z",
+      "linked_by": "agent:claude-opus-4",
+      "repo": null
+    }
+  ],
+  "comment_count": 2,
+  "complexity": null,
+  "created_at": "2026-06-16T21:53:56Z",
+  "created_by": "agent:claude-opus-4",
+  "custom_fields": {},
+  "description": null,
+  "done_at": "2026-06-16T22:01:26Z",
+  "evidence_refs": [
+    {
+      "id": "ev_01KV97881PPV1XFWSTSBGJ1ZJT",
+      "role": "review",
+      "source_type": "comment"
+    }
+  ],
+  "id": "task_01KV96TH7SYWZ3J3JJZ1RVP428",
+  "last_event_id": "ev_01KV97883ZZPCP6WVA7Q720NX8",
+  "last_status_changed_at": "2026-06-16T22:01:26Z",
+  "priority": "medium",
+  "relationships_out": [],
+  "reopened_count": 0,
+  "schema_version": 1,
+  "short_id": "FRAC-209",
+  "status": "done",
+  "tags": null,
+  "title": "Typography system cleanup: explicit headings + consolidate/rename chrome utilities + DESIGN.md rewrite",
+  "type": "task",
+  "updated_at": "2026-06-16T22:01:26Z",
+  "urgency": null
+}
