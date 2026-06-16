@@ -6,9 +6,17 @@
 // re-export, but new call sites should reach in here directly.
 import { HOUSES, SECTIONS } from "@/data/houses";
 
-const housePalette = (id: string, prefer: "light" | "deep" = "light"): string => {
+// Octahedron model gold — the graceful fallback when a section/house color is
+// missing. Shared by housePalette() below and the face materials in
+// OctahedronHero (FRAC-207: replaced a magenta #ff00ff debug sentinel).
+export const PALETTE_FALLBACK = "#c4a265";
+
+export const housePalette = (
+  id: string,
+  prefer: "light" | "deep" = "light"
+): string => {
   const palette = HOUSES.find((h) => h.id === id)?.palette;
-  return palette ? palette[prefer] : "#ff00ff";
+  return palette ? palette[prefer] : PALETTE_FALLBACK;
 };
 
 export interface NavNode {

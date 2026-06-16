@@ -1,0 +1,33 @@
+{
+  "assigned_to": null,
+  "branch_links": [
+    {
+      "branch": "frac-207-octahedron-fallback",
+      "linked_at": "2026-06-16T20:50:42Z",
+      "linked_by": "agent:claude-opus-4",
+      "repo": null
+    }
+  ],
+  "comment_count": 1,
+  "complexity": null,
+  "created_at": "2026-06-16T20:50:41Z",
+  "created_by": "agent:claude-opus-4",
+  "custom_fields": {},
+  "description": null,
+  "done_at": null,
+  "evidence_refs": [],
+  "id": "task_01KV936Q3CCZFB8DA6E30Z3P01",
+  "last_event_id": "ev_01KV938H8CZ9GG9YAVX4EBC8Q2",
+  "last_status_changed_at": "2026-06-16T20:51:41Z",
+  "priority": "medium",
+  "relationships_out": [],
+  "reopened_count": 0,
+  "schema_version": 1,
+  "short_id": "FRAC-207",
+  "status": "in_progress",
+  "tags": null,
+  "title": "Dedupe octahedron housePalette helper + replace magenta fallback with octahedron gold",
+  "type": "task",
+  "updated_at": "2026-06-16T20:51:41Z",
+  "urgency": null
+}
