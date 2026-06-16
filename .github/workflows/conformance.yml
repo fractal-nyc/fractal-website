@@ -1,0 +1,24 @@
+name: design-conformance
+
+# Preventive design-governance gate (FRAC-202): fails a PR when new off-vocabulary
+# color values are introduced, so drift is conformed to a token or deliberately
+# documented — never merged silently. Companion to the periodic /design-audit sweep.
+
+on:
+  pull_request:
+    branches: [master]
+  push:
+    branches: [master]
+
+jobs:
+  conformance:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: corepack enable
+      # No dependency install needed — the check is a zero-dep Node script.
+      - name: Design-conformance (colors)
+        run: pnpm conformance

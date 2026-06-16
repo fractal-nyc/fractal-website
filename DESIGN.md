@@ -325,3 +325,11 @@ Five components are modeled in the `components:` YAML block; the rest are descri
 - Pair every surface with its text color explicitly on the same node, per the four canonical pairings.
 - Use `.display-roman` when a heading needs upright Fraunces, and `normal-case` when a block needs mixed-case.
 - Gate every animation on `usePrefersReducedMotion()` (or an equivalent `@media (prefers-reduced-motion: reduce)` rule).
+
+## Design conformance (the governance loop)
+
+This doc is the source of design **intent**; the code must conform, and any deliberate divergence must be reconciled back here.
+
+- **Continuous gate** — `pnpm conformance` (CI: `.github/workflows/conformance.yml`) fails when a PR introduces a **net-new off-vocabulary color** — a raw hex that isn't a design token and isn't already grandfathered. The sanctioned token set is read live from `src/index.css` `@theme`, so renames never break the gate.
+- **Blessing an intentional color** — if a raw value is a deliberate exception (e.g. a non-house page-identity color), record it: run `node scripts/design-conformance.mjs --update-baseline` to add it to `scripts/design-conformance.baseline.json`, **and** document the intent here. Drift gets conformed; intent gets written down — never merged silently.
+- **Periodic sweep** — the `/design-audit` command does the full per-dimension coherence pass (color, typography, spacing, …): declared vocabulary vs used vocabulary, sorting divergences into consolidate / bless-and-document / flag. Use it to burn down the grandfathered baseline over time.
