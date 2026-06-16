@@ -235,8 +235,8 @@ export function StoryPage() {
 
         <OriginStory />
 
-        {/* Talks & Podcasts Section */}
-        <section className="flex flex-col items-center justify-start pt-8 md:pt-12 pb-16 md:pb-24">
+        {/* Talks & Podcasts Section — solid gold band anchors it within the cream page */}
+        <section className="relative flex flex-col items-center justify-start bg-section-story pt-16 md:pt-24 pb-16 md:pb-24">
           <div className="max-w-6xl mx-auto px-6 md:px-[4.5%]">
             <FadeIn>
               <p className="text-body-lead text-foreground max-w-5xl mx-auto text-center text-pretty mb-12">
