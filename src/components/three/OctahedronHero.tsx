@@ -3,15 +3,7 @@ import { useFrame, ThreeEvent } from "@react-three/fiber";
 import { Html } from "@react-three/drei";
 import * as THREE from "three";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
-import { HOUSES, SECTIONS } from "@/data/houses";
-
-// FRAC-24: House color helper — derives from canonical palette pair in
-// HOUSES instead of literal hex. Falls back to magenta to surface a missing
-// house id loudly in dev.
-const housePalette = (id: string, prefer: "light" | "deep" = "light"): string => {
-  const palette = HOUSES.find((h) => h.id === id)?.palette;
-  return palette ? palette[prefer] : "#ff00ff";
-};
+import { SECTIONS } from "@/data/houses";
 
 // ---------------------------------------------------------------------------
 // FRAC-124: Tap-vs-drag discriminator
@@ -111,7 +103,7 @@ export function useTapHandlers(onTap: () => void) {
 // importing from this module. The internal rendering loop near the bottom
 // of this file imports them below.
 export { OUTER_NAV_NODES, type NavNode } from "./heroNavNodes";
-import { OUTER_NAV_NODES, type NavNode } from "./heroNavNodes";
+import { OUTER_NAV_NODES, type NavNode, housePalette, PALETTE_FALLBACK } from "./heroNavNodes";
 
 // ---------------------------------------------------------------------------
 // Octahedron vertex generation
@@ -530,8 +522,8 @@ function usePerFaceMaterials() {
     () =>
       FACE_SECTION_MAP.map((sectionKey) => {
         const color = sectionKey
-          ? FACE_SECTION_COLORS[sectionKey] ?? "#c4a265"
-          : "#c4a265";
+          ? FACE_SECTION_COLORS[sectionKey] ?? PALETTE_FALLBACK
+          : PALETTE_FALLBACK;
         return new THREE.MeshBasicMaterial({ color, side: THREE.FrontSide });
       }),
     [],
