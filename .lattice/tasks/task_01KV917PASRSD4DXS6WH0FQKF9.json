@@ -1,0 +1,33 @@
+{
+  "assigned_to": null,
+  "branch_links": [
+    {
+      "branch": "frac-206-fractalpattern-render-fix",
+      "linked_at": "2026-06-16T20:16:17Z",
+      "linked_by": "agent:claude-opus-4",
+      "repo": null
+    }
+  ],
+  "comment_count": 2,
+  "complexity": null,
+  "created_at": "2026-06-16T20:16:16Z",
+  "created_by": "agent:claude-opus-4",
+  "custom_fields": {},
+  "description": null,
+  "done_at": null,
+  "evidence_refs": [],
+  "id": "task_01KV917PASRSD4DXS6WH0FQKF9",
+  "last_event_id": "ev_01KV91EF1RWAPVNK127PAP29F0",
+  "last_status_changed_at": "2026-06-16T20:16:16Z",
+  "priority": "medium",
+  "relationships_out": [],
+  "reopened_count": 0,
+  "schema_version": 1,
+  "short_id": "FRAC-206",
+  "status": "in_planning",
+  "tags": null,
+  "title": "Fix FractalPattern not rendering (stacking + var() color)",
+  "type": "task",
+  "updated_at": "2026-06-16T20:19:58Z",
+  "urgency": null
+}

@@ -77,3 +77,5 @@ deeper section token) — do NOT do that pre-emptively; wait for the visual call
 ## Out of scope
 - Re-flooding or changing People.
 - The houses↔css duplication (sync test stays the approach).
+
+## Reset 2026-06-16 by agent:claude-opus-4
