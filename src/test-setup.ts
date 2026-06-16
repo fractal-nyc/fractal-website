@@ -65,7 +65,7 @@ Object.defineProperty(window, "matchMedia", {
 });
 
 // ---------------------------------------------------------------------------
-// Mock document.fonts — used by use-fonts-ready hook
+// Mock document.fonts — jsdom doesn't implement the Font Loading API
 // ---------------------------------------------------------------------------
 
 Object.defineProperty(document, "fonts", {
