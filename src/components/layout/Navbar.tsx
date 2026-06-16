@@ -2,7 +2,6 @@ import { Fragment, useState } from "react";
 import { motion, useScroll, useMotionValueEvent } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import { Link, useLocation } from "wouter";
-import { JustifiedParagraph } from "@/components/typeset/JustifiedParagraph";
 import { HOUSES, NAVBAR_HIDDEN_ROUTES, SECTIONS } from "@/data/houses";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 
@@ -165,14 +164,9 @@ export function Navbar() {
             <div className="relative py-5 max-lg:hidden" style={{ paddingLeft: "4.5%", paddingRight: "4.5%" }}>
               <div className="grid grid-cols-[1fr_auto_1fr] items-end gap-6">
                 <div className="flex flex-col gap-2 min-w-0">
-                  <JustifiedParagraph
-                    text={LEFT_TEXT}
-                    fontFamily="'JetBrains Mono'"
-                    fontSize={13}
-                    lineHeight={18}
-                    uppercase
-                    className="font-thin"
-                  />
+                  <p className="font-mono text-[13px] leading-[18px] font-normal uppercase text-justify">
+                    {LEFT_TEXT}
+                  </p>
                   <nav className="flex items-baseline justify-between">
                     {leftLinks.map((link) => (
                       <NavLink key={link.name} {...link} />
@@ -196,14 +190,9 @@ export function Navbar() {
                 </Link>
 
                 <div className="flex flex-col gap-2 min-w-0">
-                  <JustifiedParagraph
-                    text={RIGHT_TEXT}
-                    fontFamily="'JetBrains Mono'"
-                    fontSize={13}
-                    lineHeight={18}
-                    uppercase
-                    className="font-thin"
-                  />
+                  <p className="font-mono text-[13px] leading-[18px] font-normal uppercase text-justify">
+                    {RIGHT_TEXT}
+                  </p>
                   <nav className="flex items-baseline justify-between">
                     {rightLinks.map((link) => (
                       <NavLink key={link.name} {...link} />
@@ -232,7 +221,7 @@ export function Navbar() {
                   </span>
                 </Link>
                 <p
-                  className="font-mono uppercase font-thin text-justify flex-1"
+                  className="font-mono uppercase font-normal text-justify flex-1"
                   style={{ fontSize: "8px", lineHeight: 1.35, letterSpacing: "0.01em" }}
                 >
                   {RIGHT_TEXT}
