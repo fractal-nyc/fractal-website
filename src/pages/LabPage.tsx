@@ -61,7 +61,7 @@ export function LabPage() {
 
             <FadeIn delay={0.3}>
               <div className="mb-12 md:mb-16 border-b border-foreground-faint pb-8">
-                <h2 className="text-eyebrow not-italic flex items-center gap-2 mb-3">
+                <h2 className="text-label not-italic flex items-center gap-2 mb-3">
                   Research + Writing
                   <MandelbrotIcon size={18} opacity={0.35} />
                 </h2>

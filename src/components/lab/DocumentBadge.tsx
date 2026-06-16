@@ -77,7 +77,7 @@ export function DocumentBadge({ document, className = "" }: DocumentBadgeProps) 
             />
           </div>
           <span
-            className="text-eyebrow"
+            className="text-label"
             style={{ color: LAB_DEEP }}
           >
             {categoryLabel}
@@ -96,7 +96,7 @@ export function DocumentBadge({ document, className = "" }: DocumentBadgeProps) 
       </h3>
 
       {/* Author */}
-      <p className="text-meta text-foreground-muted mt-1">{authorName}</p>
+      <p className="text-label text-foreground-muted mt-1">{authorName}</p>
 
       {/* Description (featured only) */}
       {isFeatured && document.description && (

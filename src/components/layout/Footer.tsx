@@ -98,7 +98,7 @@ export function Footer() {
 
           {/* Tagline */}
           <p
-            className="text-meta text-background/50 text-center"
+            className="text-label text-background/50 text-center"
           >
             New York City Collective
           </p>

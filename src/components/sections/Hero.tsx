@@ -134,7 +134,7 @@ export function Hero() {
         aria-label="Hero navigation (keyboard)"
         className="sr-only-focusable absolute top-2 left-2 z-50"
       >
-        <ul className="flex flex-col gap-1 bg-background text-foreground border border-foreground p-3 text-eyebrow">
+        <ul className="flex flex-col gap-1 bg-background text-foreground border border-foreground p-3 text-label">
           {OUTER_NAV_NODES.map((node) => (
             <li key={node.route}>
               <a
@@ -195,7 +195,7 @@ export function Hero() {
               // FRAC-43: native caret suppressed — overlay span below renders
               // the thick blinking cursor restored from commit 1ba8aa2.
               style={{ caretColor: "transparent" }}
-              className="w-full text-control text-foreground/60 border border-foreground/20 rounded-md bg-background/90 backdrop-blur-sm placeholder:text-foreground/60 outline-none transition-all duration-200 focus:border-foreground/40 focus:text-foreground/80 h-[30px] pl-8 pr-3"
+              className="w-full text-input text-foreground/60 border border-foreground/20 rounded-md bg-background/90 backdrop-blur-sm placeholder:text-foreground/60 outline-none transition-all duration-200 focus:border-foreground/40 focus:text-foreground/80 h-[30px] pl-8 pr-3"
             />
             {/* FRAC-43: hidden mirror — its offsetWidth drives the caret's
                 left offset. Same typography class as the input so width
@@ -203,7 +203,7 @@ export function Hero() {
             <span
               ref={mirrorRef}
               aria-hidden="true"
-              className="text-control"
+              className="text-input"
               style={{
                 position: "absolute",
                 visibility: "hidden",
@@ -242,7 +242,7 @@ export function Hero() {
               className="absolute bottom-full left-0 mb-1 w-full bg-background/95 text-foreground backdrop-blur-sm border border-foreground/20 rounded-md overflow-hidden shadow-lg max-h-[60vh] overflow-y-auto"
             >
               {noResults && (
-                <div className="text-meta text-foreground/60 text-center px-3 py-3">
+                <div className="text-label text-foreground/60 text-center px-3 py-3">
                   No results
                 </div>
               )}
@@ -277,7 +277,7 @@ export function Hero() {
                             <ArrowUpRight className="h-3 w-3 opacity-40 shrink-0" />
                           )}
                         </div>
-                        <div className="text-meta text-xs text-foreground/60 truncate mt-0.5">
+                        <div className="text-label text-xs text-foreground/60 truncate mt-0.5">
                           {result.subtitle}
                         </div>
                       </div>
@@ -288,7 +288,7 @@ export function Hero() {
                 return (
                   <div key={group.type} role="presentation">
                     {/* text-[10px] density override for compact search dropdown */}
-                    <div className="text-eyebrow text-[10px] text-foreground/40 px-3 pt-2 pb-1">
+                    <div className="text-label text-[10px] text-foreground/40 px-3 pt-2 pb-1">
                       {group.label}
                     </div>
                     <ul role="presentation">{items}</ul>

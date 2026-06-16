@@ -108,7 +108,7 @@ describe("Neighborhood page — content", () => {
     const visitElements = screen.getAllByText("Visit");
     expect(visitElements.length).toBeGreaterThanOrEqual(1);
     const sectorSpan = visitElements.find(
-      (el) => el.tagName === "SPAN" && el.className.includes("text-eyebrow"),
+      (el) => el.tagName === "SPAN" && el.className.includes("text-label"),
     );
     expect(sectorSpan).toBeTruthy();
   });

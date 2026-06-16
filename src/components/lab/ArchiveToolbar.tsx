@@ -44,7 +44,7 @@ export function ArchiveToolbar({ filter, showTags = true }: ArchiveToolbarProps)
       {/* Result count + clear button — only shown when filtering */}
       {isFiltering && (
         <div className="flex items-center justify-between text-sm">
-          <p className="text-meta text-foreground-muted font-light">
+          <p className="text-label text-foreground-muted font-light">
             Showing{" "}
             <span className="font-medium text-foreground">
               {filtered.length}

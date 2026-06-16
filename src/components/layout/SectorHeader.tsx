@@ -16,7 +16,7 @@ export function SectorHeader({ letter, name, color }: SectorHeaderProps) {
         >
           {letter}
         </span>
-        <span className="text-eyebrow" style={{ color }}>
+        <span className="text-label" style={{ color }}>
           {name}
         </span>
       </div>

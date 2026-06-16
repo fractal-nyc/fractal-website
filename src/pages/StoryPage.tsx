@@ -156,7 +156,7 @@ function TalkCard({ talk }: { talk: TalkItem }) {
             />
           </div>
           <span
-            className="text-eyebrow"
+            className="text-label"
             style={{ color: STORY_COLOR }}
           >
             {categoryLabel}
@@ -175,7 +175,7 @@ function TalkCard({ talk }: { talk: TalkItem }) {
       </h3>
 
       {/* Author + Year */}
-      <p className="text-meta text-foreground mt-1">
+      <p className="text-label text-foreground mt-1">
         {talk.author}, {talk.year}
       </p>
 
