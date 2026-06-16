@@ -3,8 +3,6 @@ import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { SectorHeader } from "@/components/layout/SectorHeader";
 import { FadeIn } from "@/components/ui/FadeIn";
-import { PretextParagraph } from "@/components/pretext/PretextParagraph";
-import { TEXT_SIZES } from "@/lib/pretext";
 import { FractalPattern } from "@/components/ui/FractalPattern";
 import { Button } from "@/components/ui/button";
 
@@ -35,12 +33,9 @@ export function PeoplePage() {
                     Join Discord
                   </a>
                 </Button>
-                <PretextParagraph
-                  size={TEXT_SIZES.lg}
-                  className="font-light text-white"
-                >
-                  {"Look forward to the Fractal Network Portal available to Fractal Members soon..."}
-                </PretextParagraph>
+                <p className="text-body font-light text-white">
+                  Look forward to the Fractal Network Portal available to Fractal Members soon...
+                </p>
               </div>
             </FadeIn>
           </div>
