@@ -355,12 +355,12 @@ function StreamingCrossConnections({
 // face should still show its photo. Geometry stays intact (8 triangular faces).
 //
 // FRAC-192: these 8 paths are ALSO preloaded as <link rel="preload" as="image">
-// in index.html <head>, AND six of them are rendered by the house-page banner
-// (src/components/house/HouseBanner.tsx BANNER_IMAGES). Keep all three lists
-// in sync — if you add/remove/rename a banner here, update the index.html
-// preload tags and HouseBanner.tsx too. All consumers must stay CORS-mode
-// (TextureLoader is anonymous by default; HouseBanner's <img> sets
-// crossOrigin) so the single CORS preload serves every route (FRAC-193/195).
+// in index.html <head>. Keep both lists in sync — if you add/remove/rename a
+// banner here, update the index.html preload tags too. The octahedron consumes
+// these via TextureLoader (CORS-mode / anonymous by default), so the CORS
+// preload serves the texture fetch (FRAC-193/195). (The per-page flanking
+// banners are separate baked-art `*BannerSVG` files under
+// /images/banners/*-banner.svg and do not read from this `.webp` list.)
 const FACE_BANNER_IMAGES: Record<string, string> = {
   story:        "/images/banners/story.webp",
   campus:       "/images/banners/campus.webp",
