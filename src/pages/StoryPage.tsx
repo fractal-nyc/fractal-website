@@ -203,7 +203,7 @@ export function StoryPage() {
       className="relative min-h-screen bg-background text-foreground selection:bg-foreground selection:text-background"
       style={{ "--btn-accent": "var(--color-section-story)" } as CSSProperties}
     >
-      <FractalPattern color="var(--color-section-story)" />
+      <FractalPattern color={STORY_COLOR} />
       <div className="relative z-10">
       <Navbar />
       <div>
