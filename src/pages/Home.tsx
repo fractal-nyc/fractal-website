@@ -28,7 +28,7 @@ export function Home() {
             </h2>
           </FadeIn>
           <FadeIn delay={0.15}>
-            <div className="text-body-display text-foreground/80 space-y-6" style={{ fontStyle: "normal" }}>
+            <div className="text-mono-display text-foreground/80 space-y-6" style={{ fontStyle: "normal" }}>
               <p>
                 From the{" "}
                 <a

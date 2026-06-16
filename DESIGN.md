@@ -173,14 +173,14 @@ Set the text color explicitly on the same node as the surface. A nested cream su
 
 ## Typography
 
-Four families ship. Two are declared as tokens (`font-sans`, `font-mono`); two are display families whose rules live in global CSS.
+Four families ship, mapped onto three semantic tiers. Two families are declared as tokens (`font-sans`, `font-mono`); the two display families have their rules in global CSS.
 
-- **Inter** (`font-sans`) — the canonical sans for body and label use.
-- **JetBrains Mono** (`font-mono`) — the body family, plus labels, UI chrome, and metadata.
-- **Fraunces** — the display serif. A global rule renders `h1–h6` in italic + uppercase Fraunces with `letter-spacing: 0.04em`. The `.display-roman` utility opts a heading into upright Fraunces.
-- **Jacquard 24** — the display script. Inline-styled on the Navbar wordmark, where a `[style*="Jacquard"]` rule in `src/index.css` renders it in its natural case and posture; it also appears as the monogram letter and arc tagline inside each per-page banner SVG, where the family is embedded (base64) directly in the SVG so it renders independent of page CSS.
+- **Fraunces** (`font-serif`) — the **Display** tier: headings, titles, and editorial highlights. Bare `h1–h6` default to plain Fraunces (family only, no forced case/style/weight); the visual tier is set explicitly at the call site via `.text-display` / `.text-title` / `.text-subtitle`. Heading LEVEL (document outline / a11y) is decoupled from visual TIER.
+- **Inter** (`font-sans`) — the **Body** tier: the content family for body copy, leads, asides, and editorial sign-offs (bylines, attributions).
+- **JetBrains Mono** (`font-mono`) — the **Chrome** tier: the non-content UI furniture — all the buttons, bars, labels, metadata, inputs, and frames that let users *control* the software (think address bar, tabs, nav buttons, status bars).
+- **Jacquard 24** — a display script (sits within the Display key). Inline-styled on the Navbar wordmark, where a `[style*="Jacquard"]` rule in `src/index.css` renders it in its natural case and posture; it also appears as the monogram letter and arc tagline inside each per-page banner SVG, where the family is embedded (base64) directly in the SVG so it renders independent of page CSS.
 
-Global rules: `body` renders normal-case by default; uppercase is opt-in via the heading rule, `.font-serif`, or the chrome utilities below.
+Global rules: `body` renders normal-case by default; uppercase is opt-in via `.font-serif` or the chrome utilities below.
 
 ### Semantic type scale
 
@@ -210,25 +210,23 @@ The scale is delivered as utility classes in `src/index.css`. Each utility maps 
 
 | Utility | Rendering | Tailwind size |
 |---|---|---|
-| `.text-eyebrow` | uppercase, weight 500, tracking 0.1em | `text-sm` |
-| `.text-label` | identical to `.text-eyebrow` | `text-sm` |
-| `.text-meta` | identical to `.text-eyebrow` | `text-sm` |
+| `.text-label` | uppercase, weight 500, tracking 0.1em | `text-sm` |
 
-Three names, one rendering — the name signals intent at the call site (overline label vs. form label vs. inline metadata).
+The single chrome label utility — overline labels, form labels, inline metadata all reach for `.text-label`. (Earlier `.text-eyebrow` / `.text-meta` aliases were collapsed into this one name in FRAC-209.)
 
-**Body-display tier (JetBrains Mono)**
+**Mono-display tier (JetBrains Mono)**
 
 | Utility | Rendering | Tailwind size |
 |---|---|---|
-| `.text-body-display` | mono, weight 100, uppercase, relaxed leading | `text-sm md:text-base` |
+| `.text-mono-display` | mono, weight 100, uppercase, relaxed leading | `text-sm md:text-base` |
 
 Body-length passages that carry the chrome tier's mono-uppercase identity but read as paragraphs — editorial / manifesto prose, e.g. the Home page's Golden Age Protocol section.
 
-**Control tier (JetBrains Mono)**
+**Input tier (JetBrains Mono)**
 
 | Utility | Rendering | Tailwind size |
 |---|---|---|
-| `.text-control` | mono, weight 400, uppercase | `text-base` |
+| `.text-input` | mono, weight 400, uppercase | `text-base` |
 
 For `<input>`, `<textarea>`, `<select>`, and other typeable controls. Sized at 16px (the iOS no-zoom threshold) with normal tracking; typed text renders uppercase by design.
 
@@ -240,8 +238,6 @@ For `<input>`, `<textarea>`, `<select>`, and other typeable controls. Sized at 1
 | `sm` | `px-4 py-2.5` | `text-xs tracking-widest uppercase font-medium` |
 
 Both sizes share the JetBrains Mono / uppercase / `tracking-widest` base.
-
-`.display-roman` remains the low-level escape hatch (posture/weight/transform only); `.text-display` is the full semantic preset and the default reach.
 
 ## Layout
 
@@ -337,11 +333,11 @@ Five components are modeled in the `components:` YAML block; the rest are descri
 ## Do's
 
 - Design for the 375px mobile baseline first; treat every wider viewport as progressive enhancement.
-- Use Fraunces for headings (the global `h1–h6` rule supplies italic + uppercase), JetBrains Mono (`font-mono`) for labels and chrome, and Inter (`font-sans`) for sans body copy.
-- Reach for semantic surface tokens (`background`, `foreground`, `foreground-muted`, `foreground-faint`) and the semantic type utilities (`.text-display`, `.text-body`, `.text-eyebrow`, …) rather than raw values.
+- Use Fraunces for the Display tier (headings/titles) — set the visual tier explicitly via `.text-display` / `.text-title` / `.text-subtitle`; JetBrains Mono (`font-mono`) for the Chrome tier (labels, inputs, buttons, metadata); and Inter (`font-sans`) for the Body tier.
+- Reach for semantic surface tokens (`background`, `foreground`, `foreground-muted`, `foreground-faint`) and the semantic type utilities (`.text-display`, `.text-body`, `.text-label`, …) rather than raw values.
 - Use house tokens (`house-{slug}-{light|deep}`) inside that house's own pages, and keep each house to its two-color pair.
 - Pair every surface with its text color explicitly on the same node, per the four canonical pairings.
-- Use `.display-roman` when a heading needs upright Fraunces, and `normal-case` when a block needs mixed-case.
+- Reach for the explicit tier utility a heading needs (`.text-display` for upright uppercase Fraunces, `.text-title` for italic mixed-case), and `normal-case` when a block needs mixed-case.
 - Gate every animation on `usePrefersReducedMotion()` (or an equivalent `@media (prefers-reduced-motion: reduce)` rule).
 
 ## Design conformance (the governance loop)

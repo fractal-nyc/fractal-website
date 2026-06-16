@@ -72,7 +72,7 @@ export function ArchiveSearch({ value, onChange }: ArchiveSearchProps) {
         style={{ caretColor: "transparent" }}
         className="
           w-full h-11 pl-10 pr-10
-          text-control
+          text-input
           bg-background border border-foreground-faint rounded-lg
           text-foreground placeholder:text-foreground-muted
           transition-colors duration-200
@@ -81,12 +81,12 @@ export function ArchiveSearch({ value, onChange }: ArchiveSearchProps) {
       />
 
       {/* FRAC-43: hidden mirror — its offsetWidth drives the caret's left
-          offset. Same .text-control typography class as the input so width
+          offset. Same .text-input typography class as the input so width
           measurement matches actual rendered width. */}
       <span
         ref={mirrorRef}
         aria-hidden="true"
-        className="text-control"
+        className="text-input"
         style={{
           position: "absolute",
           visibility: "hidden",

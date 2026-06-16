@@ -84,15 +84,15 @@
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.03'/%3E%3C/svg%3E");
   }
 
-  /* Serif headings: Fraunces italic with editorial tracking. Case is NOT
-     pinned globally — utilities (.text-display, .text-title, etc.) declare
-     their own text-transform so call sites don't need per-site overrides.
-     FRAC-46 dropped the global uppercase rule because it forced every
-     mixed-case utility to add a normal-case modifier on every call site
-     and silently uppercased the ones that forgot. */
+  /* Heading family default (FRAC-209): bare headings render in plain Fraunces
+     with NO forced case/style/weight. The visual TIER is set explicitly at the
+     call site via the semantic utilities (.text-display, .text-title,
+     .text-subtitle) — heading LEVEL (document outline / a11y) is decoupled from
+     visual tier. Set the family directly rather than `@apply font-serif`,
+     because the .font-serif base rule below also forces uppercase + italic,
+     which we do NOT want on plain headings. */
   h1, h2, h3, h4, h5, h6 {
-    @apply font-serif font-normal italic;
-    letter-spacing: 0.04em;
+    font-family: var(--font-serif);
   }
 
   /* Fraunces body text inherits uppercase from body; Jacquard keeps none */
@@ -139,22 +139,11 @@
     display: none;
   }
 
-  /* Display heading in Roman (non-italic) light weight, uppercase.
-     Overrides the global .font-serif italic rule for cases where we
-     want the Fraunces display rendered upright instead of italic. */
-  .display-roman {
-    font-weight: 300;
-    text-transform: uppercase;
-    font-style: normal;
-  }
-
   /* ───────────────────────────────────────────────────────────────────────
      FRAC-51: Semantic typography scale.
      8 utilities + Button (default | sm) form the locked type system.
-     .display-roman (above) is preserved as the low-level escape hatch:
-     it sets only font-style/weight/transform. .text-display is the
-     semantic preset that bundles family, size, tracking, and leading.
-     See DESIGN.md → "Semantic type scale".
+     .text-display is the semantic preset that bundles family, size, tracking,
+     and leading. See DESIGN.md → "Semantic type scale".
      ─────────────────────────────────────────────────────────────────── */
 
   /* Display tier (Fraunces) */
@@ -209,37 +198,32 @@
   }
 
   /* Chrome tier (JetBrains Mono, uppercase, widest tracking) */
-  .text-eyebrow,
-  .text-label,
-  .text-meta {
+  .text-label {
     @apply font-mono text-sm;
     font-weight: 500;
     text-transform: uppercase;
     letter-spacing: 0.1em;
   }
 
-  /* Body-display tier — JetBrains Mono uppercase weight 100 responsive
+  /* Mono-display tier — JetBrains Mono uppercase weight 100 responsive
      text-sm → text-base, normal tracking, relaxed leading. Body-tier
      rendered as display chrome: editorial / manifesto / protocol prose
      where body-length passages should carry the chrome tier's mono-
      uppercase identity but read as paragraphs. Distinguished from
-     .text-control by weight (100 vs 400) and responsive sizing.
+     .text-input by weight (100 vs 400) and responsive sizing.
      Resolves the FRAC-22 Home audit GAP. FRAC-45. */
-  .text-body-display {
+  .text-mono-display {
     @apply font-mono text-sm md:text-base uppercase font-thin leading-relaxed;
   }
 
-  /* Control tier (JetBrains Mono, uppercase, no tracking, text-base for
+  /* Input tier (JetBrains Mono, uppercase, no tracking, text-base for
      iOS no-zoom). Keeps the chrome tier's mono + uppercase identity but
      sizes up to text-base (16px = iOS no-zoom threshold) and drops the
      wide tracking (chrome's 0.1em looks wrong on typed text). Typed text
      renders uppercase by design — the all-caps chrome aesthetic wins
-     over case-preserving typed input. Named .text-control (not .text-input)
-     because it reads better for typeable controls; this also kept it clear of
-     Tailwind v4's `text-input` color utility back when a --color-input theme
-     token existed (removed in FRAC-201). FRAC-41 introduced; FRAC-44 set
+     over case-preserving typed input. FRAC-41 introduced; FRAC-44 set
      case=uppercase. */
-  .text-control {
+  .text-input {
     @apply font-mono text-base;
     font-weight: 400;
     text-transform: uppercase;
