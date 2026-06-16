@@ -1,6 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import { describe, it, expect, vi } from "vitest";
 import { SectorHeader } from "@/components/layout/SectorHeader";
+import { SECTIONS } from "@/data/houses";
 
 // ═══════════════════════════════════════════════════════════════════════════
 // Mock Framer Motion — SectorHeader uses FadeIn which wraps motion.div.
@@ -19,7 +20,7 @@ const sections = [
   { letter: "E", name: "Education", color: "#C41E20" },
   { letter: "PC", name: "Political Club", color: "#C83858" },
   { letter: "P", name: "Publications", color: "#C44878" },
-  { letter: "P", name: "People", color: "#B65D19" },
+  { letter: "P", name: "People", color: SECTIONS.people.deep },
 ] as const;
 
 describe("SectorHeader", () => {

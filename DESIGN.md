@@ -97,7 +97,7 @@ Political Club (and the People page) are intentionally **not surfaced at initial
 
 ## Colors
 
-The system declares **16 color tokens**: 4 surface tokens that drive the page chrome and 12 house tokens (6 houses × `{light, deep}`) that theme each house's pages, banner, and avatar.
+The system declares **18 color tokens**: 4 surface tokens that drive the page chrome, 12 house tokens (6 houses × `{light, deep}`) that theme each house's pages, banner, and avatar, and 2 non-house section tokens (`section-people-{light, deep}`) for section pages that aren't houses (see [Non-house section colors](#non-house-section-colors)).
 
 The surface palette is deliberately lean: cream (`background`) is the page, and the rest is a **single charcoal voice expressed in three weights**. Naming reflects that — `foreground` → `foreground-muted` → `foreground-faint`, darkest to faintest. Neutral fills are expressed as `foreground` at low opacity (e.g. `bg-foreground/5` for the gallery image placeholder) rather than a dedicated fill token; focus rings and text selection use `foreground` directly. The site's color *accents* come from the house palette, not a neutral accent token. The original shadcn scaffold's unused neutrals (`card`, `popover`, `accent`, `secondary`, `primary`, `muted`, `destructive`, `input`, `ring`, and their `-foreground` pairs) were removed in FRAC-201 along with the dead components that consumed them; the two surviving charcoal tints were renamed from the scaffold's `muted-foreground` / `border` into this ladder.
 
@@ -141,6 +141,17 @@ Each house has an internal data-model `id` (used in routes and `src/data/houses.
 `HOUSES[id].palette: { light, deep }` in `src/data/houses.ts` is the single source of truth for house color, and each house has exactly two colors — the pair is the unit.
 
 **Scope:** house colors live on their own house's pages. On a house's page, its pair may color display headings, the monogram letter, eyebrows, focus rings, and chrome. Most houses use `{light}` as the page background and `{deep}` as the accent; **Political Club and Education invert** (page background `{deep}`, accent `{light}`) — a per-page decision applied in `PoliticalClubPage.tsx` and `LiberalArtsPage.tsx`. The HouseBanner grid always uses `{light}` as the banner background.
+
+### Non-house section colors
+
+A small category distinct from the six houses: section pages that aren't houses but still carry a canonical `{light, deep}` pair. These use the `section-{slug}-{light,deep}` token prefix and are sourced from the exported `SECTIONS` record in `src/data/houses.ts` (the canonical real-hex home), mirrored by `--color-section-*` tokens in `src/index.css`. A test (`src/__tests__/section-tokens-sync.test.ts`) keeps the two in lockstep, exactly like the house-token check.
+
+| Token | Hex |
+|---|---|
+| `section-people-light` | `#C49040` |
+| `section-people-deep` | `#B65D19` |
+
+Currently only **People** lives here. The People page is intentionally **deferred from launch** (hidden from the navbar via `EXTRA_HIDDEN_HREFS` in `Navbar.tsx`) but kept fully tokenized and launch-ready — its `/people` route, octahedron face, and nav swatch all read from the same `SECTIONS.people` source. Story is also a non-house section but uses an irregular third color and is handled separately.
 
 ### Surface + text pairings
 

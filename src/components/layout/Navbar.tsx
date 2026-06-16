@@ -3,7 +3,7 @@ import { motion, useScroll, useMotionValueEvent } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import { Link, useLocation } from "wouter";
 import { JustifiedParagraph } from "@/components/typeset/JustifiedParagraph";
-import { HOUSES, NAVBAR_HIDDEN_ROUTES } from "@/data/houses";
+import { HOUSES, NAVBAR_HIDDEN_ROUTES, SECTIONS } from "@/data/houses";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 
 // FRAC-24: Per-link colors derive from the canonical House palette where a
@@ -24,7 +24,7 @@ const sectionLinks = [
   { name: "Education",      href: "/new-liberal-arts",  color: houseColor("/new-liberal-arts") },
   { name: "Political Club", href: "/political-club",    color: houseColor("/political-club", "deep") },
   { name: "Publications",   href: "/lab",               color: houseColor("/lab") },
-  { name: "People",         href: "/people",            color: "#C49040" },
+  { name: "People",         href: "/people",            color: SECTIONS.people.light },
 ];
 
 // FRAC-32: Hide routes from every nav variant by deriving from the House data

@@ -317,6 +317,22 @@ export const HOUSES: House[] = [
 ];
 
 // ---------------------------------------------------------------------------
+// Non-house section colors (FRAC-204)
+// ---------------------------------------------------------------------------
+// Some section pages aren't Houses but still carry a canonical light/deep color
+// pair — structurally identical to a HousePalette, just not in HOUSES. This is
+// the ONE place their real hex lives (the `--color-section-*-{light,deep}`
+// tokens in src/index.css mirror it; the section-tokens-sync test keeps them in
+// lockstep). Like houses, both consumers that need a real hex — three.js
+// (OctahedronHero) and JS string colors (Navbar) — read from here, not a CSS
+// var(). People is intentionally deferred from launch but kept tokenized and
+// launch-ready. Story is live but uses an irregular 3rd color and is handled
+// separately (out of scope for FRAC-204).
+export const SECTIONS = {
+  people: { light: "#C49040", deep: "#B65D19" },
+} as const satisfies Record<string, HousePalette>;
+
+// ---------------------------------------------------------------------------
 // Helper functions
 // ---------------------------------------------------------------------------
 

@@ -3,7 +3,7 @@ import { useFrame, ThreeEvent } from "@react-three/fiber";
 import { Html } from "@react-three/drei";
 import * as THREE from "three";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
-import { HOUSES } from "@/data/houses";
+import { HOUSES, SECTIONS } from "@/data/houses";
 
 // FRAC-24: House color helper — derives from canonical palette pair in
 // HOUSES instead of literal hex. Falls back to magenta to surface a missing
@@ -380,7 +380,8 @@ const FACE_BANNER_IMAGES: Record<string, string> = {
 };
 
 // Section colors. House-backed faces derive from canonical palette pairs
-// (FRAC-24). `story` and `people` are not Houses and keep literal hexes.
+// (FRAC-24). `people` is not a House but carries a canonical pair in SECTIONS
+// (FRAC-204) — read its real hex from there. `story` keeps a literal hex.
 // `forum` is intentionally desaturated (muted grey-tan) to read as
 // de-emphasized — it has no nav node and no banner texture, so the literal
 // is kept as a deliberate stylistic exception rather than a palette identity.
@@ -392,7 +393,7 @@ const FACE_SECTION_COLORS: Record<string, string> = {
   school:       housePalette("school"),
   forum:        "#8a7a6a",
   lab:          housePalette("lab"),
-  people:       "#C49040",
+  people:       SECTIONS.people.light,
 };
 
 // Map octahedron face index → section key (8 faces, 8 unique sections)
