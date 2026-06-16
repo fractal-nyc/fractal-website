@@ -8,26 +8,32 @@
       "repo": null
     }
   ],
-  "comment_count": 1,
+  "comment_count": 2,
   "complexity": null,
   "created_at": "2026-06-16T21:08:33Z",
   "created_by": "agent:claude-opus-4",
   "custom_fields": {},
   "description": null,
-  "done_at": null,
-  "evidence_refs": [],
+  "done_at": "2026-06-16T21:17:31Z",
+  "evidence_refs": [
+    {
+      "id": "ev_01KV94QTFFTAT2Y5S3YK5H8ENC",
+      "role": "review",
+      "source_type": "comment"
+    }
+  ],
   "id": "task_01KV947D6ZARYQVD1DYC5TYD8V",
-  "last_event_id": "ev_01KV948XQAC2BP2CKVFEY29V1P",
-  "last_status_changed_at": "2026-06-16T21:09:22Z",
+  "last_event_id": "ev_01KV94QTHSB9176NABDDTJHTW2",
+  "last_status_changed_at": "2026-06-16T21:17:31Z",
   "priority": "medium",
   "relationships_out": [],
   "reopened_count": 0,
   "schema_version": 1,
   "short_id": "FRAC-208",
-  "status": "in_progress",
+  "status": "done",
   "tags": null,
   "title": "Remove dead HouseBanner/HouseBannerGrid (superseded by per-page banner SVGs) + reconcile DESIGN.md",
   "type": "task",
-  "updated_at": "2026-06-16T21:09:22Z",
+  "updated_at": "2026-06-16T21:17:31Z",
   "urgency": null
 }
