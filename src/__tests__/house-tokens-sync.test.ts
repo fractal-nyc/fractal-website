@@ -8,7 +8,8 @@ import { HOUSES } from "@/data/houses";
 // House-token drift check (FRAC-203)
 //
 // `src/data/houses.ts` is the canonical source of each house's palette hex —
-// HouseBanner does luminance math on it and three.js feeds real colors. The
+// house pages read the pair for flooded backgrounds/accents and three.js feeds
+// real colors. The
 // `--color-house-*` tokens in `src/index.css` are a derived mirror so house
 // pages can reference tokens instead of hardcoding hex. These two sources can
 // silently diverge (FRAC-203 found Political Club missing from @theme entirely).

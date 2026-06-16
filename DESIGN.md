@@ -72,9 +72,9 @@ components:
     backgroundColor: "{colors.background}"
     textColor: "{colors.foreground}"
     typography: "{typography.font-mono}"
-  house-banner:
-    backgroundColor: "{colors.house-events-light}"
-    textColor: "{colors.house-events-deep}"
+  house-banner-svg:
+    backgroundColor: "{colors.house-visit-light}"
+    textColor: "{colors.house-visit-deep}"
     typography: "{typography.font-mono}"
 ---
 
@@ -91,7 +91,7 @@ Two foundations:
 1. **Mobile-first, 375px baseline.** Every page and component is designed at phone width first. Wider viewports are progressive enhancement.
 2. **Charcoal is the voice.** `colors.foreground` is the dominant text color (`#171717`), an editorial charcoal rather than a saturated brand hue. Hierarchy comes from typography, color contrast, and whitespace; house colors provide scoped accents.
 
-Political Club is reachable by direct route (`/political-club`) but hidden from the navbar and banner grid via the `hideFromNavbar` / `hideFromBanners` flags in `src/data/houses.ts`.
+Political Club is reachable by direct route (`/political-club`) but hidden from the navbar via the `hideFromNavbar` flag in `src/data/houses.ts` (a companion `hideFromBanners` flag drives the `VISIBLE_HOUSES` filter). It is the one house with no per-page banner SVG of its own.
 
 Political Club (and the People page) are intentionally **not surfaced at initial launch**, but they remain fully in the codebase and on the token system — Political Club carries its `house-political-club-{light,deep}` pair like every other house — so both are launch-ready the moment they're re-enabled, with no token or styling work left to do.
 
@@ -140,7 +140,7 @@ Each house has an internal data-model `id` (used in routes and `src/data/houses.
 
 `HOUSES[id].palette: { light, deep }` in `src/data/houses.ts` is the single source of truth for house color, and each house has exactly two colors — the pair is the unit.
 
-**Scope:** house colors live on their own house's pages. On a house's page, its pair may color display headings, the monogram letter, eyebrows, focus rings, and chrome. Most houses use `{light}` as the page background and `{deep}` as the accent; **Political Club and Education invert** (page background `{deep}`, accent `{light}`) — a per-page decision applied in `PoliticalClubPage.tsx` and `LiberalArtsPage.tsx`. The HouseBanner grid always uses `{light}` as the banner background.
+**Scope:** house colors live on their own house's pages. On a house's page, its pair may color display headings, the monogram letter, eyebrows, focus rings, and chrome. Most houses use `{light}` as the page background and `{deep}` as the accent; **Political Club and Education invert** (page background `{deep}`, accent `{light}`) — a per-page decision applied in `PoliticalClubPage.tsx` and `LiberalArtsPage.tsx`. Each house's per-page banner SVG (see [Components](#components)) likewise draws from the house pair.
 
 ### Non-house section colors
 
@@ -178,7 +178,7 @@ Four families ship. Two are declared as tokens (`font-sans`, `font-mono`); two a
 - **Inter** (`font-sans`) — the canonical sans for body and label use.
 - **JetBrains Mono** (`font-mono`) — the body family, plus labels, UI chrome, and metadata.
 - **Fraunces** — the display serif. A global rule renders `h1–h6` in italic + uppercase Fraunces with `letter-spacing: 0.04em`. The `.display-roman` utility opts a heading into upright Fraunces.
-- **Jacquard 24** — the display script, inline-styled on the Navbar wordmark and the HouseBanner monogram letter. A `[style*="Jacquard"]` rule in `src/index.css` renders it in its natural case and posture.
+- **Jacquard 24** — the display script. Inline-styled on the Navbar wordmark, where a `[style*="Jacquard"]` rule in `src/index.css` renders it in its natural case and posture; it also appears as the monogram letter and arc tagline inside each per-page banner SVG, where the family is embedded (base64) directly in the SVG so it renders independent of page CSS.
 
 Global rules: `body` renders normal-case by default; uppercase is opt-in via the heading rule, `.font-serif`, or the chrome utilities below.
 
@@ -282,7 +282,7 @@ The one true-depth surface is the OctahedronHero 3D scene — see **Components**
 
 ## Shapes
 
-The shape language is editorially square, with a small soft-corner radius for interactive elements and two signature motifs: the Mandelbrot corner and the pennant clip-path.
+The shape language is editorially square, with a small soft-corner radius for interactive elements and two signature motifs: the Mandelbrot corner and the pennant banner.
 
 ### Rounded scale
 
@@ -308,9 +308,9 @@ The reusable `MandelbrotCorners` wrapper (`src/components/ui/MandelbrotCorners.t
 | `md` | 8px | 45px | **53px** (`p-14`) |
 | `lg` | 10px | 60px | **70px** (`p-16`+) |
 
-### Pennant clip-path
+### Pennant banner
 
-HouseBanner is clipped to a downward-pointing pennant — `polygon(0% 0%, 100% 0%, 100% 100%, 50% 85%, 0% 100%)` — with a MandelbrotIcon centered at the V-notch tip on the cream page background behind it.
+The pennant motif lives in the per-page banner SVGs (see [Components](#components)). Each is a tall, downward-pointing pennant with a V-notch at the bottom, an elliptical Mandelbrot pocket cut from the house fill, an arc tagline, and a centered Jacquard 24 monogram — the whole shape is **baked into a single SVG file** (`/images/banners/*-banner.svg`, viewBox ≈ `123 × 368`) rather than applied as a runtime CSS `clip-path`. They render as plain `<img>` so the embedded base64 Jacquard font draws without page-CSS dependencies.
 
 ## Components
 
@@ -326,7 +326,7 @@ Five components are modeled in the `components:` YAML block; the rest are descri
 
 **`button-link`** — inline text action for sitting inside prose. Zero padding, `underline underline-offset-4`, hover `text-foreground/80`.
 
-**`house-banner`** — the pennant-shaped card used in the house grid (`variant="grid"`) and on house pages (`variant="full"`). At runtime the background is `house.palette.light` and the Jacquard monogram letter is `house.palette.deep`, read from the House passed in; the YAML entry encodes the Events pair as a representative example. Body text color is chosen by a luminance helper so it stays readable on every house's background.
+**`house-banner-svg`** — the per-page pennant banner. Each of the five surfaced houses ships its own baked-art SVG component (`VisitBannerSVG`, `EventsBannerSVG`, `CampusBannerSVG`, `EducationBannerSVG`, `PublicationsBannerSVG`), rendered as a plain `<img>` of `/images/banners/*-banner.svg`. The pennant shape, the house-colored fill, the Mandelbrot pocket, the arc tagline, and the Jacquard 24 monogram are all baked into the SVG — there is no runtime theming. A house page flanks its content with a pair of its banner (an absolute `hidden md:flex` layer on desktop, a `flex md:hidden` in-flow pair on mobile; see `NeighborhoodPage.tsx`). The YAML entry encodes the Visit pair as a representative example. **Political Club has no banner SVG** — it is unsurfaced at launch.
 
 ### Prose-only
 

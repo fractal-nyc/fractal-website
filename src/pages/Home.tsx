@@ -1,8 +1,5 @@
 import { Navbar } from "@/components/layout/Navbar";
 import { Hero } from "@/components/sections/Hero";
-// FRAC-161: below-hero banner grid hidden on home. To restore, uncomment this
-// import and the <HouseBannerGrid /> line below.
-// import { HouseBannerGrid } from "@/components/house/HouseBannerGrid";
 import { Footer } from "@/components/layout/Footer";
 import { FadeIn } from "@/components/ui/FadeIn";
 import { useEffect } from "react";
@@ -19,7 +16,6 @@ export function Home() {
     <main className="min-h-screen bg-background text-foreground selection:bg-foreground selection:text-background">
       <Navbar />
       <Hero />
-      {/* FRAC-161: <HouseBannerGrid /> hidden on home. */}
 
       {/* Golden Age Protocol */}
       <section className="bg-background text-foreground px-[4.5%] py-40 md:py-60">
