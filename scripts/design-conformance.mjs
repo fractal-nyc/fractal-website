@@ -73,9 +73,13 @@ function extractHexUsages(text) {
     )) {
       out.push({ value: normHex(m[1]), line: i + 1 });
     }
-    // b) bare hex literals (inline style objects, data, color props)
-    for (const m of line.matchAll(/#([0-9a-fA-F]{6}|[0-9a-fA-F]{3})\b/g)) {
-      out.push({ value: normHex(m[1]), line: i + 1 });
+    // b) QUOTED hex literals — inline style objects, JSX color attrs, color
+    //    props (e.g. style={{ color: "#171717" }}, fill="#aabbcc"). The quotes
+    //    are required so prose, comments, git refs, and hex-shaped words aren't
+    //    mistaken for colors (FRAC-202 review finding). Same quote char both
+    //    sides via the \1 backref.
+    for (const m of line.matchAll(/(["'])#([0-9a-fA-F]{8}|[0-9a-fA-F]{6}|[0-9a-fA-F]{3})\1/g)) {
+      out.push({ value: normHex(m[2]), line: i + 1 });
     }
   });
   return out;
