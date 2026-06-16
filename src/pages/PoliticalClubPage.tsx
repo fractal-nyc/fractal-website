@@ -9,16 +9,20 @@ import { Button } from "@/components/ui/button";
 export function PoliticalClubPage() {
   return (
     <main
-      className="relative min-h-screen text-white selection:bg-white selection:text-[#6E1830]"
-      style={{ backgroundColor: "#6E1830", "--btn-accent": "#C83858" } as CSSProperties}
+      className="btn-on-dark relative min-h-screen bg-house-political-club-deep text-background selection:bg-foreground selection:text-background"
+      style={{ "--btn-accent": "var(--color-house-political-club-light)" } as CSSProperties}
     >
-      <FractalPattern color="#C83858" />
+      <FractalPattern color="var(--color-house-political-club-light)" />
       <div className="relative z-10">
       <Navbar />
       <div className="min-h-screen flex flex-col items-center justify-start pt-16 md:pt-24 pb-32 md:pb-48 w-full">
         <section className="w-full">
           <div className="px-6 md:px-[4.5%] text-center">
-            <SectorHeader letter="PC" name="Political Club" color="#C83858" />
+            <SectorHeader
+              letter="PC"
+              name="Political Club"
+              color="var(--color-house-political-club-light)"
+            />
             <FadeIn>
               <p className="text-display text-center mb-10">
                 Maximum New York — A New Civics School

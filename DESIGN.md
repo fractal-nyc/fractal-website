@@ -93,6 +93,8 @@ Two foundations:
 
 Political Club is reachable by direct route (`/political-club`) but hidden from the navbar and banner grid via the `hideFromNavbar` / `hideFromBanners` flags in `src/data/houses.ts`.
 
+Political Club (and the People page) are intentionally **not surfaced at initial launch**, but they remain fully in the codebase and on the token system — Political Club carries its `house-political-club-{light,deep}` pair like every other house — so both are launch-ready the moment they're re-enabled, with no token or styling work left to do.
+
 ## Colors
 
 The system declares **16 color tokens**: 4 surface tokens that drive the page chrome and 12 house tokens (6 houses × `{light, deep}`) that theme each house's pages, banner, and avatar.
