@@ -44,6 +44,13 @@
   --color-house-political-club-light: #C83858;
   --color-house-political-club-deep: #6E1830;
 
+  /* Non-house section palette tokens (FRAC-204). Section pages that aren't
+     Houses but still carry a light/deep pair. Mirrors SECTIONS in
+     src/data/houses.ts (kept in lockstep by the section-tokens-sync test).
+     People is deferred from launch but tokenized and launch-ready. */
+  --color-section-people-light: #C49040;
+  --color-section-people-deep: #B65D19;
+
   --radius-sm: 0.25rem;
   --radius-md: 0.5rem;
   --radius-lg: 0.75rem;

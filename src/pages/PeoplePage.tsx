@@ -11,16 +11,16 @@ import { Button } from "@/components/ui/button";
 export function PeoplePage() {
   return (
     <main
-      className="relative min-h-screen text-foreground selection:bg-foreground selection:text-background"
-      style={{ backgroundColor: "#C49040", "--btn-accent": "#B65D19" } as CSSProperties}
+      className="relative min-h-screen bg-section-people-light text-foreground selection:bg-foreground selection:text-background"
+      style={{ "--btn-accent": "var(--color-section-people-deep)" } as CSSProperties}
     >
-      <FractalPattern color="#B65D19" />
+      <FractalPattern color="var(--color-section-people-deep)" />
       <div className="relative z-10">
       <Navbar />
       <div className="min-h-screen flex flex-col items-center justify-start pt-16 md:pt-24 pb-32 md:pb-48 w-full">
         <section className="w-full">
           <div className="px-6 md:px-[4.5%]">
-            <SectorHeader letter="P" name="People" color="#B65D19" />
+            <SectorHeader letter="P" name="People" color="var(--color-section-people-deep)" />
             <FadeIn delay={0.2}>
               <div className="text-center">
                 <p className="text-display text-white mb-6 text-center">
