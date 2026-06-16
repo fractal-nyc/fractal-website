@@ -8,26 +8,32 @@
       "repo": null
     }
   ],
-  "comment_count": 1,
+  "comment_count": 2,
   "complexity": null,
   "created_at": "2026-06-16T20:50:41Z",
   "created_by": "agent:claude-opus-4",
   "custom_fields": {},
   "description": null,
-  "done_at": null,
-  "evidence_refs": [],
+  "done_at": "2026-06-16T20:55:21Z",
+  "evidence_refs": [
+    {
+      "id": "ev_01KV93F7MNDM3290KA7D5B403V",
+      "role": "review",
+      "source_type": "comment"
+    }
+  ],
   "id": "task_01KV936Q3CCZFB8DA6E30Z3P01",
-  "last_event_id": "ev_01KV938H8CZ9GG9YAVX4EBC8Q2",
-  "last_status_changed_at": "2026-06-16T20:51:41Z",
+  "last_event_id": "ev_01KV93F7PXX55YPKQ8E49N8K4Z",
+  "last_status_changed_at": "2026-06-16T20:55:21Z",
   "priority": "medium",
   "relationships_out": [],
   "reopened_count": 0,
   "schema_version": 1,
   "short_id": "FRAC-207",
-  "status": "in_progress",
+  "status": "done",
   "tags": null,
   "title": "Dedupe octahedron housePalette helper + replace magenta fallback with octahedron gold",
   "type": "task",
-  "updated_at": "2026-06-16T20:51:41Z",
+  "updated_at": "2026-06-16T20:55:21Z",
   "urgency": null
 }
