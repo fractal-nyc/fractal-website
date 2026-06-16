@@ -51,6 +51,10 @@
   --color-section-people-light: #C49040;
   --color-section-people-deep: #B65D19;
 
+  /* FRAC-205: Story is a cream non-house section with a single gold identity
+     accent (no light/deep flood). Mirrors SECTIONS.story.accent in houses.ts. */
+  --color-section-story: #D4BA58;
+
   --radius-sm: 0.25rem;
   --radius-md: 0.5rem;
   --radius-lg: 0.75rem;

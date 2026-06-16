@@ -13,7 +13,12 @@ import { SECTIONS } from "@/data/houses";
 // ═══════════════════════════════════════════════════════════════════════════
 
 const sections = [
-  { letter: "S", name: "Story", color: "#8A7A20" },
+  // FRAC-205: Story is now a cream section with a single gold identity accent
+  // sourced from SECTIONS.story.accent. Its old deep-gold accent was dropped
+  // when the page moved off the gold flood; this test just feeds the
+  // SectorHeader a color prop and asserts it renders, so it reads from the
+  // canonical source like the People row below.
+  { letter: "S", name: "Story", color: SECTIONS.story.accent },
   { letter: "C", name: "Campus", color: "#1A3A2E" },
   { letter: "V", name: "Visit", color: "#4A5A30" },
   { letter: "E", name: "Events", color: "#C13B2A" },
@@ -76,7 +81,7 @@ describe("SectorHeader", () => {
   describe("Layout consistency (FRAC-85 regression)", () => {
     it("should have text-center class for centered layout", () => {
       const { container } = render(
-        <SectorHeader letter="S" name="Story" color="#8A7A20" />,
+        <SectorHeader letter="S" name="Story" color={SECTIONS.story.accent} />,
       );
       const headerDiv = container.querySelector(".text-center");
       expect(headerDiv).toBeTruthy();
@@ -84,7 +89,7 @@ describe("SectorHeader", () => {
 
     it("should use consistent responsive text sizing for the letter", () => {
       const { container } = render(
-        <SectorHeader letter="S" name="Story" color="#8A7A20" />,
+        <SectorHeader letter="S" name="Story" color={SECTIONS.story.accent} />,
       );
       const letterSpan = container.querySelector("span.block");
       expect(letterSpan).toBeTruthy();
@@ -95,7 +100,7 @@ describe("SectorHeader", () => {
 
     it("should use Jacquard serif font for the letter", () => {
       const { container } = render(
-        <SectorHeader letter="S" name="Story" color="#8A7A20" />,
+        <SectorHeader letter="S" name="Story" color={SECTIONS.story.accent} />,
       );
       const letterSpan = container.querySelector<HTMLElement>("span.block");
       expect(letterSpan).toBeTruthy();
@@ -104,7 +109,7 @@ describe("SectorHeader", () => {
 
     it("should wrap content in FadeIn animation", () => {
       const { container } = render(
-        <SectorHeader letter="S" name="Story" color="#8A7A20" />,
+        <SectorHeader letter="S" name="Story" color={SECTIONS.story.accent} />,
       );
       // FadeIn renders a motion.div — in jsdom this becomes a regular div
       // with data-* or style attributes from framer-motion

@@ -97,7 +97,7 @@ Political Club (and the People page) are intentionally **not surfaced at initial
 
 ## Colors
 
-The system declares **18 color tokens**: 4 surface tokens that drive the page chrome, 12 house tokens (6 houses × `{light, deep}`) that theme each house's pages, banner, and avatar, and 2 non-house section tokens (`section-people-{light, deep}`) for section pages that aren't houses (see [Non-house section colors](#non-house-section-colors)).
+The system declares **19 color tokens**: 4 surface tokens that drive the page chrome, 12 house tokens (6 houses × `{light, deep}`) that theme each house's pages, banner, and avatar, and 3 non-house section tokens — the `section-people-{light, deep}` pair plus the single `section-story` accent — for section pages that aren't houses (see [Non-house section colors](#non-house-section-colors)).
 
 The surface palette is deliberately lean: cream (`background`) is the page, and the rest is a **single charcoal voice expressed in three weights**. Naming reflects that — `foreground` → `foreground-muted` → `foreground-faint`, darkest to faintest. Neutral fills are expressed as `foreground` at low opacity (e.g. `bg-foreground/5` for the gallery image placeholder) rather than a dedicated fill token; focus rings and text selection use `foreground` directly. The site's color *accents* come from the house palette, not a neutral accent token. The original shadcn scaffold's unused neutrals (`card`, `popover`, `accent`, `secondary`, `primary`, `muted`, `destructive`, `input`, `ring`, and their `-foreground` pairs) were removed in FRAC-201 along with the dead components that consumed them; the two surviving charcoal tints were renamed from the scaffold's `muted-foreground` / `border` into this ladder.
 
@@ -144,14 +144,19 @@ Each house has an internal data-model `id` (used in routes and `src/data/houses.
 
 ### Non-house section colors
 
-A small category distinct from the six houses: section pages that aren't houses but still carry a canonical `{light, deep}` pair. These use the `section-{slug}-{light,deep}` token prefix and are sourced from the exported `SECTIONS` record in `src/data/houses.ts` (the canonical real-hex home), mirrored by `--color-section-*` tokens in `src/index.css`. A test (`src/__tests__/section-tokens-sync.test.ts`) keeps the two in lockstep, exactly like the house-token check.
+A small category distinct from the six houses: section pages that aren't houses but still carry canonical brand color. They are sourced from the exported `SECTIONS` record in `src/data/houses.ts` (the canonical real-hex home), mirrored by `--color-section-*` tokens in `src/index.css`. A test (`src/__tests__/section-tokens-sync.test.ts`) keeps the two in lockstep, exactly like the house-token check.
 
-| Token | Hex |
-|---|---|
-| `section-people-light` | `#C49040` |
-| `section-people-deep` | `#B65D19` |
+**Houses flood; non-house sections read as cream.** A house page is *color-flooded* — its `{light, deep}` pair fills the page background and accents (the saturated brand surface). Non-house sections need not follow that rule, and Story deliberately doesn't: **houses get color-flooded pages; non-house sections may read as cream / editorial.** Because of that, section entries are intentionally **heterogeneous in shape** — a flooded section carries a `{light, deep}` pair, while a cream section carries a single `{accent}`. The token names follow the shape: a pair → `section-{slug}-{light,deep}`; a single accent → `section-{slug}` (no variant suffix).
 
-Currently only **People** lives here. The People page is intentionally **deferred from launch** (hidden from the navbar via `EXTRA_HIDDEN_HREFS` in `Navbar.tsx`) but kept fully tokenized and launch-ready — its `/people` route, octahedron face, and nav swatch all read from the same `SECTIONS.people` source. Story is also a non-house section but uses an irregular third color and is handled separately.
+| Token | Hex | Shape |
+|---|---|---|
+| `section-people-light` | `#C49040` | flooded pair |
+| `section-people-deep` | `#B65D19` | flooded pair |
+| `section-story` | `#D4BA58` | cream — single accent |
+
+**People** is a *flooded* section (`{light, deep}`), like a house. The People page is intentionally **deferred from launch** (hidden from the navbar via `EXTRA_HIDDEN_HREFS` in `Navbar.tsx`) but kept fully tokenized and launch-ready — its `/people` route, octahedron face, and nav swatch all read from the same `SECTIONS.people` source.
+
+**Story** is a *cream* section (FRAC-205). It is a live page but, since it isn't a house, it reads as a **cream background with charcoal text** and a **single gold identity accent** (`section-story` `#D4BA58`) rather than a color flood. The accent appears only as decoration — the SectorHeader letter/name, the `FractalPattern` wallpaper, the `--btn-accent`, and the TalkCard accents — while all body text stays charcoal (`text-foreground`), since gold-on-cream fails WCAG for small text. Story previously carried *three* golds (a pale `#DFCA7A` page background, a deep `#8A7A20` accent, and `#D4BA58`); those collapsed to this one. The pale page gold was the reason a third color had been bolted on — it was illegible on the cream navbar — so `#D4BA58`, the only one legible on cream, became the single identity color. Story's color is sourced from `SECTIONS.story.accent`; its `/story` page, octahedron face, hero nav node, and navbar swatch all read from there.
 
 ### Surface + text pairings
 
