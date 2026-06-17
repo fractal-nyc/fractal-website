@@ -34,15 +34,15 @@ const CATEGORY_META: Record<
 const LAB_DEEP = HOUSES.find((h) => h.id === "lab")!.palette.deep;
 
 // ---------------------------------------------------------------------------
-// DocumentBadge
+// DocumentCard
 // ---------------------------------------------------------------------------
 
-interface DocumentBadgeProps {
+interface DocumentCardProps {
   document: LabDocument;
   className?: string;
 }
 
-export function DocumentBadge({ document, className = "" }: DocumentBadgeProps) {
+export function DocumentCard({ document, className = "" }: DocumentCardProps) {
   const { icon: CategoryIcon, label: categoryLabel } =
     CATEGORY_META[document.category];
   const authorName = formatAuthors(document.authors);
@@ -57,7 +57,7 @@ export function DocumentBadge({ document, className = "" }: DocumentBadgeProps) 
       className={`
         group block rounded-lg border border-foreground-faint bg-background text-foreground
         transition-all duration-200 ease-out
-        hover:scale-[1.02] hover:shadow-lg hover:border-house-publications-deep/40
+        hover:scale-[1.02] hover:shadow-lg hover:[border-color:var(--accent,currentColor)]
         focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground
         ${isFeatured ? "p-6 md:p-8" : "p-6 md:p-6"}
         ${className}

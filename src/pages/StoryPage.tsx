@@ -115,7 +115,7 @@ const TALKS: TalkItem[] = [
 ];
 
 // ---------------------------------------------------------------------------
-// TalkCard — styled after DocumentBadge
+// TalkCard — styled after DocumentCard
 // ---------------------------------------------------------------------------
 
 function TalkCard({ talk }: { talk: TalkItem }) {
