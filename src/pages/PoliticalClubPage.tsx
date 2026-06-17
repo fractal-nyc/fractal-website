@@ -5,6 +5,11 @@ import { SectorHeader } from "@/components/layout/SectorHeader";
 import { FadeIn } from "@/components/ui/FadeIn";
 import { FractalPattern } from "@/components/ui/FractalPattern";
 import { Button } from "@/components/ui/button";
+import { HOUSES } from "@/data/houses";
+
+// FRAC-206: SVG stroke/fill needs a literal hex (var() doesn't resolve in SVG
+// presentation attributes); sourced from the canonical Political Club (forum) palette.
+const PC_COLOR = HOUSES.find((h) => h.id === "forum")!.palette.light;
 
 export function PoliticalClubPage() {
   return (
@@ -12,7 +17,7 @@ export function PoliticalClubPage() {
       className="btn-on-dark relative min-h-screen bg-house-political-club-deep text-background selection:bg-foreground selection:text-background"
       style={{ "--accent": "var(--color-house-political-club-light)" } as CSSProperties}
     >
-      <FractalPattern color="var(--color-house-political-club-light)" />
+      <FractalPattern color={PC_COLOR} />
       <div className="relative z-10">
       <Navbar />
       <div className="min-h-screen flex flex-col items-center justify-start pt-16 md:pt-24 pb-32 md:pb-48 w-full">
