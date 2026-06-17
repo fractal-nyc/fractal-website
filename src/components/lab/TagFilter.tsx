@@ -52,7 +52,7 @@ export function TagFilter({
               transition-all duration-150
               focus:outline-none focus:ring-2 focus:ring-[#C44878]/40 focus:ring-offset-1
               whitespace-nowrap
-              ${isActive ? "hover:opacity-90" : "hover:border-[#C44878]/40 hover:text-foreground"}
+              ${isActive ? "hover:opacity-90" : "hover:[border-color:var(--accent,currentColor)] hover:text-foreground"}
             `}
             style={
               isActive

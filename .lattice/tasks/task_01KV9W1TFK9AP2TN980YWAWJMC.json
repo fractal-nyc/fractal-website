@@ -1,0 +1,39 @@
+{
+  "assigned_to": null,
+  "branch_links": [
+    {
+      "branch": "frac-217-tagfilter-hover-accent",
+      "linked_at": "2026-06-17T04:05:04Z",
+      "linked_by": "agent:claude-opus-4-orchestrator",
+      "repo": null
+    }
+  ],
+  "comment_count": 2,
+  "complexity": null,
+  "created_at": "2026-06-17T04:04:55Z",
+  "created_by": "agent:claude-opus-4-orchestrator",
+  "custom_fields": {},
+  "description": null,
+  "done_at": "2026-06-17T04:07:31Z",
+  "evidence_refs": [
+    {
+      "id": "ev_01KV9W5R625YTWK7JVJSQJ3E9Z",
+      "role": "review",
+      "source_type": "comment"
+    }
+  ],
+  "id": "task_01KV9W1TFK9AP2TN980YWAWJMC",
+  "last_event_id": "ev_01KV9W6JSEWVTX739FGZ17KHGQ",
+  "last_status_changed_at": "2026-06-17T04:07:31Z",
+  "priority": "medium",
+  "relationships_out": [],
+  "reopened_count": 0,
+  "schema_version": 1,
+  "short_id": "FRAC-217",
+  "status": "done",
+  "tags": null,
+  "title": "TagFilter pills: full house-accent border on hover (match DocumentCard; drop /40)",
+  "type": "task",
+  "updated_at": "2026-06-17T04:07:31Z",
+  "urgency": null
+}
