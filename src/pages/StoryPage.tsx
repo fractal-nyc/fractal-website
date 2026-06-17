@@ -175,12 +175,12 @@ function TalkCard({ talk }: { talk: TalkItem }) {
       </h3>
 
       {/* Author + Year */}
-      <p className="text-label text-foreground mt-1">
+      <p className="text-label text-foreground-muted mt-1">
         {talk.author}, {talk.year}
       </p>
 
       {/* Description */}
-      <p className="text-body-lead text-foreground mt-3">
+      <p className="text-body text-foreground-muted mt-3">
         {talk.description}
       </p>
 

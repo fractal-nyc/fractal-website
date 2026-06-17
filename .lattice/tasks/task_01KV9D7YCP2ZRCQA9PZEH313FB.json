@@ -1,0 +1,39 @@
+{
+  "assigned_to": null,
+  "branch_links": [
+    {
+      "branch": "frac-212-design-doc-accuracy",
+      "linked_at": "2026-06-16T23:46:19Z",
+      "linked_by": "agent:claude-opus-4-orchestrator",
+      "repo": null
+    }
+  ],
+  "comment_count": 2,
+  "complexity": null,
+  "created_at": "2026-06-16T23:46:07Z",
+  "created_by": "agent:claude-opus-4-orchestrator",
+  "custom_fields": {},
+  "description": null,
+  "done_at": "2026-06-16T23:51:33Z",
+  "evidence_refs": [
+    {
+      "id": "ev_01KV9DHDFM638D1DQCFS1886Q8",
+      "role": "review",
+      "source_type": "comment"
+    }
+  ],
+  "id": "task_01KV9D7YCP2ZRCQA9PZEH313FB",
+  "last_event_id": "ev_01KV9DHW8GAETQT6CMEBGC53E7",
+  "last_status_changed_at": "2026-06-16T23:51:33Z",
+  "priority": "medium",
+  "relationships_out": [],
+  "reopened_count": 0,
+  "schema_version": 1,
+  "short_id": "FRAC-212",
+  "status": "done",
+  "tags": null,
+  "title": "DESIGN.md doc accuracy: pairings luminance model + rounded semantic roles",
+  "type": "task",
+  "updated_at": "2026-06-16T23:51:33Z",
+  "urgency": null
+}

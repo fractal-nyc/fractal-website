@@ -82,7 +82,7 @@ components:
 
 ## Overview
 
-Fractal NYC is an editorial site in a warm-print key: cream surfaces, charcoal type, oversized italic Fraunces headings, a JetBrains Mono body, Jacquard 24 display accents, and a subtle noise texture that gives the page a faintly printed feel. There is one color scheme — surfaces are always cream, type is always charcoal.
+Fractal NYC is an editorial site in a warm-print key: cream surfaces, charcoal type, oversized italic Fraunces headings, a JetBrains Mono body, and Jacquard 24 display accents. There is one color scheme — surfaces are always cream, type is always charcoal.
 
 The site is organized as six themed houses — Visit, Events, Campus, Education, Political Club, Publications — each owning a `{light, deep}` color pair. The global voice stays charcoal-on-cream; each house tints its own pages from its pair.
 
@@ -272,11 +272,6 @@ The `spacing:` YAML key inventories the numeric Tailwind steps in use across `sr
 ## Elevation & Depth
 
 The system is **near-flat**: hierarchy is carried by typography (oversized Fraunces vs. mono body), color contrast (charcoal on cream, house deep on house light), and editorial whitespace.
-
-Two touches add tactility:
-
-- **Body noise.** The `body` background carries an inline SVG `feTurbulence` texture at opacity `0.03` — it reads as printed paper rather than digital flatness.
-- **`.hero-text-shadow`.** A two-layer cream text-shadow utility that lifts hero text over photographic backgrounds.
 
 The one true-depth surface is the OctahedronHero 3D scene — see **Components**.
 
