@@ -1,0 +1,39 @@
+{
+  "assigned_to": null,
+  "branch_links": [
+    {
+      "branch": "frac-220-tagfilter-ring-token",
+      "linked_at": "2026-06-17T19:52:21Z",
+      "linked_by": "agent:claude-opus-4-orchestrator",
+      "repo": null
+    }
+  ],
+  "comment_count": 1,
+  "complexity": null,
+  "created_at": "2026-06-17T19:44:13Z",
+  "created_by": "agent:claude-opus-4-orchestrator",
+  "custom_fields": {},
+  "description": null,
+  "done_at": "2026-06-17T19:53:20Z",
+  "evidence_refs": [
+    {
+      "id": "ev_01KVBJA1GMT4RP0WB8XECGAYYT",
+      "role": "review",
+      "source_type": "comment"
+    }
+  ],
+  "id": "task_01KVBHSQG1KRGTRF7PVP46QQP6",
+  "last_event_id": "ev_01KVBJAD2052243PE28SXXE9T7",
+  "last_status_changed_at": "2026-06-17T19:53:20Z",
+  "priority": "medium",
+  "relationships_out": [],
+  "reopened_count": 0,
+  "schema_version": 1,
+  "short_id": "FRAC-220",
+  "status": "done",
+  "tags": null,
+  "title": "TagFilter: focus ring raw hex \u2192 house-publications-deep token",
+  "type": "task",
+  "updated_at": "2026-06-17T19:53:20Z",
+  "urgency": null
+}
