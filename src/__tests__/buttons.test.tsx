@@ -74,7 +74,8 @@ describe("Button component", () => {
   it("should mark corner decorations as aria-hidden", () => {
     const { container } = render(<Button>Accessible</Button>);
     const corners = container.querySelectorAll("[aria-hidden]");
-    expect(corners.length).toBe(4);
+    // 4 Mandelbrot corners + 1 FRAC-52 paper-grain overlay, all aria-hidden.
+    expect(corners.length).toBe(5);
   });
 
   it("should NOT render Mandelbrot corners on the outline variant", () => {
@@ -129,10 +130,10 @@ describe("CTA link button styling (FRAC-86 regression)", () => {
     // The Button base styles render the inline-flex CTA chrome on the
     // forwarded element.
     expect(link!.className).toContain("inline-flex");
-    // The default variant supplies the frosted CTA surface (FRAC-52: cream
-    // tinted glass + accent border via --accent, preserved across the
-    // FRAC-86 fake-button → Button migration).
-    expect(link!.className).toContain("bg-[rgba(242,234,216,0.08)]");
+    // The default variant supplies the frosted CTA surface (FRAC-52: accent
+    // fill + accent border via --accent, preserved across the FRAC-86
+    // fake-button → Button migration; FRAC-215 renamed --btn-accent → --accent).
+    expect(link!.className).toContain("bg-[var(--accent,currentColor)]");
     expect(link!.className).toContain("[border-color:var(--accent,currentColor)]");
   });
 

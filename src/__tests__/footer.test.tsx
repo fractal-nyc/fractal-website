@@ -40,19 +40,24 @@ describe("Footer", () => {
       expect(allText).not.toContain("FRACTAL");
     });
 
-    it("should render branding text with italic styling", () => {
+    it("should render the styled Fractal branding wordmark", () => {
       const { container } = render(<Footer />);
-      // The branding div has class "italic"
-      const brandingDiv = container.querySelector(".italic");
-      expect(brandingDiv).toBeTruthy();
-      expect(brandingDiv!.textContent).toContain("Fractal");
+      // FRAC-88: the branding wordmark is the home-link styled via inline
+      // Jacquard style (no `.italic` class). Target it semantically.
+      const brandingEl = container.querySelector(
+        '[aria-label="Fractal — back to home"]',
+      );
+      expect(brandingEl).toBeTruthy();
+      expect(brandingEl!.textContent).toContain("Fractal");
     });
 
     it("should use Jacquard 24 font for the branding", () => {
       const { container } = render(<Footer />);
-      const brandingDiv = container.querySelector(".italic");
-      expect(brandingDiv).toBeTruthy();
-      expect(brandingDiv!.getAttribute("style")).toContain("Jacquard 24");
+      const brandingEl = container.querySelector(
+        '[aria-label="Fractal — back to home"]',
+      );
+      expect(brandingEl).toBeTruthy();
+      expect(brandingEl!.getAttribute("style")).toContain("Jacquard 24");
     });
   });
 

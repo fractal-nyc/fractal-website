@@ -72,8 +72,10 @@ describe("Neighborhood page — ordered list", () => {
 
   it("should center the ordered list within the note container", () => {
     const { container } = renderNeighborhood();
-    // The ol is inside a flex justify-center div
-    const centeringDiv = container.querySelector(".flex.justify-center");
+    // The ol is inside a flex justify-center div within the note container.
+    // Scope to the note wrapper (max-w-xl) so the selector isn't grabbed by
+    // FRAC-211 navbar menu buttons (also .flex.justify-center) rendered first.
+    const centeringDiv = container.querySelector(".max-w-xl .flex.justify-center");
     expect(centeringDiv).toBeTruthy();
     const ol = centeringDiv!.querySelector("ol");
     expect(ol).toBeTruthy();
@@ -127,7 +129,9 @@ describe("Neighborhood page — content", () => {
 
   it("should use full-viewport-height layout (min-h-screen flex centering)", () => {
     const { container } = renderNeighborhood();
-    const centeredSection = container.querySelector(".min-h-screen.flex.flex-col.items-center.justify-center");
+    // Content wrapper is top-aligned (justify-start + pt-16) but still a
+    // full-viewport flex column (min-h-screen). Match the current class set.
+    const centeredSection = container.querySelector(".min-h-screen.flex.flex-col.items-center.justify-start");
     expect(centeredSection).toBeTruthy();
   });
 });

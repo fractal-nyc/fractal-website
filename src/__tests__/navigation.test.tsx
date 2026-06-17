@@ -163,7 +163,7 @@ describe("Home page navbar (full state)", () => {
     // (hide Political Club + People) and FRAC-163 (rename New Liberal Arts →
     // Education, Lab → Publications), the mobile row shows 6 letters:
     // S C V E E P. No "PC" anymore (Political Club is hidden).
-    const mobileSection = document.querySelector(".lg\:hidden");
+    const mobileSection = document.querySelector(".lg\\:hidden");
     expect(mobileSection).toBeTruthy();
     expect(mobileSection!.textContent).toContain("E");
     expect(mobileSection!.textContent).not.toContain("PC");
