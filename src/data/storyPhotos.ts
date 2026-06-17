@@ -1,4 +1,4 @@
-export interface StoryPhoto {
+interface StoryPhoto {
   src: string;
   alt: string;
   aspect: "landscape" | "portrait" | "panoramic" | "square";
@@ -15,7 +15,7 @@ const base = import.meta.env.BASE_URL;
  * All 17 Story page photos, sequentially numbered.
  * Aspect ratios classified from actual pixel dimensions.
  */
-export const storyPhotos: StoryPhoto[] = [
+const storyPhotos: StoryPhoto[] = [
   { src: `${base}images/story/story-01.jpg`, alt: "Fractal NYC community gathering", aspect: "landscape" },
   { src: `${base}images/story/story-02.jpg`, alt: "Weekly dinner and talks", aspect: "landscape" },
   { src: `${base}images/story/story-03.jpg`, alt: "Community members in conversation", aspect: "landscape" },

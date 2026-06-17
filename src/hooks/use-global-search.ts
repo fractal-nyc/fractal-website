@@ -7,7 +7,7 @@ import { TAG_LABELS } from "@/data/lab-tags";
 // Search result types
 // ---------------------------------------------------------------------------
 
-export type SearchResultType = "page" | "person" | "document" | "house" | "topic";
+type SearchResultType = "page" | "person" | "document" | "house" | "topic";
 
 export interface SearchResult {
   type: SearchResultType;
@@ -232,7 +232,7 @@ function searchConcepts(query: string): SearchResult[] {
 // Grouped results type
 // ---------------------------------------------------------------------------
 
-export interface SearchResultGroup {
+interface SearchResultGroup {
   type: SearchResultType;
   label: string;
   results: SearchResult[];

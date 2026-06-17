@@ -97,12 +97,10 @@ export function useTapHandlers(onTap: () => void) {
 // geometry still reads as complete (6 vertices, 6 nodes); Political Club
 // remains hidden from the navbar.
 
-// FRAC-181: OUTER_NAV_NODES + NavNode moved to heroNavNodes.ts (three-free)
-// so Hero.tsx can import them without dragging the three.js chunk onto the
-// entry chunk. Re-exported here for back-compat with anything still
-// importing from this module. The internal rendering loop near the bottom
-// of this file imports them below.
-export { OUTER_NAV_NODES, type NavNode } from "./heroNavNodes";
+// FRAC-181: OUTER_NAV_NODES + NavNode live in heroNavNodes.ts (three-free) so
+// Hero.tsx can import them without dragging the three.js chunk onto the entry
+// chunk. The internal rendering loop near the bottom of this file imports them
+// below.
 import { OUTER_NAV_NODES, type NavNode, housePalette, PALETTE_FALLBACK } from "./heroNavNodes";
 
 // ---------------------------------------------------------------------------

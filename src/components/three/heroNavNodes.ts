@@ -2,8 +2,7 @@
 // Hero.tsx's keyboard-accessible skip-nav) can import OUTER_NAV_NODES without
 // dragging the entire three.js dependency chain (three + @react-three/fiber +
 // drei + three-stdlib) onto the entry chunk. Importing from this module is
-// three-free; importing OUTER_NAV_NODES from OctahedronHero still works via a
-// re-export, but new call sites should reach in here directly.
+// three-free — reach in here directly for OUTER_NAV_NODES / NavNode.
 import { HOUSES, SECTIONS } from "@/data/houses";
 
 // Octahedron model gold — the graceful fallback when a section/house color is

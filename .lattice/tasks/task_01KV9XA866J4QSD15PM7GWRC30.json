@@ -1,0 +1,39 @@
+{
+  "assigned_to": null,
+  "branch_links": [
+    {
+      "branch": "frac-218-knip-sweep",
+      "linked_at": "2026-06-17T04:27:11Z",
+      "linked_by": "agent:claude-opus-4-orchestrator",
+      "repo": null
+    }
+  ],
+  "comment_count": 2,
+  "complexity": null,
+  "created_at": "2026-06-17T04:27:00Z",
+  "created_by": "agent:claude-opus-4-orchestrator",
+  "custom_fields": {},
+  "description": null,
+  "done_at": "2026-06-17T04:37:08Z",
+  "evidence_refs": [
+    {
+      "id": "ev_01KV9XVR3GPEN6F55F6YBTXFH8",
+      "role": "review",
+      "source_type": "comment"
+    }
+  ],
+  "id": "task_01KV9XA866J4QSD15PM7GWRC30",
+  "last_event_id": "ev_01KV9XWSTWC9JVCZ4YYT8QANC1",
+  "last_status_changed_at": "2026-06-17T04:37:08Z",
+  "priority": "medium",
+  "relationships_out": [],
+  "reopened_count": 0,
+  "schema_version": 1,
+  "short_id": "FRAC-218",
+  "status": "done",
+  "tags": null,
+  "title": "knip dead-code sweep: remove verified-unused files, devDep, exports & types",
+  "type": "task",
+  "updated_at": "2026-06-17T04:37:08Z",
+  "urgency": null
+}

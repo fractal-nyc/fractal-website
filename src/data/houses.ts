@@ -4,12 +4,12 @@
 // Source of truth: fractal-os/notes/2026-03-28-fractal-nyc-website-synthesis.md
 // ---------------------------------------------------------------------------
 
-export interface ExternalLink {
+interface ExternalLink {
   label: string;
   url: string;
 }
 
-export interface PersonSocials {
+interface PersonSocials {
   twitter?: string; // handle without @
   substack?: string; // full URL
   website?: string; // personal/project URL
@@ -25,7 +25,7 @@ export interface Person {
   bio?: string;
 }
 
-export interface HousePalette {
+interface HousePalette {
   /** Lighter color in the pair — typically the surface bg on the house page. */
   light: string;
   /** Deeper color in the pair — typically the accent / letter color. */
@@ -354,32 +354,7 @@ export const SECTIONS = {
 // the House entry rather than maintaining a parallel list here. Direct routes
 // to hidden houses remain reachable.
 
-/** Houses visible in the banner grid. Hides any house with `hideFromBanners`. */
-export const VISIBLE_HOUSES: House[] = HOUSES.filter((h) => !h.hideFromBanners);
-
-/** Houses visible in the navbar. Hides any house with `hideFromNavbar`. */
-export const NAVBAR_VISIBLE_HOUSES: House[] = HOUSES.filter(
-  (h) => !h.hideFromNavbar,
-);
-
 /** Route paths hidden from the navbar — used to filter the navbar's sectionLinks. */
 export const NAVBAR_HIDDEN_ROUTES: Set<string> = new Set(
   HOUSES.filter((h) => h.hideFromNavbar).map((h) => h.route),
 );
-
-/** Look up a house by its URL slug. */
-export function getHouseBySlug(slug: string): House | undefined {
-  return HOUSES.find((h) => h.slug === slug);
-}
-
-/** Return every person associated with a given house. */
-export function getPeopleByHouse(houseId: string): Person[] {
-  return PEOPLE.filter((p) => p.houses.includes(houseId));
-}
-
-/** Return every house a given person belongs to. */
-export function getHousesByPerson(personId: string): House[] {
-  const person = PEOPLE.find((p) => p.id === personId);
-  if (!person) return [];
-  return HOUSES.filter((h) => person.houses.includes(h.id));
-}
