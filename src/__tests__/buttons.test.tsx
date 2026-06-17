@@ -23,8 +23,8 @@ import { Button, buttonVariants } from "@/components/ui/button";
 // Replit-injected utilities (hover-elevate, [border-color:var(...)],
 // border-primary-border, etc.) that were never declared in src/index.css.
 // The new minimal Button matches shipped CTA reality: four variants
-// (default, outline, ghost, link) and three sizes (default, sm, lg) plus
-// `icon` for vendored shadcn components.
+// (default, outline, ghost, link) and a single `default` size (the only
+// size any consumer uses; sm/lg/icon were dead and removed in FRAC-214).
 // ═══════════════════════════════════════════════════════════════════════════
 
 describe("Button component", () => {
@@ -37,14 +37,10 @@ describe("Button component", () => {
     });
   }
 
-  const sizes = ["default", "sm", "lg", "icon"] as const;
-
-  for (const size of sizes) {
-    it(`should render at size "${size}"`, () => {
-      render(<Button size={size}>Btn</Button>);
-      expect(screen.getByText("Btn")).toBeTruthy();
-    });
-  }
+  it('should render at the "default" size', () => {
+    render(<Button size="default">Btn</Button>);
+    expect(screen.getByText("Btn")).toBeTruthy();
+  });
 
   it("should support the asChild prop (Radix Slot pattern)", () => {
     // asChild forwards classes and ref to the consumer's child element.
@@ -191,9 +187,9 @@ describe("buttonVariants utility", () => {
     expect(classes).toContain("tracking-widest");
   });
 
-  it("should produce a smaller padding string for sm size", () => {
-    const classes = buttonVariants({ size: "sm" });
-    expect(classes).toContain("px-4");
-    expect(classes).toContain("py-2");
+  it("should produce the default-size padding string", () => {
+    const classes = buttonVariants({ size: "default" });
+    expect(classes).toContain("px-8");
+    expect(classes).toContain("py-5");
   });
 });

@@ -69,18 +69,11 @@ const buttonVariants = cva(
       },
       size: {
         default: "px-8 py-5 text-sm font-medium",
-        sm: "px-4 py-2.5 text-xs font-medium",
-        lg: "px-10 py-6 text-base",
-        // `icon` is required by vendored shadcn components (calendar, carousel,
-        // sidebar). Square button for a single glyph.
-        icon: "h-9 w-9 p-0",
       },
     },
     compoundVariants: [
-      // Link variant should have no padding regardless of size.
-      { variant: "link", size: "default", class: "px-0 py-0" },
-      { variant: "link", size: "sm", class: "px-0 py-0" },
-      { variant: "link", size: "lg", class: "px-0 py-0" },
+      // Link variant should have no padding.
+      { variant: "link", class: "px-0 py-0" },
     ],
     defaultVariants: {
       variant: "default",
@@ -110,7 +103,6 @@ const cornerStyle = (
 });
 
 // Corners render on the default variant only. Outline / ghost / link skip them.
-// Small size skips them too — they look crowded at xs padding.
 const variantsWithCorners = new Set(["default"]);
 
 // FRAC-52: Paper-grain overlay ported from Renoverse's .fx-grain--warm
@@ -134,10 +126,7 @@ const grainStyle: React.CSSProperties = {
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant, size, asChild = false, children, ...props }, ref) => {
     const Comp = asChild ? Slot : "button";
-    const showCorners =
-      variantsWithCorners.has(variant ?? "default") &&
-      size !== "sm" &&
-      size !== "icon";
+    const showCorners = variantsWithCorners.has(variant ?? "default");
 
     // When asChild + corners, Radix Slot requires exactly one child. Wrap the
     // user's child + corners in a fragment so the consumer's element gets the

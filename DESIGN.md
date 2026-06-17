@@ -51,11 +51,15 @@ spacing:
   "60": "15rem"
 components:
   button-default:
-    backgroundColor: "{colors.foreground}"
-    textColor: "{colors.foreground}"
+    backgroundColor: "var(--btn-accent, currentColor)"
+    backdropFilter: "blur(6px)"
+    textColor: "#ffffff"
+    border: "var(--btn-accent, currentColor)"
     rounded: "{rounded.md}"
     padding: "1.25rem 2rem"
     typography: "{typography.font-mono}"
+    hoverBackgroundColor: "var(--btn-fill, rgba(242, 234, 216, 0.16))"
+    hoverTextColor: "var(--btn-text, var(--btn-accent, currentColor))"
   button-outline:
     backgroundColor: "{colors.background}"
     textColor: "{colors.foreground}"
@@ -239,9 +243,8 @@ For `<input>`, `<textarea>`, `<select>`, and other typeable controls. Sized at 1
 | Size | Padding | Type |
 |---|---|---|
 | `default` | `px-8 py-5` | `text-sm tracking-widest uppercase font-medium` |
-| `sm` | `px-4 py-2.5` | `text-xs tracking-widest uppercase font-medium` |
 
-Both sizes share the JetBrains Mono / uppercase / `tracking-widest` base.
+The Button ships a single `default` size — JetBrains Mono, uppercase, `tracking-widest`, `font-medium`. (FRAC-214 removed the unused `sm` / `lg` / `icon` sizes.)
 
 ## Layout
 
@@ -294,7 +297,7 @@ Radii map to semantic roles, not arbitrary sizes:
 
 ### Mandelbrot corners
 
-The Button `default` variant places four `MandelbrotIcon` glyphs at 4px insets from each corner — 20px, opacity 0.2, rotated to face center. This is the brand shape signature for primary CTAs; outline / ghost / link variants and the `sm` / `icon` sizes render clean.
+The Button `default` variant places four `MandelbrotIcon` glyphs at 4px insets from each corner — 20px, opacity 0.8, rotated to face center. This is the brand shape signature for primary CTAs; the outline / ghost / link variants render clean (no corners).
 
 The reusable `MandelbrotCorners` wrapper (`src/components/ui/MandelbrotCorners.tsx`) puts the same motif around any container — a note card, a badge, an embed panel. **Invariant:** when the wrapped container holds text, its padding on every side, at every breakpoint, must be ≥ `inset + iconSize` so the glyphs stay clear of the copy:
 
@@ -315,7 +318,7 @@ Five components are modeled in the `components:` YAML block; the rest are descri
 
 ### YAML-modeled
 
-**`button-default`** — bordered, translucent charcoal-tinted surface (`bg-foreground/[0.03]`, `border-foreground/20`) with the four Mandelbrot corners. Padding `px-8 py-5`. Hover `bg-foreground/10`; focus-visible ring in canonical charcoal.
+**`button-default`** — the FRAC-52 frosted-glass CTA. An accent-filled surface (`bg-[var(--btn-accent,currentColor)]`) under a `backdrop-filter: blur(6px)` frost, with a matching accent border (`[border-color:var(--btn-accent,currentColor)]`), white text, a tiled paper-grain overlay (`PAPER_GRAIN_BG` — a 320×320 fractal-noise SVG at `mix-blend-mode: overlay`, opacity 0.35), and the four Mandelbrot corner glyphs. Padding `px-8 py-5`; soft drop shadow. The accent (`--btn-accent`) is set per house page on `<main>`, falling back to `currentColor`. Hover swaps to a cream fill (`hover:bg-[var(--btn-fill,rgba(242,234,216,0.16))]`) with accent-colored text. Real focus-visible ring (`focus-visible:ring-2 ring-foreground`).
 
 **`button-outline`** — same padding, transparent background, `border border-current`, no corner glyphs. Hover `bg-foreground/5`. For secondary or compact uses.
 
