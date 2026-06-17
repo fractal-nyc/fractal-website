@@ -42,21 +42,21 @@ const buttonVariants = cva(
       variant: {
         // Default (FRAC-52): frosted-glass surface ported from Renoverse's
         // .btn--frosted recipe. The border + corner Mandelbrots take the
-        // house accent via `--btn-accent` (set on each house page's <main>);
+        // house accent via `--accent` (set on each house page's <main>);
         // unset pages fall back to `currentColor`. Text inherits the page's
         // body color via text-current. Cream tint (rgba(242,234,216,...)) is
         // neutral against every house background and reads as a subtle
         // translucent fill on dark surfaces, and as a border-only chrome on
         // cream surfaces — both intentional.
         default:
-          "border bg-[var(--btn-accent,currentColor)] " +
+          "border bg-[var(--accent,currentColor)] " +
           "[backdrop-filter:blur(6px)] [-webkit-backdrop-filter:blur(6px)] " +
           "[isolation:isolate] [transform:translateZ(0)] " +
-          "[border-color:var(--btn-accent,currentColor)] " +
+          "[border-color:var(--accent,currentColor)] " +
           "text-white " +
           "shadow-[0_8px_24px_-12px_rgba(11,26,43,0.18)] " +
           "hover:bg-[var(--btn-fill,rgba(242,234,216,0.16))] " +
-          "hover:text-[var(--btn-text,var(--btn-accent,currentColor))]",
+          "hover:text-[var(--btn-text,var(--accent,currentColor))]",
         // Outline: same border, no corners. For secondary or compact uses.
         outline:
           "border border-current bg-transparent text-foreground hover:bg-foreground/5",

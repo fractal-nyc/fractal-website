@@ -180,7 +180,7 @@ function PrimaryButton({
     ? { target: "_blank" as const, rel: "noopener noreferrer" }
     : {};
   // FRAC-52: Campus inherits the sitewide frost recipe (cream-tinted glass +
-  // accent border via `--btn-accent` set on CampusPage's <main>). The old
+  // accent border via `--accent` set on CampusPage's <main>). The old
   // Campus-specific `bg-foreground/20 hover:bg-foreground/30` override has
   // been dropped — the cream tint reads cleanly against the green Campus
   // background and matches every other house page.

@@ -51,15 +51,15 @@ spacing:
   "60": "15rem"
 components:
   button-default:
-    backgroundColor: "var(--btn-accent, currentColor)"
+    backgroundColor: "var(--accent, currentColor)"
     backdropFilter: "blur(6px)"
     textColor: "#ffffff"
-    border: "var(--btn-accent, currentColor)"
+    border: "var(--accent, currentColor)"
     rounded: "{rounded.md}"
     padding: "1.25rem 2rem"
     typography: "{typography.font-mono}"
     hoverBackgroundColor: "var(--btn-fill, rgba(242, 234, 216, 0.16))"
-    hoverTextColor: "var(--btn-text, var(--btn-accent, currentColor))"
+    hoverTextColor: "var(--btn-text, var(--accent, currentColor))"
   button-outline:
     backgroundColor: "{colors.background}"
     textColor: "{colors.foreground}"
@@ -160,7 +160,7 @@ A small category distinct from the six houses: section pages that aren't houses 
 
 **People** is a *flooded* section (`{light, deep}`), like a house. The People page is intentionally **deferred from launch** (hidden from the navbar via `EXTRA_HIDDEN_HREFS` in `Navbar.tsx`) but kept fully tokenized and launch-ready — its `/people` route, octahedron face, and nav swatch all read from the same `SECTIONS.people` source.
 
-**Story** is a *cream* section (FRAC-205). It is a live page but, since it isn't a house, it reads as a **cream background with charcoal text** and a **single gold identity accent** (`section-story` `#D4BA58`) rather than a color flood. The accent appears only as decoration — the SectorHeader letter/name, the `FractalPattern` wallpaper, the `--btn-accent`, and the TalkCard accents — while all body text stays charcoal (`text-foreground`), since gold-on-cream fails WCAG for small text. Story previously carried *three* golds (a pale `#DFCA7A` page background, a deep `#8A7A20` accent, and `#D4BA58`); those collapsed to this one. The pale page gold was the reason a third color had been bolted on — it was illegible on the cream navbar — so `#D4BA58`, the only one legible on cream, became the single identity color. Story's color is sourced from `SECTIONS.story.accent`; its `/story` page, octahedron face, hero nav node, and navbar swatch all read from there.
+**Story** is a *cream* section (FRAC-205). It is a live page but, since it isn't a house, it reads as a **cream background with charcoal text** and a **single gold identity accent** (`section-story` `#D4BA58`) rather than a color flood. The accent appears only as decoration — the SectorHeader letter/name, the `FractalPattern` wallpaper, the `--accent`, and the TalkCard accents — while all body text stays charcoal (`text-foreground`), since gold-on-cream fails WCAG for small text. Story previously carried *three* golds (a pale `#DFCA7A` page background, a deep `#8A7A20` accent, and `#D4BA58`); those collapsed to this one. The pale page gold was the reason a third color had been bolted on — it was illegible on the cream navbar — so `#D4BA58`, the only one legible on cream, became the single identity color. Story's color is sourced from `SECTIONS.story.accent`; its `/story` page, octahedron face, hero nav node, and navbar swatch all read from there.
 
 ### Surface + text pairings
 
@@ -295,6 +295,18 @@ Radii map to semantic roles, not arbitrary sizes:
 
 (`rounded.xl` is declared in tokens but currently unused.)
 
+### Borders
+
+Borders resolve to one of three semantic tiers — pick by intent, not by eye:
+
+| Tier | Value | Role | Example sites |
+|---|---|---|---|
+| **Structural** | `border-foreground-faint` | Default frames, dividers, hairlines. The sitewide default (`* { border-foreground-faint }`). | footer divider, lab cards (`DocumentBadge`, `ArchiveSearch`, Story TalkCard), Navbar menu-row dividers, LabPage section rule |
+| **Definition** | `border-foreground/20` | A defining container edge on cream, without emphasis. | Hero search input + results dropdown, Hero keyboard-nav popover |
+| **Emphasis** | `[border-color:var(--accent,currentColor)]` | Themed house/section accent border — the same accent the button uses. For containers that want to carry the house color. Inherits `--accent` (set per page on `<main>`); falls back to `currentColor`. | `button-default`, Visit "Note" card (`NeighborhoodPage`), Events Luma embed (`EventsPage`) |
+
+The `--accent` custom property (renamed from the former button-accent var in FRAC-215) is set on each page's `<main>` to that page's house/section color and read by both the button and the Emphasis-tier borders. Focus/hover states (e.g. the Hero input's `focus:border-foreground/40`, the lab `focus:border-house-publications-deep/60`) sit deliberately outside this resting-tier vocabulary — they are transient states, not resting borders.
+
 ### Mandelbrot corners
 
 The Button `default` variant places four `MandelbrotIcon` glyphs at 4px insets from each corner — 20px, opacity 0.8, rotated to face center. This is the brand shape signature for primary CTAs; the outline / ghost / link variants render clean (no corners).
@@ -318,7 +330,7 @@ Five components are modeled in the `components:` YAML block; the rest are descri
 
 ### YAML-modeled
 
-**`button-default`** — the FRAC-52 frosted-glass CTA. An accent-filled surface (`bg-[var(--btn-accent,currentColor)]`) under a `backdrop-filter: blur(6px)` frost, with a matching accent border (`[border-color:var(--btn-accent,currentColor)]`), white text, a tiled paper-grain overlay (`PAPER_GRAIN_BG` — a 320×320 fractal-noise SVG at `mix-blend-mode: overlay`, opacity 0.35), and the four Mandelbrot corner glyphs. Padding `px-8 py-5`; soft drop shadow. The accent (`--btn-accent`) is set per house page on `<main>`, falling back to `currentColor`. Hover swaps to a cream fill (`hover:bg-[var(--btn-fill,rgba(242,234,216,0.16))]`) with accent-colored text. Real focus-visible ring (`focus-visible:ring-2 ring-foreground`).
+**`button-default`** — the FRAC-52 frosted-glass CTA. An accent-filled surface (`bg-[var(--accent,currentColor)]`) under a `backdrop-filter: blur(6px)` frost, with a matching accent border (`[border-color:var(--accent,currentColor)]`), white text, a tiled paper-grain overlay (`PAPER_GRAIN_BG` — a 320×320 fractal-noise SVG at `mix-blend-mode: overlay`, opacity 0.35), and the four Mandelbrot corner glyphs. Padding `px-8 py-5`; soft drop shadow. The accent (`--accent`) is set per house page on `<main>`, falling back to `currentColor`. Hover swaps to a cream fill (`hover:bg-[var(--btn-fill,rgba(242,234,216,0.16))]`) with accent-colored text. Real focus-visible ring (`focus-visible:ring-2 ring-foreground`).
 
 **`button-outline`** — same padding, transparent background, `border border-current`, no corner glyphs. Hover `bg-foreground/5`. For secondary or compact uses.
 

@@ -1,0 +1,39 @@
+{
+  "assigned_to": null,
+  "branch_links": [
+    {
+      "branch": "frac-215-border-system",
+      "linked_at": "2026-06-17T00:13:36Z",
+      "linked_by": "agent:claude-opus-4-orchestrator",
+      "repo": null
+    }
+  ],
+  "comment_count": 2,
+  "complexity": null,
+  "created_at": "2026-06-17T00:12:59Z",
+  "created_by": "agent:claude-opus-4-orchestrator",
+  "custom_fields": {},
+  "description": null,
+  "done_at": "2026-06-17T00:23:10Z",
+  "evidence_refs": [
+    {
+      "id": "ev_01KV9FAXJ66QNJ8A76KCFQHEMK",
+      "role": "review",
+      "source_type": "comment"
+    }
+  ],
+  "id": "task_01KV9ES3XK85KFMJRPP01H8ZN5",
+  "last_event_id": "ev_01KV9FBSAQ0W1VN4TY1VH8T1BN",
+  "last_status_changed_at": "2026-06-17T00:23:10Z",
+  "priority": "medium",
+  "relationships_out": [],
+  "reopened_count": 0,
+  "schema_version": 1,
+  "short_id": "FRAC-215",
+  "status": "done",
+  "tags": null,
+  "title": "Rename --btn-accent to --accent; implement & document 3-tier border system",
+  "type": "task",
+  "updated_at": "2026-06-17T00:23:10Z",
+  "urgency": null
+}

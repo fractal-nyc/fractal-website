@@ -15,7 +15,7 @@ export function EventsPage() {
   return (
     <main
       className="relative min-h-screen bg-house-events-light text-foreground selection:bg-foreground selection:text-background"
-      style={{ "--btn-accent": "var(--color-house-events-deep)" } as CSSProperties}
+      style={{ "--accent": "var(--color-house-events-deep)" } as CSSProperties}
     >
       <FractalPattern color="#C13B2A" />
       <div className="relative z-10">
@@ -44,7 +44,7 @@ export function EventsPage() {
               Luma embed: calendar-ID URL from luma.com/nyc-tech > Manage > Embed.
               Uses the stable `cal-` calendar ID rather than the `nyc-tech` slug.
             */}
-            <div className="relative w-full max-w-5xl mx-auto rounded-md overflow-hidden border border-foreground/20 bg-foreground/[0.03] h-[80vh] min-h-[600px] md:h-[850px] mb-6">
+            <div className="relative w-full max-w-5xl mx-auto rounded-md overflow-hidden border [border-color:var(--accent,currentColor)] bg-foreground/[0.03] h-[80vh] min-h-[600px] md:h-[850px] mb-6">
               <CornerDecorations size="xs" />
               <iframe
                 src="https://luma.com/embed/calendar/cal-RHI1LJC6K8JRBLI/events"

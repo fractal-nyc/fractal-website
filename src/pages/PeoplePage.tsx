@@ -10,7 +10,7 @@ export function PeoplePage() {
   return (
     <main
       className="relative min-h-screen bg-section-people-light text-foreground selection:bg-foreground selection:text-background"
-      style={{ "--btn-accent": "var(--color-section-people-deep)" } as CSSProperties}
+      style={{ "--accent": "var(--color-section-people-deep)" } as CSSProperties}
     >
       <FractalPattern color="var(--color-section-people-deep)" />
       <div className="relative z-10">

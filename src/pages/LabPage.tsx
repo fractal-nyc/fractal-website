@@ -15,7 +15,7 @@ export function LabPage() {
   return (
     <main
       className="relative min-h-screen bg-house-publications-light text-background selection:bg-foreground selection:text-background"
-      style={{ "--btn-accent": "var(--color-house-publications-deep)" } as CSSProperties}
+      style={{ "--accent": "var(--color-house-publications-deep)" } as CSSProperties}
     >
       <FractalPattern color="#C44878" />
       <div className="relative z-10">

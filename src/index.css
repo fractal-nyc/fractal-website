@@ -263,7 +263,7 @@
    `bg-house-education-deep`), the default cream frost (0.16 rest / 0.24
    hover) doesn't lift the button surface enough to carry an accent-colored
    text + border with legible contrast. Apply this class on the page's
-   `<main>` (alongside `--btn-accent`) to bump the cream frost opacity into
+   `<main>` (alongside `--accent`) to bump the cream frost opacity into
    a range where the accent text reads cleanly against the page bg. */
 .btn-on-dark {
   --btn-fill: rgba(242, 234, 216, 0.6);

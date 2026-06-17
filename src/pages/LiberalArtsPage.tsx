@@ -9,7 +9,7 @@ export function LiberalArtsPage() {
   return (
     <main
       className="btn-on-dark relative min-h-screen bg-house-education-deep text-background selection:bg-foreground selection:text-background"
-      style={{ "--btn-accent": "var(--color-house-education-light)" } as CSSProperties}
+      style={{ "--accent": "var(--color-house-education-light)" } as CSSProperties}
     >
       <FractalPattern color="#C41E20" />
       <div className="relative z-10">

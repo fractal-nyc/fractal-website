@@ -12,7 +12,7 @@ export function NeighborhoodPage() {
   return (
     <main
       className="relative min-h-screen bg-house-visit-light text-foreground selection:bg-foreground selection:text-background"
-      style={{ "--btn-accent": "var(--color-house-visit-deep)" } as CSSProperties}
+      style={{ "--accent": "var(--color-house-visit-deep)" } as CSSProperties}
     >
       <FractalPattern color="#4A5A30" />
       <div className="relative z-10">
@@ -58,7 +58,7 @@ export function NeighborhoodPage() {
             </FadeIn>
 
             <FadeIn delay={0.15}>
-              <MandelbrotCorners size="sm" opacity={0.15} className="border border-foreground/20 rounded-md p-9 md:px-10 md:py-8 mb-3 md:mb-10 bg-foreground/[0.03] text-foreground text-left max-w-xl mx-auto">
+              <MandelbrotCorners size="sm" opacity={0.15} className="border [border-color:var(--accent,currentColor)] rounded-md p-9 md:px-10 md:py-8 mb-3 md:mb-10 bg-foreground/[0.03] text-foreground text-left max-w-xl mx-auto">
                 <p className="text-label text-foreground mb-2 md:mb-3">
                   Note
                 </p>

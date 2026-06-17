@@ -9,7 +9,7 @@ export function CampusPage() {
   return (
     <main
       className="relative min-h-screen bg-house-campus-light text-background selection:bg-foreground selection:text-background"
-      style={{ "--btn-accent": "var(--color-house-campus-deep)" } as CSSProperties}
+      style={{ "--accent": "var(--color-house-campus-deep)" } as CSSProperties}
     >
       <FractalPattern color="#1A3A2E" />
       <div className="relative z-10">

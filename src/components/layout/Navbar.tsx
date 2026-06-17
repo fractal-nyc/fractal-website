@@ -394,7 +394,7 @@ export function Navbar() {
                   setLocation(link.href);
                   setMobileMenuOpen(false);
                 }}
-                className="flex items-center gap-5 min-h-[56px] py-3 border-b border-foreground/10 cursor-pointer hover:bg-foreground/5 active:bg-foreground/10 transition-colors text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-foreground"
+                className="flex items-center gap-5 min-h-[56px] py-3 border-b border-foreground-faint cursor-pointer hover:bg-foreground/5 active:bg-foreground/10 transition-colors text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-foreground"
                 style={{ borderLeft: `3px solid ${link.color}`, paddingLeft: "16px" }}
               >
                 <span

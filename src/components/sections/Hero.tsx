@@ -134,7 +134,7 @@ export function Hero() {
         aria-label="Hero navigation (keyboard)"
         className="sr-only-focusable absolute top-2 left-2 z-50"
       >
-        <ul className="flex flex-col gap-1 bg-background text-foreground border border-foreground p-3 text-label">
+        <ul className="flex flex-col gap-1 bg-background text-foreground border border-foreground/20 p-3 text-label">
           {OUTER_NAV_NODES.map((node) => (
             <li key={node.route}>
               <a

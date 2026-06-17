@@ -10,7 +10,7 @@ export function PoliticalClubPage() {
   return (
     <main
       className="btn-on-dark relative min-h-screen bg-house-political-club-deep text-background selection:bg-foreground selection:text-background"
-      style={{ "--btn-accent": "var(--color-house-political-club-light)" } as CSSProperties}
+      style={{ "--accent": "var(--color-house-political-club-light)" } as CSSProperties}
     >
       <FractalPattern color="var(--color-house-political-club-light)" />
       <div className="relative z-10">
