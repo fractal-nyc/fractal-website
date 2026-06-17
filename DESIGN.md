@@ -160,16 +160,20 @@ A small category distinct from the six houses: section pages that aren't houses 
 
 ### Surface + text pairings
 
-Two text colors carry the entire site: charcoal (`text-foreground`) on light surfaces, cream (`text-background`) on charcoal or saturated house surfaces. The four canonical pairings:
+Two text colors carry the entire site: charcoal (`text-foreground`) and cream (`text-background`). Which one a surface takes is driven by the surface's **perceived luminance**, not by the `-light` / `-deep` token name. A light fill takes charcoal; a dark or saturated fill takes cream:
 
-| Surface | Pair |
-|---|---|
-| Cream | `bg-background` + `text-foreground` |
-| Charcoal | `bg-foreground` + `text-background` |
-| House light (saturated) | `bg-house-{slug}-light` + `text-background` |
-| House deep (saturated) | `bg-house-{slug}-deep` + `text-background` |
+| Surface luminance | Text | Examples |
+|---|---|---|
+| Light (cream + light house fills) | `text-foreground` (charcoal) | `bg-background`, `bg-house-visit-light`, `bg-house-events-light` |
+| Dark / saturated (charcoal + dark/saturated house fills) | `text-background` (cream) | `bg-foreground`, `bg-house-campus-light`, `bg-house-education-deep`, `bg-house-publications-light`, `bg-house-political-club-deep` |
+
+The token suffix does **not** decide the text color. Campus (`house-campus-light` `#2E6B4A`) and Publications (`house-publications-light` `#E870A0`) both use a `-light` background token yet still take cream `text-background`, because those fills are dark/saturated enough that charcoal would fail contrast. The luminance of the actual surface decides, not the `-light`/`-deep` label.
+
+Secondary / supporting text uses `text-foreground-muted` (`#525252`), not `foreground-light` (that token was removed).
 
 Set the text color explicitly on the same node as the surface. A nested cream surface inside a house page re-asserts `text-foreground` on the inner surface, so text always pairs with its actual background rather than inheriting from the page cascade.
+
+**Known concern:** the Publications page (`LabPage`) floods `bg-house-publications-light` (`#E870A0`, a bright pink) under cream `text-background`. Cream-on-pink is a borderline-contrast pairing worth a revisit.
 
 ## Typography
 
@@ -282,14 +286,16 @@ The shape language is editorially square, with a small soft-corner radius for in
 
 ### Rounded scale
 
-| Token | Value |
-|---|---|
-| `rounded.sm` | `0.25rem` |
-| `rounded.md` | `0.5rem` |
-| `rounded.lg` | `0.75rem` |
-| `rounded.xl` | `1rem` |
+Radii map to semantic roles, not arbitrary sizes:
 
-Pill and circular shapes (avatar badges) use Tailwind's `rounded-full` per use.
+| Class | Role | Example |
+|---|---|---|
+| `rounded-sm` | images | `GalleryImage` |
+| `rounded-md` | interactive controls (buttons, inputs, dropdowns, navbar menu buttons) and containers (note cards, embeds) | `button.tsx`, Hero combobox, `NeighborhoodPage` note |
+| `rounded-lg` | cards | `DocumentBadge`, `ArchiveSearch`, Story TalkCard |
+| `rounded-full` | pill shapes: tag-filter pills and accent bars | `TagFilter`, accent bars |
+
+(`rounded.xl` is declared in tokens but currently unused.)
 
 ### Mandelbrot corners
 
@@ -336,7 +342,7 @@ Five components are modeled in the `components:` YAML block; the rest are descri
 - Use Fraunces for the Display tier (headings/titles) — set the visual tier explicitly via `.text-display` / `.text-title` / `.text-subtitle`; JetBrains Mono (`font-mono`) for the Chrome tier (labels, inputs, buttons, metadata); and Inter (`font-sans`) for the Body tier.
 - Reach for semantic surface tokens (`background`, `foreground`, `foreground-muted`, `foreground-faint`) and the semantic type utilities (`.text-display`, `.text-body`, `.text-label`, …) rather than raw values.
 - Use house tokens (`house-{slug}-{light|deep}`) inside that house's own pages, and keep each house to its two-color pair.
-- Pair every surface with its text color explicitly on the same node, per the four canonical pairings.
+- Pair every surface with its text color explicitly on the same node, driven by the surface's perceived luminance (light → charcoal `text-foreground`; dark/saturated → cream `text-background`).
 - Reach for the explicit tier utility a heading needs (`.text-display` for upright uppercase Fraunces, `.text-title` for italic mixed-case), and `normal-case` when a block needs mixed-case.
 - Gate every animation on `usePrefersReducedMotion()` (or an equivalent `@media (prefers-reduced-motion: reduce)` rule).
 
