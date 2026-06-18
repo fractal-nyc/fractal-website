@@ -50,7 +50,7 @@ export function TagFilter({
               text-sm font-medium
               rounded-full border
               transition-all duration-150
-              focus:outline-none focus:ring-2 focus:ring-[#C44878]/40 focus:ring-offset-1
+              focus:outline-none focus:ring-2 focus:ring-house-publications-deep/40 focus:ring-offset-1
               whitespace-nowrap
               ${isActive ? "hover:opacity-90" : "hover:[border-color:var(--accent,currentColor)] hover:text-foreground"}
             `}
