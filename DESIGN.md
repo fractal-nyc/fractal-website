@@ -86,14 +86,14 @@ components:
 
 ## Overview
 
-Fractal NYC is an editorial site in a warm-print key: cream surfaces, charcoal type, oversized italic Fraunces headings, a JetBrains Mono body, and Jacquard 24 display accents. There is one color scheme — surfaces are always cream, type is always charcoal.
+Fractal NYC is an editorial site in a warm-print key: cream surfaces, charcoal type, oversized italic Fraunces headings, a JetBrains Mono body, and Jacquard 24 display accents.
 
-The site is organized as six themed houses — Visit, Events, Campus, Education, Political Club, Publications — each owning a `{light, deep}` color pair. The global voice stays charcoal-on-cream; each house tints its own pages from its pair.
+Fractal is organized into themed **houses** — Visit, Events, Campus, Education, Political Club, Publications — one per sector of the organization. Each house owns an accent color pair (`{light, deep}`) that brands its sector and themes its own pages. The houses are where the site's color lives.
 
 Two foundations:
 
 1. **Mobile-first, 375px baseline.** Every page and component is designed at phone width first. Wider viewports are progressive enhancement.
-2. **Charcoal is the voice.** `colors.foreground` is the dominant text color (`#171717`), an editorial charcoal rather than a saturated brand hue. Hierarchy comes from typography, color contrast, and whitespace; house colors provide scoped accents.
+2. **A quiet base so the houses can be loud.** The base is deliberately neutral — cream surfaces, charcoal text, one scheme, no dark mode — so the accent house colors carry the brand and signal Fractal's different sectors. There are so many pops of color from the houses that the base is kept simple, letting those accents read. Hierarchy comes from typography, contrast, and whitespace; color comes from the houses.
 
 Political Club is reachable by direct route (`/political-club`) but hidden from the navbar via the `hideFromNavbar` flag in `src/data/houses.ts` (a companion `hideFromBanners` flag drives the `VISIBLE_HOUSES` filter). It is the one house with no per-page banner SVG of its own.
 
@@ -103,7 +103,7 @@ Political Club (and the People page) are intentionally **not surfaced at initial
 
 The system declares **19 color tokens**: 4 surface tokens that drive the page chrome, 12 house tokens (6 houses × `{light, deep}`) that theme each house's pages, banner, and avatar, and 3 non-house section tokens — the `section-people-{light, deep}` pair plus the single `section-story` accent — for section pages that aren't houses (see [Non-house section colors](#non-house-section-colors)).
 
-The surface palette is deliberately lean: cream (`background`) is the page, and the rest is a **single charcoal voice expressed in three weights**. Naming reflects that — `foreground` → `foreground-muted` → `foreground-faint`, darkest to faintest. Neutral fills are expressed as `foreground` at low opacity (e.g. `bg-foreground/5` for the gallery image placeholder) rather than a dedicated fill token; focus rings and text selection use `foreground` directly. The site's color *accents* come from the house palette, not a neutral accent token. The original shadcn scaffold's unused neutrals (`card`, `popover`, `accent`, `secondary`, `primary`, `muted`, `destructive`, `input`, `ring`, and their `-foreground` pairs) were removed in FRAC-201 along with the dead components that consumed them; the two surviving charcoal tints were renamed from the scaffold's `muted-foreground` / `border` into this ladder.
+The surface palette is deliberately lean: cream (`background`) is the page, and the rest is charcoal in three weights — `foreground` → `foreground-muted` → `foreground-faint`, darkest to faintest. Neutral fills are `foreground` at low opacity (e.g. `bg-foreground/5` for the gallery image placeholder) rather than a dedicated fill token; focus rings and text selection use `foreground` directly. The site's color *accents* come from the house palette, not a neutral accent token.
 
 ### Surface palette
 
@@ -160,7 +160,7 @@ A small category distinct from the six houses: section pages that aren't houses 
 
 **People** is a *flooded* section (`{light, deep}`), like a house. The People page is intentionally **deferred from launch** (hidden from the navbar via `EXTRA_HIDDEN_HREFS` in `Navbar.tsx`) but kept fully tokenized and launch-ready — its `/people` route, octahedron face, and nav swatch all read from the same `SECTIONS.people` source.
 
-**Story** is a *cream* section (FRAC-205). It is a live page but, since it isn't a house, it reads as a **cream background with charcoal text** and a **single gold identity accent** (`section-story` `#D4BA58`) rather than a color flood. The accent appears only as decoration — the SectorHeader letter/name, the `FractalPattern` wallpaper, the `--accent`, and the TalkCard accents — while all body text stays charcoal (`text-foreground`), since gold-on-cream fails WCAG for small text. Story previously carried *three* golds (a pale `#DFCA7A` page background, a deep `#8A7A20` accent, and `#D4BA58`); those collapsed to this one. The pale page gold was the reason a third color had been bolted on — it was illegible on the cream navbar — so `#D4BA58`, the only one legible on cream, became the single identity color. Story's color is sourced from `SECTIONS.story.accent`; its `/story` page, octahedron face, hero nav node, and navbar swatch all read from there.
+**Story** is a *cream* section. Since it isn't a house, it reads as a **cream background with charcoal text** and a **single gold identity accent** (`section-story` `#D4BA58`) rather than a color flood. The accent appears only as decoration — the SectorHeader letter/name, the `FractalPattern` wallpaper, the `--accent`, and the TalkCard accents — while all body text stays charcoal (`text-foreground`), since gold-on-cream fails WCAG for small text. Story's color is sourced from `SECTIONS.story.accent`; its `/story` page, octahedron face, hero nav node, and navbar swatch all read from there.
 
 ### Surface + text pairings
 
@@ -173,7 +173,7 @@ Two text colors carry the entire site: charcoal (`text-foreground`) and cream (`
 
 The token suffix does **not** decide the text color. Campus (`house-campus-light` `#2E6B4A`) and Publications (`house-publications-light` `#E870A0`) both use a `-light` background token yet still take cream `text-background`, because those fills are dark/saturated enough that charcoal would fail contrast. The luminance of the actual surface decides, not the `-light`/`-deep` label.
 
-Secondary / supporting text uses `text-foreground-muted` (`#525252`), not `foreground-light` (that token was removed).
+Secondary / supporting text uses `text-foreground-muted` (`#525252`).
 
 Set the text color explicitly on the same node as the surface. A nested cream surface inside a house page re-asserts `text-foreground` on the inner surface, so text always pairs with its actual background rather than inheriting from the page cascade.
 
@@ -232,7 +232,7 @@ Inline `<strong>` emphasis in body copy renders at `font-semibold` (weight 600) 
 |---|---|---|
 | `.text-label` | uppercase, weight 500, tracking 0.1em | `text-sm` |
 
-The single chrome label utility — overline labels, form labels, inline metadata all reach for `.text-label`. (Earlier `.text-eyebrow` / `.text-meta` aliases were collapsed into this one name in FRAC-209.)
+The single chrome label utility — overline labels, form labels, inline metadata all reach for `.text-label`.
 
 **Mono-display tier (JetBrains Mono)**
 
@@ -256,7 +256,7 @@ For `<input>`, `<textarea>`, `<select>`, and other typeable controls. Sized at 1
 |---|---|---|
 | `default` | `px-8 py-5` | `text-sm tracking-widest uppercase font-medium` |
 
-The Button ships a single `default` size — JetBrains Mono, uppercase, `tracking-widest`, `font-medium`. (FRAC-214 removed the unused `sm` / `lg` / `icon` sizes.)
+The Button ships a single `default` size — JetBrains Mono, uppercase, `tracking-widest`, `font-medium`.
 
 ## Layout
 
@@ -318,7 +318,7 @@ Borders resolve to one of three semantic tiers — pick by intent, not by eye:
 | **Definition** | `border-foreground/20` | A defining container edge on cream, without emphasis. | Hero search input + results dropdown, Hero keyboard-nav popover |
 | **Emphasis** | `[border-color:var(--accent,currentColor)]` | Themed house/section accent border — the same accent the button uses. For containers that want to carry the house color. Inherits `--accent` (set per page on `<main>`); falls back to `currentColor`. | `button-default`, Visit "Note" card (`NeighborhoodPage`), Events Luma embed (`EventsPage`) |
 
-The `--accent` custom property (renamed from the former button-accent var in FRAC-215) is set on each page's `<main>` to that page's house/section color and read by both the button and the Emphasis-tier borders. Focus/hover states (e.g. the Hero input's `focus:border-foreground/40`, the lab `focus:border-house-publications-deep/60`) sit deliberately outside this resting-tier vocabulary — they are transient states, not resting borders.
+The `--accent` custom property is set on each page's `<main>` to that page's house/section color and read by both the button and the Emphasis-tier borders. Focus/hover states (e.g. the Hero input's `focus:border-foreground/40`, the lab `focus:border-house-publications-deep/60`) sit deliberately outside this resting-tier vocabulary — they are transient states, not resting borders.
 
 ### Mandelbrot corners
 
