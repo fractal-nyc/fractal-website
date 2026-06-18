@@ -63,7 +63,7 @@ export function NeighborhoodPage() {
             </FadeIn>
 
             <FadeIn delay={0.15}>
-              <MandelbrotCorners size="sm" opacity={0.15} className="border [border-color:var(--accent,currentColor)] rounded-md p-9 md:px-10 md:py-8 mb-3 md:mb-10 bg-foreground/[0.03] text-foreground text-left max-w-xl mx-auto">
+              <MandelbrotCorners size="sm" opacity={0.15} className="border [border-color:var(--accent,currentColor)] rounded-md p-9 md:px-10 md:py-8 mb-3 md:mb-10 bg-background text-foreground text-left max-w-xl mx-auto">
                 <p className="text-label text-foreground mb-2 md:mb-3">
                   Note
                 </p>
