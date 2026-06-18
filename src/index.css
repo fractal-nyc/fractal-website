@@ -259,7 +259,7 @@
 }
 
 /* FRAC-52: dark-background button condition.
-   On pages with deeply saturated / dark backgrounds (e.g. LiberalArtsPage's
+   On pages with deeply saturated / dark backgrounds (e.g. EducationPage's
    `bg-house-education-deep`), the default cream frost (0.16 rest / 0.24
    hover) doesn't lift the button surface enough to carry an accent-colored
    text + border with legible contrast. Apply this class on the page's

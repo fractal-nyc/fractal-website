@@ -57,11 +57,11 @@ vi.mock("@/components/sections/OriginStory", () => ({
   OriginStory: () => <div data-testid="origin-story-mock" />,
 }));
 
-vi.mock("@/components/lab/DocumentGrid", () => ({
+vi.mock("@/components/publications/DocumentGrid", () => ({
   DocumentGrid: () => <div data-testid="document-grid-mock" />,
 }));
 
-vi.mock("@/components/lab/ArchiveToolbar", () => ({
+vi.mock("@/components/publications/ArchiveToolbar", () => ({
   ArchiveToolbar: () => <div data-testid="archive-toolbar-mock" />,
 }));
 
@@ -80,20 +80,20 @@ vi.mock("@/pages/StoryPage", () => ({
 vi.mock("@/pages/CampusPage", () => ({
   CampusPage: () => <main data-testid="page-campus" />,
 }));
-vi.mock("@/pages/NeighborhoodPage", () => ({
-  NeighborhoodPage: () => <main data-testid="page-neighborhood" />,
+vi.mock("@/pages/VisitPage", () => ({
+  VisitPage: () => <main data-testid="page-visit" />,
 }));
 vi.mock("@/pages/EventsPage", () => ({
   EventsPage: () => <main data-testid="page-events" />,
 }));
-vi.mock("@/pages/LiberalArtsPage", () => ({
-  LiberalArtsPage: () => <main data-testid="page-liberal-arts" />,
+vi.mock("@/pages/EducationPage", () => ({
+  EducationPage: () => <main data-testid="page-education" />,
 }));
 vi.mock("@/pages/PoliticalClubPage", () => ({
   PoliticalClubPage: () => <main data-testid="page-political-club" />,
 }));
-vi.mock("@/pages/LabPage", () => ({
-  LabPage: () => <main data-testid="page-lab" />,
+vi.mock("@/pages/PublicationsPage", () => ({
+  PublicationsPage: () => <main data-testid="page-publications" />,
 }));
 vi.mock("@/pages/PeoplePage", () => ({
   PeoplePage: () => <main data-testid="page-people" />,

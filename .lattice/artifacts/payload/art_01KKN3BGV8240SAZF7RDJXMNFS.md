@@ -1,1 +1,0 @@
-Replaced header nav with 8 new section links: Liberal Arts, Coliving, Campus, Political Club, Research Lab, Publication, Protocol, Events. Removed old community links grid and 'Get Involved' CTA button. Updated navbar logo to use Jacquard 24. Both desktop and mobile menus updated. Typecheck passes.

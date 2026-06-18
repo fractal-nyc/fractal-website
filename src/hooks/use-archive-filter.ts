@@ -1,10 +1,10 @@
 import { useState, useMemo, useCallback } from "react";
 import {
-  LAB_DOCUMENTS,
-  type LabDocument,
+  PUBLICATION_DOCUMENTS,
+  type PublicationDocument,
   getAllTags,
   getTagCounts,
-} from "@/data/lab-documents";
+} from "@/data/publications-documents";
 import { PEOPLE } from "@/data/houses";
 
 // ---------------------------------------------------------------------------
@@ -17,7 +17,7 @@ export interface ArchiveFilterState {
   /** Set of currently active tag slugs. */
   activeTags: Set<string>;
   /** Filtered documents (query AND tags compose). */
-  filtered: LabDocument[];
+  filtered: PublicationDocument[];
   /** Total number of documents before filtering. */
   total: number;
   /** Whether any filter is active. */
@@ -77,7 +77,7 @@ export function useArchiveFilter(): ArchiveFilterState {
   const isFiltering = query.trim().length > 0 || activeTags.size > 0;
 
   const filtered = useMemo(() => {
-    let results = LAB_DOCUMENTS;
+    let results = PUBLICATION_DOCUMENTS;
 
     // Query filter: case-insensitive substring on title, author name, description
     const q = query.trim().toLowerCase();
@@ -107,7 +107,7 @@ export function useArchiveFilter(): ArchiveFilterState {
     query,
     activeTags,
     filtered,
-    total: LAB_DOCUMENTS.length,
+    total: PUBLICATION_DOCUMENTS.length,
     isFiltering,
     allTags,
     tagCounts,

@@ -19,7 +19,7 @@ import { MandelbrotIcon } from "@/components/house/MandelbrotIcon";
 // This rewrite matches the shipped product reality:
 //   - Uppercase JetBrains Mono (site default body type)
 //   - Bordered, translucent surface (preserves the existing CTA look on
-//     EventsPage / NeighborhoodPage / PoliticalClubPage / PeoplePage / Campus
+//     EventsPage / VisitPage / PoliticalClubPage / PeoplePage / Campus
 //     / LiberalArts — see FRAC-86 regression test for the inline-block +
 //     max-w-xs pattern)
 //   - Real focus-visible ring (was missing sitewide)

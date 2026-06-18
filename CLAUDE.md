@@ -1,5 +1,14 @@
 # fractal-nyc
 
+## Orientation
+
+This file is the **work-tracking protocol** (Lattice) — one of four docs that govern this repo. Claude auto-loads `CLAUDE.md`; the others are *not* auto-loaded, so read them explicitly at session start:
+
+- **`AGENTS.md`** — **start here.** Session protocol: start-of-session git sync, house rules, `DESIGN.md` conformance, and pre-PR validation (`pnpm typecheck && pnpm test && pnpm build`). `AGENTS.md` points here for work tracking; this is the reverse pointer.
+- **`DESIGN.md`** — the canonical design system (tokens, color/type rules, shape motifs, component specs).
+- **`EDITING.md`** — maps every piece of visible copy to the file that holds it.
+- **`CLAUDE.md`** (this file) — the Lattice lifecycle: tasks, statuses, branches, PRs, review gates.
+
 ## Lattice
 
 > **MANDATORY: This project has Lattice initialized (`.lattice/` exists). You MUST use Lattice to track all work. Creating tasks, updating statuses, and following the workflow below is not optional — it is a hard requirement. Failure to track work in Lattice is a coordination failure: other agents and humans cannot see, build on, or trust untracked work. If you are about to write code and no Lattice task exists for it, stop and create one first.**

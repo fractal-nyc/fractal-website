@@ -20,11 +20,11 @@ function houseColor(route: string, prefer: "light" | "deep" = "light"): string {
 const sectionLinks = [
   { name: "Story",          href: "/story",             color: SECTIONS.story.accent },
   { name: "Campus",         href: "/campus",            color: houseColor("/campus") },
-  { name: "Visit",          href: "/neighborhood",      color: houseColor("/neighborhood") },
+  { name: "Visit",          href: "/visit",             color: houseColor("/visit") },
   { name: "Events",         href: "/events",            color: houseColor("/events") },
-  { name: "Education",      href: "/new-liberal-arts",  color: houseColor("/new-liberal-arts") },
+  { name: "Education",      href: "/education",         color: houseColor("/education") },
   { name: "Political Club", href: "/political-club",    color: houseColor("/political-club", "deep") },
-  { name: "Publications",   href: "/lab",               color: houseColor("/lab") },
+  { name: "Publications",   href: "/publications",      color: houseColor("/publications") },
   { name: "People",         href: "/people",            color: SECTIONS.people.light },
 ];
 

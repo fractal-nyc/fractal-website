@@ -1,7 +1,7 @@
 import { useState, useMemo, useCallback } from "react";
 import { PEOPLE, HOUSES, type Person, type House } from "@/data/houses";
-import { LAB_DOCUMENTS, formatAuthors } from "@/data/lab-documents";
-import { TAG_LABELS } from "@/data/lab-tags";
+import { PUBLICATION_DOCUMENTS, formatAuthors } from "@/data/publications-documents";
+import { TAG_LABELS } from "@/data/publications-tags";
 
 // ---------------------------------------------------------------------------
 // Search result types
@@ -24,11 +24,11 @@ export interface SearchResult {
 const PAGES = [
   { name: "Story", href: "/story", keywords: ["origin", "history", "founding", "about"] },
   { name: "Campus", href: "/campus", keywords: ["111 conselyea", "williamsburg", "coworking", "space", "rooftop"] },
-  { name: "Neighborhood", href: "/neighborhood", keywords: ["coliving", "co-living", "brooklyn", "mckibbin", "housing"] },
+  { name: "Visit", href: "/visit", keywords: ["neighborhood", "coliving", "co-living", "brooklyn", "mckibbin", "housing"] },
   { name: "Events", href: "/events", keywords: ["hackathon", "ai hacks", "singularity conference", "luma", "sidequest"] },
-  { name: "New Liberal Arts", href: "/new-liberal-arts", keywords: ["fractal u", "fractal university", "school", "education", "accelerator", "courses", "classes"] },
+  { name: "Education", href: "/education", keywords: ["new liberal arts", "liberal arts", "fractal u", "fractal university", "school", "education", "accelerator", "courses", "classes"] },
   { name: "Political Club", href: "/political-club", keywords: ["maximum new york", "maximum nyc", "civic", "government", "forum", "manhattan institute"] },
-  { name: "Lab", href: "/lab", keywords: ["research", "writing", "publishing", "fractal labs"] },
+  { name: "Publications", href: "/publications", keywords: ["lab", "research", "writing", "publishing", "fractal labs"] },
   { name: "People", href: "/people", keywords: ["team", "members", "network", "who"] },
   { name: "The Protocol", href: "/the-protocol", keywords: ["golden age", "golden age protocol", "strategy"] },
 ];
@@ -37,11 +37,11 @@ const PAGES = [
 const CONCEPT_ALIASES: { term: string; results: SearchResult[] }[] = [
   {
     term: "fractal u",
-    results: [{ type: "page", title: "New Liberal Arts", subtitle: "Fractal University", href: "/new-liberal-arts" }],
+    results: [{ type: "page", title: "Education", subtitle: "Fractal University", href: "/education" }],
   },
   {
     term: "fractal university",
-    results: [{ type: "page", title: "New Liberal Arts", subtitle: "Fractal University", href: "/new-liberal-arts" }],
+    results: [{ type: "page", title: "Education", subtitle: "Fractal University", href: "/education" }],
   },
   {
     term: "maximum new york",
@@ -61,11 +61,11 @@ const CONCEPT_ALIASES: { term: string; results: SearchResult[] }[] = [
   },
   {
     term: "cooperation machine",
-    results: [{ type: "page", title: "The Lab", subtitle: "Ivan's Cooperation Machine", href: "/lab" }],
+    results: [{ type: "page", title: "Publications", subtitle: "Ivan's Cooperation Machine", href: "/publications" }],
   },
   {
     term: "merlin",
-    results: [{ type: "page", title: "Neighborhood", subtitle: "Merlin's Place", href: "/neighborhood" }],
+    results: [{ type: "page", title: "Visit", subtitle: "Merlin's Place", href: "/visit" }],
   },
 ];
 
@@ -140,7 +140,7 @@ function searchDocuments(query: string): SearchResult[] {
   }
 
   const results: { result: SearchResult; score: number }[] = [];
-  for (const doc of LAB_DOCUMENTS) {
+  for (const doc of PUBLICATION_DOCUMENTS) {
     const titleScore = matchScore(doc.title, q);
     const authorScore =
       Math.max(
@@ -208,7 +208,7 @@ function searchTopics(query: string): SearchResult[] {
           type: "topic",
           title: label,
           subtitle: "Topic",
-          href: `/lab?tag=${slug}`,
+          href: `/publications?tag=${slug}`,
         },
         score,
       });

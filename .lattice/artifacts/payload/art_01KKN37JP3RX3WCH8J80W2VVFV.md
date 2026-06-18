@@ -1,1 +1,0 @@
-Rearranged hero layout: removed 'New York City' label, centered 'Fractal Collective' heading at top, moved 'In 2021...' to bottom-left, moved 'Explore our story' to bottom-right. Used flexbox with mt-auto for bottom positioning. Typecheck passes.

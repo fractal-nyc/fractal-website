@@ -22,7 +22,7 @@ For content edits (copy, data, assets), `EDITING.md` maps every piece of visible
 - **House colors stay in their house.** Each house's `{light, deep}` pair themes that house's own pages, banner, and avatar — per the scoping rules in `DESIGN.md` § Colors.
 - **Pair surfaces and text explicitly.** Every surface sets its text color on the same node, per the four canonical pairings in `DESIGN.md` § Colors.
 - **Reduced motion.** Every animation is gated by `usePrefersReducedMotion()` or `@media (prefers-reduced-motion: reduce)`.
-- **Copy and data live in their source-of-truth files.** House names, taglines, descriptions, palettes, and people: `src/data/houses.ts`. Publications archive: `src/data/lab-documents.ts`. Story gallery: `src/data/storyPhotos.ts`.
+- **Copy and data live in their source-of-truth files.** House names, taglines, descriptions, palettes, and people: `src/data/houses.ts`. Publications archive: `src/data/publications-documents.ts`. Story gallery: `src/data/storyPhotos.ts`.
 
 ## DESIGN.md conformance
 

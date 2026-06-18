@@ -1,1 +1,0 @@
-Created Coliving.tsx — light bg, two-column layout matching Campus style. Text about communal living model + image placeholder + stats row. Wired into Home.tsx.

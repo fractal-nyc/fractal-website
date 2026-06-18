@@ -641,6 +641,11 @@ const FADE_K = 9;
 const CENTER_REST_SCALE = 0.9;
 const CENTER_HOVER_SCALE = 0.95;
 
+// FRAC-226: the center octahedron's "The Protocol" button is temporarily
+// disabled. Flip this back to `true` to restore center-tap → /the-protocol
+// navigation plus its hover tooltip and pointer cursor.
+const PROTOCOL_BUTTON_ENABLED = false;
+
 function CenterOctahedron({
   onNavigate,
 }: {
@@ -716,7 +721,7 @@ function CenterOctahedron({
           visible from frame 0. A face whose banner texture hasn't arrived (or
           permanently failed) shows its section color here. */}
       <mesh geometry={geometry} material={placeholderMatArray}>
-        {hovered && (
+        {PROTOCOL_BUTTON_ENABLED && hovered && (
           <Html center distanceFactor={8} style={{ pointerEvents: "none" }}>
             <div style={tooltipStyle("hsl(var(--foreground))")}>The Protocol</div>
           </Html>
@@ -739,16 +744,20 @@ function CenterOctahedron({
           restores the same effective world-space tap radius (1.0 at rest,
           ~1.06 during the decorative hover scale-up). */}
       <mesh
-        {...tapHandlers}
-        onPointerOver={(e: ThreeEvent<PointerEvent>) => {
-          e.stopPropagation();
-          setHovered(true);
-          document.body.style.cursor = "pointer";
-        }}
-        onPointerOut={() => {
-          setHovered(false);
-          document.body.style.cursor = "auto";
-        }}
+        {...(PROTOCOL_BUTTON_ENABLED
+          ? {
+              ...tapHandlers,
+              onPointerOver: (e: ThreeEvent<PointerEvent>) => {
+                e.stopPropagation();
+                setHovered(true);
+                document.body.style.cursor = "pointer";
+              },
+              onPointerOut: () => {
+                setHovered(false);
+                document.body.style.cursor = "auto";
+              },
+            }
+          : {})}
       >
         <octahedronGeometry args={[1 / CENTER_REST_SCALE, 0]} />
         <meshBasicMaterial visible={false} />

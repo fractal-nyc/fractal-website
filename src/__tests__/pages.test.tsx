@@ -19,7 +19,7 @@ vi.mock("@/components/sections/OriginStory", () => ({
   OriginStory: () => <div data-testid="origin-story-mock" />,
 }));
 
-vi.mock("@/components/lab/DocumentGrid", () => ({
+vi.mock("@/components/publications/DocumentGrid", () => ({
   DocumentGrid: () => <div data-testid="document-grid-mock" />,
 }));
 
@@ -30,11 +30,11 @@ vi.mock("@/components/lab/DocumentGrid", () => ({
 import { Home } from "@/pages/Home";
 import { StoryPage } from "@/pages/StoryPage";
 import { CampusPage } from "@/pages/CampusPage";
-import { NeighborhoodPage } from "@/pages/NeighborhoodPage";
+import { VisitPage } from "@/pages/VisitPage";
 import { EventsPage } from "@/pages/EventsPage";
-import { LiberalArtsPage } from "@/pages/LiberalArtsPage";
+import { EducationPage } from "@/pages/EducationPage";
 import { PoliticalClubPage } from "@/pages/PoliticalClubPage";
-import { LabPage } from "@/pages/LabPage";
+import { PublicationsPage } from "@/pages/PublicationsPage";
 import { PeoplePage } from "@/pages/PeoplePage";
 
 // ---------------------------------------------------------------------------
@@ -57,11 +57,11 @@ function renderPage(Page: React.ComponentType, path: string) {
 const pages = [
   { name: "StoryPage", Component: StoryPage, path: "/story" },
   { name: "CampusPage", Component: CampusPage, path: "/campus" },
-  { name: "NeighborhoodPage", Component: NeighborhoodPage, path: "/neighborhood" },
+  { name: "VisitPage", Component: VisitPage, path: "/visit" },
   { name: "EventsPage", Component: EventsPage, path: "/events" },
-  { name: "LiberalArtsPage", Component: LiberalArtsPage, path: "/new-liberal-arts" },
+  { name: "EducationPage", Component: EducationPage, path: "/education" },
   { name: "PoliticalClubPage", Component: PoliticalClubPage, path: "/political-club" },
-  { name: "LabPage", Component: LabPage, path: "/lab" },
+  { name: "PublicationsPage", Component: PublicationsPage, path: "/publications" },
   { name: "PeoplePage", Component: PeoplePage, path: "/people" },
 ] as const;
 
@@ -111,11 +111,11 @@ describe("Route paths match expected URLs", () => {
   const expectedRoutes = [
     { path: "/story", label: "Story" },
     { path: "/campus", label: "Campus" },
-    { path: "/neighborhood", label: "Visit" },
+    { path: "/visit", label: "Visit" },
     { path: "/events", label: "Events" },
-    { path: "/new-liberal-arts", label: "Education" },
+    { path: "/education", label: "Education" },
     { path: "/political-club", label: "Political Club" },
-    { path: "/lab", label: "Publications" },
+    { path: "/publications", label: "Publications" },
     { path: "/people", label: "People" },
   ];
 

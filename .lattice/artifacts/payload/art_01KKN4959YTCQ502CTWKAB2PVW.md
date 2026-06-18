@@ -1,1 +1,0 @@
-Updated existing Campus.tsx — enriched copy with specific space types (living rooms turned classrooms, rooftop gatherings, co-working hub). Three paragraphs instead of two. Same component structure preserved.

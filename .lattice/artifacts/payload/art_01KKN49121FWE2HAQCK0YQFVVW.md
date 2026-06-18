@@ -1,1 +1,0 @@
-Created FuturistLiberalArts.tsx — dark bg section with two-column layout. Left: heading + intro paragraphs about futurist liberal arts philosophy. Right: 2x3 grid of disciplines (Systems Thinking, Applied Philosophy, etc.). Bottom pull quote. Wired into Home.tsx.

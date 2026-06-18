@@ -26,10 +26,10 @@ export interface NavNode {
 }
 
 export const OUTER_NAV_NODES: NavNode[] = [
-  { label: "Visit",          route: "/neighborhood",     color: housePalette("neighborhood"), vertexIndex: 3 },
-  { label: "Events",         route: "/events",           color: housePalette("events"),       vertexIndex: 2 },
-  { label: "Campus",         route: "/campus",           color: housePalette("campus"),       vertexIndex: 0 },
-  { label: "Education",      route: "/new-liberal-arts", color: housePalette("school"),       vertexIndex: 1 },
-  { label: "Publications",   route: "/lab",              color: housePalette("lab"),          vertexIndex: 5 },
-  { label: "Story",          route: "/story",            color: SECTIONS.story.accent,        vertexIndex: 4 },
+  { label: "Visit",          route: "/visit",        color: housePalette("neighborhood"), vertexIndex: 3 },
+  { label: "Events",         route: "/events",       color: housePalette("events"),       vertexIndex: 2 },
+  { label: "Campus",         route: "/campus",       color: housePalette("campus"),       vertexIndex: 0 },
+  { label: "Education",      route: "/education",    color: housePalette("school"),       vertexIndex: 1 },
+  { label: "Publications",   route: "/publications", color: housePalette("lab"),          vertexIndex: 5 },
+  { label: "Story",          route: "/story",        color: SECTIONS.story.accent,        vertexIndex: 4 },
 ];

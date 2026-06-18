@@ -1,13 +1,13 @@
 import { useEffect } from "react";
-import { Switch, Route, Router as WouterRouter, useLocation } from "wouter";
+import { Switch, Route, Redirect, Router as WouterRouter, useLocation } from "wouter";
 import { Home } from "@/pages/Home";
 import { ProtocolPage } from "@/pages/ProtocolPage";
-import { NeighborhoodPage } from "@/pages/NeighborhoodPage";
+import { VisitPage } from "@/pages/VisitPage";
 import { EventsPage } from "@/pages/EventsPage";
 import { CampusPage } from "@/pages/CampusPage";
-import { LiberalArtsPage } from "@/pages/LiberalArtsPage";
+import { EducationPage } from "@/pages/EducationPage";
 import { PoliticalClubPage } from "@/pages/PoliticalClubPage";
-import { LabPage } from "@/pages/LabPage";
+import { PublicationsPage } from "@/pages/PublicationsPage";
 import { StoryPage } from "@/pages/StoryPage";
 import { PeoplePage } from "@/pages/PeoplePage";
 
@@ -26,14 +26,20 @@ function Router() {
     <Switch>
       <Route path="/" component={Home} />
       <Route path="/the-protocol" component={ProtocolPage} />
-      <Route path="/neighborhood" component={NeighborhoodPage} />
-      <Route path="/new-liberal-arts" component={LiberalArtsPage} />
+      <Route path="/visit" component={VisitPage} />
+      <Route path="/education" component={EducationPage} />
       <Route path="/campus" component={CampusPage} />
       <Route path="/events" component={EventsPage} />
       <Route path="/political-club" component={PoliticalClubPage} />
-      <Route path="/lab" component={LabPage} />
+      <Route path="/publications" component={PublicationsPage} />
       <Route path="/story" component={StoryPage} />
       <Route path="/people" component={PeoplePage} />
+
+      {/* FRAC-228: redirects from the old URLs so existing bookmarks/links
+          keep working after the rename to match the website labels. */}
+      <Route path="/neighborhood">{() => <Redirect to="/visit" />}</Route>
+      <Route path="/new-liberal-arts">{() => <Redirect to="/education" />}</Route>
+      <Route path="/lab">{() => <Redirect to="/publications" />}</Route>
 
       <Route component={NotFound} />
     </Switch>

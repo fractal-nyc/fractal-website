@@ -43,7 +43,7 @@ If step 5 fails, tell Claude what's wrong — one round of correction is usually
 - **`src/data/houses.ts`** — the source of truth for the six houses and the people directory.
   - Each house: display name, tagline (*"Want to live here?"*, *"Want to host?"*, …), 2–3 paragraph description, color pair, leaders, external links, visibility flags.
   - `PEOPLE`: every person's name, role, houses, and social links.
-- **`src/data/lab-documents.ts`** — every entry in the Publications archive (`/lab`): title, authors, description, URL, category, tags, `featured` flag.
+- **`src/data/publications-documents.ts`** — every entry in the Publications archive (`/publications`): title, authors, description, URL, category, tags, `featured` flag.
 - **`src/data/storyPhotos.ts`** — the Story page photo gallery: image paths, alt text, and gallery layout.
 
 ### Site-wide (every page)
@@ -79,7 +79,7 @@ The longest page; everything below is in `Campus.tsx`:
 - Section copy: overview + amenities, four audiences, AI Accelerator (+ apply link), *"A place to get shit done…"*, quotes from Andrew Rose and Jake Zegil, events list, Williamsburg / McCarren Park blurbs, team bios, *"…by the way, what's Fractal?"*.
 - **Photo grid** — the `campusPhotos` array (src, alt, caption); images in `public/images/campus/`.
 
-### Visit (`/neighborhood` — `src/pages/NeighborhoodPage.tsx`)
+### Visit (`/visit` — `src/pages/VisitPage.tsx`)
 
 - Headline *"Live Near 100 Friends & Peers"*, visitor-form CTA (Airtable URL), and the *"Note"* box explaining how staying here works — all in the page file.
 
@@ -87,14 +87,14 @@ The longest page; everything below is in `Campus.tsx`:
 
 - Headlines *"Join Tech Events"*, *"Host an event in our space"*, *"Stay in the Loop"*; Luma calendar embed + link; hosting instructions; `crystal@fractalnyc.com`; Discord button — all in the page file.
 
-### Education (`/new-liberal-arts` — copy in `src/components/sections/LiberalArts.tsx`)
+### Education (`/education` — copy in `src/components/sections/Education.tsx`)
 
 - Headline *"Tech, Entrepreneurship, Rhetoric, Civics"*, the *"coming June 2026"* note, the Fractal U blurb, CTA buttons (Substack, instructor application), and two body paragraphs.
 
-### Publications (`/lab` — `src/pages/LabPage.tsx`)
+### Publications (`/publications` — `src/pages/PublicationsPage.tsx`)
 
 - Headline and intro copy in the page file.
-- **The archive itself** — add/edit/remove entries in `src/data/lab-documents.ts`; tag labels in `src/data/lab-tags.ts`.
+- **The archive itself** — add/edit/remove entries in `src/data/publications-documents.ts`; tag labels in `src/data/publications-tags.ts`.
 
 ### Political Club (`/political-club` — `src/pages/PoliticalClubPage.tsx`)
 
@@ -114,9 +114,9 @@ The longest page; everything below is in `Campus.tsx`:
 
 ### Pattern A — Replace a single piece of copy
 
-> In `src/pages/NeighborhoodPage.tsx`, change the headline "Live Near 100 Friends & Peers" to: **"[your new headline]"**. Make only this change.
+> In `src/pages/VisitPage.tsx`, change the headline "Live Near 100 Friends & Peers" to: **"[your new headline]"**. Make only this change.
 
-**Verify:** `pnpm dev`, open `/neighborhood` — the big display headline should read your new text.
+**Verify:** `pnpm dev`, open `/visit` — the big display headline should read your new text.
 
 ### Pattern B — Edit house data (tagline, description, people)
 
@@ -128,9 +128,9 @@ To add a person: ask Claude to add an entry to the `PEOPLE` array with name, rol
 
 ### Pattern C — Add a publication to the archive
 
-> In `src/data/lab-documents.ts`, add a new document following the existing entry shape: title **"[title]"**, authors **["person-id"]**, description **"[1–2 sentences]"**, url **"[link]"**, category **"[substack/essay/podcast/talk/video/social/project]"**, tags **["…"]**. Author ids must match `PEOPLE` ids in `src/data/houses.ts`.
+> In `src/data/publications-documents.ts`, add a new document following the existing entry shape: title **"[title]"**, authors **["person-id"]**, description **"[1–2 sentences]"**, url **"[link]"**, category **"[substack/essay/podcast/talk/video/social/project]"**, tags **["…"]**. Author ids must match `PEOPLE` ids in `src/data/houses.ts`.
 
-**Verify:** open `/lab` and search for the new title.
+**Verify:** open `/publications` and search for the new title.
 
 ### Pattern D — Site-wide copy (nav blurbs, footer)
 

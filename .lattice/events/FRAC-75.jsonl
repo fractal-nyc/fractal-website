@@ -1,2 +1,0 @@
-{"actor":"agent:claude-opus-4-orchestrator","data":{"short_id":"FRAC-111"},"id":"ev_01KNPT2B40J629XDA85NWVSN1K","schema_version":1,"task_id":"FRAC-75","ts":"2026-04-08T15:06:12Z","type":"task_short_id_assigned"}
-{"actor":"agent:claude-opus-4-orchestrator","data":{"from":"backlog","to":"cancelled"},"id":"ev_01KNPTBVKB9KSP3D3WHSHCR3XZ","provenance":{"reason":"Duplicate of FRAC-119 (same Neighborhood shrink-note task)"},"schema_version":1,"task_id":"FRAC-75","ts":"2026-04-08T15:11:24Z","type":"status_changed"}

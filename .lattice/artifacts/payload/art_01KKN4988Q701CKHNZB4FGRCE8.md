@@ -1,1 +1,0 @@
-Created ResearchLab.tsx — dark bg with 2x2 research areas grid. Numbered items (01-04): urban governance, human flourishing, tools for thought, city as research site. Wired into Home.tsx.

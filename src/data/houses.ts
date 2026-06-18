@@ -215,8 +215,8 @@ export const HOUSES: House[] = [
     name: "Visit",
     displayName: "Visit",
     subtitle: "Visit",
-    slug: "neighborhood",
-    route: "/neighborhood",
+    slug: "visit",
+    route: "/visit",
     palette: { light: "#889460", deep: "#4A5A30" },
     tagline: "Want to live here?",
     description:
@@ -268,8 +268,8 @@ export const HOUSES: House[] = [
     name: "Education",
     displayName: "Education",
     subtitle: "Education",
-    slug: "new-liberal-arts",
-    route: "/new-liberal-arts",
+    slug: "education",
+    route: "/education",
     palette: { light: "#C41E20", deep: "#5C1010" },
     tagline: "Want to learn?",
     description:
@@ -305,8 +305,8 @@ export const HOUSES: House[] = [
     name: "Publications",
     displayName: "Publications",
     subtitle: "Publications",
-    slug: "lab",
-    route: "/lab",
+    slug: "publications",
+    route: "/publications",
     palette: { light: "#E870A0", deep: "#C44878" },
     tagline: "Want to think, build, publish?",
     description:
