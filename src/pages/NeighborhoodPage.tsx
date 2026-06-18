@@ -72,7 +72,7 @@ export function NeighborhoodPage() {
                 </p>
                 <div className="flex justify-center mt-1.5 md:mt-3">
                   <ol className="list-decimal list-inside space-y-1 md:space-y-2 text-body leading-relaxed text-foreground-muted text-left">
-                    <li>You fill out one of the forms below.</li>
+                    <li>You fill out the form above.</li>
                     <li>
                       An automatic message sends your info to leaseholders.
                     </li>
