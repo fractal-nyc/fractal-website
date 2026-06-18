@@ -179,6 +179,16 @@ Set the text color explicitly on the same node as the surface. A nested cream su
 
 **Known concern:** the Publications page (`LabPage`) floods `bg-house-publications-light` (`#E870A0`, a bright pink) under cream `text-background`. Cream-on-pink is a borderline-contrast pairing worth a revisit.
 
+### 3D-scene palette (out-of-token)
+
+The WebGL hero scenes carry their own material/light palette that lives **deliberately outside** the 2D token system: Three.js materials and lights set color in JS props, where CSS custom properties don't resolve, so these are raw hex literals by necessity, not drift. They're sanctioned exceptions, grandfathered in `scripts/design-conformance.baseline.json` (this section is the *intent* half of that baseline entry). They never appear in 2D CSS — reach for them only inside the `three/` scene code.
+
+| Source | Colors | Role |
+|---|---|---|
+| `OctahedronHero.tsx` | `#e8e0d0` `#e0c880` `#ddb866` `#cc9955` `#c4a265` `#bb8844` `#8a7a6a` | octahedron gold/sand face-material tints |
+| `FractalCityScene.tsx` | `#ffaa66` `#ffcc88` `#f5f0ea` `#aabbcc` `#ffffff` | scene point/directional lights + ambient (`#aabbcc` is the cool fill `directionalLight`) |
+| `heroNavNodes.ts` | `#c4a265` | `PALETTE_FALLBACK` — the model gold used when a section/house color is missing |
+
 ## Typography
 
 Four families ship, mapped onto three semantic tiers. Two families are declared as tokens (`font-sans`, `font-mono`); the two display families have their rules in global CSS.
@@ -186,7 +196,7 @@ Four families ship, mapped onto three semantic tiers. Two families are declared 
 - **Fraunces** (`font-serif`) — the **Display** tier: headings, titles, and editorial highlights. Bare `h1–h6` default to plain Fraunces (family only, no forced case/style/weight); the visual tier is set explicitly at the call site via `.text-display` / `.text-title` / `.text-subtitle`. Heading LEVEL (document outline / a11y) is decoupled from visual TIER.
 - **Inter** (`font-sans`) — the **Body** tier: the content family for body copy, leads, asides, and editorial sign-offs (bylines, attributions).
 - **JetBrains Mono** (`font-mono`) — the **Chrome** tier: the non-content UI furniture — all the buttons, bars, labels, metadata, inputs, and frames that let users *control* the software (think address bar, tabs, nav buttons, status bars).
-- **Jacquard 24** — a display script (sits within the Display key). Inline-styled on the Navbar wordmark, where a `[style*="Jacquard"]` rule in `src/index.css` renders it in its natural case and posture; it also appears as the monogram letter and arc tagline inside each per-page banner SVG, where the family is embedded (base64) directly in the SVG so it renders independent of page CSS.
+- **Jacquard 24** — a display script (sits within the Display key). It headlines the Navbar, where a `[style*="Jacquard"]` rule in `src/index.css` renders it in its natural case and posture; it also appears as the monogram letter and arc tagline inside each per-page banner SVG, where the family is embedded (base64) directly in the SVG so it renders independent of page CSS. The Navbar is a **bespoke inline-styled display surface**: the whole mega-menu sets `fontSize`/`fontWeight`/`fontFamily` directly (`Navbar.tsx`, e.g. lines ~78, 90, 100, 180, 186, 218, 225, 273, 285, 318, 347), mixing Jacquard 24 caps with weight-100/300 mono and `clamp()` sizing — deliberately **outside** the semantic `.text-*` scale. It's low-consistency-expectation signature chrome; don't normalize it onto the type utilities.
 
 Global rules: `body` renders normal-case by default; uppercase is opt-in via `.font-serif` or the chrome utilities below.
 
@@ -213,6 +223,8 @@ The scale is delivered as utility classes in `src/index.css`. Each utility maps 
 | `.text-aside` | weight 400, italic, leading-relaxed | `text-base` |
 
 `.text-aside` is the editorial italic voice — bylines, attributions, role labels, parenthetical asides. It pairs with `.text-subtitle` on quoted passages: the quote uses `.text-subtitle`, the byline uses `.text-aside`.
+
+Inline `<strong>` emphasis in body copy renders at `font-semibold` (weight 600) over the Inter-400 body — the sanctioned body-emphasis weight (used in `Campus.tsx`). `<strong>` semantically wants visual weight, and 600 is a measured editorial bump rather than a bold.
 
 **Chrome tier (JetBrains Mono)**
 
@@ -254,6 +266,7 @@ The Button ships a single `default` size — JetBrains Mono, uppercase, `trackin
 
 - `px-6` — the mobile gutter and default page-edge inset.
 - `px-[4.5%]` — the full-bleed editorial gutter for sections whose breathing room scales with viewport width.
+- `md:px-[22%]` — the centered narrow-content desktop gutter: mobile stays `px-6`, then on `md+` a deep percentage inset squeezes a single column of editorial copy to the center of wide viewports. Used at `EventsPage.tsx:36`, `LabPage.tsx:38`, `NeighborhoodPage.tsx:34`, `LiberalArts.tsx:8`.
 
 ### Containers
 
@@ -342,7 +355,8 @@ Five components are modeled in the `components:` YAML block; the rest are descri
 
 ### Prose-only
 
-- **Navbar wordmark** — Jacquard 24, inline-styled, sized fluidly via `clamp()`.
+- **Navbar** — a bespoke inline-styled display surface, not just the wordmark. The wordmark is Jacquard 24 sized fluidly via `clamp()`, and the entire expanded mega-menu likewise sets `fontSize`/`fontWeight`/`fontFamily` inline (Jacquard 24 caps + weight-100/300 mono, `clamp()` sizing) — intentionally outside the `.text-*` scale (see §Typography). Treat it as signature chrome, themed but not on the semantic type system.
+- **`FractalPattern`** (`src/components/ui/FractalPattern.tsx`) — the low-opacity Sierpinski-tessellation wallpaper placed as the first child of `<main>` so it sits behind content. Its `color` prop is injected straight into SVG `stroke`/`fill` **presentation attributes**, where `var()` does **not** resolve — so the value must be a **literal hex sourced from the data model** (`HOUSES.find(...).palette.{light|deep}` / `SECTIONS.*`), never a hand-typed hex and never a CSS var. FRAC-206 established the convention (Political Club: `const PC_COLOR = HOUSES.find(h => h.id === "forum")!.palette.light`); FRAC-219 extends it to the remaining five house pages (Campus, Visit, Publications, Events, Education).
 - **Hero combobox** — the search/filter combobox on the homepage hero, with full combobox/listbox a11y semantics.
 - **OctahedronHero** — the homepage 3D scene (Three.js / React Three Fiber): an eight-face octahedron, each face carrying a section photo, with auto-rotation and breathing animations all gated by `usePrefersReducedMotion()`. Keyboard users reach the destination routes via the `.sr-only-focusable` skip-nav. Face order is locked in `src/components/three/OctahedronHero.tsx`.
 
