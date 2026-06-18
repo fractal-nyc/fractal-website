@@ -7,9 +7,14 @@ import { FractalPattern } from "@/components/ui/FractalPattern";
 import { CornerDecorations } from "@/components/ui/MandelbrotCorners";
 import { Button } from "@/components/ui/button";
 import { EventsBannerSVG } from "@/components/house/EventsBannerSVG";
+import { HOUSES } from "@/data/houses";
 
 const LUMA_EVENTS_URL = "https://lu.ma/nyc-tech";
 const CRYSTAL_MAILTO = "mailto:crystal@fractalnyc.com";
+
+// FRAC-206/219: SVG stroke/fill needs a literal hex (var() doesn't resolve in SVG
+// presentation attributes); sourced from the canonical Events palette.
+const EVENTS_COLOR = HOUSES.find((h) => h.id === "events")!.palette.deep;
 
 export function EventsPage() {
   return (
@@ -17,7 +22,7 @@ export function EventsPage() {
       className="relative min-h-screen bg-house-events-light text-foreground selection:bg-foreground selection:text-background"
       style={{ "--accent": "var(--color-house-events-deep)" } as CSSProperties}
     >
-      <FractalPattern color="#C13B2A" />
+      <FractalPattern color={EVENTS_COLOR} />
       <div className="relative z-10">
       <Navbar />
       <div

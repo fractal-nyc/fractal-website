@@ -9,6 +9,11 @@ import { ArchiveToolbar } from "@/components/lab/ArchiveToolbar";
 import { useArchiveFilter } from "@/hooks/use-archive-filter";
 import { FractalPattern } from "@/components/ui/FractalPattern";
 import { PublicationsBannerSVG } from "@/components/house/PublicationsBannerSVG";
+import { HOUSES } from "@/data/houses";
+
+// FRAC-206/219: SVG stroke/fill needs a literal hex (var() doesn't resolve in SVG
+// presentation attributes); sourced from the canonical Publications (lab) palette.
+const PUBLICATIONS_COLOR = HOUSES.find((h) => h.id === "lab")!.palette.deep;
 
 export function LabPage() {
   const filter = useArchiveFilter();
@@ -17,7 +22,7 @@ export function LabPage() {
       className="relative min-h-screen bg-house-publications-light text-background selection:bg-foreground selection:text-background"
       style={{ "--accent": "var(--color-house-publications-deep)" } as CSSProperties}
     >
-      <FractalPattern color="#C44878" />
+      <FractalPattern color={PUBLICATIONS_COLOR} />
       <div className="relative z-10">
       <Navbar />
       <div

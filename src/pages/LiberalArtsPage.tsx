@@ -4,6 +4,12 @@ import { LiberalArts } from "@/components/sections/LiberalArts";
 import { Footer } from "@/components/layout/Footer";
 import { FractalPattern } from "@/components/ui/FractalPattern";
 import { EducationBannerSVG } from "@/components/house/EducationBannerSVG";
+import { HOUSES } from "@/data/houses";
+
+// FRAC-206/219: SVG stroke/fill needs a literal hex (var() doesn't resolve in SVG
+// presentation attributes); Education inverts (accent = light), sourced from the
+// canonical Education (school) palette.
+const EDUCATION_COLOR = HOUSES.find((h) => h.id === "school")!.palette.light;
 
 export function LiberalArtsPage() {
   return (
@@ -11,7 +17,7 @@ export function LiberalArtsPage() {
       className="btn-on-dark relative min-h-screen bg-house-education-deep text-background selection:bg-foreground selection:text-background"
       style={{ "--accent": "var(--color-house-education-light)" } as CSSProperties}
     >
-      <FractalPattern color="#C41E20" />
+      <FractalPattern color={EDUCATION_COLOR} />
       <div className="relative z-10">
         <Navbar />
         <div

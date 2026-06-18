@@ -4,6 +4,11 @@ import { Campus } from "@/components/sections/Campus";
 import { Footer } from "@/components/layout/Footer";
 import { FractalPattern } from "@/components/ui/FractalPattern";
 import { CampusBannerSVG } from "@/components/house/CampusBannerSVG";
+import { HOUSES } from "@/data/houses";
+
+// FRAC-206/219: SVG stroke/fill needs a literal hex (var() doesn't resolve in SVG
+// presentation attributes); sourced from the canonical Campus palette.
+const CAMPUS_COLOR = HOUSES.find((h) => h.id === "campus")!.palette.deep;
 
 export function CampusPage() {
   return (
@@ -11,7 +16,7 @@ export function CampusPage() {
       className="relative min-h-screen bg-house-campus-light text-background selection:bg-foreground selection:text-background"
       style={{ "--accent": "var(--color-house-campus-deep)" } as CSSProperties}
     >
-      <FractalPattern color="#1A3A2E" />
+      <FractalPattern color={CAMPUS_COLOR} />
       <div className="relative z-10">
         <Navbar />
         {/* Flanking pennants over the hero region — purely decorative, never

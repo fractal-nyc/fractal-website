@@ -7,6 +7,11 @@ import { FractalPattern } from "@/components/ui/FractalPattern";
 import { MandelbrotCorners } from "@/components/ui/MandelbrotCorners";
 import { Button } from "@/components/ui/button";
 import { VisitBannerSVG } from "@/components/house/VisitBannerSVG";
+import { HOUSES } from "@/data/houses";
+
+// FRAC-206/219: SVG stroke/fill needs a literal hex (var() doesn't resolve in SVG
+// presentation attributes); sourced from the canonical Visit (neighborhood) palette.
+const VISIT_COLOR = HOUSES.find((h) => h.id === "neighborhood")!.palette.deep;
 
 export function NeighborhoodPage() {
   return (
@@ -14,7 +19,7 @@ export function NeighborhoodPage() {
       className="relative min-h-screen bg-house-visit-light text-foreground selection:bg-foreground selection:text-background"
       style={{ "--accent": "var(--color-house-visit-deep)" } as CSSProperties}
     >
-      <FractalPattern color="#4A5A30" />
+      <FractalPattern color={VISIT_COLOR} />
       <div className="relative z-10">
       <Navbar />
       <div
