@@ -1,4 +1,6 @@
 import type { CSSProperties } from "react";
+import { useRef } from "react";
+import { useBannerAboveFooter } from "@/hooks/useBannerAboveFooter";
 import { Navbar } from "@/components/layout/Navbar";
 import { Education } from "@/components/sections/Education";
 import { Footer } from "@/components/layout/Footer";
@@ -12,6 +14,9 @@ import { HOUSES } from "@/data/houses";
 const EDUCATION_COLOR = HOUSES.find((h) => h.id === "school")!.palette.light;
 
 export function EducationPage() {
+  const bannerRef = useRef<HTMLDivElement>(null);
+  useBannerAboveFooter(bannerRef);
+
   return (
     <main
       className="btn-on-dark relative min-h-screen bg-house-education-deep text-background selection:bg-foreground selection:text-background"
@@ -21,8 +26,9 @@ export function EducationPage() {
       <div className="relative z-10">
         <Navbar />
         <div
+          ref={bannerRef}
           aria-hidden="true"
-          className="pointer-events-none absolute inset-x-4 sm:inset-x-8 md:inset-x-12 lg:inset-x-16 top-28 md:top-36 z-0 hidden md:flex md:justify-between"
+          className="pointer-events-none fixed inset-x-4 sm:inset-x-8 md:inset-x-12 lg:inset-x-16 top-28 md:top-36 z-0 hidden md:flex md:justify-between"
           style={{ height: "min(72vh, 660px)" }}
         >
           <div className="pointer-events-auto h-full w-[24%] md:w-[16%] max-w-[210px]">

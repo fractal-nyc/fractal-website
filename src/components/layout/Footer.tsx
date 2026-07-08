@@ -20,7 +20,7 @@ export function Footer() {
   };
 
   return (
-    <footer className="relative overflow-hidden">
+    <footer data-site-footer className="relative overflow-hidden">
       {/* CTA section — black background, white text, centered */}
       <div className="relative border-t border-foreground-faint bg-foreground text-background py-12 md:py-20 overflow-hidden">
         {/* Mandelbrot top corners — CTA section */}

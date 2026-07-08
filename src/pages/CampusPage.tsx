@@ -1,4 +1,6 @@
 import type { CSSProperties } from "react";
+import { useRef } from "react";
+import { useBannerAboveFooter } from "@/hooks/useBannerAboveFooter";
 import { Navbar } from "@/components/layout/Navbar";
 import { Campus } from "@/components/sections/Campus";
 import { Footer } from "@/components/layout/Footer";
@@ -11,6 +13,9 @@ import { HOUSES } from "@/data/houses";
 const CAMPUS_COLOR = HOUSES.find((h) => h.id === "campus")!.palette.deep;
 
 export function CampusPage() {
+  const bannerRef = useRef<HTMLDivElement>(null);
+  useBannerAboveFooter(bannerRef);
+
   return (
     <main
       className="relative min-h-screen bg-house-campus-light text-background selection:bg-foreground selection:text-background"
@@ -27,8 +32,9 @@ export function CampusPage() {
             breakpoints; horizontal inset gives them breathing room from the
             screen edge. */}
         <div
+          ref={bannerRef}
           aria-hidden="true"
-          className="pointer-events-none absolute inset-x-4 sm:inset-x-8 md:inset-x-12 lg:inset-x-16 top-28 md:top-36 z-0 hidden md:flex justify-between"
+          className="pointer-events-none fixed inset-x-4 sm:inset-x-8 md:inset-x-12 lg:inset-x-16 top-28 md:top-36 z-0 hidden md:flex justify-between"
           style={{ height: "min(72vh, 660px)" }}
         >
           <div className="pointer-events-auto h-full w-[24%] md:w-[16%] max-w-[210px]">
