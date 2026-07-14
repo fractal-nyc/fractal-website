@@ -49,9 +49,9 @@ If step 5 fails, tell Claude what's wrong — one round of correction is usually
 ### Site-wide (every page)
 
 - **Top navigation** — `src/components/layout/Navbar.tsx`
-  - Wordmark: *"Fractal" / "Collective"*.
-  - Two corner blurbs: `LEFT_TEXT` (*"In 2021, our small group of friends…"*) and `RIGHT_TEXT` (*"we believe small groups…"*).
-  - Section links are derived from `houses.ts` plus hard-coded Story and People entries.
+  - Wordmark: *"Fractal"*.
+  - The menu rows live in the `NAV_GROUPS` array, grouped **Spaces** / **Education** / **Community**. Each row is a letter, a label, a color, and a destination (`route` for an internal page, `href` for an external link). Row colors are read from `houses.ts`, so change a house's color there and the menu follows.
+  - Every row must have a destination — there are deliberately no disabled/"coming soon" rows. The member-portal row (*"Enter the Fractal"*) is commented out in `NAV_GROUPS` until the portal exists.
 - **Footer** — `src/components/layout/Footer.tsx`
   - Discord CTA (*"If you're in NYC and would like to introduce yourself…"*), Discord invite URL, *"New York City"*, `hello@fractalnyc.com`, wordmark + *"New York City Collective"*, copyright line.
 - **Browser tab title & head metadata** — `index.html`. Also holds the font loading and image preloads (see [Asset swaps](#pattern-e--asset-swaps)).
@@ -79,34 +79,39 @@ The longest page; everything below is in `Campus.tsx`:
 - Section copy: overview + amenities, four audiences, AI Accelerator (+ apply link), *"A place to get shit done…"*, quotes from Andrew Rose and Jake Zegil, events list, Williamsburg / McCarren Park blurbs, team bios, *"…by the way, what's Fractal?"*.
 - **Photo grid** — the `campusPhotos` array (src, alt, caption); images in `public/images/campus/`.
 
-### Visit (`/visit` — `src/pages/VisitPage.tsx`)
+### Fractal Co-Living (`/co-living` — `src/pages/CoLivingPage.tsx`)
 
-- Headline *"Live Near 100 Friends & Peers"*, visitor-form CTA (Airtable URL), and the *"Note"* box explaining how staying here works — all in the page file.
+- Headline *"Live Near Your Friends"* and the intro paragraph, in the page file.
+- **"Visiting NYC?" callout** — the copy, plus two links held as constants at the top of the page file: `HOUSING_FORM_URL` (the Airtable housing interest form) and `DISCORD_URL`. To repoint either link, edit the constant, not the JSX.
+- **The map** — `src/components/sections/HousingMap.tsx` (Leaflet; house pins read their colors from `houses.ts`).
+- **Photo strip** — the `PHOTOS` array in the page file; images in `public/images/story/`.
 
 ### Events (`/events` — `src/pages/EventsPage.tsx`)
 
 - Headlines *"Join Tech Events"*, *"Host an event in our space"*, *"Stay in the Loop"*; Luma calendar embed + link; hosting instructions; `crystal@fractalnyc.com`; Discord button — all in the page file.
-
-### Education (`/education` — copy in `src/components/sections/Education.tsx`)
-
-- Headline *"Tech, Entrepreneurship, Rhetoric, Civics"*, the *"coming June 2026"* note, the Fractal U blurb, CTA buttons (Substack, instructor application), and two body paragraphs.
 
 ### Publications (`/publications` — `src/pages/PublicationsPage.tsx`)
 
 - Headline and intro copy in the page file.
 - **The archive itself** — add/edit/remove entries in `src/data/publications-documents.ts`; tag labels in `src/data/publications-tags.ts`.
 
-### Political Club (`/political-club` — `src/pages/PoliticalClubPage.tsx`)
-
-- Headline *"Maximum New York — A New Civics School"* and the CTA button. The page is intentionally hidden from the navbar (flags in `houses.ts`); the route stays live.
-
-### People (`/people` — `src/pages/PeoplePage.tsx`)
-
-- Headline *"A Fractal Is a Friendship Infrastructure"*, Discord button, and the members-portal teaser. Hidden from the navbar.
-
 ### The Protocol (`/the-protocol` — `src/pages/ProtocolPage.tsx`)
 
 - Visual-only page (animated Sierpinski carpet, `src/components/sections/SierpinskiCarpet.tsx`). No copy.
+
+### Retired pages — Education, Political Club, People
+
+**These three pages no longer exist. There is no copy to edit.**
+
+| Page | Was at | Copy used to live in |
+|---|---|---|
+| Education | `/education` | `src/components/sections/Education.tsx` |
+| Political Club | `/political-club` | `src/pages/PoliticalClubPage.tsx` |
+| People | `/people` | `src/pages/PeoplePage.tsx` |
+
+All three page components were deleted, and the URLs are **not redirected** — they simply 404. Their *colors* were deliberately kept (see `DESIGN.md` § Retired pages, retained tokens), so if you go looking you will still find `house-education-*`, `house-political-club-*` and `section-people-*` in the codebase. **A surviving color is not a surviving page.** Bringing one back means rebuilding the page and re-adding its route — a build task, not a copy edit; describe what you want and let Claude do it.
+
+The Education *house* is still very much alive as a brand: it colors the **FractalU** navbar row and the **Community-run University** node on the homepage diagram. Its house data (tagline, description) still lives in `src/data/houses.ts` and is still worth keeping accurate.
 
 ---
 

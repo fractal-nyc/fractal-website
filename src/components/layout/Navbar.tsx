@@ -1,423 +1,226 @@
-import { Fragment, useState } from "react";
-import { motion, useScroll, useMotionValueEvent } from "framer-motion";
-import { Menu, X } from "lucide-react";
+import { useEffect, useId, useRef, useState } from "react";
 import { Link, useLocation } from "wouter";
-import { HOUSES, NAVBAR_HIDDEN_ROUTES, SECTIONS } from "@/data/houses";
-import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
+import { HOUSES, SECTIONS } from "@/data/houses";
 
-// FRAC-24: Per-link colors derive from the canonical House palette where a
-// House exists. Non-house links (Story, People) have no House entry, so they
-// read from the SECTIONS record instead (FRAC-204/FRAC-205): Story is a cream
-// section with a single accent (`SECTIONS.story.accent`); People is a flooded
-// section pair (`SECTIONS.people.light`). House links default to `.light` to
-// match what each link CURRENTLY shows; Political Club uses `.deep` because the
-// link's visual identity has always been the deeper burgundy.
-function houseColor(route: string, prefer: "light" | "deep" = "light"): string {
-  const palette = HOUSES.find((h) => h.route === route)?.palette;
-  return palette ? palette[prefer] : "#000";
+/**
+ * Menu model.
+ *
+ * The menu is grouped into three sections — Spaces / Education / Community — and
+ * mixes internal routes with external destinations (Merlin's Place, FractalU), so
+ * it is NOT derivable from HOUSES alone. House-backed rows read their real hex from
+ * HOUSES so the color stays in lockstep with the token; the one row with no house
+ * of its own (Merlin's Place) reads from SECTIONS. Per the repo convention, JS
+ * string colors always come from the data model, never from a `var()` — see
+ * DESIGN.md → FractalPattern.
+ */
+const house = (id: string) => {
+  const h = HOUSES.find((x) => x.id === id);
+  if (!h) throw new Error(`Navbar: unknown house id "${id}"`);
+  return h;
+};
+
+interface NavRowBase {
+  letter: string;
+  label: string;
+  color: string;
 }
 
-const sectionLinks = [
-  { name: "Story",          href: "/story",             color: SECTIONS.story.accent },
-  { name: "Campus",         href: "/campus",            color: houseColor("/campus") },
-  { name: "Visit",          href: "/visit",             color: houseColor("/visit") },
-  { name: "Events",         href: "/events",            color: houseColor("/events") },
-  { name: "Education",      href: "/education",         color: houseColor("/education") },
-  { name: "Political Club", href: "/political-club",    color: houseColor("/political-club", "deep") },
-  { name: "Publications",   href: "/publications",      color: houseColor("/publications") },
-  { name: "People",         href: "/people",            color: SECTIONS.people.light },
+/**
+ * Every row goes SOMEWHERE — an internal route or an external URL, never neither.
+ *
+ * This used to be `{ route?: string; href?: string }`, which allowed a third,
+ * destination-less shape: the "Enter the Fractal" portal row, rendered as a
+ * disabled <span>. That row is hidden until the member portal ships (see
+ * NAV_GROUPS below), so the shape is now unrepresentable and MenuRow no longer
+ * carries a disabled branch. Restoring the row means restoring both.
+ */
+type NavRow =
+  | (NavRowBase & { route: string; href?: never })
+  | (NavRowBase & { href: string; route?: never });
+
+const NAV_GROUPS: { title: string; rows: NavRow[] }[] = [
+  {
+    title: "Spaces",
+    rows: [
+      { letter: "C", label: "Fractal Campus", color: house("campus").palette.light, route: house("campus").route },
+      { letter: "H", label: "Fractal Co-Living", color: house("coliving").palette.light, route: house("coliving").route },
+      { letter: "M", label: "Merlin's Place", color: SECTIONS.story.deep, href: "https://merlins.place/" },
+    ],
+  },
+  {
+    title: "Education",
+    rows: [
+      { letter: "A", label: "Fractal Accelerator", color: house("accelerator").palette.light, route: house("accelerator").route },
+      // The Education house keeps the abstract internal id "school" (AGENTS.md:
+      // house ids are deliberately decoupled from slug and display name).
+      { letter: "F", label: "FractalU", color: house("school").palette.light, href: "https://fractalu.nyc" },
+    ],
+  },
+  {
+    title: "Community",
+    rows: [
+      { letter: "E", label: "Events", color: house("events").palette.light, route: house("events").route },
+      { letter: "L", label: "Library", color: house("library").palette.light, route: house("library").route },
+      // INTENTIONALLY HIDDEN until the member portal ships:
+      //   { letter: "F", label: "Enter the Fractal", color: NAV_PORTAL_COLOR },
+      // The portal has no page, and a permanently-disabled row is worse than no
+      // row. `NAV_PORTAL_COLOR` (src/data/houses.ts) and the `--color-nav-portal`
+      // token (src/index.css) are deliberately KEPT so restoring this is a
+      // one-line change here plus the disabled branch in MenuRow.
+    ],
+  },
 ];
 
-// FRAC-32: Hide routes from every nav variant by deriving from the House data
-// model (`hideFromNavbar`). Non-house section links (e.g. "People", which has
-// a route but no House entry) are hidden via the explicit set below.
-// To restore a house, flip its `hideFromNavbar` flag in src/data/houses.ts.
-// To restore a non-house link, remove its href from EXTRA_HIDDEN_HREFS.
-const EXTRA_HIDDEN_HREFS = new Set<string>(["/people"]);
-const visibleSectionLinks = sectionLinks.filter(
-  (link) =>
-    !NAVBAR_HIDDEN_ROUTES.has(link.href) && !EXTRA_HIDDEN_HREFS.has(link.href),
-);
+const ROW_CLASS =
+  "flex w-full items-center gap-4 min-h-12 px-4 py-2.5 text-left border-l-[3px] transition-colors hover:bg-foreground/5";
 
-// Inner-page navbar hides all remaining section links. The home page navbar
-// and the full-screen overlay menu still expose the visible sections.
-const innerPageHiddenLinks = new Set([
-  "Story",
-  "Campus",
-  "Visit",
-  "Events",
-  "Education",
-  "Political Club",
-  "Publications",
-  "People",
-]);
-const innerPageSectionLinks = visibleSectionLinks.filter(
-  (link) => !innerPageHiddenLinks.has(link.name)
-);
+function MenuRow({ row, onNavigate }: { row: NavRow; onNavigate: () => void }) {
+  const inner = (
+    <>
+      <span
+        aria-hidden="true"
+        className="min-w-8 text-[28px] leading-none"
+        style={{ fontFamily: "'Jacquard 24', system-ui", color: row.color }}
+      >
+        {row.letter}
+      </span>
+      <span className="text-label text-foreground">{row.label}</span>
+    </>
+  );
 
-const LEFT_TEXT =
-  "In 2021, our small group of friends decided to live, learn, & build together. It started as just a single apartment with weekly dinners where people gave 5-minute talks & grew into A neighborhood & campus. now we are building A GOLDEN AGE PROTOCOL.";
+  if (row.route) {
+    return (
+      <Link href={row.route} onClick={onNavigate} className={ROW_CLASS} style={{ borderLeftColor: row.color }}>
+        {inner}
+      </Link>
+    );
+  }
 
-const RIGHT_TEXT =
-  "we believe small groups who share context deeply & build agentic tools for each other can move dramatically faster than individuals working alone, so We embrace experimentation, joyful cyborgism & fun-first collaboration to solve problems together with friends.";
-
-function NavLink({ name, href, color }: { name: string; href: string; color: string }) {
-  // Render each word's leading cap in Jacquard 24 (38px) and the remainder in
-  // light serif (22px). Multi-word labels like "New Liberal Arts" and
-  // "Political Club" therefore get a Jacquard cap on every word's first
-  // letter; single-word labels are unchanged.
-  const words = name.split(" ");
+  // Not an internal route ⇒ an external URL. There is no third case: the one row
+  // that had no destination (the portal) is hidden — see NAV_GROUPS.
   return (
-    <Link href={href} className="hover:opacity-70 transition-opacity" style={{ color }}>
-      {words.map((word, i) => (
-        <Fragment key={i}>
-          {i > 0 && (
-            <span
-              className="font-serif"
-              style={{
-                fontSize: "22px",
-                lineHeight: 1,
-                textTransform: "none",
-                fontStyle: "normal",
-                fontWeight: 300,
-              }}
-            >
-              {"\u00A0"}
-            </span>
-          )}
-          <span
-            style={{
-              fontFamily: "'Jacquard 24', system-ui",
-              fontSize: "38px",
-              lineHeight: 1,
-            }}
-          >
-            {word[0]}
-          </span>
-          <span
-            className="font-serif"
-            style={{
-              fontSize: "22px",
-              lineHeight: 1,
-              textTransform: "none",
-              fontStyle: "normal",
-              fontWeight: 300,
-            }}
-          >
-            {word.slice(1)}
-          </span>
-        </Fragment>
-      ))}
-    </Link>
+    <a
+      href={row.href}
+      target="_blank"
+      rel="noopener noreferrer"
+      onClick={onNavigate}
+      className={ROW_CLASS}
+      style={{ borderLeftColor: row.color }}
+    >
+      {inner}
+    </a>
   );
 }
 
 export function Navbar() {
-  const { scrollY } = useScroll();
-  const [hidden, setHidden] = useState(false);
+  const [location] = useLocation();
+  const [open, setOpen] = useState(false);
+  const menuId = useId();
+  const wrapRef = useRef<HTMLElement>(null);
 
-  const [hasScrolledPast, setHasScrolledPast] = useState(false);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [location, setLocation] = useLocation();
-  const isHome = location === "/" || location === "";
-  const prefersReducedMotion = usePrefersReducedMotion();
+  const isHome = location === "/";
 
-  useMotionValueEvent(scrollY, "change", (latest) => {
-    const previous = scrollY.getPrevious() || 0;
-    if (latest > previous && latest > 150) {
-      setHidden(true);
-      setHasScrolledPast(true);
-    } else {
-      setHidden(false);
-    }
-    if (latest < 10) {
-      setHasScrolledPast(false);
-    }
+  // Close on route change.
+  useEffect(() => setOpen(false), [location]);
 
-  });
-
-  const leftLinks = visibleSectionLinks.slice(0, 3);
-  const rightLinks = visibleSectionLinks.slice(3);
-
-  const showFull = isHome && !hasScrolledPast;
+  // Close on Escape, and on any pointer-down outside the header.
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setOpen(false);
+    };
+    const onDown = (e: MouseEvent) => {
+      if (wrapRef.current && !wrapRef.current.contains(e.target as Node)) setOpen(false);
+    };
+    document.addEventListener("keydown", onKey);
+    document.addEventListener("mousedown", onDown);
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      document.removeEventListener("mousedown", onDown);
+    };
+  }, [open]);
 
   return (
-    <>
-      <motion.header
-        variants={{
-          visible: { y: 0 },
-          hidden: { y: "-100%" },
-        }}
-        animate={hidden ? "hidden" : "visible"}
-        transition={
-          prefersReducedMotion
-            ? { duration: 0 }
-            : { duration: 0.4, ease: [0.25, 1, 0.5, 1] }
+    // Sticky rather than static: this menu is the site's only navigation, so it has
+    // to stay reachable at any scroll depth. `--page-bg` is set per page on <main>
+    // (alongside `--accent`) so the bar reads as part of whatever house surface it
+    // sits on; it falls back to cream on unthemed pages.
+    <header ref={wrapRef} className="sticky top-0 z-50 bg-[var(--page-bg,var(--color-background))]">
+      <div
+        className={
+          isHome
+            ? "relative flex items-center justify-center px-[4.5%] pt-5"
+            : "relative flex items-center justify-between px-[4.5%] py-4"
         }
-        className="fixed top-0 left-0 right-0 z-50 bg-transparent"
       >
-        {showFull ? (
-          <>
-            {/* Full desktop navbar — shown at >= 1024px (lg). The 3-col grid
-                cannot fit smaller widths without overflow, so tablets get the
-                mobile layout below until lg. */}
-            <div className="relative py-5 max-lg:hidden" style={{ paddingLeft: "4.5%", paddingRight: "4.5%" }}>
-              <div className="grid grid-cols-[1fr_auto_1fr] items-end gap-6">
-                <div className="flex flex-col gap-2 min-w-0">
-                  <p className="font-mono text-[13px] leading-[18px] font-normal uppercase text-justify">
-                    {LEFT_TEXT}
-                  </p>
-                  <nav className="flex items-baseline justify-between">
-                    {leftLinks.map((link) => (
-                      <NavLink key={link.name} {...link} />
-                    ))}
-                  </nav>
-                </div>
+        <Link
+          href="/"
+          className="cursor-pointer text-center leading-[1.1] tracking-[-0.02em] no-underline"
+          aria-label="Fractal — home"
+        >
+          <span
+            className="block"
+            style={{
+              fontFamily: "'Jacquard 24', system-ui",
+              fontSize: isHome ? "clamp(42px, 8vw, 82px)" : "clamp(28px, 5.5vw, 50px)",
+            }}
+          >
+            Fractal
+          </span>
+        </Link>
 
-                <Link href="/" className="text-center leading-[1.1] tracking-tighter min-w-0">
-                  <span
-                    className="block"
-                    style={{ fontFamily: "'Jacquard 24', system-ui", fontSize: "clamp(42px, 8vw, 82px)" }}
-                  >
-                    Fractal
-                  </span>
-                  <span
-                    className="font-serif block italic"
-                    style={{ fontSize: "clamp(27px, 5vw, 48px)", textTransform: "none", fontWeight: 100 }}
-                  >
-                    Collective
-                  </span>
-                </Link>
+        <button
+          type="button"
+          onClick={() => setOpen((v) => !v)}
+          aria-label={open ? "Close menu" : "Open menu"}
+          aria-expanded={open}
+          aria-controls={menuId}
+          className={
+            isHome
+              ? "absolute right-[4.5%] top-1/2 flex -translate-y-1/2 cursor-pointer items-center justify-center p-3"
+              : "flex cursor-pointer items-center justify-center p-3"
+          }
+        >
+          <svg
+            width="32"
+            height="32"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            aria-hidden="true"
+          >
+            <line x1="4" y1="6" x2="20" y2="6" />
+            <line x1="4" y1="12" x2="20" y2="12" />
+            <line x1="4" y1="18" x2="20" y2="18" />
+          </svg>
+        </button>
 
-                <div className="flex flex-col gap-2 min-w-0">
-                  <p className="font-mono text-[13px] leading-[18px] font-normal uppercase text-justify">
-                    {RIGHT_TEXT}
-                  </p>
-                  <nav className="flex items-baseline justify-between">
-                    {rightLinks.map((link) => (
-                      <NavLink key={link.name} {...link} />
-                    ))}
-                  </nav>
-                </div>
-              </div>
-            </div>
-
-            {/* Mobile + tablet navbar — shown at < 1024px (lg). */}
-            <div className="lg:hidden px-6 pt-5 pb-3">
-              {/* Top row: Fractal logo + blurb */}
-              <div className="flex items-center gap-3">
-                <Link href="/" className="tracking-tighter shrink-0 leading-[0.9] text-center">
+        {open && (
+          <nav
+            id={menuId}
+            className="absolute right-[4.5%] top-full z-50 w-[280px] overflow-hidden rounded-lg border border-foreground-faint bg-background text-foreground shadow-[0_12px_32px_rgba(23,23,23,0.14)]"
+          >
+            <div className="flex flex-col py-2">
+              {NAV_GROUPS.map((group, i) => (
+                <div key={group.title} className="flex flex-col">
                   <span
-                    className="block"
-                    style={{ fontFamily: "'Jacquard 24', system-ui", fontSize: "clamp(32px, 6vw, 42px)" }}
+                    className={`px-4 pb-1 font-mono text-[11px] font-medium uppercase tracking-[0.14em] text-foreground/45 ${
+                      i > 0 ? "mt-2 border-t border-foreground-faint pt-4" : "pt-3"
+                    }`}
                   >
-                    Fractal
+                    {group.title}
                   </span>
-                  <span
-                    className="font-serif block italic"
-                    style={{ fontSize: "clamp(18px, 3.5vw, 25px)", textTransform: "none", fontWeight: 100 }}
-                  >
-                    Collective
-                  </span>
-                </Link>
-                <p
-                  className="font-mono uppercase font-normal text-justify flex-1"
-                  style={{ fontSize: "8px", lineHeight: 1.35, letterSpacing: "0.01em" }}
-                >
-                  {RIGHT_TEXT}
-                </p>
-              </div>
-
-              {/* Nav letters row */}
-              <nav className="flex items-baseline justify-between mt-2">
-                {visibleSectionLinks.map((link) => (
-                  <Link
-                    key={link.name}
-                    href={link.href}
-                    className="hover:opacity-70 transition-opacity"
-                    style={{ color: link.color }}
-                  >
-                    <span
-                      style={{
-                        fontFamily: "'Jacquard 24', system-ui",
-                        fontSize: "28px",
-                        lineHeight: 1,
-                      }}
-                    >
-                      {link.name === "Education"
-                        ? "E"
-                        : link.name === "Political Club"
-                          ? "PC"
-                          : link.name[0]}
-                    </span>
-                  </Link>
-                ))}
-              </nav>
-            </div>
-          </>
-        ) : !isHome ? (
-          /* Inner page branded header — scaled-down hero treatment */
-          <>
-            {/* Desktop inner page header */}
-            <div className="max-md:hidden py-4" style={{ paddingLeft: "4.5%", paddingRight: "4.5%" }}>
-              <div className="flex items-end justify-between">
-                <Link href="/" className="text-center leading-[1.1] tracking-tighter">
-                  <span
-                    className="block"
-                    style={{ fontFamily: "'Jacquard 24', system-ui", fontSize: "clamp(28px, 5.5vw, 50px)" }}
-                  >
-                    Fractal
-                  </span>
-                  <span
-                    className="font-serif block italic"
-                    style={{ fontSize: "clamp(16px, 3.22vw, 29px)", textTransform: "none", fontWeight: 100 }}
-                  >
-                    Collective
-                  </span>
-                </Link>
-                <nav className="flex items-baseline gap-5">
-                  {innerPageSectionLinks.map((link) => (
-                    <Link
-                      key={link.name}
-                      href={link.href}
-                      className="hover:opacity-70 transition-opacity font-serif"
-                      style={{
-                        fontSize: "18px",
-                        fontWeight: 300,
-                        fontStyle: "normal",
-                      }}
-                    >
-                      {link.name}
-                    </Link>
+                  {group.rows.map((row) => (
+                    <MenuRow key={row.label} row={row} onNavigate={() => setOpen(false)} />
                   ))}
-                </nav>
-                <button
-                  type="button"
-                  aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
-                  aria-expanded={mobileMenuOpen}
-                  className="z-50 relative cursor-pointer transition-opacity duration-200 hover:opacity-70 active:opacity-90 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-offset-2 focus-visible:ring-offset-background rounded-md flex items-center justify-center p-3 -mr-3"
-                  onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                >
-                  {mobileMenuOpen ? <X size={32} /> : <Menu size={32} />}
-                </button>
-              </div>
+                </div>
+              ))}
             </div>
-
-            {/* Mobile inner page header */}
-            <div className="md:hidden px-6 pt-4 pb-3">
-              <div className="flex items-center justify-between">
-                <Link href="/" className="tracking-tighter leading-[0.9] text-center">
-                  <span
-                    className="block"
-                    style={{ fontFamily: "'Jacquard 24', system-ui", fontSize: "36px" }}
-                  >
-                    Fractal
-                  </span>
-                  <span
-                    className="font-serif block italic"
-                    style={{ fontSize: "21px", textTransform: "none", fontWeight: 100 }}
-                  >
-                    Collective
-                  </span>
-                </Link>
-                <button
-                  type="button"
-                  aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
-                  aria-expanded={mobileMenuOpen}
-                  className="z-50 relative cursor-pointer transition-opacity duration-200 hover:opacity-70 active:opacity-90 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-offset-2 focus-visible:ring-offset-background rounded-md flex items-center justify-center p-3 -mr-3"
-                  onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                >
-                  {mobileMenuOpen ? <X size={32} /> : <Menu size={32} />}
-                </button>
-              </div>
-            </div>
-          </>
-        ) : (
-          /* Home page scrolled — compact bar, same branding size as full navbar */
-          <div className="py-4 flex items-center justify-between" style={{ paddingLeft: "4.5%", paddingRight: "4.5%" }}>
-            <Link href="/" className="tracking-tighter leading-[0.9] text-center">
-              <span
-                className="block"
-                style={{ fontFamily: "'Jacquard 24', system-ui", fontSize: "clamp(42px, 8vw, 82px)" }}
-              >
-                Fractal
-              </span>
-              <span
-                className="font-serif block italic"
-                style={{ fontSize: "clamp(27px, 5vw, 48px)", textTransform: "none", fontWeight: 100 }}
-              >
-                Collective
-              </span>
-            </Link>
-            <button
-              type="button"
-              aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
-              aria-expanded={mobileMenuOpen}
-              className="z-50 relative cursor-pointer transition-opacity duration-200 hover:opacity-70 active:opacity-90 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-offset-2 focus-visible:ring-offset-background rounded-md flex items-center justify-center p-3 -mr-3"
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            >
-              {mobileMenuOpen ? <X size={32} /> : <Menu size={32} />}
-            </button>
-          </div>
+          </nav>
         )}
-      </motion.header>
-
-      {/* Menu overlay — vertical list of section pages */}
-      <motion.div
-        initial={false}
-        animate={mobileMenuOpen ? "open" : "closed"}
-        variants={{
-          open: { opacity: 1, pointerEvents: "auto" as const },
-          closed: { opacity: 0, pointerEvents: "none" as const },
-        }}
-        transition={
-          prefersReducedMotion
-            ? { duration: 0 }
-            : { duration: 0.3, ease: "easeInOut" }
-        }
-        className="fixed inset-0 z-40 bg-background overflow-y-auto"
-      >
-        {/* Section page list */}
-        <nav className="flex flex-col w-full pt-24 pb-8 px-6 max-w-md mx-auto">
-          {visibleSectionLinks.map((link) => {
-            const letter =
-              link.name === "Education"
-                ? "E"
-                : link.name === "Political Club"
-                  ? "PC"
-                  : link.name[0];
-            return (
-              <button
-                key={link.name}
-                type="button"
-                onClick={() => {
-                  setLocation(link.href);
-                  setMobileMenuOpen(false);
-                }}
-                className="flex items-center gap-5 min-h-[56px] py-3 border-b border-foreground-faint cursor-pointer hover:bg-foreground/5 active:bg-foreground/10 transition-colors text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-foreground"
-                style={{ borderLeft: `3px solid ${link.color}`, paddingLeft: "16px" }}
-              >
-                <span
-                  style={{
-                    fontFamily: "'Jacquard 24', system-ui",
-                    fontSize: "36px",
-                    lineHeight: 1,
-                    color: link.color,
-                    minWidth: "44px",
-                  }}
-                >
-                  {letter}
-                </span>
-                <span
-                  className="text-label text-foreground"
-                >
-                  {link.name}
-                </span>
-              </button>
-            );
-          })}
-        </nav>
-      </motion.div>
-    </>
+      </div>
+    </header>
   );
 }

@@ -9,12 +9,18 @@ import { HOUSES } from "@/data/houses";
 //
 // `src/data/houses.ts` is the canonical source of each house's palette hex —
 // house pages read the pair for flooded backgrounds/accents and three.js feeds
-// real colors. The
-// `--color-house-*` tokens in `src/index.css` are a derived mirror so house
-// pages can reference tokens instead of hardcoding hex. These two sources can
-// silently diverge (FRAC-203 found Political Club missing from @theme entirely).
-// This test asserts they stay in lockstep: all 6 houses × {light,deep} = 12
-// tokens, each present and hex-equal to the corresponding palette member.
+// real colors. The `--color-house-*` tokens in `src/index.css` are a derived
+// mirror so house pages can reference tokens instead of hardcoding hex. These
+// two sources can silently diverge (FRAC-203 found Political Club missing from
+// @theme entirely). This test asserts they stay in lockstep: all 7 houses ×
+// {light, deep} = 14 tokens, each present and hex-equal to its palette member.
+//
+// The token slug comes from the house's explicit `tokenSlug` field. It used to
+// be DERIVED from the display name here, which was fragile in exactly the way
+// you'd expect: "Fractal Co-Living" slugifies to `fractal-co-living`, but the
+// token is `--color-house-coliving-*`. A derived slug turns a token rename into
+// a silent pass (the test looks for a token that was never supposed to exist);
+// reading the declared field turns it into a loud failure.
 // ═══════════════════════════════════════════════════════════════════════════
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -34,33 +40,30 @@ function parseHouseTokens(source: string): Map<string, string> {
   return tokens;
 }
 
-/**
- * The token slug uses the display-name slug, which differs from the house `id`
- * (forum→political-club, lab→publications, school→education,
- * neighborhood→visit). Derive it from the user-facing label so the mapping is
- * robust rather than hand-maintained.
- */
-function houseTokenSlug(house: (typeof HOUSES)[number]): string {
-  const label = house.displayName ?? house.subtitle ?? house.name;
-  return label
-    .toLowerCase()
-    .trim()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "");
-}
-
 const tokens = parseHouseTokens(css);
 
 describe("house token sync (houses.ts ↔ index.css)", () => {
-  it("defines exactly 12 house tokens (6 houses × light/deep)", () => {
-    expect(HOUSES).toHaveLength(6);
-    expect(tokens.size).toBe(12);
+  it("defines exactly 14 house tokens (7 houses × light/deep)", () => {
+    expect(HOUSES).toHaveLength(7);
+    expect(tokens.size).toBe(14);
+  });
+
+  it("every house declares a non-empty tokenSlug", () => {
+    for (const house of HOUSES) {
+      expect(
+        house.tokenSlug,
+        `House "${house.id}" is missing its tokenSlug`,
+      ).toBeTruthy();
+    }
+    // Slugs must be unique, or two houses would fight over one token pair.
+    const slugs = HOUSES.map((h) => h.tokenSlug);
+    expect(new Set(slugs).size).toBe(slugs.length);
   });
 
   for (const house of HOUSES) {
-    const slug = houseTokenSlug(house);
+    const slug = house.tokenSlug;
 
-    describe(`${house.displayName ?? house.name} (slug "${slug}")`, () => {
+    describe(`${house.displayName ?? house.name} (id "${house.id}", tokenSlug "${slug}")`, () => {
       for (const variant of ["light", "deep"] as const) {
         it(`token --color-house-${slug}-${variant} matches palette.${variant}`, () => {
           const key = `${slug}-${variant}`;
@@ -80,10 +83,7 @@ describe("house token sync (houses.ts ↔ index.css)", () => {
 
   it("has no orphan house token without a matching house", () => {
     const expectedKeys = new Set(
-      HOUSES.flatMap((h) => {
-        const slug = houseTokenSlug(h);
-        return [`${slug}-light`, `${slug}-deep`];
-      }),
+      HOUSES.flatMap((h) => [`${h.tokenSlug}-light`, `${h.tokenSlug}-deep`]),
     );
     const orphans = [...tokens.keys()].filter((k) => !expectedKeys.has(k));
     expect(

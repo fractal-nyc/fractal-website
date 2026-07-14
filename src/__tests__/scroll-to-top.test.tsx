@@ -45,58 +45,28 @@ import { memoryLocation } from "wouter/memory-location";
 // page content.
 // ═══════════════════════════════════════════════════════════════════════════
 
-vi.mock("@/components/three/FractalCityScene", () => ({
-  FractalCityScene: () => <div data-testid="fractal-city-mock" />,
-}));
-
-vi.mock("@/components/gallery/PhotoGallery", () => ({
-  PhotoGallery: () => <div data-testid="photo-gallery-mock" />,
-}));
-
-vi.mock("@/components/sections/OriginStory", () => ({
-  OriginStory: () => <div data-testid="origin-story-mock" />,
-}));
-
-vi.mock("@/components/publications/DocumentGrid", () => ({
-  DocumentGrid: () => <div data-testid="document-grid-mock" />,
-}));
-
-vi.mock("@/components/publications/ArchiveToolbar", () => ({
-  ArchiveToolbar: () => <div data-testid="archive-toolbar-mock" />,
-}));
-
-vi.mock("@/hooks/use-archive-filter", () => ({
-  useArchiveFilter: () => ({ isFiltering: false, filtered: [] }),
-}));
-
 // Stub every page to a trivial marker div. The router still mounts and
-// transitions between them, which is all ScrollToTop cares about.
+// transitions between them, which is all ScrollToTop cares about. Because the
+// pages themselves are stubbed, none of their heavy children (the WebGL hero,
+// the Leaflet map, the Accelerator's 2D canvas) are ever imported — no
+// component-level mocks are needed here.
 vi.mock("@/pages/Home", () => ({
   Home: () => <main data-testid="page-home" />,
-}));
-vi.mock("@/pages/StoryPage", () => ({
-  StoryPage: () => <main data-testid="page-story" />,
 }));
 vi.mock("@/pages/CampusPage", () => ({
   CampusPage: () => <main data-testid="page-campus" />,
 }));
-vi.mock("@/pages/VisitPage", () => ({
-  VisitPage: () => <main data-testid="page-visit" />,
+vi.mock("@/pages/CoLivingPage", () => ({
+  CoLivingPage: () => <main data-testid="page-co-living" />,
+}));
+vi.mock("@/pages/AcceleratorPage", () => ({
+  AcceleratorPage: () => <main data-testid="page-accelerator" />,
 }));
 vi.mock("@/pages/EventsPage", () => ({
   EventsPage: () => <main data-testid="page-events" />,
 }));
-vi.mock("@/pages/EducationPage", () => ({
-  EducationPage: () => <main data-testid="page-education" />,
-}));
-vi.mock("@/pages/PoliticalClubPage", () => ({
-  PoliticalClubPage: () => <main data-testid="page-political-club" />,
-}));
-vi.mock("@/pages/PublicationsPage", () => ({
-  PublicationsPage: () => <main data-testid="page-publications" />,
-}));
-vi.mock("@/pages/PeoplePage", () => ({
-  PeoplePage: () => <main data-testid="page-people" />,
+vi.mock("@/pages/LibraryPage", () => ({
+  LibraryPage: () => <main data-testid="page-library" />,
 }));
 vi.mock("@/pages/ProtocolPage", () => ({
   ProtocolPage: () => <main data-testid="page-protocol" />,
@@ -238,8 +208,8 @@ describe("Scroll-to-top on navigation (FRAC-132 regression)", () => {
   // Scenario 3: Deep page -> another deep page
   // ═════════════════════════════════════════════════════════════════════════
   describe("Deep page -> deep page", () => {
-    it("fires scrollTo(0,0) when navigating from /story to /campus", () => {
-      seedLocation("/story");
+    it("fires scrollTo(0,0) when navigating from /library to /campus", () => {
+      seedLocation("/library");
       render(<App />);
       scrollToSpy.mockClear();
 
@@ -260,7 +230,7 @@ describe("Scroll-to-top on navigation (FRAC-132 regression)", () => {
       // ScrollToTop watches useLocation — the click mechanism is irrelevant to
       // what we're proving: the effect fires on any location change in App.
       setViewport(375);
-      seedLocation("/story");
+      seedLocation("/library");
       render(<App />);
       scrollToSpy.mockClear();
 
@@ -276,19 +246,22 @@ describe("Scroll-to-top on navigation (FRAC-132 regression)", () => {
   // Scenario 5: Multi-hop sequential navigations
   // ═════════════════════════════════════════════════════════════════════════
   describe("Multi-hop sequential navigations", () => {
-    it("fires scrollTo(0,0) on each hop: / -> /story -> /campus -> /people", () => {
+    // Every hop must be a LIVE route. /people used to close this sequence; it is
+    // a 404 now, and a 404 still fires ScrollToTop, so the test would have kept
+    // passing while quietly no longer testing a real page transition.
+    it("fires scrollTo(0,0) on each hop: / -> /co-living -> /campus -> /accelerator", () => {
       seedLocation("/");
       render(<App />);
       scrollToSpy.mockClear();
 
       act(() => {
-        pushRoute("/story");
+        pushRoute("/co-living");
       });
       act(() => {
         pushRoute("/campus");
       });
       act(() => {
-        pushRoute("/people");
+        pushRoute("/accelerator");
       });
 
       const zeroZeroCalls = scrollToSpy.mock.calls.filter(

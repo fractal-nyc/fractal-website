@@ -378,14 +378,19 @@ const FACE_BANNER_IMAGES: Record<string, string> = {
 // `forum` is intentionally desaturated (muted grey-tan) to read as
 // de-emphasized — it has no nav node and no banner texture, so the literal
 // is kept as a deliberate stylistic exception rather than a palette identity.
+// The FACE_* keys below are BANNER-IMAGE keys (they name /images/banners/*.webp
+// and the matching index.html preloads), not house ids — so `neighborhood` and
+// `lab` stay as keys. Only the house ids passed to housePalette() moved with the
+// rename (`neighborhood` → `coliving`, `lab` → `library`), and `story` now reads
+// SECTIONS.story.light (the old `accent`, same #D4BA58).
 const FACE_SECTION_COLORS: Record<string, string> = {
-  story:        SECTIONS.story.accent,
+  story:        SECTIONS.story.light,
   campus:       housePalette("campus"),
-  neighborhood: housePalette("neighborhood"),
+  neighborhood: housePalette("coliving"),
   events:       housePalette("events"),
   school:       housePalette("school"),
   forum:        "#8a7a6a",
-  lab:          housePalette("lab"),
+  lab:          housePalette("library"),
   people:       SECTIONS.people.light,
 };
 

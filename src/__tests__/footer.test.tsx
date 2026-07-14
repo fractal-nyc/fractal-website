@@ -1,157 +1,174 @@
 import { render, screen } from "@testing-library/react";
-import { describe, it, expect, vi } from "vitest";
-
-// ═══════════════════════════════════════════════════════════════════════════
-// Mock MandelbrotIcon — renders a lightweight SVG placeholder
-// ═══════════════════════════════════════════════════════════════════════════
-
-vi.mock("@/components/house/MandelbrotIcon", () => ({
-  MandelbrotIcon: ({ size }: { size: number }) => (
-    <svg data-testid="mandelbrot-icon" width={size} height={size} />
-  ),
-}));
+import userEvent from "@testing-library/user-event";
+import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
+import { Router as WouterRouter } from "wouter";
+import { memoryLocation } from "wouter/memory-location";
 
 import { Footer } from "@/components/layout/Footer";
 
 // ═══════════════════════════════════════════════════════════════════════════
-// Footer content and structure
+// The Footer was rewritten. It is now a single dark band: the Jacquard
+// "Fractal" wordmark, two X links, and a "Designed by Julianna" credit.
+//
+// GONE: the old Discord / "schedule a virtual chat with Ian" CTA band, the
+// "New York City Collective" tagline, the copyright line, and the Mandelbrot
+// corner decorations. That CTA content moved to the Home page — the tests for
+// it live with Home now, not here.
+//
+// KEPT: `data-site-footer` (the marker `useBannerAboveFooter` measures the
+// flanking pennants against) and the same-route smooth-scroll-to-top on the
+// wordmark (FRAC-183).
 // ═══════════════════════════════════════════════════════════════════════════
 
+function renderFooter(path = "/") {
+  const { hook } = memoryLocation({ path, static: true });
+  const user = userEvent.setup();
+  const utils = render(
+    <WouterRouter hook={hook}>
+      <Footer />
+    </WouterRouter>,
+  );
+  return { ...utils, user };
+}
+
+const wordmark = () => screen.getByRole("link", { name: /fractal — back to home/i });
+
 describe("Footer", () => {
-  it("should render without crashing", () => {
-    const { container } = render(<Footer />);
-    expect(container.querySelector("footer")).toBeTruthy();
+  it("renders a <footer> carrying the data-site-footer marker", () => {
+    const { container } = renderFooter();
+    const footer = container.querySelector("footer");
+    expect(footer).toBeTruthy();
+    // useBannerAboveFooter queries this attribute to stop the pennants
+    // overlapping the footer. Removing it silently breaks every house page.
+    expect(footer!.hasAttribute("data-site-footer")).toBe(true);
   });
 
   // ═════════════════════════════════════════════════════════════════════
-  // FRAC-88 regression: Footer branding uses "Fractal" in camelCase,
-  // NOT "FRACTAL" in all-caps. This was fixed and must stay fixed.
+  // Branding wordmark (FRAC-88 regression: camelCase, not all-caps)
   // ═════════════════════════════════════════════════════════════════════
 
-  describe("Branding text (FRAC-88 regression)", () => {
-    it('should display "Fractal" in camelCase — not "FRACTAL" in all-caps', () => {
-      render(<Footer />);
-      // The large branding text should be "Fractal" (capital F, lowercase ractal)
-      const brandingElements = screen.getAllByText("Fractal");
-      expect(brandingElements.length).toBeGreaterThanOrEqual(1);
-
-      // Verify none of them say "FRACTAL" (all-caps)
-      const allText = document.querySelector("footer")!.textContent;
-      expect(allText).not.toContain("FRACTAL");
+  describe("Branding wordmark", () => {
+    it('renders "Fractal" in camelCase — never "FRACTAL"', () => {
+      const { container } = renderFooter();
+      expect(wordmark().textContent).toContain("Fractal");
+      expect(container.querySelector("footer")!.textContent).not.toContain("FRACTAL");
     });
 
-    it("should render the styled Fractal branding wordmark", () => {
-      const { container } = render(<Footer />);
-      // FRAC-88: the branding wordmark is the home-link styled via inline
-      // Jacquard style (no `.italic` class). Target it semantically.
-      const brandingEl = container.querySelector(
-        '[aria-label="Fractal — back to home"]',
-      );
-      expect(brandingEl).toBeTruthy();
-      expect(brandingEl!.textContent).toContain("Fractal");
+    it("uses the Jacquard 24 display face", () => {
+      renderFooter();
+      expect(wordmark().getAttribute("style")).toContain("Jacquard 24");
     });
 
-    it("should use Jacquard 24 font for the branding", () => {
-      const { container } = render(<Footer />);
-      const brandingEl = container.querySelector(
-        '[aria-label="Fractal — back to home"]',
-      );
-      expect(brandingEl).toBeTruthy();
-      expect(brandingEl!.getAttribute("style")).toContain("Jacquard 24");
+    it("links back to /", () => {
+      renderFooter("/campus");
+      expect(wordmark().getAttribute("href")).toBe("/");
     });
   });
 
   // ═════════════════════════════════════════════════════════════════════
-  // Discord CTA
+  // FRAC-183 — same-route wordmark click smooth-scrolls to top.
+  //
+  // wouter's <Link> does not re-fire the router on a same-route nav, so App's
+  // ScrollToTop effect (which keys on location change) never runs when the user
+  // is already on / and clicks the wordmark. The Footer intercepts that case.
   // ═════════════════════════════════════════════════════════════════════
 
-  describe("Discord CTA", () => {
-    it("should contain a link to Discord", () => {
-      render(<Footer />);
-      const discordLink = screen.getByText("Discord");
-      expect(discordLink.closest("a")).toBeTruthy();
-      expect(discordLink.closest("a")!.getAttribute("href")).toContain("discord.gg");
+  describe("Scroll-to-top on the wordmark (FRAC-183)", () => {
+    let scrollToSpy: ReturnType<typeof vi.fn>;
+
+    beforeEach(() => {
+      scrollToSpy = vi.fn();
+      Object.defineProperty(window, "scrollTo", {
+        value: scrollToSpy,
+        writable: true,
+        configurable: true,
+      });
     });
 
-    it('should mention #intros channel', () => {
-      render(<Footer />);
-      expect(screen.getByText("#intros")).toBeTruthy();
+    afterEach(() => {
+      Object.defineProperty(window, "scrollTo", {
+        value: () => {},
+        writable: true,
+        configurable: true,
+      });
     });
 
-    it("should open Discord link in a new tab", () => {
-      render(<Footer />);
-      const discordLink = screen.getByText("Discord").closest("a");
-      expect(discordLink!.getAttribute("target")).toBe("_blank");
-      expect(discordLink!.getAttribute("rel")).toContain("noopener");
+    it("smooth-scrolls to top when already on / (same-route click)", async () => {
+      const { user } = renderFooter("/");
+
+      await user.click(wordmark());
+
+      expect(scrollToSpy).toHaveBeenCalledWith({ top: 0, behavior: "smooth" });
+    });
+
+    it("does NOT intercept the click from another route — wouter navigates instead", async () => {
+      const { user } = renderFooter("/campus");
+
+      await user.click(wordmark());
+
+      // Cross-route: App's ScrollToTop owns the scroll, so the Footer must not
+      // call scrollTo itself (and must not preventDefault the navigation).
+      expect(scrollToSpy).not.toHaveBeenCalled();
     });
   });
 
   // ═════════════════════════════════════════════════════════════════════
-  // Schedule-a-chat CTA
+  // Social links
   // ═════════════════════════════════════════════════════════════════════
 
-  describe("Schedule a chat CTA", () => {
-    it("should invite the visitor to schedule a one-on-one chat", () => {
-      render(<Footer />);
-      expect(
-        screen.getByText(/schedule a virtual chat with/i),
-      ).toBeTruthy();
-    });
+  describe("Social links", () => {
+    const SOCIALS = [
+      { label: "@fractal_nyc", href: "https://x.com/fractal_nyc" },
+      { label: "@fractaltechnyc", href: "https://x.com/fractaltechnyc" },
+    ];
 
-    it('should link "Ian" to the Google Calendar appointment schedule', () => {
-      render(<Footer />);
-      const ianLink = screen.getByText("Ian").closest("a");
-      expect(ianLink).toBeTruthy();
-      expect(ianLink!.getAttribute("href")).toContain(
-        "calendar.google.com/calendar/u/0/appointments/schedules/",
-      );
-      expect(ianLink!.getAttribute("target")).toBe("_blank");
-      expect(ianLink!.getAttribute("rel")).toContain("noopener");
+    for (const { label, href } of SOCIALS) {
+      it(`links ${label} to ${href}, opening in a new tab`, () => {
+        renderFooter();
+        const link = screen.getByText(label).closest("a");
+        expect(link).toBeTruthy();
+        expect(link!.getAttribute("href")).toBe(href);
+        expect(link!.getAttribute("target")).toBe("_blank");
+        expect(link!.getAttribute("rel")).toContain("noopener");
+      });
+    }
+  });
+
+  // ═════════════════════════════════════════════════════════════════════
+  // Design credit
+  // ═════════════════════════════════════════════════════════════════════
+
+  describe("Design credit", () => {
+    it("credits Julianna with a link to parallax.haus", () => {
+      renderFooter();
+      const link = screen.getByText("Julianna").closest("a");
+      expect(link).toBeTruthy();
+      expect(link!.getAttribute("href")).toContain("parallax.haus");
+      expect(link!.getAttribute("target")).toBe("_blank");
     });
   });
 
   // ═════════════════════════════════════════════════════════════════════
-  // Visual styling — black background, white text
+  // The old CTA band is gone (its content moved to Home)
   // ═════════════════════════════════════════════════════════════════════
 
-  describe("Visual styling", () => {
-    it("should use dark background with light text (bg-foreground text-background)", () => {
-      const { container } = render(<Footer />);
-      const ctaSection = container.querySelector(".bg-foreground.text-background");
-      expect(ctaSection).toBeTruthy();
+  describe("Removed CTA band", () => {
+    it("no longer carries the Discord / Ian / tagline / copyright content", () => {
+      const { container } = renderFooter();
+      const text = container.querySelector("footer")!.textContent ?? "";
+
+      expect(text).not.toContain("Discord");
+      expect(text).not.toContain("#intros");
+      expect(text).not.toContain("Ian");
+      expect(text).not.toContain("New York City Collective");
+      expect(text).not.toContain("Fractal Collective");
     });
 
-    it("should have the branding band with bg-foreground", () => {
-      const { container } = render(<Footer />);
-      // There are two sections with bg-foreground
-      const bgForegroundSections = container.querySelectorAll(".bg-foreground");
-      expect(bgForegroundSections.length).toBeGreaterThanOrEqual(2);
-    });
-
-    it('should display "New York City Collective" tagline', () => {
-      render(<Footer />);
-      expect(screen.getByText("New York City Collective")).toBeTruthy();
-    });
-
-    it("should display copyright with current year", () => {
-      render(<Footer />);
-      const currentYear = new Date().getFullYear().toString();
-      const footer = document.querySelector("footer")!;
-      expect(footer.textContent).toContain(currentYear);
-      expect(footer.textContent).toContain("Fractal Collective");
-    });
-  });
-
-  // ═════════════════════════════════════════════════════════════════════
-  // Mandelbrot decorations
-  // ═════════════════════════════════════════════════════════════════════
-
-  describe("Mandelbrot decorations", () => {
-    it("should include Mandelbrot corner accents", () => {
-      const { container } = render(<Footer />);
-      const icons = container.querySelectorAll('[data-testid="mandelbrot-icon"]');
-      // 1 watermark center + 4 corner accents = 5 total
-      expect(icons.length).toBeGreaterThanOrEqual(5);
+    it("renders a single dark band (bg-foreground / text-background)", () => {
+      const { container } = renderFooter();
+      const bands = container.querySelectorAll(".bg-foreground.text-background");
+      // Was two bands (branding + CTA). Now exactly one.
+      expect(bands.length).toBe(1);
     });
   });
 });

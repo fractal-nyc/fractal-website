@@ -19,7 +19,13 @@ export function CampusPage() {
   return (
     <main
       className="relative min-h-screen bg-house-campus-light text-background selection:bg-foreground selection:text-background"
-      style={{ "--accent": "var(--color-house-campus-deep)" } as CSSProperties}
+      style={
+        {
+          "--accent": "var(--color-house-campus-deep)",
+          // The sticky Navbar reads --page-bg to color itself to the page flood.
+          "--page-bg": "var(--color-house-campus-light)",
+        } as CSSProperties
+      }
     >
       <FractalPattern color={CAMPUS_COLOR} />
       <div className="relative z-10">
@@ -44,7 +50,11 @@ export function CampusPage() {
             <CampusBannerSVG />
           </div>
         </div>
-        <div className="relative z-10">
+        {/* `clear-banners` reserves the fixed pennant layer's gutters on md+ so
+            no section of Campus scrolls underneath a banner. Campus's own inner
+            gutter is `px-6 md:px-8` — small enough to read as breathing room
+            rather than a second inset, so it stays. */}
+        <div className="clear-banners relative z-10">
           <Campus />
         </div>
         {/* Mobile-only flanking pennants — bold moment before the footer.

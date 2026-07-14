@@ -40,6 +40,17 @@ export interface House {
   slug: string; // URL slug
   route: string; // full route path
   /**
+   * The slug used in this house's CSS token names
+   * (`--color-house-<tokenSlug>-{light,deep}` in src/index.css).
+   *
+   * Declared explicitly rather than derived. It used to be computed from the
+   * display name, which silently broke the moment a display name stopped
+   * matching its token — "Fractal Co-Living" slugifies to `fractal-co-living`,
+   * not `coliving`. The `house-tokens-sync` test reads this field, so a token
+   * rename that forgets to update it fails loudly instead of quietly passing.
+   */
+  tokenSlug: string;
+  /**
    * Canonical light/deep color pair. FRAC-24 single source of truth.
    * The pair is the unit; which member is bg vs. accent is a per-surface
    * decision. Most houses use `light` as page bg and `deep` as accent.
@@ -209,16 +220,20 @@ export const PEOPLE: Person[] = [
 // ---------------------------------------------------------------------------
 
 export const HOUSES: House[] = [
-  // 1. Co-Living — The Neighborhood
+  // 1. Fractal Co-Living — The Neighborhood.
+  // Formerly the "Visit" house. Same neighborhood content and the same olive
+  // pair, renamed to what it actually is; `deep` moved #4A5A30 → #4A5528 to
+  // match the map-pin / callout border color the Co-Living page draws with.
   {
-    id: "neighborhood",
-    name: "Visit",
-    displayName: "Visit",
-    subtitle: "Visit",
-    slug: "visit",
-    route: "/visit",
-    palette: { light: "#889460", deep: "#4A5A30" },
-    tagline: "Want to live here?",
+    id: "coliving",
+    name: "Fractal Co-Living",
+    displayName: "Fractal Co-Living",
+    subtitle: "Co-Living",
+    slug: "co-living",
+    route: "/co-living",
+     tokenSlug: "coliving",
+    palette: { light: "#889460", deep: "#4A5528" },
+    tagline: "Live near your friends.",
     description:
       "The original Fractal. Before the tech, before the accelerator — Fractal was a network of coliving houses in Brooklyn. That's still the bedrock. McKibbin Lofts in Bushwick is the original hub, about 70 people across multiple apartments including 1G, the communal third space. Bebop and Fractal IV sit in Fort Greene, Rectangoob holds it down in Bed-Stuy above the Bedford-Nostrand G, and The Nook rounds things out at McKibbin 4S. Andrew and Priya's place in Fort Greene is forming a pocket neighborhood with Bebop — the houses are starting to cluster.\n\nCommunity life runs on weekly Sunday brunches (potluck at the Campus), SideQuest coworking sessions every Sunday (37+ and counting), and the Co-op Crawl — Brooklyn community house tours that start right here. There's art installations, ecstatic dance, singing circles, parkour in the park, EDM production meetups, Groupmuse classical concerts. The neighborhood is the social fabric that everything else is built on.\n\nFractal Toronto appeared spontaneously. The protocol is spreading.",
     leaders: ["priya", "andrew"],
@@ -232,6 +247,7 @@ export const HOUSES: House[] = [
     subtitle: "Events",
     slug: "events",
     route: "/events",
+     tokenSlug: "events",
     palette: { light: "#D4857A", deep: "#C13B2A" },
     tagline: "Want to host?",
     description:
@@ -249,6 +265,7 @@ export const HOUSES: House[] = [
     subtitle: "Campus",
     slug: "campus",
     route: "/campus",
+     tokenSlug: "campus",
     palette: { light: "#2E6B4A", deep: "#1A3A2E" },
     tagline: "Want to work together?",
     description:
@@ -263,6 +280,12 @@ export const HOUSES: House[] = [
   },
 
   // 4. New Liberal Arts — The School
+  //
+  // PAGE RETIRED: the /education page was deleted and NOT redirected — the route
+  // 404s. `route` below is therefore dead as a destination, but the house, its
+  // `house-education-{light,deep}` tokens, and its FractalU navbar row all stay
+  // live (the Education house still colors the diagram's University node and the
+  // FractalU row), so the page is launch-ready if it ever comes back.
   {
     id: "school",
     name: "Education",
@@ -270,6 +293,7 @@ export const HOUSES: House[] = [
     subtitle: "Education",
     slug: "education",
     route: "/education",
+     tokenSlug: "education",
     palette: { light: "#C41E20", deep: "#5C1010" },
     tagline: "Want to learn?",
     description:
@@ -279,6 +303,11 @@ export const HOUSES: House[] = [
   },
 
   // 5. Political Club — The Forum
+  //
+  // PAGE RETIRED: the /political-club page was deleted and NOT redirected — the
+  // route 404s, so `route` below is dead as a destination. Everything else stays:
+  // the house, its `house-political-club-{light,deep}` tokens, and its octahedron
+  // face (a decorative face, not a nav destination). Launch-ready if it returns.
   {
     id: "forum",
     name: "The Forum",
@@ -286,6 +315,7 @@ export const HOUSES: House[] = [
     subtitle: "Political Club",
     slug: "political-club",
     route: "/political-club",
+     tokenSlug: "political-club",
     palette: { light: "#C83858", deep: "#6E1830" },
     tagline: "Want to change things?",
     description:
@@ -299,14 +329,38 @@ export const HOUSES: House[] = [
     hideFromBanners: true,
   },
 
-  // 6. Lab — Research + Writing
+  // 6. Fractal Accelerator — the flagship class.
+  // The 7th house and the odd one out: it does not render a themed Fractal NYC
+  // page, it renders the separate Fractal Accelerator brand (burgundy / white /
+  // warm cream — see fractal-os BRAND/fractalaccelerator.md). The pair below
+  // still themes its nav row and octahedron face like any other house.
   {
-    id: "lab",
-    name: "Publications",
-    displayName: "Publications",
-    subtitle: "Publications",
-    slug: "publications",
-    route: "/publications",
+    id: "accelerator",
+    name: "Fractal Accelerator",
+    displayName: "Fractal Accelerator",
+    subtitle: "Accelerator",
+    slug: "accelerator",
+    route: "/accelerator",
+     tokenSlug: "accelerator",
+    palette: { light: "#8E2A1E", deep: "#641E28" },
+    tagline: "Turn 6 weeks into years of acceleration.",
+    description:
+      "A hands-on, six-week program for ambitious professionals who want to master AI. Consultants, analysts, and engineers learn to make AI work while they sleep, build without limits, and join a community of builders. Saturdays on Campus, applied practice during the week, compounding skills each week.",
+    leaders: ["andrew"],
+    externalLinks: [
+      { label: "Apply", url: "https://www.fractalaccelerator.com/apply" },
+    ],
+  },
+
+  // 7. Library — Research + Writing (formerly "Publications")
+  {
+    id: "library",
+    name: "Library",
+    displayName: "Library",
+    subtitle: "Library",
+    slug: "library",
+    route: "/library",
+     tokenSlug: "library",
     palette: { light: "#E870A0", deep: "#C44878" },
     tagline: "Want to think, build, publish?",
     description:
@@ -325,22 +379,40 @@ export const HOUSES: House[] = [
 // tokens in src/index.css mirror it; the section-tokens-sync test keeps them in
 // lockstep). Like houses, both consumers that need a real hex — three.js
 // (OctahedronHero) and JS string colors (Navbar) — read from here, not a CSS
-// var(). People is intentionally deferred from launch but kept tokenized and
-// launch-ready.
+// var().
 //
-// FRAC-205: Story is a live non-house section, but unlike People it reads as a
-// CREAM page (charcoal text) with a SINGLE gold identity accent rather than a
-// color-flooded {light,deep} pair — cream is just the shared `background`, so
-// Story only needs the one accent. Section entries are therefore HETEROGENEOUS
-// in shape: People is `{ light, deep }` (flooded), Story is `{ accent }`
-// (cream). Both consumers that need a real hex (three.js OctahedronHero +
-// heroNavNodes, Navbar JS strings) read Story's color from here. The
-// `--color-section-story` token in index.css mirrors `accent`; the
-// section-tokens-sync test keeps them in lockstep across both shapes.
+// People: the PAGE IS RETIRED — /people was deleted and NOT redirected, so the
+// route 404s. The section survives here, fully tokenized and launch-ready: its
+// `section-people-{light,deep}` tokens and its decorative octahedron face both
+// still read from this record.
+//
+// Story no longer has a page of its own — it folded into Home — but it keeps
+// its identity color, which now themes the Story block ON the home page: the
+// "S" sector letter, the fractal diagram, and the "Curious about Fractal?"
+// callout. It is a {light, deep} GOLD PAIR, not a single accent: the light gold
+// (#D4BA58) is decoration-only (it fails WCAG as small text on cream), and the
+// deep gold (#a08a2e) is the one that may carry text. The Venues node on the
+// home diagram and the Merlin's Place nav row both take the deep gold.
+//
+// When People had a page it read as a CREAM page (charcoal text) rather than a
+// color flood, using `deep` as its accent. It keeps the pair regardless, so it
+// can flood — or come back at all — without a token change.
 export const SECTIONS = {
   people: { light: "#C49040", deep: "#B65D19" },
-  story: { accent: "#D4BA58" },
+  story: { light: "#D4BA58", deep: "#a08a2e" },
 } as const;
+
+/**
+ * "Enter the Fractal" — the member portal. It has no page, so it carries a
+ * nav-only identity color rather than a section entry. Mirrors
+ * `--color-nav-portal` in src/index.css.
+ *
+ * Its navbar row is currently HIDDEN (see the comment in NAV_GROUPS,
+ * src/components/layout/Navbar.tsx) — a permanently-disabled row is worse than
+ * no row. This export and the token are kept deliberately, unreferenced, so
+ * restoring the row when the portal ships is a one-liner and needs no new color.
+ */
+export const NAV_PORTAL_COLOR = "#5B4A8A";
 
 // ---------------------------------------------------------------------------
 // Helper functions

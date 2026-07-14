@@ -1,37 +1,71 @@
 import { render, screen } from "@testing-library/react";
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect } from "vitest";
 import { SectorHeader } from "@/components/layout/SectorHeader";
-import { SECTIONS } from "@/data/houses";
+import { HOUSES, SECTIONS } from "@/data/houses";
 
 // ═══════════════════════════════════════════════════════════════════════════
-// Mock Framer Motion — SectorHeader uses FadeIn which wraps motion.div.
-// We let the real FadeIn render (IntersectionObserver is mocked in setup).
+// SectorHeader renders the correct letter, name, and color for each section.
+//
+// Colors are pulled from the canonical data model (HOUSES / SECTIONS) rather
+// than hand-typed hex, so a palette change can't leave a stale literal behind
+// here. The letter/name/variant of each row mirrors its call site:
+//
+//   Campus          C   house campus         deep    (Campus.tsx)
+//   Fractal Co-Living H house coliving       deep    (CoLivingPage.tsx)
+//   Events          E   house events         deep    (EventsPage.tsx)
+//   Library         L   house library        deep    (LibraryPage.tsx)
+//   Education       E   house school         LIGHT   (page RETIRED — inverted)
+//   Political Club  PC  house forum          LIGHT   (page RETIRED — inverted)
+//   People          P   SECTIONS.people      deep    (page RETIRED)
+//
+// The last three no longer have a page: Education, Political Club and People were
+// retired and their routes 404 (see routes.test.tsx). Their rows STAY here on
+// purpose. The houses/sections and their tokens were deliberately retained so the
+// pages are launch-ready, and these rows are what prove the retained colors are
+// still real, still SectorHeader-renderable values — not orphans that quietly
+// rotted to `undefined` (exactly the failure the Story `accent` note below
+// describes). Delete a row only when its token is deleted.
+//
+// Education and the Political Club invert the pair (deep floods the page, light
+// is the accent) — see the House.palette doc comment in src/data/houses.ts.
+//
+// Story keeps a row here even though Home hand-rolls its own header markup
+// (it paints the big "S" and the small label DIFFERENT golds, which SectorHeader
+// cannot express). Its color is now SECTIONS.story.deep — the pair's text-safe
+// member. `SECTIONS.story.accent` no longer exists: Story became a
+// {light, deep} pair like People.
 // ═══════════════════════════════════════════════════════════════════════════
 
-// ═══════════════════════════════════════════════════════════════════════════
-// SectorHeader renders correct letter and name for each section
-// ═══════════════════════════════════════════════════════════════════════════
+const house = (id: string) => {
+  const h = HOUSES.find((x) => x.id === id);
+  if (!h) throw new Error(`sector-header.test: unknown house id "${id}"`);
+  return h;
+};
 
 const sections = [
-  // FRAC-205: Story is now a cream section with a single gold identity accent
-  // sourced from SECTIONS.story.accent. Its old deep-gold accent was dropped
-  // when the page moved off the gold flood; this test just feeds the
-  // SectorHeader a color prop and asserts it renders, so it reads from the
-  // canonical source like the People row below.
-  { letter: "S", name: "Story", color: SECTIONS.story.accent },
-  { letter: "C", name: "Campus", color: "#1A3A2E" },
-  { letter: "V", name: "Visit", color: "#4A5A30" },
-  { letter: "E", name: "Events", color: "#C13B2A" },
-  { letter: "E", name: "Education", color: "#C41E20" },
-  { letter: "PC", name: "Political Club", color: "#C83858" },
-  { letter: "P", name: "Publications", color: "#C44878" },
+  { letter: "S", name: "Story", color: SECTIONS.story.deep },
+  { letter: "C", name: "Campus", color: house("campus").palette.deep },
+  { letter: "H", name: "Fractal Co-Living", color: house("coliving").palette.deep },
+  { letter: "E", name: "Events", color: house("events").palette.deep },
+  { letter: "E", name: "Education", color: house("school").palette.light },
+  { letter: "PC", name: "Political Club", color: house("forum").palette.light },
+  { letter: "L", name: "Library", color: house("library").palette.deep },
   { letter: "P", name: "People", color: SECTIONS.people.deep },
 ] as const;
 
 describe("SectorHeader", () => {
+  it("every section supplies a real color (guards against an undefined prop)", () => {
+    // The old suite fed `SECTIONS.story.accent`, which quietly became undefined
+    // when Story turned into a pair — SectorHeader then rendered colorless
+    // spans and the color assertion below was the only thing that noticed.
+    for (const { name, color } of sections) {
+      expect(color, `${name} has no color`).toMatch(/^#[0-9a-fA-F]{3,8}$/);
+    }
+  });
+
   for (const section of sections) {
     describe(`${section.name} section`, () => {
-      it(`should render the letter "${section.letter}"`, () => {
+      it(`renders the letter "${section.letter}"`, () => {
         render(
           <SectorHeader
             letter={section.letter}
@@ -42,7 +76,7 @@ describe("SectorHeader", () => {
         expect(screen.getByText(section.letter)).toBeTruthy();
       });
 
-      it(`should render the name "${section.name}"`, () => {
+      it(`renders the name "${section.name}"`, () => {
         render(
           <SectorHeader
             letter={section.letter}
@@ -53,7 +87,7 @@ describe("SectorHeader", () => {
         expect(screen.getByText(section.name)).toBeTruthy();
       });
 
-      it("should apply the section color to both letter and name", () => {
+      it("applies the section color to BOTH the letter and the name", () => {
         const { container } = render(
           <SectorHeader
             letter={section.letter}
@@ -61,61 +95,49 @@ describe("SectorHeader", () => {
             color={section.color}
           />,
         );
-        // jsdom normalizes hex colors to rgb() — check that both spans
-        // have a non-empty color style set (the actual value is the section color)
-        const spans = container.querySelectorAll("span");
-        const coloredSpans = Array.from(spans).filter(
-          (el) => el.style.color !== "",
-        );
-        // Letter span and name span should both have color set
-        expect(coloredSpans.length).toBeGreaterThanOrEqual(2);
+        const letterSpan = container.querySelector<HTMLElement>("span.block")!;
+        const nameSpan = container.querySelector<HTMLElement>("span.text-label")!;
+
+        // jsdom normalizes hex to rgb(), so compare both spans against each
+        // other and assert neither is empty — an undefined color prop yields "".
+        expect(letterSpan.style.color).not.toBe("");
+        expect(nameSpan.style.color).not.toBe("");
+        expect(letterSpan.style.color).toBe(nameSpan.style.color);
       });
     });
   }
 
   // ═══════════════════════════════════════════════════════════════════════
   // Layout consistency — FRAC-85 regression test
-  // All SectorHeaders should use centered text with consistent sizing
   // ═══════════════════════════════════════════════════════════════════════
 
   describe("Layout consistency (FRAC-85 regression)", () => {
-    it("should have text-center class for centered layout", () => {
-      const { container } = render(
-        <SectorHeader letter="S" name="Story" color={SECTIONS.story.accent} />,
-      );
-      const headerDiv = container.querySelector(".text-center");
-      expect(headerDiv).toBeTruthy();
+    const renderStory = () =>
+      render(<SectorHeader letter="S" name="Story" color={SECTIONS.story.deep} />);
+
+    it("centers the header", () => {
+      const { container } = renderStory();
+      expect(container.querySelector(".text-center")).toBeTruthy();
     });
 
-    it("should use consistent responsive text sizing for the letter", () => {
-      const { container } = render(
-        <SectorHeader letter="S" name="Story" color={SECTIONS.story.accent} />,
-      );
+    it("uses the responsive letter sizing (text-[7rem] → md:text-[14rem])", () => {
+      const { container } = renderStory();
       const letterSpan = container.querySelector("span.block");
       expect(letterSpan).toBeTruthy();
-      // Mobile: text-[7rem], Desktop: md:text-[14rem]
       expect(letterSpan!.className).toContain("text-[7rem]");
       expect(letterSpan!.className).toContain("md:text-[14rem]");
     });
 
-    it("should use Jacquard serif font for the letter", () => {
-      const { container } = render(
-        <SectorHeader letter="S" name="Story" color={SECTIONS.story.accent} />,
-      );
+    it("uses the Jacquard display face for the letter", () => {
+      const { container } = renderStory();
       const letterSpan = container.querySelector<HTMLElement>("span.block");
-      expect(letterSpan).toBeTruthy();
       expect(letterSpan!.style.fontFamily).toContain("Jacquard");
     });
 
-    it("should wrap content in FadeIn animation", () => {
-      const { container } = render(
-        <SectorHeader letter="S" name="Story" color={SECTIONS.story.accent} />,
-      );
-      // FadeIn renders a motion.div — in jsdom this becomes a regular div
-      // with data-* or style attributes from framer-motion
+    it("wraps its content in the FadeIn animation", () => {
+      const { container } = renderStory();
       const wrapper = container.firstElementChild;
       expect(wrapper).toBeTruthy();
-      // The wrapper should contain the text-center div
       expect(wrapper!.querySelector(".text-center")).toBeTruthy();
     });
   });

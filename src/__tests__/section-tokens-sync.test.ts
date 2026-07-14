@@ -2,7 +2,7 @@ import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, resolve } from "node:path";
 import { describe, it, expect } from "vitest";
-import { SECTIONS } from "@/data/houses";
+import { SECTIONS, NAV_PORTAL_COLOR } from "@/data/houses";
 
 // ═══════════════════════════════════════════════════════════════════════════
 // Section-token drift check (FRAC-204, extended FRAC-205)
@@ -14,14 +14,20 @@ import { SECTIONS } from "@/data/houses";
 // tokens instead of hardcoding hex. These two sources can silently diverge.
 // This test asserts they stay in lockstep, exactly like the house-token check.
 //
-// FRAC-205: section entries are HETEROGENEOUS in shape. A "flooded" section
-// (People) carries a `{ light, deep }` pair → tokens
-// `--color-section-<slug>-{light,deep}`. A "cream" section (Story) carries a
-// single `{ accent }` → token `--color-section-<slug>` (no variant suffix).
-// This test handles both: it derives the EXPECTED token set from each SECTIONS
-// entry's actual keys, asserts every expected token exists and is hex-equal,
-// and asserts there are no orphan section tokens. Non-vacuous: a drifted hex,
-// a missing token, or an extra token all fail.
+// SHAPE: every section entry is a `{ light, deep }` PAIR — People and Story
+// alike — mirroring a HousePalette. Story used to be the odd one out, carrying
+// a single `{ accent }` (token `--color-section-story`, no variant suffix); it
+// is now the gold pair `{ light: #D4BA58, deep: #a08a2e }`, so that shape is
+// gone and no section exercises it any more.
+//
+// The PARSER below still recognises the old suffix-less shape on purpose. It is
+// not dead code: expectations are built strictly as pairs, so a leftover or
+// hand-added `--color-section-<slug>: #HEX;` gets parsed, matches no expected
+// token, and is caught by the orphan check instead of being silently ignored.
+// Narrowing the parser to `-light|-deep` would quietly weaken that.
+//
+// Non-vacuous: a drifted hex, a missing token, an extra token, or a section
+// that stops being a pair all fail.
 // ═══════════════════════════════════════════════════════════════════════════
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -32,11 +38,15 @@ const css = readFileSync(cssPath, "utf8");
  * Parse every section token from index.css into a `tokenName → hex` map.
  *
  * Matches BOTH shapes:
- *   - pair tokens   `--color-section-<slug>-<light|deep>: #HEX;`
- *   - single tokens `--color-section-<slug>: #HEX;`              (e.g. story)
+ *   - pair tokens   `--color-section-<slug>-<light|deep>: #HEX;`   (the only
+ *                                                                   shape in use)
+ *   - single tokens `--color-section-<slug>: #HEX;`                (legacy; kept
+ *                                                                   so strays are
+ *                                                                   caught as
+ *                                                                   orphans)
  *
- * The slug body forbids the trailing `-light`/`-deep` so a pair token never
- * also matches as a (slug = "people-light") single token. Token names are
+ * The lazy slug body means a pair token always binds its `-light`/`-deep` into
+ * the variant group rather than swallowing it into the slug. Token names are
  * stored WITHOUT the `--color-section-` prefix.
  */
 function parseSectionTokens(source: string): Map<string, string> {
@@ -52,21 +62,15 @@ function parseSectionTokens(source: string): Map<string, string> {
   return tokens;
 }
 
-/**
- * Flatten a SECTIONS entry into `tokenName → hex` expectations.
- *   - `{ light, deep }` → `<slug>-light`, `<slug>-deep`
- *   - `{ accent }`      → `<slug>`
- */
+/** Flatten a SECTIONS entry into `tokenName → hex` expectations: `<slug>-{light,deep}`. */
 function expectedTokensFor(
   slug: string,
   value: Record<string, string>,
 ): Array<[string, string]> {
-  const out: Array<[string, string]> = [];
-  for (const [variant, hex] of Object.entries(value)) {
-    const name = variant === "accent" ? slug : `${slug}-${variant}`;
-    out.push([name, hex.toLowerCase()]);
-  }
-  return out;
+  return Object.entries(value).map(([variant, hex]) => [
+    `${slug}-${variant}`,
+    hex.toLowerCase(),
+  ]);
 }
 
 const tokens = parseSectionTokens(css);
@@ -77,11 +81,19 @@ const allExpected: Array<[string, string]> = sectionKeys.flatMap((key) =>
 );
 
 describe("section token sync (houses.ts SECTIONS ↔ index.css)", () => {
-  it("defines exactly one token per SECTIONS variant (across both shapes)", () => {
+  it("every SECTIONS entry is a {light, deep} pair", () => {
     expect(sectionKeys.length).toBeGreaterThan(0);
-    // Sanity: SECTIONS must currently exercise BOTH shapes so the parser /
-    // mapping logic above is genuinely covered (keeps this test non-vacuous).
-    expect(allExpected.length).toBeGreaterThan(sectionKeys.length);
+    for (const key of sectionKeys) {
+      expect(
+        Object.keys(SECTIONS[key]).sort(),
+        `SECTIONS.${key} must be a { light, deep } pair`,
+      ).toEqual(["deep", "light"]);
+    }
+  });
+
+  it("defines exactly one token per SECTIONS variant", () => {
+    // Pairs only ⇒ two tokens per section, and index.css must hold exactly those.
+    expect(allExpected.length).toBe(sectionKeys.length * 2);
     expect(tokens.size).toBe(allExpected.length);
   });
 
@@ -113,5 +125,24 @@ describe("section token sync (houses.ts SECTIONS ↔ index.css)", () => {
       orphans,
       `Orphan section token(s) in index.css with no matching SECTIONS entry: ${orphans.join(", ")}`,
     ).toEqual([]);
+  });
+});
+
+// ═══════════════════════════════════════════════════════════════════════════
+// NAV_PORTAL_COLOR — the "Enter the Fractal" menu row.
+//
+// It has no page, so it is not a section and carries a nav-only identity color.
+// The Navbar reads the JS constant; `--color-nav-portal` in index.css is the
+// mirror. Same drift risk, same check.
+// ═══════════════════════════════════════════════════════════════════════════
+
+describe("nav portal token sync (NAV_PORTAL_COLOR ↔ index.css)", () => {
+  it("--color-nav-portal matches NAV_PORTAL_COLOR", () => {
+    const match = /--color-nav-portal\s*:\s*(#[0-9a-fA-F]{3,8})\s*;/.exec(css);
+    expect(
+      match,
+      "Missing @theme token --color-nav-portal in src/index.css",
+    ).toBeTruthy();
+    expect(match![1].toLowerCase()).toBe(NAV_PORTAL_COLOR.toLowerCase());
   });
 });

@@ -1,11 +1,11 @@
-interface VisitBannerSVGProps {
+interface LibraryBannerSVGProps {
   className?: string;
 }
 
-export function VisitBannerSVG({ className = "" }: VisitBannerSVGProps) {
+export function LibraryBannerSVG({ className = "" }: LibraryBannerSVGProps) {
   return (
     <img
-      src="/images/banners/visit-banner.svg"
+      src="/images/banners/library-banner.svg"
       alt=""
       aria-hidden="true"
       draggable={false}

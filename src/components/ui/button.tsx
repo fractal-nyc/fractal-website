@@ -18,10 +18,11 @@ import { MandelbrotIcon } from "@/components/house/MandelbrotIcon";
 //
 // This rewrite matches the shipped product reality:
 //   - Uppercase JetBrains Mono (site default body type)
-//   - Bordered, translucent surface (preserves the existing CTA look on
-//     EventsPage / VisitPage / PoliticalClubPage / PeoplePage / Campus
-//     / LiberalArts — see FRAC-86 regression test for the inline-block +
-//     max-w-xs pattern)
+//   - Bordered, translucent surface (preserves the existing CTA look across the
+//     house pages — see FRAC-86 regression test for the inline-block +
+//     max-w-xs pattern). NB: the original call-site list named VisitPage,
+//     PoliticalClubPage, PeoplePage and LiberalArts, all of which have since
+//     been renamed or retired; the pattern outlived the pages.
 //   - Real focus-visible ring (was missing sitewide)
 //   - Mandelbrot corner motifs on the default variant (preserved from the
 //     prior implementation's house aesthetic — old button.tsx:70-73)

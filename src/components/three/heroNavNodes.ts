@@ -25,11 +25,20 @@ export interface NavNode {
   vertexIndex: number;
 }
 
+// Routes/labels only: Visit → Fractal Co-Living (/co-living), Publications →
+// Library (/library), and Story — which folded into Home — now points at "/".
+// House ids follow houses.ts (`neighborhood` → `coliving`, `lab` → `library`).
+// Story's color is SECTIONS.story.light (#D4BA58 — the old `accent` value);
+// it is decorative here (a glowing 3D node), never text.
+//
+// vertexIndex 1 used to be Education (/education). That page was retired and the
+// route now 404s, so the vertex was repointed at the Accelerator rather than
+// dropped — the node COUNT stays at 6 and the octahedron geometry is untouched.
 export const OUTER_NAV_NODES: NavNode[] = [
-  { label: "Visit",          route: "/visit",        color: housePalette("neighborhood"), vertexIndex: 3 },
-  { label: "Events",         route: "/events",       color: housePalette("events"),       vertexIndex: 2 },
-  { label: "Campus",         route: "/campus",       color: housePalette("campus"),       vertexIndex: 0 },
-  { label: "Education",      route: "/education",    color: housePalette("school"),       vertexIndex: 1 },
-  { label: "Publications",   route: "/publications", color: housePalette("lab"),          vertexIndex: 5 },
-  { label: "Story",          route: "/story",        color: SECTIONS.story.accent,        vertexIndex: 4 },
+  { label: "Fractal Co-Living", route: "/co-living",   color: housePalette("coliving"),    vertexIndex: 3 },
+  { label: "Events",            route: "/events",      color: housePalette("events"),      vertexIndex: 2 },
+  { label: "Campus",            route: "/campus",      color: housePalette("campus"),      vertexIndex: 0 },
+  { label: "Accelerator",       route: "/accelerator", color: housePalette("accelerator"), vertexIndex: 1 },
+  { label: "Library",           route: "/library",     color: housePalette("library"),     vertexIndex: 5 },
+  { label: "Story",             route: "/",            color: SECTIONS.story.light,        vertexIndex: 4 },
 ];

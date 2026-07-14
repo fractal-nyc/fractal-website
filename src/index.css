@@ -26,8 +26,8 @@
      (charcoal) directly — no per-house *-foreground sibling tokens. Cream and
      charcoal are page-agnostic. The FRAC-42 paired-foreground convention is
      fully retired; FRAC-50 swept the last consumer (Campus). */
-  --color-house-publications-light: #E870A0;
-  --color-house-publications-deep: #C44878;
+  --color-house-library-light: #E870A0;
+  --color-house-library-deep: #C44878;
 
   --color-house-campus-light: #2E6B4A;
   --color-house-campus-deep: #1A3A2E;
@@ -35,8 +35,8 @@
   --color-house-education-light: #C41E20;
   --color-house-education-deep: #5C1010;
 
-  --color-house-visit-light: #889460;
-  --color-house-visit-deep: #4A5A30;
+  --color-house-coliving-light: #889460;
+  --color-house-coliving-deep: #4A5528;
 
   --color-house-events-light: #D4857A;
   --color-house-events-deep: #C13B2A;
@@ -44,16 +44,41 @@
   --color-house-political-club-light: #C83858;
   --color-house-political-club-deep: #6E1830;
 
+  /* The Accelerator is the 7th house. Unlike the other six it does not just
+     theme a cream page — it carries the separate Fractal Accelerator brand
+     (see fractal-os BRAND/fractalaccelerator.md), whose surfaces are burgundy,
+     white, and a warmer cream than the site's. The pair below themes the house
+     the way every other house pair does (flooded page bg + accent); the
+     `accel-*` tokens under it are the brand's own palette, scoped to that one
+     page. */
+  --color-house-accelerator-light: #8E2A1E;
+  --color-house-accelerator-deep: #641E28;
+
+  /* Fractal Accelerator brand sub-palette — page-scoped to AcceleratorPage.
+     A sanctioned exception to "house colors are a two-color pair": this page
+     renders a different brand, not a themed Fractal NYC page. */
+  --color-accel-ink: #641E28;
+  --color-accel-cta: #9B3741;
+  --color-accel-emphasis: #8C2D37;
+  --color-accel-cream: #F1F0EC;
+  --color-accel-pale: #FCEBED;
+
   /* Non-house section palette tokens (FRAC-204). Section pages that aren't
      Houses but still carry a light/deep pair. Mirrors SECTIONS in
-     src/data/houses.ts (kept in lockstep by the section-tokens-sync test).
-     People is deferred from launch but tokenized and launch-ready. */
+     src/data/houses.ts (kept in lockstep by the section-tokens-sync test). */
   --color-section-people-light: #C49040;
   --color-section-people-deep: #B65D19;
 
-  /* FRAC-205: Story is a cream non-house section with a single gold identity
-     accent (no light/deep flood). Mirrors SECTIONS.story.accent in houses.ts. */
-  --color-section-story: #D4BA58;
+  /* Story is a gold light/deep PAIR, not a single accent. The light gold is a
+     decoration-only value (it fails WCAG as small text on cream); the deep gold
+     is the one that may carry text — the Story letter, the "Curious about
+     Fractal?" callout label, and the Venues node on the home diagram. */
+  --color-section-story-light: #D4BA58;
+  --color-section-story-deep: #a08a2e;
+
+  /* Nav-only identity color for the "Enter the Fractal" member portal — it has
+     no page of its own yet, only a menu row. */
+  --color-nav-portal: #5B4A8A;
 
   --radius-sm: 0.25rem;
   --radius-md: 0.5rem;
@@ -224,6 +249,52 @@
     letter-spacing: normal;
   }
 
+  /* ───────────────────────────────────────────────────────────────────────
+     Banner clearance. The four sector pages (Campus, Co-Living, Events,
+     Library) flank their content with a pair of pennant banners rendered in a
+     `position: fixed` layer. Because that layer is fixed it takes part in NO
+     layout: without this utility every section of the page scrolls underneath
+     the pennants and overlaps them at some scroll depth. `.clear-banners`
+     reserves the gutters the pennants occupy on the page's content wrapper, so
+     content renders BETWEEN the two banners at every scroll position.
+
+     INVARIANT — this utility is COUPLED TO THE BANNER LAYER'S GEOMETRY. The
+     layer (see e.g. src/pages/EventsPage.tsx) is:
+
+         fixed inset-x-4 sm:inset-x-8 md:inset-x-12 lg:inset-x-16 ... hidden md:flex
+         each pennant: w-[24%] md:w-[16%] max-w-[210px]
+
+     so the clearance is (edge inset) + (pennant width) + (breathing gap):
+       md+  → inset-x-12 = 3rem
+       lg+  → inset-x-16 = 4rem
+       pennant → min(16%, 210px)   ← mirrors w-[16%] max-w-[210px]
+     If the inset scale, the pennant width, or the `md` visibility breakpoint
+     changes, THIS UTILITY MUST CHANGE WITH IT — they are two halves of one
+     layout. See DESIGN.md → Layout → Banner clearance.
+
+     Below `md` there is deliberately NO padding: the banner layer is `hidden`
+     there, so reserving space would only narrow the 375px mobile baseline for
+     nothing. Mobile-first — the phone layout must not pay for a desktop
+     decoration. Page sections keep their own `px-6` mobile gutter; on md+ the
+     clearance is the single source of horizontal inset (the pages drop their
+     percentage gutters at md so the two don't compound). */
+  .clear-banners {
+    --banner-pennant: min(16%, 210px);
+    --banner-gap: 2rem;
+  }
+  @media (min-width: 48rem) {
+    /* md — the banner layer appears; inset-x-12 */
+    .clear-banners {
+      padding-inline: calc(3rem + var(--banner-pennant) + var(--banner-gap));
+    }
+  }
+  @media (min-width: 64rem) {
+    /* lg — inset-x-16 */
+    .clear-banners {
+      padding-inline: calc(4rem + var(--banner-pennant) + var(--banner-gap));
+    }
+  }
+
   /* FRAC-33: visually-hidden until any descendant receives focus. Used
      for the octahedron hero skip-nav so keyboard users can reach the
      nav routes without depending on 3D mesh pointer events. */
@@ -259,12 +330,20 @@
 }
 
 /* FRAC-52: dark-background button condition.
-   On pages with deeply saturated / dark backgrounds (e.g. EducationPage's
-   `bg-house-education-deep`), the default cream frost (0.16 rest / 0.24
-   hover) doesn't lift the button surface enough to carry an accent-colored
-   text + border with legible contrast. Apply this class on the page's
-   `<main>` (alongside `--accent`) to bump the cream frost opacity into
-   a range where the accent text reads cleanly against the page bg. */
+   On pages with deeply saturated / dark backgrounds, the default cream frost
+   (0.16 rest / 0.24 hover) doesn't lift the button surface enough to carry an
+   accent-colored text + border with legible contrast. Apply this class on the
+   page's `<main>` (alongside `--accent`) to bump the cream frost opacity into
+   a range where the accent text reads cleanly against the page bg.
+
+   CURRENTLY UNREFERENCED — retained deliberately, not dead code to prune.
+   Its only two consumers were EducationPage and PoliticalClubPage, the pages
+   that INVERT their house pair (`bg-house-education-deep` /
+   `bg-house-political-club-deep`). Both pages are retired; their tokens were
+   kept so the pages stay launch-ready, and this utility is kept for the same
+   reason — a rebuilt inverted page needs it back on day one. It is the button
+   half of the same "retired page, retained system" decision documented in
+   DESIGN.md § Retired pages, retained tokens. */
 .btn-on-dark {
   --btn-fill: rgba(242, 234, 216, 0.6);
 }
