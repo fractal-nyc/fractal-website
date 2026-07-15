@@ -63,7 +63,7 @@ export function CoLivingPage() {
             </FadeIn>
 
             <FadeIn delay={0.15}>
-              <p className="text-body-lead text-foreground-muted max-w-2xl mx-auto">
+              <p className="text-subtitle text-foreground max-w-2xl mx-auto">
                 Fractal is an extended network of friends living in shared homes
                 across NYC. Fractal homes often host FractalU classes,
                 gatherings, and serve as social hubs for our community.
@@ -74,53 +74,59 @@ export function CoLivingPage() {
 
         {/* Where We Live */}
         <section className="w-full mt-16 md:mt-24">
-          <div className="page-gutter max-w-5xl mx-auto">
-            <FadeIn>
-              <h2 className="text-title mb-4 md:mb-6">Where We Live</h2>
-            </FadeIn>
-            <FadeIn delay={0.1}>
-              <div className="bg-background text-foreground border border-foreground-faint rounded-md p-3 sm:p-5 md:p-8">
-                <HousingMap />
-              </div>
-            </FadeIn>
+          {/* FRAC-10: primary content tracks the Campus content column
+              (max-w-7xl page-gutter frame + max-w-3xl column) so the two
+              pages line up. */}
+          <div className="max-w-7xl mx-auto page-gutter">
+            <div className="max-w-3xl mx-auto">
+              <FadeIn>
+                <h2 className="text-title mb-4 md:mb-6">Where We Live</h2>
+              </FadeIn>
+              <FadeIn delay={0.1}>
+                <div className="bg-background text-foreground border border-foreground-faint rounded-md p-3 sm:p-5 md:p-8">
+                  <HousingMap />
+                </div>
+              </FadeIn>
+            </div>
           </div>
         </section>
 
         {/* Photo strip */}
         <section className="w-full mt-10 md:mt-14">
-          <div className="page-gutter max-w-5xl mx-auto">
-            <FadeIn delay={0.1}>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {PHOTOS.map((photo) => (
-                  <div
-                    key={photo.src}
-                    className="overflow-hidden rounded-sm aspect-[4/3]"
-                  >
-                    <img
-                      src={photo.src}
-                      alt={photo.alt}
-                      loading="lazy"
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                ))}
-              </div>
-            </FadeIn>
+          <div className="max-w-7xl mx-auto page-gutter">
+            <div className="max-w-3xl mx-auto">
+              <FadeIn delay={0.1}>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {PHOTOS.map((photo) => (
+                    <div
+                      key={photo.src}
+                      className="overflow-hidden rounded-sm aspect-[4/3]"
+                    >
+                      <img
+                        src={photo.src}
+                        alt={photo.alt}
+                        loading="lazy"
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                  ))}
+                </div>
+              </FadeIn>
+            </div>
           </div>
         </section>
 
-        {/* Visiting NYC? callout */}
+        {/* Visiting NYC? callout — intentionally keeps its own narrower
+            max-w-xl box (not the Campus content column); only the map + photo
+            strip above track Campus width. */}
         <section className="w-full mt-16 md:mt-24">
           <div className="page-gutter max-w-xl mx-auto">
             <FadeIn delay={0.1}>
               <MandelbrotCorners
                 size="sm"
                 opacity={0.15}
-                className="border [border-color:var(--accent,currentColor)] rounded-md p-7 md:px-10 md:py-8 bg-background text-foreground text-left flex items-start gap-5"
+                className="border [border-color:var(--accent,currentColor)] rounded-md p-7 md:px-10 md:py-8 bg-background text-foreground text-left"
               >
-                <span aria-hidden="true" className="text-3xl leading-none">
-                  🏠
-                </span>
                 <div>
                   <p className="text-label text-house-co-living-deep mb-2 md:mb-3">
                     Visiting NYC?
