@@ -3,7 +3,7 @@ import { FadeIn } from "@/components/ui/FadeIn";
 export function OriginStory() {
   return (
     <section className="py-10 md:py-16 overflow-hidden" id="story">
-      <div className="max-w-5xl mx-auto px-[4.5%]">
+      <div className="max-w-5xl mx-auto page-gutter">
         <FadeIn>
           <div className="space-y-4">
             <p className="text-body-lead">
@@ -23,7 +23,7 @@ export function OriginStory() {
           operator request over the newer generated pentagon. The baked-in
           labels still read the pre-rename "Visit"; refresh the PNG later.) */}
       <FadeIn>
-        <div className="max-w-5xl mx-auto px-[4.5%] mt-10 md:mt-16">
+        <div className="max-w-5xl mx-auto page-gutter mt-10 md:mt-16">
           <img
             src="/images/fractal-nyc-diagram.png"
             alt="Fractal NYC neighborhood campus diagram — four pillars around the Fractal Collective: Campus, Visit, Events, and Education (Fractal Tech and Fractal University)"
@@ -34,7 +34,7 @@ export function OriginStory() {
         </div>
       </FadeIn>
 
-      <div className="max-w-5xl mx-auto px-[4.5%] mt-5 md:mt-8">
+      <div className="max-w-5xl mx-auto page-gutter mt-5 md:mt-8">
         <FadeIn>
           <p className="text-body-lead">
             In 2025, we taught an online class helping small groups of friends create their own neighborhood campuses. That lead to{" "}

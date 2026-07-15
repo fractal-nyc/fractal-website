@@ -45,7 +45,7 @@ export function LibraryPage() {
       <div className="relative z-10">
         {/* Publications heading + description */}
         <section className="flex flex-col items-center justify-start pt-16 md:pt-24 pb-12 md:pb-20 w-full">
-          <div className="px-6 md:px-[22%] w-full">
+          <div className="page-gutter mx-auto max-w-2xl w-full">
             <SectorHeader letter="L" name="Library" color="var(--color-house-library-deep)" />
             <FadeIn delay={0.1}>
               <div className="text-center">
@@ -59,7 +59,7 @@ export function LibraryPage() {
 
         {/* Research & Writing archive */}
         <section className="pt-0 pb-16 md:pb-24">
-          <div className="relative max-w-[1600px] mx-auto px-6 md:px-[4.5%]">
+          <div className="relative max-w-[1600px] mx-auto page-gutter">
             {/* Mandelbrot watermark — desktop */}
             <div className="hidden md:block absolute right-8 top-0 pointer-events-none select-none" aria-hidden="true">
               <MandelbrotIcon size={320} opacity={0.04} />

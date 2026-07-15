@@ -275,15 +275,48 @@ The Button ships a single `default` size — JetBrains Mono, uppercase, `trackin
 
 **Mobile-first, 375px baseline.** Write the mobile layout first; all breakpoints are additive enhancements.
 
-### Horizontal padding
+### Breakpoints
 
-- `px-6` — the mobile gutter and default page-edge inset.
-- `px-[4.5%]` — the full-bleed editorial gutter for sections whose breathing room scales with viewport width.
-- `md:px-[22%]` — the centered narrow-content desktop gutter: mobile stays `px-6`, then on `md+` a deep percentage inset squeezes a single column of editorial copy to the center of wide viewports. Used by the single-column sector pages (`EventsPage`, `LibraryPage`, `CoLivingPage`, `Education`).
+Two structural breakpoints on Tailwind's defaults (`sm 640 / md 768 / lg 1024 / xl 1280`). Synthesized from Apple HIG size classes (compact/regular) and Material 3 window classes — assign each concern to exactly one:
+
+| Name | Tailwind | Range | What flips |
+|---|---|---|---|
+| **Compact** | (base) | <768 | single column; mobile nav (hamburger + overlay); `.page-gutter` at its 24px floor |
+| **Medium** | `md:` | 768–1023 | *refinement only* — type scale, 2-col media grids, wider gutter. **Not** the structural switch. |
+| **Expanded** | `lg:` | 1024–1279 | **the** desktop structural break — 3-col navbar grid, full hero search, multi-column layouts, inner-page desktop header |
+| **Wide** | `xl:` | ≥1280 | max-width containers cap; gutter at its 64px ceiling |
+
+**The one rule:** *structural* layout (navbar grid, hero, inner-page header, column count) flips at **`lg` (1024)** everywhere. *Refinement* (gutter step, type scale, media grids) steps at **`md` (768)**. Never introduce a second "goes desktop" line.
+
+### Horizontal gutter — `.page-gutter`
+
+**One rule replaces three.** Use the `.page-gutter` utility (`src/index.css`) for every page-edge inset. It floors at the phone-comfortable 24px (meets Apple's 16–20pt guidance), scales on the editorial 4.5% intent (as `4.5vw`, Material-3 flavored), caps at 64px (Apple-style restraint — never sprawls), and folds in `env(safe-area-inset-*)` so a landscape notch never overlaps content:
+
+```css
+.page-gutter { padding-inline: max(clamp(1.5rem, 4.5vw, 4rem), env(safe-area-inset-left), env(safe-area-inset-right)); }
+```
+
+| Viewport | `.page-gutter` |
+|---|---|
+| 375 (phone) | 24px (floor) |
+| 768 (md) | ~35px |
+| 1440+ | 64px (ceiling) |
+
+**Deprecated for page edges — do not reintroduce:** `px-6` / `px-[4.5%]` / `md:px-[22%]` / stepped `px-6 md:px-8`. (Those remain fine as *component/card* padding; the deprecation is only for the page-edge gutter role.) **Gutter ≠ measure:** `.page-gutter` only prevents edge-touching; cap readable line length with a `max-w-*` container. Single-column editorial pages use **`page-gutter mx-auto max-w-2xl`** (the replacement for the old `md:px-[22%]` inset).
 
 ### Containers
 
-Choose the narrowest `max-w-*` container that fits the content.
+Choose the narrowest `max-w-*` that fits. Named ladder:
+
+| Role | Tailwind | px |
+|---|---|---|
+| single-column editorial body | `max-w-2xl` | 672 |
+| longer-form prose | `max-w-3xl` | 768 |
+| standard section content | `max-w-5xl` | 1024 |
+| full-width sections / card grids | `max-w-7xl` | 1280 |
+| publications archive (widest) | `max-w-[1600px]` | 1600 |
+| overlay nav list | `max-w-md` | 448 |
+| hero / banners / background | (none) | full-bleed |
 
 ### Vertical rhythm
 

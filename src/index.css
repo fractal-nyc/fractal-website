@@ -123,6 +123,26 @@
     text-wrap: pretty;
   }
 
+  /* ───────────────────────────────────────────────────────────────────────
+     FRAC-6: The single horizontal page-gutter rule. Replaces the three
+     competing strategies (px-6 fixed, px-[4.5%] viewport-%, md:px-[22%]
+     centered inset). Synthesis of Apple HIG (bounded, near-fixed margins)
+     and Material 3 (margins that scale modestly with the window):
+       - floor 1.5rem (24px)  — the phone-comfortable minimum (also Apple's
+         16–20pt guidance, met/exceeded);
+       - scale 4.5vw          — preserves the site's editorial 4.5% intent;
+       - ceiling 4rem (64px)  — Apple-style restraint; never sprawls wide;
+       - max(..., safe-area)  — landscape notch never overlaps content.
+     Pair with a max-w-* container to cap readable measure (gutter ≠ measure).
+     See DESIGN.md § Layout. ─────────────────────────────────────────────── */
+  .page-gutter {
+    padding-inline: max(
+      clamp(1.5rem, 4.5vw, 4rem),
+      env(safe-area-inset-left),
+      env(safe-area-inset-right)
+    );
+  }
+
   .border-grid {
     @apply border-foreground-faint;
     border-width: 1px;

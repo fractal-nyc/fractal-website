@@ -202,7 +202,7 @@ export function Navbar() {
             {/* Full desktop navbar — shown at >= 1024px (lg). The 3-col grid
                 cannot fit smaller widths without overflow, so tablets get the
                 mobile layout below until lg. */}
-            <div className="relative py-5 max-lg:hidden" style={{ paddingLeft: "4.5%", paddingRight: "4.5%" }}>
+            <div className="relative py-5 max-lg:hidden page-gutter">
               <div className="grid grid-cols-[1fr_auto_1fr] items-end gap-6">
                 <div className="flex flex-col gap-2 min-w-0">
                   <p className="font-mono text-[13px] leading-[18px] font-normal uppercase text-justify">
@@ -243,60 +243,49 @@ export function Navbar() {
               </div>
             </div>
 
-            {/* Mobile + tablet navbar — shown at < 1024px (lg). */}
-            <div className="lg:hidden px-6 pt-5 pb-3">
-              {/* Top row: Fractal logo + blurb */}
-              <div className="flex items-center gap-3">
-                <Link href="/" className="tracking-tighter shrink-0 leading-[0.9] text-center">
-                  <span
-                    className="block"
-                    style={{ fontFamily: "'Jacquard 24', system-ui", fontSize: "clamp(32px, 6vw, 42px)" }}
-                  >
-                    Fractal
-                  </span>
-                  <span
-                    className="font-serif block italic"
-                    style={{ fontSize: "clamp(18px, 3.5vw, 25px)", textTransform: "none", fontWeight: 100 }}
-                  >
-                    Collective
-                  </span>
-                </Link>
-                <p
-                  className="font-mono uppercase font-normal text-justify flex-1"
-                  style={{ fontSize: "8px", lineHeight: 1.35, letterSpacing: "0.01em" }}
+            {/* Home mobile + tablet header — shown at < 1024px (lg).
+                FRAC-3 redesign: a single-line "Fractal Collective" wordmark on
+                the left and the hamburger on the right, replacing the old
+                stacked title + 8px blurb + row of single-letter nav caps. The
+                three-column desktop grid can't fit below lg, and the old
+                letter-row was cramped and illegible; navigation now lives in the
+                overlay menu (same one every other breakpoint uses), while the
+                hero octant remains a parallel, interactive nav. Sizes step up
+                from phone (<md) to small tablet (md..lg). */}
+            <div className="lg:hidden flex items-center justify-between page-gutter pt-5 pb-3">
+              <Link
+                href="/"
+                className="flex items-baseline gap-1.5 tracking-tighter leading-none min-w-0"
+              >
+                <span
+                  className="text-[clamp(30px,8.6vw,46px)]"
+                  style={{ fontFamily: "'Jacquard 24', system-ui" }}
                 >
-                  {RIGHT_TEXT}
-                </p>
-              </div>
-
-              {/* Nav letters row */}
-              <nav className="flex items-baseline justify-between mt-2">
-                {visibleSectionLinks.map((link) => (
-                  <SectionAnchor
-                    key={link.name}
-                    link={link}
-                    className="hover:opacity-70 transition-opacity"
-                    style={{ color: link.color }}
-                  >
-                    <span
-                      style={{
-                        fontFamily: "'Jacquard 24', system-ui",
-                        fontSize: "28px",
-                        lineHeight: 1,
-                      }}
-                    >
-                      {link.name === "Political Club" ? "PC" : link.name[0]}
-                    </span>
-                  </SectionAnchor>
-                ))}
-              </nav>
+                  Fractal
+                </span>
+                <span
+                  className="font-serif italic text-[clamp(19px,5.4vw,30px)]"
+                  style={{ textTransform: "none", fontWeight: 100 }}
+                >
+                  Collective
+                </span>
+              </Link>
+              <button
+                type="button"
+                aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
+                aria-expanded={mobileMenuOpen}
+                className="z-50 relative cursor-pointer transition-opacity duration-200 hover:opacity-70 active:opacity-90 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-offset-2 focus-visible:ring-offset-background rounded-md flex items-center justify-center p-3 -mr-3 shrink-0"
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              >
+                {mobileMenuOpen ? <X size={32} /> : <Menu size={32} />}
+              </button>
             </div>
           </>
         ) : !isHome ? (
           /* Inner page branded header — scaled-down hero treatment */
           <>
             {/* Desktop inner page header */}
-            <div className="max-md:hidden py-4" style={{ paddingLeft: "4.5%", paddingRight: "4.5%" }}>
+            <div className="max-lg:hidden py-4 page-gutter">
               <div className="flex items-end justify-between">
                 <Link href="/" className="text-center leading-[1.1] tracking-tighter">
                   <span
@@ -341,7 +330,7 @@ export function Navbar() {
             </div>
 
             {/* Mobile inner page header */}
-            <div className="md:hidden px-6 pt-4 pb-3">
+            <div className="lg:hidden page-gutter pt-4 pb-3">
               <div className="flex items-center justify-between">
                 <Link href="/" className="tracking-tighter leading-[0.9] text-center">
                   <span
@@ -371,7 +360,7 @@ export function Navbar() {
           </>
         ) : (
           /* Home page scrolled — compact bar, same branding size as full navbar */
-          <div className="py-4 flex items-center justify-between" style={{ paddingLeft: "4.5%", paddingRight: "4.5%" }}>
+          <div className="py-4 flex items-center justify-between page-gutter">
             <Link href="/" className="tracking-tighter leading-[0.9] text-center">
               <span
                 className="block"
@@ -415,7 +404,7 @@ export function Navbar() {
         className="fixed inset-0 z-40 bg-background overflow-y-auto"
       >
         {/* Section page list */}
-        <nav className="flex flex-col w-full pt-24 pb-8 px-6 max-w-md mx-auto">
+        <nav className="flex flex-col w-full pt-24 pb-8 page-gutter max-w-md mx-auto">
           {visibleSectionLinks.map((link) => {
             const letter = link.name === "Political Club" ? "PC" : link.name[0];
             return (

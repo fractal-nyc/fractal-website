@@ -21,7 +21,7 @@ export function PhotoGallery({ sections }: PhotoGalleryProps) {
 
   return (
     <section className="py-16 md:py-24">
-      <div className="max-w-7xl mx-auto px-4 md:px-8 lg:px-12 space-y-6 md:space-y-10">
+      <div className="max-w-7xl mx-auto page-gutter space-y-6 md:space-y-10">
         {sections.map((section, sectionIdx) => {
           const dir = directions[sectionIdx % directions.length];
 
