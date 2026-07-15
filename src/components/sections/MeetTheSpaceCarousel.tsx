@@ -20,15 +20,19 @@ export interface MeetTheSpacePhoto {
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
-// MeetTheSpaceCarousel (FRAC-8) — a 3D coverflow of the Campus photos.
+// MeetTheSpaceCarousel (FRAC-8) — an infinite 3D coverflow of the Campus photos.
 //
 // Desktop/tablet: Swiper's EffectCoverflow — the centered card sits forward,
-// neighbours rotate + recede + fade, contained to a centered stage so the side
-// cards fall well inside the flanking CAMPUS banner gutters. Mobile (<640px):
-// a clean single centered card with a slight peek (plain `slide` effect).
-// Reduced motion drops the 3D entirely (flat slide, instant). The active
-// photo's caption renders below the stage so the cards themselves stay clean
-// (they'd collide in 3D); every image keeps descriptive alt text.
+// neighbours overlap + rotate + recede + fade. Cards and the stage are kept
+// narrow (and neighbours pulled inward via negative `stretch`) so the fan
+// stays in the central channel between the flanking CAMPUS banner pennants.
+// Mobile (<640px): a clean single centered card with a slight peek (plain
+// `slide` effect). Reduced motion drops the 3D entirely (flat, instant).
+//
+// The carousel loops, so you can page backwards off the first photo and wrap
+// to the last. The active photo's caption renders below the stage (the cards
+// themselves stay clean — they'd collide in 3D); every image keeps descriptive
+// alt text for content parity.
 // ═══════════════════════════════════════════════════════════════════════════
 export function MeetTheSpaceCarousel({
   photos,
@@ -42,68 +46,86 @@ export function MeetTheSpaceCarousel({
   const mode = coverflow ? "coverflow" : "slide";
 
   const [swiper, setSwiper] = useState<SwiperClass | null>(null);
+  // Loop duplicates slides, so track realIndex (the logical photo), not
+  // activeIndex (the physical, duplicate-inclusive slide).
   const [active, setActive] = useState(0);
-  const [atStart, setAtStart] = useState(true);
-  const [atEnd, setAtEnd] = useState(false);
-
-  const sync = (s: SwiperClass) => {
-    setActive(s.activeIndex);
-    setAtStart(s.isBeginning);
-    setAtEnd(s.isEnd);
-  };
 
   const total = photos.length;
+  // Only accept a real, in-range index. Under loop, Swiper can briefly report
+  // a NaN/out-of-range realIndex (notably in layout-less envs), which would
+  // otherwise blank the caption or print "NaN" in the counter.
+  const syncActive = (s: SwiperClass) => {
+    if (Number.isInteger(s.realIndex) && s.realIndex >= 0 && s.realIndex < total) {
+      setActive(s.realIndex);
+    }
+  };
   const pad = (n: number) => String(n).padStart(2, "0");
 
   const arrowClass =
     "inline-flex h-10 w-10 items-center justify-center rounded-full border " +
     "border-background/25 text-background transition-colors " +
-    "hover:bg-background/5 disabled:opacity-30 disabled:pointer-events-none " +
+    "hover:bg-background/5 " +
     "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-background " +
     "focus-visible:ring-offset-2 focus-visible:ring-offset-house-campus-light";
 
   return (
-    <div className="mx-auto w-full max-w-3xl lg:max-w-4xl">
-      <Swiper
-        key={mode}
-        modules={[EffectCoverflow, Keyboard, A11y]}
-        effect={coverflow ? "coverflow" : "slide"}
-        grabCursor
-        centeredSlides
-        slidesPerView="auto"
-        spaceBetween={coverflow ? 0 : 16}
-        speed={prefersReducedMotion ? 0 : 500}
-        keyboard={{ enabled: true }}
-        a11y={{
-          prevSlideMessage: "Previous photo",
-          nextSlideMessage: "Next photo",
+    // The site has no grid — content tracks the width of the primary
+    // text/content column (max-w-3xl, same as the section's heading + body).
+    // The carousel matches that column exactly.
+    <div className="mx-auto w-full max-w-3xl">
+      {/* Stage: clip the coverflow to the content column so the fan never
+          reaches the flanking banners, with a soft horizontal edge-fade so the
+          receding side cards dissolve rather than hard-cut. */}
+      <div
+        className="overflow-hidden py-4"
+        style={{
+          maskImage:
+            "linear-gradient(to right, transparent, #000 12%, #000 88%, transparent)",
+          WebkitMaskImage:
+            "linear-gradient(to right, transparent, #000 12%, #000 88%, transparent)",
         }}
-        coverflowEffect={{
-          rotate: 32,
-          stretch: 0,
-          depth: 160,
-          modifier: 1.15,
-          scale: 0.92,
-          slideShadows: false,
-        }}
-        onSwiper={(s) => {
-          setSwiper(s);
-          sync(s);
-        }}
-        onSlideChange={sync}
-        // Let the coverflow transforms spill outside the stage without a
-        // scrollbar; the fade + fixed card widths keep them centered.
-        className="!overflow-visible !px-2"
       >
-        {photos.map((photo, i) => {
-          const dist = Math.abs(i - active);
+        <Swiper
+          key={mode}
+          modules={[EffectCoverflow, Keyboard, A11y]}
+          effect={coverflow ? "coverflow" : "slide"}
+          loop
+          grabCursor
+          centeredSlides
+          slidesPerView="auto"
+          spaceBetween={coverflow ? 0 : 16}
+          speed={prefersReducedMotion ? 0 : 500}
+          keyboard={{ enabled: true }}
+          a11y={{
+            prevSlideMessage: "Previous photo",
+            nextSlideMessage: "Next photo",
+          }}
+          coverflowEffect={{
+            rotate: 40,
+            stretch: -28,
+            depth: 210,
+            modifier: 1,
+            scale: 0.86,
+            slideShadows: false,
+          }}
+          onSwiper={(s) => {
+            setSwiper(s);
+            syncActive(s);
+          }}
+          onSlideChange={syncActive}
+        >
+          {photos.map((photo, i) => {
+          // Circular distance so wrapped neighbours (e.g. last slide when the
+          // first is active) fade like the visual neighbours they are.
+          const raw = Math.abs(i - active);
+          const dist = Math.min(raw, total - raw);
           const opacity = dist === 0 ? 1 : dist === 1 ? 0.7 : 0.45;
           return (
             <SwiperSlide
               key={photo.src}
               // Fixed slide widths so `slidesPerView:auto` has a size to work
-              // with: ~78vw single-card peek on mobile, 300px stage on desktop.
-              className="!flex justify-center !w-[78vw] max-w-[280px] sm:!w-[300px] sm:max-w-none"
+              // with: single-card peek on mobile, a narrow stage on desktop.
+              className="!flex justify-center !w-[70vw] max-w-[260px] sm:!w-[240px] sm:max-w-none"
             >
               <div
                 className={cn(
@@ -123,8 +145,9 @@ export function MeetTheSpaceCarousel({
               </div>
             </SwiperSlide>
           );
-        })}
-      </Swiper>
+          })}
+        </Swiper>
+      </div>
 
       {/* Active caption — reserved height so the controls don't jump between
           slides of different caption lengths. */}
@@ -132,12 +155,12 @@ export function MeetTheSpaceCarousel({
         {photos[active]?.caption}
       </p>
 
-      {/* Controls: prev · dots · next, with a slim NN / TT counter. */}
+      {/* Controls: prev · dots · next, with a slim NN / TT counter. The loop
+          means the arrows never disable — they wrap. */}
       <div className="mt-4 flex items-center justify-center gap-5">
         <button
           type="button"
           onClick={() => swiper?.slidePrev()}
-          disabled={atStart}
           aria-label="Previous photo"
           className={arrowClass}
         >
@@ -149,7 +172,7 @@ export function MeetTheSpaceCarousel({
             <button
               key={photo.src}
               type="button"
-              onClick={() => swiper?.slideTo(i)}
+              onClick={() => swiper?.slideToLoop(i)}
               aria-label={`Go to photo ${i + 1}`}
               aria-current={i === active}
               className={cn(
@@ -166,7 +189,6 @@ export function MeetTheSpaceCarousel({
         <button
           type="button"
           onClick={() => swiper?.slideNext()}
-          disabled={atEnd}
           aria-label="Next photo"
           className={arrowClass}
         >
