@@ -22,7 +22,7 @@ export function PoliticalClubPage() {
       <Navbar />
       <div className="min-h-screen flex flex-col items-center justify-start pt-16 md:pt-24 pb-32 md:pb-48 w-full">
         <section className="w-full">
-          <div className="px-6 md:px-[4.5%] text-center">
+          <div className="page-gutter text-center">
             <SectorHeader
               letter="PC"
               name="Political Club"

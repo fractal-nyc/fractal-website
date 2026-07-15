@@ -202,7 +202,7 @@ export function Navbar() {
             {/* Full desktop navbar — shown at >= 1024px (lg). The 3-col grid
                 cannot fit smaller widths without overflow, so tablets get the
                 mobile layout below until lg. */}
-            <div className="relative py-5 max-lg:hidden" style={{ paddingLeft: "4.5%", paddingRight: "4.5%" }}>
+            <div className="relative py-5 max-lg:hidden page-gutter">
               <div className="grid grid-cols-[1fr_auto_1fr] items-end gap-6">
                 <div className="flex flex-col gap-2 min-w-0">
                   <p className="font-mono text-[13px] leading-[18px] font-normal uppercase text-justify">
@@ -252,7 +252,7 @@ export function Navbar() {
                 overlay menu (same one every other breakpoint uses), while the
                 hero octant remains a parallel, interactive nav. Sizes step up
                 from phone (<md) to small tablet (md..lg). */}
-            <div className="lg:hidden flex items-center justify-between px-6 pt-5 pb-3">
+            <div className="lg:hidden flex items-center justify-between page-gutter pt-5 pb-3">
               <Link
                 href="/"
                 className="flex items-baseline gap-1.5 tracking-tighter leading-none min-w-0"
@@ -285,7 +285,7 @@ export function Navbar() {
           /* Inner page branded header — scaled-down hero treatment */
           <>
             {/* Desktop inner page header */}
-            <div className="max-md:hidden py-4" style={{ paddingLeft: "4.5%", paddingRight: "4.5%" }}>
+            <div className="max-lg:hidden py-4 page-gutter">
               <div className="flex items-end justify-between">
                 <Link href="/" className="text-center leading-[1.1] tracking-tighter">
                   <span
@@ -330,7 +330,7 @@ export function Navbar() {
             </div>
 
             {/* Mobile inner page header */}
-            <div className="md:hidden px-6 pt-4 pb-3">
+            <div className="lg:hidden page-gutter pt-4 pb-3">
               <div className="flex items-center justify-between">
                 <Link href="/" className="tracking-tighter leading-[0.9] text-center">
                   <span
@@ -360,7 +360,7 @@ export function Navbar() {
           </>
         ) : (
           /* Home page scrolled — compact bar, same branding size as full navbar */
-          <div className="py-4 flex items-center justify-between" style={{ paddingLeft: "4.5%", paddingRight: "4.5%" }}>
+          <div className="py-4 flex items-center justify-between page-gutter">
             <Link href="/" className="tracking-tighter leading-[0.9] text-center">
               <span
                 className="block"
@@ -404,7 +404,7 @@ export function Navbar() {
         className="fixed inset-0 z-40 bg-background overflow-y-auto"
       >
         {/* Section page list */}
-        <nav className="flex flex-col w-full pt-24 pb-8 px-6 max-w-md mx-auto">
+        <nav className="flex flex-col w-full pt-24 pb-8 page-gutter max-w-md mx-auto">
           {visibleSectionLinks.map((link) => {
             const letter = link.name === "Political Club" ? "PC" : link.name[0];
             return (

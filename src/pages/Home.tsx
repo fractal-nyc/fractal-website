@@ -54,7 +54,7 @@ export function Home() {
           <img src="/favicon.svg" alt="" className="w-[16%] lg:w-[14%] max-w-[260px] h-auto" />
           <img src="/favicon.svg" alt="" className="w-[16%] lg:w-[14%] max-w-[260px] h-auto" />
         </div>
-        <div className="relative z-10 max-w-6xl mx-auto px-6 md:px-[4.5%] w-full">
+        <div className="relative z-10 max-w-6xl mx-auto page-gutter w-full">
           <SectorHeader letter="S" name="Story" color={STORY_COLOR} />
           <FadeIn>
             <p className="text-display mb-12 text-center">
@@ -70,7 +70,7 @@ export function Home() {
 
       {/* Curious about Fractal? — Discord + one-on-one chat with Ian. */}
       <section className="pb-24 md:pb-32">
-        <div className="max-w-2xl mx-auto px-6 md:px-[4.5%]">
+        <div className="max-w-2xl mx-auto page-gutter">
           <FadeIn>
             <div
               className="rounded-md border border-foreground-faint p-7 md:px-8"

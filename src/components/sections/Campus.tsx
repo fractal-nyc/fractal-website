@@ -271,7 +271,7 @@ export function Campus() {
     <section id="campus" className="text-background">
       {/* Hero */}
       <div className="min-h-screen flex flex-col items-center justify-start pt-16 md:pt-24 pb-16 md:pb-24 w-full">
-        <div className="px-6 md:px-[4.5%] w-full">
+        <div className="page-gutter w-full">
           <FadeIn>
             <SectorHeader
               letter="C"
@@ -306,7 +306,7 @@ export function Campus() {
       </div>
 
       {/* Overview */}
-      <div className="max-w-7xl mx-auto px-6 md:px-[4.5%] pb-24 md:pb-32">
+      <div className="max-w-7xl mx-auto page-gutter pb-24 md:pb-32">
         <FadeIn>
           <div className="max-w-3xl mx-auto">
             <p className="text-title leading-tight mb-8 normal-case">
@@ -354,7 +354,7 @@ export function Campus() {
       </div>
 
       {/* Four audiences */}
-      <div className="max-w-7xl mx-auto px-6 md:px-[4.5%] pb-24 md:pb-32">
+      <div className="max-w-7xl mx-auto page-gutter pb-24 md:pb-32">
         <FadeIn>
           <div className="max-w-3xl mx-auto">
             <h2 className="text-title mb-8 normal-case">
@@ -370,7 +370,7 @@ export function Campus() {
       </div>
 
       {/* Get shit done */}
-      <div className="max-w-7xl mx-auto px-6 md:px-[4.5%] pb-24 md:pb-32">
+      <div className="max-w-7xl mx-auto page-gutter pb-24 md:pb-32">
         <FadeIn>
           <div className="max-w-3xl mx-auto">
             <h2 className="text-title mb-6 normal-case">
@@ -389,7 +389,7 @@ export function Campus() {
       </div>
 
       {/* And have a good time */}
-      <div className="max-w-7xl mx-auto px-6 md:px-[4.5%] pb-24 md:pb-32">
+      <div className="max-w-7xl mx-auto page-gutter pb-24 md:pb-32">
         <FadeIn>
           <div className="max-w-3xl mx-auto">
             <h2 className="text-title mb-6 normal-case">
@@ -410,7 +410,7 @@ export function Campus() {
       </div>
 
       {/* More than a WeWork */}
-      <div className="max-w-7xl mx-auto px-6 md:px-[4.5%] pb-24 md:pb-32">
+      <div className="max-w-7xl mx-auto page-gutter pb-24 md:pb-32">
         <FadeIn>
           <div className="max-w-3xl mx-auto">
             <h2 className="text-title mb-10 normal-case">
@@ -460,7 +460,7 @@ export function Campus() {
       </div>
 
       {/* Meet the Space */}
-      <div className="max-w-7xl mx-auto px-6 md:px-[4.5%] pb-24 md:pb-32">
+      <div className="max-w-7xl mx-auto page-gutter pb-24 md:pb-32">
         <FadeIn>
           <div className="max-w-3xl mx-auto mb-12">
             <h2 className="text-title mb-6 normal-case">Meet the Space</h2>
@@ -486,7 +486,7 @@ export function Campus() {
       </div>
 
       {/* Stay in the Loop */}
-      <div className="max-w-7xl mx-auto px-6 md:px-[4.5%] pb-24 md:pb-40 text-center">
+      <div className="max-w-7xl mx-auto page-gutter pb-24 md:pb-40 text-center">
         <FadeIn>
           <p className="text-display text-background mb-6">Stay in the Loop</p>
           <div className="flex justify-center">

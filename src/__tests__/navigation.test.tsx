@@ -62,7 +62,10 @@ describe("Inner page navbar", () => {
   it("should NOT use Jacquard font styling on inner page nav links (FRAC-83 regression)", () => {
     // On inner pages, section links use font-serif with fontWeight 300 —
     // NOT the decorative Jacquard 24 font. This was a regression fixed in FRAC-83.
-    const innerDesktopNav = document.querySelector(".max-md\\:hidden nav");
+    // FRAC-6: inner-page header structural switch moved md -> lg to match the
+    // home navbar (one "goes desktop" line at 1024). The full inner header is
+    // now max-lg:hidden (shown at >= lg).
+    const innerDesktopNav = document.querySelector(".max-lg\\:hidden nav");
     expect(innerDesktopNav).toBeTruthy();
 
     const links = innerDesktopNav!.querySelectorAll("a");
@@ -105,7 +108,8 @@ describe("Inner page navbar", () => {
   });
 
   it("should have a hamburger menu button on mobile inner page", () => {
-    const mobileHeader = document.querySelector(".md\\:hidden");
+    // FRAC-6: mobile inner header now shows below lg (was md).
+    const mobileHeader = document.querySelector(".lg\\:hidden");
     expect(mobileHeader).toBeTruthy();
     const button = mobileHeader!.querySelector("button");
     expect(button).toBeTruthy();

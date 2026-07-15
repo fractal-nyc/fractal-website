@@ -49,7 +49,7 @@ export function CoLivingPage() {
       <div className="relative z-10 min-h-screen flex flex-col items-center justify-start pt-16 md:pt-24 pb-32 md:pb-48 w-full">
         {/* Hero */}
         <section className="w-full">
-          <div className="px-6 md:px-[22%] text-center">
+          <div className="page-gutter mx-auto max-w-2xl text-center">
             <SectorHeader
               letter="H"
               name="Fractal Co-Living"
@@ -74,7 +74,7 @@ export function CoLivingPage() {
 
         {/* Where We Live */}
         <section className="w-full mt-16 md:mt-24">
-          <div className="px-6 md:px-8 max-w-5xl mx-auto">
+          <div className="page-gutter max-w-5xl mx-auto">
             <FadeIn>
               <h2 className="text-title mb-4 md:mb-6">Where We Live</h2>
             </FadeIn>
@@ -88,7 +88,7 @@ export function CoLivingPage() {
 
         {/* Photo strip */}
         <section className="w-full mt-10 md:mt-14">
-          <div className="px-6 md:px-8 max-w-5xl mx-auto">
+          <div className="page-gutter max-w-5xl mx-auto">
             <FadeIn delay={0.1}>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 {PHOTOS.map((photo) => (
@@ -111,7 +111,7 @@ export function CoLivingPage() {
 
         {/* Visiting NYC? callout */}
         <section className="w-full mt-16 md:mt-24">
-          <div className="px-6 md:px-8 max-w-xl mx-auto">
+          <div className="page-gutter max-w-xl mx-auto">
             <FadeIn delay={0.1}>
               <MandelbrotCorners
                 size="sm"

@@ -195,7 +195,7 @@ export function Hero() {
           pointer-events-none so it never blocks taps/swipes on the octant
           underneath — only the scroll link re-enables pointer events. Sizes
           step up from phone (<md) to small tablet (md..lg). */}
-      <div className="lg:hidden absolute inset-x-0 bottom-0 z-10 flex items-end justify-between gap-4 px-6 pb-8 md:pb-12 pointer-events-none">
+      <div className="lg:hidden absolute inset-x-0 bottom-0 z-10 flex items-end justify-between gap-4 page-gutter pb-8 md:pb-12 pointer-events-none">
         <p className="font-mono normal-case text-foreground/85 leading-relaxed max-w-[54%] md:max-w-[46%] text-[13px] md:text-[16px]">
           In 2021, our small group of friends decided to live, learn, and build
           together in NYC.
