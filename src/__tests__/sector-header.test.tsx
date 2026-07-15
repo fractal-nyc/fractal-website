@@ -20,11 +20,16 @@ const sections = [
   // canonical source like the People row below.
   { letter: "S", name: "Story", color: SECTIONS.story.accent },
   { letter: "C", name: "Campus", color: "#1A3A2E" },
-  { letter: "V", name: "Visit", color: "#4A5A30" },
+  // Content port: Visit → Co-Living (letter "H"), Publications → Library
+  // (letter "L"). The hex pairs are unchanged from houses.ts (neighborhood /
+  // lab), only the user-facing letter + name moved.
+  { letter: "H", name: "Co-Living", color: "#4A5A30" },
   { letter: "E", name: "Events", color: "#C13B2A" },
-  { letter: "E", name: "Education", color: "#C41E20" },
+  // Education/Accelerator no longer have internal pages (they link out to
+  // fractalu.nyc / fractalaccelerator.com), so no page renders a SectorHeader
+  // for them — dropped from these fixtures.
   { letter: "PC", name: "Political Club", color: "#C83858" },
-  { letter: "P", name: "Publications", color: "#C44878" },
+  { letter: "L", name: "Library", color: "#C44878" },
   { letter: "P", name: "People", color: SECTIONS.people.deep },
 ] as const;
 

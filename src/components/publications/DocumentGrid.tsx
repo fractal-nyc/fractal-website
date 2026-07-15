@@ -34,7 +34,7 @@ export function DocumentGrid({ documents }: DocumentGridProps) {
     }
 
     return (
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
         {documents.map((doc, i) => (
           <FadeIn key={doc.id} delay={i * 0.06}>
             <DocumentCard document={doc} className="h-full" />
@@ -44,33 +44,18 @@ export function DocumentGrid({ documents }: DocumentGridProps) {
     );
   }
 
-  // Default behavior: featured/regular split (original layout).
-  const featured = getFeaturedDocuments();
-  const regular = getRegularDocuments();
+  // Default behavior: one uniform grid of every document, featured first. The
+  // old featured/regular split rendered featured cards in a wider 2-column grid;
+  // the design shows a single flat grid where every card is the same size.
+  const all = [...getFeaturedDocuments(), ...getRegularDocuments()];
 
   return (
-    <div>
-      {/* Featured documents */}
-      {featured.length > 0 && (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mb-6 md:mb-8">
-          {featured.map((doc, i) => (
-            <FadeIn key={doc.id} delay={i * 0.1}>
-              <DocumentCard document={doc} className="h-full" />
-            </FadeIn>
-          ))}
-        </div>
-      )}
-
-      {/* Regular documents */}
-      {regular.length > 0 && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-          {regular.map((doc, i) => (
-            <FadeIn key={doc.id} delay={(featured.length + i) * 0.08}>
-              <DocumentCard document={doc} className="h-full" />
-            </FadeIn>
-          ))}
-        </div>
-      )}
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+      {all.map((doc, i) => (
+        <FadeIn key={doc.id} delay={i * 0.06} className="h-full">
+          <DocumentCard document={doc} className="h-full" />
+        </FadeIn>
+      ))}
     </div>
   );
 }

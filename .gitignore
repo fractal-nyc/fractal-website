@@ -34,3 +34,6 @@ assets-src/
 public/images/banners/*.png
 public/images/banners/* brand photo.*
 public/images/banners/*_brand_photo.*
+
+# Vercel local project link (machine-local)
+.vercel

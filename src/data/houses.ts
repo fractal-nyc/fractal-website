@@ -209,14 +209,17 @@ export const PEOPLE: Person[] = [
 // ---------------------------------------------------------------------------
 
 export const HOUSES: House[] = [
-  // 1. Co-Living — The Neighborhood
+  // 1. Co-Living — The Neighborhood.
+  // Renamed from "Visit" (content port from the Claude Design). The internal id
+  // stays the abstract "neighborhood"; only the user-facing name, slug, route,
+  // and matching token (`house-co-living-*`) changed.
   {
     id: "neighborhood",
-    name: "Visit",
-    displayName: "Visit",
-    subtitle: "Visit",
-    slug: "visit",
-    route: "/visit",
+    name: "Fractal Co-Living",
+    displayName: "Co-Living",
+    subtitle: "Co-Living",
+    slug: "co-living",
+    route: "/co-living",
     palette: { light: "#889460", deep: "#4A5A30" },
     tagline: "Want to live here?",
     description:
@@ -299,20 +302,44 @@ export const HOUSES: House[] = [
     hideFromBanners: true,
   },
 
-  // 6. Lab — Research + Writing
+  // 6. Library — Research + Writing.
+  // Renamed from "Publications" (content port from the Claude Design). Internal
+  // id stays "lab"; user-facing name, slug, route, and token (`house-library-*`)
+  // changed.
   {
     id: "lab",
-    name: "Publications",
-    displayName: "Publications",
-    subtitle: "Publications",
-    slug: "publications",
-    route: "/publications",
+    name: "Library",
+    displayName: "Library",
+    subtitle: "Library",
+    slug: "library",
+    route: "/library",
     palette: { light: "#E870A0", deep: "#C44878" },
     tagline: "Want to think, build, publish?",
     description:
       "Fractal Labs is co-founded with Ivan Vendrov — ex-DeepMind, ex-Anthropic, ex-Midjourney. The thesis: build a research institute doing 'gain of function research on the golden age virus,' studying how institutional knowledge spreads via AI agents. The target is a $10-20M lab launching May 2026. This is where Fractal's intellectual backbone gets built.\n\nThe research side runs deep: a population genetics study group reading NIH papers weekly at the Campus, an HCI club working through McLuhan and Bret Victor, the Folk Computer project exploring embodied computing, and a fast.ai deep learning study group. Ivan's contributions — the Tyranny of the Marginal User, the Cooperation Machine, Metrics as Cowardice — form the theoretical framework that Fractal builds on.\n\nThe publishing arm keeps the ideas flowing outward. Andrew's Substack (65 posts across 6 years, the founding documents), Ivan's 'Nothing Human' (the theoretical backbone), the Unblocked coaching podcast, Crystal handling tweets, video, and audio. The core belief: a group of friends can write a single markdown file and influence millions of lives overnight.",
     leaders: ["ivan", "andrew", "crystal"],
     externalLinks: [],
+  },
+
+  // 7. Accelerator — the flagship AI class.
+  // Added as a new house (content port from the Claude Design). It renders in
+  // the Fractal NYC editorial language like every other house — NOT the separate
+  // burgundy Accelerator brand from the design — so it just takes a house pair.
+  {
+    id: "accelerator",
+    name: "Fractal Accelerator",
+    displayName: "Accelerator",
+    subtitle: "Accelerator",
+    slug: "accelerator",
+    route: "/accelerator",
+    palette: { light: "#8E2A1E", deep: "#641E28" },
+    tagline: "Want to master AI?",
+    description:
+      "The Fractal AI Accelerator — a hands-on, six-week program for ambitious professionals who want to master AI. Consultants, analysts, and engineers learn to make AI work while they sleep, build without limits, and join a community of builders. Saturdays on Campus, applied practice during the week, compounding skills every week.",
+    leaders: ["andrew"],
+    externalLinks: [
+      { label: "Apply", url: "https://www.fractalaccelerator.com/apply" },
+    ],
   },
 ];
 

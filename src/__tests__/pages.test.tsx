@@ -28,14 +28,13 @@ vi.mock("@/components/publications/DocumentGrid", () => ({
 // ═══════════════════════════════════════════════════════════════════════════
 
 import { Home } from "@/pages/Home";
-import { StoryPage } from "@/pages/StoryPage";
 import { CampusPage } from "@/pages/CampusPage";
-import { VisitPage } from "@/pages/VisitPage";
+import { CoLivingPage } from "@/pages/CoLivingPage";
 import { EventsPage } from "@/pages/EventsPage";
-import { EducationPage } from "@/pages/EducationPage";
 import { PoliticalClubPage } from "@/pages/PoliticalClubPage";
-import { PublicationsPage } from "@/pages/PublicationsPage";
+import { LibraryPage } from "@/pages/LibraryPage";
 import { PeoplePage } from "@/pages/PeoplePage";
+import { ProtocolPage } from "@/pages/ProtocolPage";
 
 // ---------------------------------------------------------------------------
 // Helper: render a page component at the given route
@@ -55,14 +54,14 @@ function renderPage(Page: React.ComponentType, path: string) {
 // ═══════════════════════════════════════════════════════════════════════════
 
 const pages = [
-  { name: "StoryPage", Component: StoryPage, path: "/story" },
+  { name: "Home", Component: Home, path: "/" },
   { name: "CampusPage", Component: CampusPage, path: "/campus" },
-  { name: "VisitPage", Component: VisitPage, path: "/visit" },
+  { name: "CoLivingPage", Component: CoLivingPage, path: "/co-living" },
   { name: "EventsPage", Component: EventsPage, path: "/events" },
-  { name: "EducationPage", Component: EducationPage, path: "/education" },
   { name: "PoliticalClubPage", Component: PoliticalClubPage, path: "/political-club" },
-  { name: "PublicationsPage", Component: PublicationsPage, path: "/publications" },
+  { name: "LibraryPage", Component: LibraryPage, path: "/library" },
   { name: "PeoplePage", Component: PeoplePage, path: "/people" },
+  { name: "ProtocolPage", Component: ProtocolPage, path: "/the-protocol" },
 ] as const;
 
 describe("Page rendering", () => {
@@ -109,14 +108,14 @@ describe("FRAC-161 visibility filters", () => {
 
 describe("Route paths match expected URLs", () => {
   const expectedRoutes = [
-    { path: "/story", label: "Story" },
+    { path: "/", label: "Home" },
     { path: "/campus", label: "Campus" },
-    { path: "/visit", label: "Visit" },
+    { path: "/co-living", label: "Co-Living" },
     { path: "/events", label: "Events" },
-    { path: "/education", label: "Education" },
     { path: "/political-club", label: "Political Club" },
-    { path: "/publications", label: "Publications" },
+    { path: "/library", label: "Library" },
     { path: "/people", label: "People" },
+    { path: "/the-protocol", label: "Protocol" },
   ];
 
   for (const { path, label } of expectedRoutes) {

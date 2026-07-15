@@ -14,17 +14,17 @@ import { PublicationsBannerSVG } from "@/components/house/PublicationsBannerSVG"
 import { HOUSES } from "@/data/houses";
 
 // FRAC-206/219: SVG stroke/fill needs a literal hex (var() doesn't resolve in SVG
-// presentation attributes); sourced from the canonical Publications (lab) palette.
+// presentation attributes); sourced from the canonical Library (lab) palette.
 const PUBLICATIONS_COLOR = HOUSES.find((h) => h.id === "lab")!.palette.deep;
 
-export function PublicationsPage() {
+export function LibraryPage() {
   const bannerRef = useRef<HTMLDivElement>(null);
   useBannerAboveFooter(bannerRef);
   const filter = useArchiveFilter();
   return (
     <main
-      className="relative min-h-screen bg-house-publications-light text-background selection:bg-foreground selection:text-background"
-      style={{ "--accent": "var(--color-house-publications-deep)" } as CSSProperties}
+      className="relative min-h-screen bg-house-library-light text-background selection:bg-foreground selection:text-background"
+      style={{ "--accent": "var(--color-house-library-deep)" } as CSSProperties}
     >
       <FractalPattern color={PUBLICATIONS_COLOR} />
       <div className="relative z-10">
@@ -46,11 +46,11 @@ export function PublicationsPage() {
         {/* Publications heading + description */}
         <section className="flex flex-col items-center justify-start pt-16 md:pt-24 pb-12 md:pb-20 w-full">
           <div className="px-6 md:px-[22%] w-full">
-            <SectorHeader letter="P" name="Publications" color="var(--color-house-publications-deep)" />
+            <SectorHeader letter="L" name="Library" color="var(--color-house-library-deep)" />
             <FadeIn delay={0.1}>
               <div className="text-center">
                 <p className="text-display mb-6 text-center">
-                  A Research Institute Doing 'Gain of Function Research on the Golden Age Virus'
+                  The Art and Science of Campus Building
                 </p>
               </div>
             </FadeIn>
@@ -59,7 +59,7 @@ export function PublicationsPage() {
 
         {/* Research & Writing archive */}
         <section className="pt-0 pb-16 md:pb-24">
-          <div className="relative max-w-7xl mx-auto px-6 md:px-[4.5%]">
+          <div className="relative max-w-[1600px] mx-auto px-6 md:px-[4.5%]">
             {/* Mandelbrot watermark — desktop */}
             <div className="hidden md:block absolute right-8 top-0 pointer-events-none select-none" aria-hidden="true">
               <MandelbrotIcon size={320} opacity={0.04} />
@@ -71,10 +71,6 @@ export function PublicationsPage() {
 
             <FadeIn delay={0.3}>
               <div className="mb-12 md:mb-16 border-b border-foreground-faint pb-8">
-                <h2 className="text-label not-italic flex items-center gap-2 mb-3">
-                  Research + Writing
-                  <MandelbrotIcon size={18} opacity={0.35} />
-                </h2>
                 <p className="text-title leading-tight normal-case">
                   The Records
                 </p>

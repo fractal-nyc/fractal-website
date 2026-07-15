@@ -74,26 +74,20 @@ vi.mock("@/hooks/use-archive-filter", () => ({
 vi.mock("@/pages/Home", () => ({
   Home: () => <main data-testid="page-home" />,
 }));
-vi.mock("@/pages/StoryPage", () => ({
-  StoryPage: () => <main data-testid="page-story" />,
-}));
 vi.mock("@/pages/CampusPage", () => ({
   CampusPage: () => <main data-testid="page-campus" />,
 }));
-vi.mock("@/pages/VisitPage", () => ({
-  VisitPage: () => <main data-testid="page-visit" />,
+vi.mock("@/pages/CoLivingPage", () => ({
+  CoLivingPage: () => <main data-testid="page-co-living" />,
 }));
 vi.mock("@/pages/EventsPage", () => ({
   EventsPage: () => <main data-testid="page-events" />,
 }));
-vi.mock("@/pages/EducationPage", () => ({
-  EducationPage: () => <main data-testid="page-education" />,
-}));
 vi.mock("@/pages/PoliticalClubPage", () => ({
   PoliticalClubPage: () => <main data-testid="page-political-club" />,
 }));
-vi.mock("@/pages/PublicationsPage", () => ({
-  PublicationsPage: () => <main data-testid="page-publications" />,
+vi.mock("@/pages/LibraryPage", () => ({
+  LibraryPage: () => <main data-testid="page-library" />,
 }));
 vi.mock("@/pages/PeoplePage", () => ({
   PeoplePage: () => <main data-testid="page-people" />,
@@ -238,8 +232,8 @@ describe("Scroll-to-top on navigation (FRAC-132 regression)", () => {
   // Scenario 3: Deep page -> another deep page
   // ═════════════════════════════════════════════════════════════════════════
   describe("Deep page -> deep page", () => {
-    it("fires scrollTo(0,0) when navigating from /story to /campus", () => {
-      seedLocation("/story");
+    it("fires scrollTo(0,0) when navigating from /co-living to /campus", () => {
+      seedLocation("/co-living");
       render(<App />);
       scrollToSpy.mockClear();
 
@@ -260,7 +254,7 @@ describe("Scroll-to-top on navigation (FRAC-132 regression)", () => {
       // ScrollToTop watches useLocation — the click mechanism is irrelevant to
       // what we're proving: the effect fires on any location change in App.
       setViewport(375);
-      seedLocation("/story");
+      seedLocation("/co-living");
       render(<App />);
       scrollToSpy.mockClear();
 
@@ -276,13 +270,13 @@ describe("Scroll-to-top on navigation (FRAC-132 regression)", () => {
   // Scenario 5: Multi-hop sequential navigations
   // ═════════════════════════════════════════════════════════════════════════
   describe("Multi-hop sequential navigations", () => {
-    it("fires scrollTo(0,0) on each hop: / -> /story -> /campus -> /people", () => {
+    it("fires scrollTo(0,0) on each hop: / -> /co-living -> /campus -> /people", () => {
       seedLocation("/");
       render(<App />);
       scrollToSpy.mockClear();
 
       act(() => {
-        pushRoute("/story");
+        pushRoute("/co-living");
       });
       act(() => {
         pushRoute("/campus");

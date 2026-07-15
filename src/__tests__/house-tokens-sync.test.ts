@@ -52,9 +52,9 @@ function houseTokenSlug(house: (typeof HOUSES)[number]): string {
 const tokens = parseHouseTokens(css);
 
 describe("house token sync (houses.ts ↔ index.css)", () => {
-  it("defines exactly 12 house tokens (6 houses × light/deep)", () => {
-    expect(HOUSES).toHaveLength(6);
-    expect(tokens.size).toBe(12);
+  it("defines exactly 14 house tokens (7 houses × light/deep)", () => {
+    expect(HOUSES).toHaveLength(7);
+    expect(tokens.size).toBe(14);
   });
 
   for (const house of HOUSES) {

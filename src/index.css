@@ -26,8 +26,9 @@
      (charcoal) directly — no per-house *-foreground sibling tokens. Cream and
      charcoal are page-agnostic. The FRAC-42 paired-foreground convention is
      fully retired; FRAC-50 swept the last consumer (Campus). */
-  --color-house-publications-light: #E870A0;
-  --color-house-publications-deep: #C44878;
+  /* Library (formerly "Publications") — renamed with the page. Same pink pair. */
+  --color-house-library-light: #E870A0;
+  --color-house-library-deep: #C44878;
 
   --color-house-campus-light: #2E6B4A;
   --color-house-campus-deep: #1A3A2E;
@@ -35,14 +36,21 @@
   --color-house-education-light: #C41E20;
   --color-house-education-deep: #5C1010;
 
-  --color-house-visit-light: #889460;
-  --color-house-visit-deep: #4A5A30;
+  /* Co-Living (formerly "Visit") — renamed with the page. Same olive pair. */
+  --color-house-co-living-light: #889460;
+  --color-house-co-living-deep: #4A5A30;
 
   --color-house-events-light: #D4857A;
   --color-house-events-deep: #C13B2A;
 
   --color-house-political-club-light: #C83858;
   --color-house-political-club-deep: #6E1830;
+
+  /* Accelerator — a new house (the Fractal AI Accelerator page). Rendered in
+     the Fractal NYC editorial language like every other house, so it takes a
+     house color pair, not the separate burgundy Accelerator brand. */
+  --color-house-accelerator-light: #8E2A1E;
+  --color-house-accelerator-deep: #641E28;
 
   /* Non-house section palette tokens (FRAC-204). Section pages that aren't
      Houses but still carry a light/deep pair. Mirrors SECTIONS in
