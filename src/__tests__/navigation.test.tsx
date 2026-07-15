@@ -161,16 +161,20 @@ describe("Home page navbar (full state)", () => {
     expect(desktopNav).toBeTruthy();
   });
 
-  it("should render mobile nav with abbreviated labels for long section names", () => {
-    // Mobile + tablet full navbar shows abbreviated labels. After the content
-    // port (Story folded into Home, Visit → Co-Living, Publications → Library,
-    // Accelerator added, Education renamed FractalU) the visible row shows 6
-    // letters: C C A E F L. No "PC" (Political Club is hidden per FRAC-161).
+  it("renders the mobile home header as a one-line wordmark + hamburger (FRAC-3)", () => {
+    // FRAC-3 redesign: below lg the home header no longer crams a row of
+    // single-letter section caps. It shows a single-line "Fractal Collective"
+    // wordmark on the left and a hamburger toggle on the right; section
+    // navigation moved entirely to the overlay menu (covered by its own tests).
     const mobileSection = document.querySelector(".lg\\:hidden");
     expect(mobileSection).toBeTruthy();
-    expect(mobileSection!.textContent).toContain("E");
-    expect(mobileSection!.textContent).toContain("F");
-    expect(mobileSection!.textContent).not.toContain("PC");
+    expect(mobileSection!.textContent).toContain("Fractal");
+    expect(mobileSection!.textContent).toContain("Collective");
+    // Hamburger toggle present inside the mobile header.
+    const menuButton = mobileSection!.querySelector(
+      'button[aria-label="Open menu"]',
+    );
+    expect(menuButton).toBeTruthy();
   });
 });
 

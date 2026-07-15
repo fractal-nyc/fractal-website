@@ -1,7 +1,7 @@
 import { Suspense, lazy, useCallback, useState, useRef, useEffect, useLayoutEffect, useId } from "react";
 import { useLocation } from "wouter";
 import { useGlobalSearch, type SearchResult } from "@/hooks/use-global-search";
-import { Search, User, FileText, MapPin, Hash, ArrowUpRight, LayoutGrid } from "lucide-react";
+import { Search, User, FileText, MapPin, Hash, ArrowUpRight, LayoutGrid, ArrowDown } from "lucide-react";
 // FRAC-33: keyboard skip-nav fallback — the 3D nav nodes inside
 // FractalCityScene are pointer-only, so we render a parallel
 // sr-only-focusable list of the same routes here. Tabbing into the
@@ -168,9 +168,54 @@ export function Hero() {
         <FractalCityScene onNavigate={handleNavigate} />
       </Suspense>
 
-      {/* Search bar */}
+      {/* CTA — instructs visitors to use the Octant (the hero octahedron) as
+          the primary navigation. Intentional hero-only treatment: italic
+          Fraunces at a custom caption size (not one of the DESIGN.md display
+          tiers) for a quiet editorial voice, sized to sit on a single line at
+          the 375px baseline. `italic` is explicit even though .font-serif
+          already italicizes, to keep the intent obvious. `font-light` (300) is
+          the lightest Fraunces master loaded (index.html trims the family to
+          300..500). The whole line uses text-foreground/70 (the darker "Octant"
+          color) and is flanked by `~` per the requested treatment. Positioned
+          below the geometry (above the search bar) so "above" reads true;
+          pointer-transparent so it never blocks taps/swipes underneath. */}
+      <p
+        className="hidden lg:block font-serif italic font-light normal-case text-lg md:text-2xl whitespace-nowrap absolute bottom-[6.5rem] md:bottom-28 left-1/2 -translate-x-1/2 z-10 max-w-full text-center text-foreground/70 pointer-events-none"
+      >
+        ~ Interact with the Octant above to navigate ~
+      </p>
+
+      {/* Mobile / small-tablet hero footer (< lg) — FRAC-3. The Story now lives
+          directly below the hero, so the hero's lower edge previews it: a short
+          Story blurb on the left and an "Explore our Story" affordance on the
+          right that smooth-scrolls down to the #story section (Home enables
+          scroll-behavior: smooth). The desktop search bar and octant caption
+          are hidden here; the always-on octant labels (FRAC-266) already signal
+          that the octant itself is interactive. The container is
+          pointer-events-none so it never blocks taps/swipes on the octant
+          underneath — only the scroll link re-enables pointer events. Sizes
+          step up from phone (<md) to small tablet (md..lg). */}
+      <div className="lg:hidden absolute inset-x-0 bottom-0 z-10 flex items-end justify-between gap-4 px-6 pb-8 md:pb-12 pointer-events-none">
+        <p className="font-mono normal-case text-foreground/85 leading-relaxed max-w-[54%] md:max-w-[46%] text-[13px] md:text-[16px]">
+          In 2021, our small group of friends decided to live, learn, and build
+          together in NYC.
+        </p>
+        <a
+          href="#story"
+          aria-label="Explore our Story — scroll to the Story section"
+          className="pointer-events-auto shrink-0 flex flex-col items-center gap-1.5 text-foreground/70 hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground rounded-sm px-1 pb-1"
+        >
+          <ArrowDown className="h-5 w-5 md:h-6 md:w-6 motion-safe:animate-bounce" />
+          <span className="text-label text-[11px] md:text-[13px] whitespace-nowrap">
+            Explore our Story
+          </span>
+        </a>
+      </div>
+
+      {/* Search bar — desktop only (>= lg); on small screens the hero footer
+          above replaces it. */}
       <div
-        className="absolute bottom-12 left-1/2 -translate-x-1/2 z-10 w-[calc(100%-2rem)] max-w-sm"
+        className="hidden lg:block absolute bottom-12 left-1/2 -translate-x-1/2 z-10 w-[calc(100%-2rem)] max-w-sm"
         ref={containerRef}
       >
         <div className="relative">

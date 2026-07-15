@@ -35,8 +35,13 @@ export function Home() {
       <Navbar />
       <Hero />
 
-      {/* Story — merged in from the retired /story page. */}
-      <section className="relative flex flex-col items-center justify-start pt-16 md:pt-24">
+      {/* Story — merged in from the retired /story page. `id="story"` is the
+          scroll target for the hero's mobile "Explore our Story" arrow (FRAC-3);
+          scroll-mt keeps the fixed header from covering the heading on landing. */}
+      <section
+        id="story"
+        className="relative flex flex-col items-center justify-start pt-16 md:pt-24 scroll-mt-24"
+      >
         {/* Flanking favicon diamonds — decorative brand framing that mirrors the
             house-banner flanking pattern: an absolute, pointer-events-none layer
             pinned to the page edges so it never constrains the heading's width.

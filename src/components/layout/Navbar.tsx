@@ -243,53 +243,42 @@ export function Navbar() {
               </div>
             </div>
 
-            {/* Mobile + tablet navbar — shown at < 1024px (lg). */}
-            <div className="lg:hidden px-6 pt-5 pb-3">
-              {/* Top row: Fractal logo + blurb */}
-              <div className="flex items-center gap-3">
-                <Link href="/" className="tracking-tighter shrink-0 leading-[0.9] text-center">
-                  <span
-                    className="block"
-                    style={{ fontFamily: "'Jacquard 24', system-ui", fontSize: "clamp(32px, 6vw, 42px)" }}
-                  >
-                    Fractal
-                  </span>
-                  <span
-                    className="font-serif block italic"
-                    style={{ fontSize: "clamp(18px, 3.5vw, 25px)", textTransform: "none", fontWeight: 100 }}
-                  >
-                    Collective
-                  </span>
-                </Link>
-                <p
-                  className="font-mono uppercase font-normal text-justify flex-1"
-                  style={{ fontSize: "8px", lineHeight: 1.35, letterSpacing: "0.01em" }}
+            {/* Home mobile + tablet header — shown at < 1024px (lg).
+                FRAC-3 redesign: a single-line "Fractal Collective" wordmark on
+                the left and the hamburger on the right, replacing the old
+                stacked title + 8px blurb + row of single-letter nav caps. The
+                three-column desktop grid can't fit below lg, and the old
+                letter-row was cramped and illegible; navigation now lives in the
+                overlay menu (same one every other breakpoint uses), while the
+                hero octant remains a parallel, interactive nav. Sizes step up
+                from phone (<md) to small tablet (md..lg). */}
+            <div className="lg:hidden flex items-center justify-between px-6 pt-5 pb-3">
+              <Link
+                href="/"
+                className="flex items-baseline gap-1.5 tracking-tighter leading-none min-w-0"
+              >
+                <span
+                  className="text-[34px] md:text-[46px]"
+                  style={{ fontFamily: "'Jacquard 24', system-ui" }}
                 >
-                  {RIGHT_TEXT}
-                </p>
-              </div>
-
-              {/* Nav letters row */}
-              <nav className="flex items-baseline justify-between mt-2">
-                {visibleSectionLinks.map((link) => (
-                  <SectionAnchor
-                    key={link.name}
-                    link={link}
-                    className="hover:opacity-70 transition-opacity"
-                    style={{ color: link.color }}
-                  >
-                    <span
-                      style={{
-                        fontFamily: "'Jacquard 24', system-ui",
-                        fontSize: "28px",
-                        lineHeight: 1,
-                      }}
-                    >
-                      {link.name === "Political Club" ? "PC" : link.name[0]}
-                    </span>
-                  </SectionAnchor>
-                ))}
-              </nav>
+                  Fractal
+                </span>
+                <span
+                  className="font-serif italic text-[21px] md:text-[30px]"
+                  style={{ textTransform: "none", fontWeight: 100 }}
+                >
+                  Collective
+                </span>
+              </Link>
+              <button
+                type="button"
+                aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
+                aria-expanded={mobileMenuOpen}
+                className="z-50 relative cursor-pointer transition-opacity duration-200 hover:opacity-70 active:opacity-90 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-offset-2 focus-visible:ring-offset-background rounded-md flex items-center justify-center p-3 -mr-3 shrink-0"
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              >
+                {mobileMenuOpen ? <X size={32} /> : <Menu size={32} />}
+              </button>
             </div>
           </>
         ) : !isHome ? (
