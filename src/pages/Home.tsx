@@ -6,6 +6,7 @@ import { OriginStory } from "@/components/sections/OriginStory";
 import { PhotoGallery } from "@/components/gallery/PhotoGallery";
 import { gallerySections } from "@/data/storyPhotos";
 import { FadeIn } from "@/components/ui/FadeIn";
+import { MandelbrotCorners } from "@/components/ui/MandelbrotCorners";
 import { SECTIONS } from "@/data/houses";
 import { useEffect } from "react";
 
@@ -68,13 +69,16 @@ export function Home() {
 
       <PhotoGallery sections={gallerySections} />
 
-      {/* Curious about Fractal? — Discord + one-on-one chat with Ian. */}
+      {/* Curious about Fractal? — Discord + one-on-one chat with Ian. Framed to
+          match the Visit page callouts: Story-gold border token + grey
+          Mandelbrot corner accents on a plain background surface. */}
       <section className="pb-24 md:pb-32">
         <div className="max-w-2xl mx-auto page-gutter">
           <FadeIn>
-            <div
-              className="rounded-md border border-foreground-faint p-7 md:px-8"
-              style={{ backgroundColor: `${STORY_COLOR}14` }}
+            <MandelbrotCorners
+              size="sm"
+              opacity={0.15}
+              className="border [border-color:var(--color-section-story)] rounded-md p-7 md:px-10 md:py-8 bg-[color-mix(in_srgb,var(--color-section-story)_8%,transparent)] text-foreground text-left"
             >
               <p className="text-label mb-3" style={{ color: STORY_GOLD_DEEP }}>
                 Curious about Fractal?
@@ -100,7 +104,7 @@ export function Home() {
                 </a>
                 .
               </p>
-            </div>
+            </MandelbrotCorners>
           </FadeIn>
         </div>
       </section>
