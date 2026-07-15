@@ -1,14 +1,7 @@
 import { FadeIn } from "@/components/ui/FadeIn";
 import { SectorHeader } from "@/components/layout/SectorHeader";
 import { Button } from "@/components/ui/button";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-  useCarousel,
-} from "@/components/ui/carousel";
+import { MeetTheSpaceCarousel } from "@/components/sections/MeetTheSpaceCarousel";
 import { CornerDecorations } from "@/components/ui/MandelbrotCorners";
 import { PaperGrain } from "@/components/ui/PaperGrain";
 import { cn } from "@/lib/utils";
@@ -265,89 +258,6 @@ function AudienceCard({
   );
 }
 
-function CampusPhoto({
-  src,
-  alt,
-  caption,
-}: {
-  src: string;
-  alt: string;
-  caption: string;
-}) {
-  return (
-    <div className="flex flex-col gap-3">
-      <div className="aspect-[4/5] md:aspect-square w-full overflow-hidden border border-background/10 bg-background/5">
-        <img
-          src={src}
-          alt={alt}
-          loading="lazy"
-          decoding="async"
-          className="h-full w-full object-cover"
-        />
-      </div>
-      <p className="text-body text-background/70 leading-relaxed">{caption}</p>
-    </div>
-  );
-}
-
-// FRAC-4: dot indicators for the Meet-the-Space carousel. One dot per Embla
-// snap position (fewer than the photo count once >1 slide is visible). Reads
-// live state from the surrounding <Carousel> via context.
-function CarouselDots() {
-  const { scrollSnaps, selectedIndex, scrollTo } = useCarousel();
-  if (scrollSnaps.length <= 1) return null;
-  return (
-    <div className="flex items-center justify-center gap-2.5">
-      {scrollSnaps.map((_, i) => (
-        <button
-          key={i}
-          type="button"
-          onClick={() => scrollTo(i)}
-          aria-label={`Go to photo ${i + 1}`}
-          aria-current={i === selectedIndex}
-          className={cn(
-            "h-2 w-2 rounded-full transition-colors",
-            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-background focus-visible:ring-offset-2 focus-visible:ring-offset-house-campus-light",
-            i === selectedIndex
-              ? "bg-background"
-              : "bg-background/30 hover:bg-background/50",
-          )}
-        />
-      ))}
-    </div>
-  );
-}
-
-// FRAC-4: the "Meet the Space" gallery as a peek carousel — ~1 photo on mobile,
-// 2 on tablet, 3 on desktop with a peek of the next. Swipe/drag, arrows, dots,
-// and keyboard (←/→) all advance it; reduced motion is honored by the Carousel
-// primitive. Replaces the former 9-row stacked grid to cut scroll time.
-function MeetTheSpaceCarousel() {
-  return (
-    <Carousel ariaLabel="Photos of Fractal Campus">
-      <CarouselContent>
-        {campusPhotos.map((photo) => (
-          <CarouselItem
-            key={photo.src}
-            className="basis-[82%] sm:basis-1/2 lg:basis-1/3"
-          >
-            <CampusPhoto
-              src={photo.src}
-              alt={photo.alt}
-              caption={photo.caption}
-            />
-          </CarouselItem>
-        ))}
-      </CarouselContent>
-      <div className="mt-8 flex items-center justify-center gap-5">
-        <CarouselPrevious />
-        <CarouselDots />
-        <CarouselNext />
-      </div>
-    </Carousel>
-  );
-}
-
 export function Campus() {
   return (
     <section id="campus" className="text-background">
@@ -555,7 +465,7 @@ export function Campus() {
           </div>
         </FadeIn>
         <FadeIn>
-          <MeetTheSpaceCarousel />
+          <MeetTheSpaceCarousel photos={campusPhotos} />
         </FadeIn>
       </div>
 

@@ -1,13 +1,9 @@
-import { render, screen, within } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import { describe, it, expect } from "vitest";
 import { Router as WouterRouter } from "wouter";
 import { memoryLocation } from "wouter/memory-location";
 
 import { CampusPage } from "@/pages/CampusPage";
-
-// ---------------------------------------------------------------------------
-// Helper
-// ---------------------------------------------------------------------------
 
 function renderCampus() {
   const { hook } = memoryLocation({ path: "/campus", static: true });
@@ -18,57 +14,53 @@ function renderCampus() {
   );
 }
 
-// The nine Meet-the-Space captions, in source order.
-const CAPTIONS = [
-  /5000 sq\. ft of private rooftop/i,
-  /A full kitchen, with an island/i,
-  /Open coworking space with room to spread out/i,
-  /Seating, seating, and more seating/i,
-  /Large call booths for meetings/i,
-  /Small call booths for quick one-on-ones/i,
-  /cozy engineers are productive engineers/i,
-  /Roomy private office or large meeting room/i,
-  /Nice and clean/i,
+// The nine Meet-the-Space photos are identified by their alt text (the caption
+// shows one-at-a-time below the coverflow, so alt text carries content parity).
+const ALTS = [
+  /private rooftop deck/i,
+  /Fractal Campus kitchen/i,
+  /coworking floor/i,
+  /Lounge seating/i,
+  /Large call booths/i,
+  /Small call booths/i,
+  /working side-by-side/i,
+  /Private office/i,
+  /Bathroom/i,
 ];
 
 // ═══════════════════════════════════════════════════════════════════════════
-// FRAC-4 — "Meet the Space" carousel
+// FRAC-8 — Meet the Space 3D coverflow (Swiper)
 // ═══════════════════════════════════════════════════════════════════════════
 
-describe("Campus — Meet the Space carousel", () => {
-  it("renders a carousel region", () => {
+describe("Campus — Meet the Space coverflow", () => {
+  it("renders all nine photos as slides (content parity via alt text)", () => {
     renderCampus();
-    const region = screen.getByRole("region", { name: /photos of fractal campus/i });
-    expect(region).toBeTruthy();
-    expect(region.getAttribute("aria-roledescription")).toBe("carousel");
-  });
-
-  it("keeps all nine photos and their captions in the DOM (content parity)", () => {
-    renderCampus();
-    const region = screen.getByRole("region", { name: /photos of fractal campus/i });
-    // Embla renders every slide up front (no virtualization), so all nine
-    // slide groups are present regardless of layout measurement in jsdom.
-    const slides = within(region).getAllByRole("group");
-    expect(slides).toHaveLength(9);
-    for (const caption of CAPTIONS) {
-      expect(within(region).getByText(caption)).toBeTruthy();
+    // A couple of alts (e.g. lounge seating) are reused by the separate
+    // overview photo pair higher up the page, so assert presence rather than
+    // uniqueness.
+    for (const alt of ALTS) {
+      expect(screen.getAllByAltText(alt).length).toBeGreaterThanOrEqual(1);
     }
   });
 
-  it("exposes accessible previous/next controls", () => {
+  it("shows the active photo's caption below the stage", () => {
     renderCampus();
-    const region = screen.getByRole("region", { name: /photos of fractal campus/i });
-    expect(within(region).getByRole("button", { name: /previous slide/i })).toBeTruthy();
-    expect(within(region).getByRole("button", { name: /next slide/i })).toBeTruthy();
+    // First slide is active on mount; its caption is the rooftop line.
+    expect(
+      screen.getByText(/5000 sq\. ft of private rooftop/i),
+    ).toBeTruthy();
   });
 
-  it("uses a mobile-first peek layout on the first slide (375px baseline)", () => {
+  it("exposes previous/next controls and a dot per photo", () => {
     renderCampus();
-    const region = screen.getByRole("region", { name: /photos of fractal campus/i });
-    const [firstSlide] = within(region).getAllByRole("group");
-    // ~1 card + peek on mobile, widening to 1/2 (tablet) and 1/3 (desktop).
-    expect(firstSlide.className).toContain("basis-[82%]");
-    expect(firstSlide.className).toContain("sm:basis-1/2");
-    expect(firstSlide.className).toContain("lg:basis-1/3");
+    expect(screen.getByRole("button", { name: /previous photo/i })).toBeTruthy();
+    expect(screen.getByRole("button", { name: /next photo/i })).toBeTruthy();
+    const dots = screen.getAllByRole("button", { name: /go to photo/i });
+    expect(dots).toHaveLength(9);
+  });
+
+  it("renders a NN / TT position counter", () => {
+    renderCampus();
+    expect(screen.getByText(/01 \/ 09/)).toBeTruthy();
   });
 });
