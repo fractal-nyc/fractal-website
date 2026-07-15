@@ -44,7 +44,7 @@ export function EventsPage() {
         </div>
       </div>
       <div className="relative z-10 min-h-screen flex flex-col items-center justify-start pt-16 md:pt-24 pb-32 md:pb-48 w-full">
-        <section className="w-full px-6 md:px-[22%] text-center">
+        <section className="w-full page-gutter mx-auto max-w-2xl text-center">
           <SectorHeader letter="E" name="Events" color="var(--color-house-events-deep)" />
 
           <FadeIn delay={0.1}>

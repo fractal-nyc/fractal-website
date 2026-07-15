@@ -62,7 +62,10 @@ describe("Inner page navbar", () => {
   it("should NOT use Jacquard font styling on inner page nav links (FRAC-83 regression)", () => {
     // On inner pages, section links use font-serif with fontWeight 300 —
     // NOT the decorative Jacquard 24 font. This was a regression fixed in FRAC-83.
-    const innerDesktopNav = document.querySelector(".max-md\\:hidden nav");
+    // FRAC-6: inner-page header structural switch moved md -> lg to match the
+    // home navbar (one "goes desktop" line at 1024). The full inner header is
+    // now max-lg:hidden (shown at >= lg).
+    const innerDesktopNav = document.querySelector(".max-lg\\:hidden nav");
     expect(innerDesktopNav).toBeTruthy();
 
     const links = innerDesktopNav!.querySelectorAll("a");
@@ -105,7 +108,8 @@ describe("Inner page navbar", () => {
   });
 
   it("should have a hamburger menu button on mobile inner page", () => {
-    const mobileHeader = document.querySelector(".md\\:hidden");
+    // FRAC-6: mobile inner header now shows below lg (was md).
+    const mobileHeader = document.querySelector(".lg\\:hidden");
     expect(mobileHeader).toBeTruthy();
     const button = mobileHeader!.querySelector("button");
     expect(button).toBeTruthy();
@@ -161,16 +165,20 @@ describe("Home page navbar (full state)", () => {
     expect(desktopNav).toBeTruthy();
   });
 
-  it("should render mobile nav with abbreviated labels for long section names", () => {
-    // Mobile + tablet full navbar shows abbreviated labels. After the content
-    // port (Story folded into Home, Visit → Co-Living, Publications → Library,
-    // Accelerator added, Education renamed FractalU) the visible row shows 6
-    // letters: C C A E F L. No "PC" (Political Club is hidden per FRAC-161).
+  it("renders the mobile home header as a one-line wordmark + hamburger (FRAC-3)", () => {
+    // FRAC-3 redesign: below lg the home header no longer crams a row of
+    // single-letter section caps. It shows a single-line "Fractal Collective"
+    // wordmark on the left and a hamburger toggle on the right; section
+    // navigation moved entirely to the overlay menu (covered by its own tests).
     const mobileSection = document.querySelector(".lg\\:hidden");
     expect(mobileSection).toBeTruthy();
-    expect(mobileSection!.textContent).toContain("E");
-    expect(mobileSection!.textContent).toContain("F");
-    expect(mobileSection!.textContent).not.toContain("PC");
+    expect(mobileSection!.textContent).toContain("Fractal");
+    expect(mobileSection!.textContent).toContain("Collective");
+    // Hamburger toggle present inside the mobile header.
+    const menuButton = mobileSection!.querySelector(
+      'button[aria-label="Open menu"]',
+    );
+    expect(menuButton).toBeTruthy();
   });
 });
 
