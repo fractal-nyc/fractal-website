@@ -258,13 +258,13 @@ export function Navbar() {
                 className="flex items-baseline gap-1.5 tracking-tighter leading-none min-w-0"
               >
                 <span
-                  className="text-[34px] md:text-[46px]"
+                  className="text-[clamp(30px,8.6vw,46px)]"
                   style={{ fontFamily: "'Jacquard 24', system-ui" }}
                 >
                   Fractal
                 </span>
                 <span
-                  className="font-serif italic text-[21px] md:text-[30px]"
+                  className="font-serif italic text-[clamp(19px,5.4vw,30px)]"
                   style={{ textTransform: "none", fontWeight: 100 }}
                 >
                   Collective

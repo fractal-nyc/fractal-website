@@ -203,12 +203,12 @@ export function Hero() {
         <a
           href="#story"
           aria-label="Explore our Story — scroll to the Story section"
-          className="pointer-events-auto shrink-0 flex flex-col items-center gap-1.5 text-foreground/70 hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground rounded-sm px-1 pb-1"
+          className="pointer-events-auto shrink-0 flex flex-col items-start gap-1.5 text-foreground/70 hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground rounded-sm px-1 pb-1"
         >
-          <ArrowDown className="h-5 w-5 md:h-6 md:w-6 motion-safe:animate-bounce" />
           <span className="text-label text-[11px] md:text-[13px] whitespace-nowrap">
             Explore our Story
           </span>
+          <ArrowDown className="h-5 w-5 md:h-6 md:w-6 motion-safe:animate-bounce" />
         </a>
       </div>
 
