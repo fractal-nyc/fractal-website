@@ -152,6 +152,35 @@
     @apply relative inline-block after:absolute after:bottom-0 after:left-0 after:h-[1px] after:w-full after:origin-bottom-right after:scale-x-0 after:bg-current after:transition-transform after:duration-300 after:ease-[cubic-bezier(0.65_0.05_0.36_1)] hover:after:origin-bottom-left hover:after:scale-x-100;
   }
 
+  /* FRAC-13: section nav-link affordance. A persistent, faint house-colored
+     underline sits under every nav link at rest; on hover/keyboard-focus it
+     thickens (1px → 2px) and the text + rule deepen from the house `.light`
+     shade to its `.deep` shade — echoing the buttons' accent color-shift so
+     these read unmistakably as links. Colors come from inline CSS vars
+     (`--nav-c` / `--nav-c-deep`) the component sets per house. The underline
+     grows downward (below the baseline), so in an items-baseline row the
+     letters never shift. padding-bottom clears serif descenders. */
+  .nav-link {
+    color: var(--nav-c, currentColor);
+    padding-bottom: 0.12em;
+    border-bottom: 1px solid
+      color-mix(in srgb, var(--nav-c, currentColor) 45%, transparent);
+    transition:
+      color 300ms ease,
+      border-color 300ms ease,
+      border-bottom-width 300ms ease;
+  }
+  /* FRAC-14: .is-active mirrors the hover/focus treatment, driven by the shared
+     hero-nav hover bridge (hovering a node on the octahedron highlights its
+     matching nav link). */
+  .nav-link:hover,
+  .nav-link:focus-visible,
+  .nav-link.is-active {
+    color: var(--nav-c-deep, var(--nav-c, currentColor));
+    border-bottom-width: 2px;
+    border-bottom-color: var(--nav-c-deep, var(--nav-c, currentColor));
+  }
+
   /* Hide scrollbar while keeping scroll behavior */
   .scrollbar-hide {
     -ms-overflow-style: none;

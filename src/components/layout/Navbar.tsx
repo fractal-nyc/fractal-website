@@ -1,9 +1,10 @@
 import { Fragment, useState } from "react";
 import { motion, useScroll, useMotionValueEvent } from "framer-motion";
-import { Menu, X } from "lucide-react";
+import { Menu, X, ArrowUpRight } from "lucide-react";
 import { Link, useLocation } from "wouter";
 import { HOUSES, NAVBAR_HIDDEN_ROUTES, SECTIONS } from "@/data/houses";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
+import { setHeroNavHover, useHeroNavHover } from "@/hooks/useHeroNavHover";
 
 // FRAC-24: Per-link colors derive from the canonical House palette where a
 // House exists. The one non-house link left in the nav (People) has no House
@@ -27,18 +28,22 @@ interface SectionLink {
   name: string;
   href: string;
   color: string;
+  // FRAC-13: the house `.deep` shade, used for the nav-link hover/focus color
+  // deepen. Political Club's identity color is already `.deep`, so it has no
+  // deeper shade — it reuses `color` and communicates hover via the underline.
+  colorDeep: string;
   external?: boolean;
 }
 
 const sectionLinks: SectionLink[] = [
-  { name: "Campus",         href: "/campus",            color: houseColor("/campus") },
-  { name: "Co-Living",      href: "/co-living",         color: houseColor("/co-living") },
-  { name: "Accelerator",    href: ACCELERATOR_URL,      color: houseColor("/accelerator"), external: true },
-  { name: "Events",         href: "/events",            color: houseColor("/events") },
-  { name: "FractalU",       href: FRACTALU_URL,         color: houseColor("/education"), external: true },
-  { name: "Political Club", href: "/political-club",    color: houseColor("/political-club", "deep") },
-  { name: "Library",        href: "/library",           color: houseColor("/library") },
-  { name: "People",         href: "/people",            color: SECTIONS.people.light },
+  { name: "Campus",         href: "/campus",            color: houseColor("/campus"),                    colorDeep: houseColor("/campus", "deep") },
+  { name: "Co-Living",      href: "/co-living",         color: houseColor("/co-living"),                 colorDeep: houseColor("/co-living", "deep") },
+  { name: "Accelerator",    href: ACCELERATOR_URL,      color: houseColor("/accelerator"),               colorDeep: houseColor("/accelerator", "deep"), external: true },
+  { name: "Events",         href: "/events",            color: houseColor("/events"),                    colorDeep: houseColor("/events", "deep") },
+  { name: "FractalU",       href: FRACTALU_URL,         color: houseColor("/education"),                 colorDeep: houseColor("/education", "deep"), external: true },
+  { name: "Political Club", href: "/political-club",    color: houseColor("/political-club", "deep"),    colorDeep: houseColor("/political-club", "deep") },
+  { name: "Library",        href: "/library",           color: houseColor("/library"),                   colorDeep: houseColor("/library", "deep") },
+  { name: "People",         href: "/people",            color: SECTIONS.people.light,                    colorDeep: SECTIONS.people.deep },
 ];
 
 // Renders an internal wouter <Link> or, for external destinations, a plain
@@ -49,21 +54,33 @@ function SectionAnchor({
   className,
   style,
   children,
+  // FRAC-14: hover/focus handlers forwarded so NavLink can bridge to the hero
+  // octahedron. Both the external <a> and the internal wouter <Link> render a
+  // plain anchor, so the DOM events attach the same way on either branch.
+  onMouseEnter,
+  onMouseLeave,
+  onFocus,
+  onBlur,
 }: {
   link: SectionLink;
   className?: string;
   style?: React.CSSProperties;
   children: React.ReactNode;
+  onMouseEnter?: () => void;
+  onMouseLeave?: () => void;
+  onFocus?: () => void;
+  onBlur?: () => void;
 }) {
+  const handlers = { onMouseEnter, onMouseLeave, onFocus, onBlur };
   if (link.external) {
     return (
-      <a href={link.href} target="_blank" rel="noopener noreferrer" className={className} style={style}>
+      <a href={link.href} target="_blank" rel="noopener noreferrer" className={className} style={style} {...handlers}>
         {children}
       </a>
     );
   }
   return (
-    <Link href={link.href} className={className} style={style}>
+    <Link href={link.href} className={className} style={style} {...handlers}>
       {children}
     </Link>
   );
@@ -103,13 +120,31 @@ const RIGHT_TEXT =
   "we believe small groups who share context deeply can move dramatically faster than individuals working alone, so We embrace experimentation, joyful cyborgism & fun-first collaboration to solve problems together with friends.";
 
 function NavLink(link: SectionLink) {
-  const { name, color } = link;
+  const { name, color, colorDeep } = link;
+  // FRAC-14: reverse-direction highlight — when the matching octahedron node is
+  // hovered on the model, the bridge publishes its route and this link lights up
+  // with the same treatment as a real hover (via .nav-link.is-active).
+  const isActive = useHeroNavHover()?.route === link.href;
   // Render each word's leading cap in Jacquard 24 (38px) and the remainder in
   // light serif (22px). Multi-word labels like "Political Club" therefore get a
   // Jacquard cap on every word's first letter; single-word labels are unchanged.
   const words = name.split(" ");
   return (
-    <SectionAnchor link={link} className="hover:opacity-70 transition-opacity" style={{ color }}>
+    <SectionAnchor
+      link={link}
+      // FRAC-13: .nav-link gives the persistent house-colored underline that
+      // thickens + deepens to `.deep` on hover/focus. The spans inherit `color`
+      // from the anchor (set via --nav-c), so they need no color of their own.
+      className={isActive ? "nav-link is-active" : "nav-link"}
+      style={{ "--nav-c": color, "--nav-c-deep": colorDeep } as React.CSSProperties}
+      // FRAC-14: publish this link's route to the hero octahedron so the matching
+      // vertex node glows and rotates to the front while the link is hovered or
+      // keyboard-focused. Cleared on leave/blur so the octant resumes auto-spin.
+      onMouseEnter={() => setHeroNavHover(link.href)}
+      onMouseLeave={() => setHeroNavHover(null)}
+      onFocus={() => setHeroNavHover(link.href)}
+      onBlur={() => setHeroNavHover(null)}
+    >
       {words.map((word, i) => (
         <Fragment key={i}>
           {i > 0 && (
@@ -149,6 +184,25 @@ function NavLink(link: SectionLink) {
           </span>
         </Fragment>
       ))}
+      {/* FRAC-13: superscript ↗ external-link mark — only on links that open a
+          standalone site in a new tab (Accelerator, FractalU), keeping the arrow
+          semantically honest. Inherits the anchor's currentColor, so it takes the
+          house color at rest and deepens to `.deep` alongside the text on
+          hover/focus. Decorative → aria-hidden. */}
+      {link.external && (
+        <ArrowUpRight
+          aria-hidden
+          strokeWidth={2.25}
+          style={{
+            display: "inline-block",
+            width: "15px",
+            height: "15px",
+            verticalAlign: "baseline",
+            transform: "translateY(-9px)",
+            marginLeft: "1px",
+          }}
+        />
+      )}
     </SectionAnchor>
   );
 }
@@ -306,12 +360,16 @@ export function Navbar() {
                     <SectionAnchor
                       key={link.name}
                       link={link}
-                      className="hover:opacity-70 transition-opacity font-serif"
+                      // FRAC-13: same nav-link affordance as the home navbar so
+                      // inner-page links read as links too.
+                      className="nav-link font-serif"
                       style={{
                         fontSize: "18px",
                         fontWeight: 300,
                         fontStyle: "normal",
-                      }}
+                        "--nav-c": link.color,
+                        "--nav-c-deep": link.colorDeep,
+                      } as React.CSSProperties}
                     >
                       {link.name}
                     </SectionAnchor>

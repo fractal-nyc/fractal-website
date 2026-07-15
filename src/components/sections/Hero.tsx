@@ -1,7 +1,13 @@
 import { Suspense, lazy, useCallback, useState, useRef, useEffect, useLayoutEffect, useId } from "react";
 import { useLocation } from "wouter";
 import { useGlobalSearch, type SearchResult } from "@/hooks/use-global-search";
-import { Search, User, FileText, MapPin, Hash, ArrowUpRight, LayoutGrid, ArrowDown } from "lucide-react";
+import { Search, User, FileText, MapPin, Hash, ArrowUpRight, LayoutGrid, ArrowDown, CornerDownLeft } from "lucide-react";
+
+// FRAC-13: single, static placeholder — cleared on focus so the empty,
+// caret-ready field visibly invites typing. Thin-space-separated dots (instead
+// of a single "…" glyph) give the trailing ellipsis a little breathing room
+// before the caret without a full space between each.
+const SEARCH_PLACEHOLDER = "Explore Fractal . . .";
 // FRAC-33: keyboard skip-nav fallback — the 3D nav nodes inside
 // FractalCityScene are pointer-only, so we render a parallel
 // sr-only-focusable list of the same routes here. Tabbing into the
@@ -59,6 +65,31 @@ export function Hero() {
   const containerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const mirrorRef = useRef<HTMLSpanElement>(null);
+
+  // FRAC-13: the placeholder shown — cleared on focus so the empty, caret-ready
+  // field visibly invites typing.
+  const placeholder = isFocused ? "" : SEARCH_PLACEHOLDER;
+
+  // FRAC-13: "/" focuses the search from anywhere (a familiar search shortcut),
+  // unless the user is already typing in a field or holding a modifier.
+  useEffect(() => {
+    function onKey(e: KeyboardEvent) {
+      if (e.key !== "/" || e.metaKey || e.ctrlKey || e.altKey) return;
+      const t = e.target as HTMLElement | null;
+      if (
+        t &&
+        (t.tagName === "INPUT" ||
+          t.tagName === "TEXTAREA" ||
+          t.isContentEditable)
+      ) {
+        return;
+      }
+      e.preventDefault();
+      inputRef.current?.focus();
+    }
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, []);
 
   // FRAC-43: measure rendered text width same-frame so the caret sits flush
   // at end-of-text. Keyed on [query, isFocused] — focus toggling matters
@@ -235,7 +266,7 @@ export function Hero() {
               }}
               onBlur={() => setIsFocused(false)}
               onKeyDown={handleKeyDown}
-              placeholder="Explore Fractal..."
+              placeholder={placeholder}
               // FRAC-33: combobox semantics — input owns the listbox via
               // aria-controls and reports the currently focused option via
               // aria-activedescendant. aria-autocomplete=list because we
@@ -251,7 +282,10 @@ export function Hero() {
               // FRAC-43: native caret suppressed — overlay span below renders
               // the thick blinking cursor restored from commit 1ba8aa2.
               style={{ caretColor: "transparent" }}
-              className="w-full text-input text-foreground/60 border border-foreground/20 rounded-md bg-background/90 backdrop-blur-sm placeholder:text-foreground/60 outline-none transition-all duration-200 focus:border-foreground/40 focus:text-foreground/80 h-[30px] pl-8 pr-3"
+              // FRAC-13: stronger focus emphasis — border darkens and a soft,
+              // house-neutral foreground ring appears so the active state is
+              // unmistakable. pr-9 reserves room for the shortcut/enter badge.
+              className="w-full text-input text-foreground/60 border border-foreground/20 rounded-md bg-background/90 backdrop-blur-sm placeholder:text-foreground/60 outline-none transition-all duration-200 focus:border-foreground/50 focus:text-foreground/80 focus:ring-2 focus:ring-foreground/15 h-[30px] pl-8 pr-9"
             />
             {/* FRAC-43: hidden mirror — its offsetWidth drives the caret's
                 left offset. Same typography class as the input so width
@@ -269,12 +303,15 @@ export function Hero() {
                 left: 0,
               }}
             >
-              {query || "Explore Fractal..."}
+              {query || placeholder}
             </span>
-            {/* FRAC-43: thick blinking cursor overlay. 9px × 18px charcoal
-                block at end-of-text, restored from commit 1ba8aa2. Reuses
-                the surviving .animate-blink utility (with FRAC-28 reduced-
-                motion guard) and is purely decorative. */}
+            {/* FRAC-43 + FRAC-13: thick blinking cursor overlay. 9px × 18px
+                charcoal block at end-of-text, restored from commit 1ba8aa2.
+                Always on — it blinks in the base (unfocused) state at the end of
+                the "Explore Fractal…" placeholder, and on focus the placeholder
+                clears so the caret jumps to the start of the empty field. Reuses
+                the .animate-blink utility (FRAC-28 reduced-motion guard);
+                decorative. */}
             <span
               aria-hidden="true"
               className="absolute inline-block w-[9px] h-[18px] bg-foreground/70 animate-blink pointer-events-none"
@@ -284,6 +321,29 @@ export function Hero() {
                 transform: "translateY(-50%)",
               }}
             />
+
+            {/* FRAC-13: right-aligned affordance badge. At rest it shows a "/"
+                key hint (press "/" anywhere to focus); once the user is typing
+                and results exist it becomes an enter cue signalling the bar
+                navigates. Decorative — the input keeps its own combobox a11y. */}
+            {hasResults ? (
+              <span
+                aria-hidden="true"
+                className="absolute right-2.5 top-1/2 -translate-y-1/2 inline-flex items-center gap-1 text-[10px] leading-none text-foreground/45 pointer-events-none"
+              >
+                <CornerDownLeft className="h-3 w-3" />
+              </span>
+            ) : (
+              !isFocused &&
+              !query && (
+                <kbd
+                  aria-hidden="true"
+                  className="absolute right-2.5 top-1/2 -translate-y-1/2 inline-flex items-center justify-center h-[18px] min-w-[18px] px-1 rounded border border-foreground/20 bg-foreground/5 text-[11px] leading-none font-mono text-foreground/45 pointer-events-none"
+                >
+                  /
+                </kbd>
+              )
+            )}
           </div>
 
           {/* Dropdown */}
