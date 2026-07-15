@@ -9,8 +9,9 @@ import {
   CarouselPrevious,
   useCarousel,
 } from "@/components/ui/carousel";
+import { CornerDecorations } from "@/components/ui/MandelbrotCorners";
+import { PaperGrain } from "@/components/ui/PaperGrain";
 import { cn } from "@/lib/utils";
-import { SECTIONS } from "@/data/houses";
 
 const LUMA_EVENTS_URL = "https://lu.ma/nyc-tech";
 const FRACTAL_U_URL = "https://fractaluniversity.substack.com/";
@@ -53,11 +54,6 @@ const amenities = [
   "Free near-daily tech events",
 ];
 
-// FRAC: gold numeral accent for the audience cards. Sourced from the data model
-// (SECTIONS.story.accent, #D4BA58) so the literal hex stays out of the markup —
-// this is the one place the design calls for the gold identity accent on Campus.
-const GOLD = SECTIONS.story.accent;
-
 const audiences = [
   {
     num: "01",
@@ -77,7 +73,7 @@ const audiences = [
     num: "03",
     title: "Members",
     description: "24/7 access to our space for coworking and socializing.",
-    href: null,
+    href: STRIPE_FULLTIME_URL,
   },
   {
     num: "04",
@@ -215,20 +211,37 @@ function AudienceCard({
   description: string;
   href: string | null;
 }) {
-  const cardClass =
-    "flex flex-col gap-2 bg-house-campus-deep text-background rounded-md p-7 shadow-lg";
+  // FRAC-7: the audience cards adopt the frosted-Button design schema (see
+  // ui/button.tsx default variant) — accent fill + border, backdrop blur, the
+  // shared paper-grain overlay, Mandelbrot corners, and the cream-frost hover
+  // (bg → --btn-fill, text → --btn-text/accent). `--accent` is campus-deep on
+  // this page, so the card's rest color matches the sitewide CTA buttons.
+  const cardClass = cn(
+    "group relative overflow-hidden flex flex-col gap-2 rounded-md p-7 shadow-lg",
+    "border bg-[var(--accent,currentColor)] text-background",
+    "[border-color:var(--accent,currentColor)]",
+    "[backdrop-filter:blur(6px)] [-webkit-backdrop-filter:blur(6px)] [isolation:isolate] [transform:translateZ(0)]",
+    "transition-colors duration-300",
+    "hover:bg-[var(--btn-fill,rgba(242,234,216,0.16))] hover:text-[var(--btn-text,var(--accent,currentColor))]",
+  );
   const body = (
     <>
-      <span
-        className="text-aside font-medium"
-        style={{ color: GOLD }}
-      >
-        {num}
-      </span>
+      {/* Eyebrow numeral: the .text-label chrome tier (mono/uppercase/wide
+          tracking), inheriting the card text color so it inverts with the
+          frost hover — FRAC-7 retired the italic gold treatment. */}
+      <span className="text-label">{num}</span>
       <span className="text-subtitle normal-case">{title}</span>
-      <span className="text-body text-background/75 leading-relaxed">
-        {description}
-      </span>
+      {/* opacity (not a fixed token color) so the description follows
+          currentColor through the hover inversion. */}
+      <span className="text-body opacity-75 leading-relaxed">{description}</span>
+    </>
+  );
+  // Decorative chrome, mirrored from the Button: paper grain + corner
+  // Mandelbrots. p-7 (28px) clears the size="xs" safe-padding minimum (24px).
+  const decorations = (
+    <>
+      <PaperGrain />
+      <CornerDecorations size="xs" opacity={0.8} />
     </>
   );
   if (href) {
@@ -237,16 +250,19 @@ function AudienceCard({
         href={href}
         target="_blank"
         rel="noopener noreferrer"
-        className={cn(
-          cardClass,
-          "no-underline transition-shadow hover:shadow-xl",
-        )}
+        className={cn(cardClass, "no-underline")}
       >
         {body}
+        {decorations}
       </a>
     );
   }
-  return <div className={cardClass}>{body}</div>;
+  return (
+    <div className={cardClass}>
+      {body}
+      {decorations}
+    </div>
+  );
 }
 
 function CampusPhoto({

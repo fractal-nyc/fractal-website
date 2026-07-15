@@ -4,6 +4,7 @@ import { cva, type VariantProps } from "class-variance-authority";
 
 import { cn } from "@/lib/utils";
 import { MandelbrotIcon } from "@/components/house/MandelbrotIcon";
+import { PaperGrain } from "@/components/ui/PaperGrain";
 
 // ═══════════════════════════════════════════════════════════════════════════
 // Minimal Button — replaces the broken shadcn/Replit Button (FRAC-27).
@@ -105,23 +106,9 @@ const cornerStyle = (
 // Corners render on the default variant only. Outline / ghost / link skip them.
 const variantsWithCorners = new Set(["default"]);
 
-// FRAC-52: Paper-grain overlay ported from Renoverse's .fx-grain--warm
-// (shared/effects.css). Tiled 320×320 SVG fractal-noise; the baseFrequency /
-// numOctaves / seed values are part of Renoverse's brand fingerprint — don't
-// drift them. Rendered as a sibling of the corner Mandelbrots inside the
-// frosted default variant.
-const PAPER_GRAIN_BG =
-  "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='320'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' seed='7' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.96 0 0 0 0 0.93 0 0 0 0 0.85 0 0 0 0 0.9 0'/%3E%3C/filter%3E%3Crect width='320' height='320' filter='url(%23n)'/%3E%3C/svg%3E\")";
-
-const grainStyle: React.CSSProperties = {
-  position: "absolute",
-  inset: 0,
-  pointerEvents: "none",
-  backgroundImage: PAPER_GRAIN_BG,
-  backgroundSize: "320px 320px",
-  mixBlendMode: "overlay",
-  opacity: 0.35,
-};
+// FRAC-52: the frosted default variant's paper-grain overlay now lives in the
+// shared <PaperGrain /> component (ui/PaperGrain.tsx) so the Button and the
+// Campus audience cards draw from one copy of the brand fingerprint (FRAC-7).
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant, size, asChild = false, children, ...props }, ref) => {
@@ -140,7 +127,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     // per-span color override needed.
     const corners = showCorners ? (
       <>
-        <span style={grainStyle} aria-hidden />
+        <PaperGrain />
         <span
           style={cornerStyle(true, true, "135deg")}
           className="[&_svg]:!size-auto"
