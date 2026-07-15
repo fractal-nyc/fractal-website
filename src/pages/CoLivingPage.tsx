@@ -116,11 +116,12 @@ export function CoLivingPage() {
           </div>
         </section>
 
-        {/* Visiting NYC? callout */}
+        {/* Visiting NYC? callout — intentionally keeps its own narrower
+            max-w-xl box (not the Campus content column); only the map + photo
+            strip above track Campus width. */}
         <section className="w-full mt-16 md:mt-24">
-          <div className="max-w-7xl mx-auto px-6 md:px-[4.5%]">
-            <div className="max-w-3xl mx-auto">
-              <FadeIn delay={0.1}>
+          <div className="px-6 md:px-8 max-w-xl mx-auto">
+            <FadeIn delay={0.1}>
               <MandelbrotCorners
                 size="sm"
                 opacity={0.15}
@@ -155,7 +156,6 @@ export function CoLivingPage() {
                 </div>
               </MandelbrotCorners>
             </FadeIn>
-            </div>
           </div>
         </section>
       </div>
