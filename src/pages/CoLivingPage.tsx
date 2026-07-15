@@ -63,7 +63,7 @@ export function CoLivingPage() {
             </FadeIn>
 
             <FadeIn delay={0.15}>
-              <p className="text-body-lead text-foreground-muted max-w-2xl mx-auto">
+              <p className="text-subtitle text-foreground max-w-2xl mx-auto">
                 Fractal is an extended network of friends living in shared homes
                 across NYC. Fractal homes often host FractalU classes,
                 gatherings, and serve as social hubs for our community.
@@ -116,11 +116,8 @@ export function CoLivingPage() {
               <MandelbrotCorners
                 size="sm"
                 opacity={0.15}
-                className="border [border-color:var(--accent,currentColor)] rounded-md p-7 md:px-10 md:py-8 bg-background text-foreground text-left flex items-start gap-5"
+                className="border [border-color:var(--accent,currentColor)] rounded-md p-7 md:px-10 md:py-8 bg-background text-foreground text-left"
               >
-                <span aria-hidden="true" className="text-3xl leading-none">
-                  🏠
-                </span>
                 <div>
                   <p className="text-label text-house-co-living-deep mb-2 md:mb-3">
                     Visiting NYC?
