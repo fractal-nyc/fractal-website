@@ -4,6 +4,7 @@ import { Html } from "@react-three/drei";
 import * as THREE from "three";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 import { useIsMobile } from "@/hooks/useIsMobile";
+import { getHeroNavHover, setHeroNavHover, useHeroNavHover } from "@/hooks/useHeroNavHover";
 import { SECTIONS } from "@/data/houses";
 
 // ---------------------------------------------------------------------------
@@ -809,15 +810,22 @@ function NavNodeMesh({
   const materialRef = useRef<THREE.MeshStandardMaterial>(null);
   const labelRef = useRef<HTMLDivElement>(null);
   const [hovered, setHovered] = useState(false);
+  // FRAC-14: this node is also "active" when the matching navbar section link is
+  // hovered/focused — the navbar publishes its route through the shared hover
+  // bridge. `active` unifies the two sources so a link hover fires the exact same
+  // glow/scale/label treatment as pointing at the node itself.
+  const externallyActive = useHeroNavHover()?.route === node.route;
+  const active = hovered || externallyActive;
   const phase = useRef(Math.random() * Math.PI * 2);
   // FRAC-9: independent phase for the emissive glow pulse so the sine breath
   // is decorrelated from the existing scale pulse and staggered across nodes.
   const glowPhase = useRef(Math.random() * Math.PI * 2);
   const prefersReducedMotion = usePrefersReducedMotion();
   // Labels are always-on only on phones. On tablet/desktop they behave like
-  // tooltips — shown on hover — so the six labels don't crowd the wider layout.
+  // tooltips — shown on hover (or a linked navbar hover) — so the six labels
+  // don't crowd the wider layout.
   const isMobile = useIsMobile();
-  const showLabel = isMobile || hovered;
+  const showLabel = isMobile || active;
 
   useFrame((state, delta) => {
     // Hide this node's always-on label while the node is on the far side of the
@@ -840,13 +848,13 @@ function NavNodeMesh({
       // size (hover still snaps cleanly via lerp) so the sinusoid pulse
       // component is removed.
       if (prefersReducedMotion) {
-        const target = hovered ? 1.8 : 1.0;
+        const target = active ? 1.8 : 1.0;
         const s = meshRef.current.scale.x;
         meshRef.current.scale.setScalar(s + (target - s) * 0.15);
       } else {
         phase.current += delta * 2;
         const pulse = 1 + Math.sin(phase.current) * 0.08;
-        const target = hovered ? 1.8 : 1.0;
+        const target = active ? 1.8 : 1.0;
         const s = meshRef.current.scale.x / pulse;
         meshRef.current.scale.setScalar((s + (target - s) * 0.15) * pulse);
       }
@@ -856,10 +864,10 @@ function NavNodeMesh({
     // and 1.6. Hover boosts to 2.4 peak. Reduced-motion → static.
     if (materialRef.current) {
       if (prefersReducedMotion) {
-        materialRef.current.emissiveIntensity = hovered ? 2.0 : 1.0;
+        materialRef.current.emissiveIntensity = active ? 2.0 : 1.0;
       } else {
         glowPhase.current += delta * 2.51;
-        const base = hovered ? 1.8 : 1.0;
+        const base = active ? 1.8 : 1.0;
         const amp = 0.6;
         materialRef.current.emissiveIntensity =
           base + Math.sin(glowPhase.current) * amp;
@@ -910,10 +918,15 @@ function NavNodeMesh({
         onPointerOver={(e: ThreeEvent<PointerEvent>) => {
           e.stopPropagation();
           setHovered(true);
+          // FRAC-14: publish with source "node" so the matching navbar link
+          // highlights — but the scene does NOT rotate (it only rotates for
+          // source "nav"), since this node is already under the cursor.
+          setHeroNavHover(node.route, "node");
           document.body.style.cursor = "pointer";
         }}
         onPointerOut={() => {
           setHovered(false);
+          setHeroNavHover(null);
           document.body.style.cursor = "auto";
         }}
       >
@@ -946,6 +959,33 @@ function tooltipStyle(borderColor: string): React.CSSProperties {
 }
 
 // ---------------------------------------------------------------------------
+// FRAC-14: rotate-a-node-to-front support
+// ---------------------------------------------------------------------------
+
+const TAU = Math.PI * 2;
+
+// Signed shortest angular delta from `from` to `to`, in (−π, π]. Used to ease
+// the (unbounded, continuously-accumulating) auto-rotation toward a target
+// heading by the short way around rather than unwinding several turns.
+function shortestAngle(from: number, to: number): number {
+  let d = (to - from) % TAU;
+  if (d > Math.PI) d -= TAU;
+  else if (d < -Math.PI) d += TAU;
+  return d;
+}
+
+// How briskly the rotation eases toward the hovered node's target pose.
+// factor = min(1, delta * ROTATE_EASE) → ~0.4s settle at 60fps.
+const ROTATE_EASE = 6;
+
+// FRAC-14: X-axis tilt (radians, ~36°) used to bring the top/bottom nodes
+// (Events / Co-Living) toward the camera. They sit ON the Y spin-axis, so a
+// Y-rotation can't present them — instead the whole octant leans forward/back.
+// A point on the ±Y axis maps to (0, ±cosβ, ±sinβ) under an X-tilt (independent
+// of the Y-spin), so +Y leans toward +Z (front) with +β and −Y with −β.
+const AXIS_NODE_TILT = 0.62;
+
+// ---------------------------------------------------------------------------
 // Main: Nested octahedra with cross-connections and edge text
 // ---------------------------------------------------------------------------
 
@@ -965,15 +1005,60 @@ export function FractalObject({
   const outerVerts = useMemo(() => makeOctahedronVertices(1.7), []);
   const innerVerts = useMemo(() => makeOctahedronVertices(1.1), []);
 
+  // FRAC-14: per-route target pose that brings a node's vertex to the front
+  // (+Z, toward the camera).
+  //   • Equator vertex (x,0,z): eased on Y to heading −atan2(x, z); no tilt.
+  //   • Axis vertex (±Y — Events / Co-Living): can't be presented by a Y-spin
+  //     (it's on the spin axis), so `y` is null (hold current heading) and the
+  //     octant tilts on X toward the camera — sign follows the vertex's Y sign.
+  const navTargets = useMemo(() => {
+    const m = new Map<string, { y: number | null; x: number }>();
+    for (const node of OUTER_NAV_NODES) {
+      const v = outerVerts[node.vertexIndex];
+      const horiz = Math.hypot(v.x, v.z);
+      if (horiz < 1e-3) {
+        m.set(node.route, { y: null, x: v.y > 0 ? AXIS_NODE_TILT : -AXIS_NODE_TILT });
+      } else {
+        m.set(node.route, { y: -Math.atan2(v.x, v.z), x: 0 });
+      }
+    }
+    return m;
+  }, [outerVerts]);
+
   // Slow auto-rotation — Y-axis only so it stays vertical.
   // FRAC-28: skip the rotation delta when the user prefers reduced motion so
   // the entire hero scene parks at its initial pose.
+  // FRAC-14: when a navbar link is hovered/focused (published via the shared
+  // hover bridge), pause the auto-spin and ease the matching node to the front —
+  // Y-heading for equator nodes, X-tilt for the top/bottom ones. On release the
+  // tilt eases back to level and auto-rotation resumes from the current heading.
   useFrame((_, delta) => {
+    const g = groupRef.current;
+    if (!g) return;
+    // Reduced motion parks the scene entirely; the linked node still glows
+    // (handled per-node), so the association stays visible without spinning.
     if (prefersReducedMotion) return;
-    if (groupRef.current) {
-      const d = Math.min(delta, 0.05);
-      groupRef.current.rotation.y += d * 0.12;
+
+    // Only nav-driven hovers rotate the octant; node-driven hovers (pointer
+    // already on the node) just glow + highlight the link, no rotation.
+    const active = getHeroNavHover();
+    const target =
+      active && active.source === "nav" ? navTargets.get(active.route) : undefined;
+    const ease = Math.min(1, delta * ROTATE_EASE);
+
+    if (target) {
+      if (target.y != null) {
+        g.rotation.y += shortestAngle(g.rotation.y, target.y) * ease;
+      }
+      // Ease the X-tilt toward its target (0 for equator, ±tilt for axis nodes).
+      g.rotation.x += (target.x - g.rotation.x) * ease;
+      return;
     }
+
+    // Idle: ease any residual tilt back to level, then resume the auto-spin.
+    g.rotation.x += (0 - g.rotation.x) * ease;
+    const d = Math.min(delta, 0.05);
+    g.rotation.y += d * 0.12;
   });
 
   return (
