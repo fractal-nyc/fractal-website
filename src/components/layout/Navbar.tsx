@@ -6,27 +6,68 @@ import { HOUSES, NAVBAR_HIDDEN_ROUTES, SECTIONS } from "@/data/houses";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 
 // FRAC-24: Per-link colors derive from the canonical House palette where a
-// House exists. Non-house links (Story, People) have no House entry, so they
-// read from the SECTIONS record instead (FRAC-204/FRAC-205): Story is a cream
-// section with a single accent (`SECTIONS.story.accent`); People is a flooded
-// section pair (`SECTIONS.people.light`). House links default to `.light` to
-// match what each link CURRENTLY shows; Political Club uses `.deep` because the
-// link's visual identity has always been the deeper burgundy.
+// House exists. The one non-house link left in the nav (People) has no House
+// entry, so it reads from the SECTIONS record instead. House links default to
+// `.light`; Political Club uses `.deep` because the link's visual identity has
+// always been the deeper burgundy.
+// (Story used to be a link too, but it folded into Home in the content port.)
 function houseColor(route: string, prefer: "light" | "deep" = "light"): string {
   const palette = HOUSES.find((h) => h.route === route)?.palette;
   return palette ? palette[prefer] : "#000";
 }
 
-const sectionLinks = [
-  { name: "Story",          href: "/story",             color: SECTIONS.story.accent },
+// Accelerator and FractalU (formerly Education) have no internal page — they
+// link out to their standalone sites. The color still comes from the retained
+// `accelerator` / `school` house entries (looked up by their old internal
+// route), so those nav letters keep their house tint.
+const FRACTALU_URL = "https://www.fractalu.nyc/";
+const ACCELERATOR_URL = "https://www.fractalaccelerator.com/";
+
+interface SectionLink {
+  name: string;
+  href: string;
+  color: string;
+  external?: boolean;
+}
+
+const sectionLinks: SectionLink[] = [
   { name: "Campus",         href: "/campus",            color: houseColor("/campus") },
-  { name: "Visit",          href: "/visit",             color: houseColor("/visit") },
+  { name: "Co-Living",      href: "/co-living",         color: houseColor("/co-living") },
+  { name: "Accelerator",    href: ACCELERATOR_URL,      color: houseColor("/accelerator"), external: true },
   { name: "Events",         href: "/events",            color: houseColor("/events") },
-  { name: "Education",      href: "/education",         color: houseColor("/education") },
+  { name: "FractalU",       href: FRACTALU_URL,         color: houseColor("/education"), external: true },
   { name: "Political Club", href: "/political-club",    color: houseColor("/political-club", "deep") },
-  { name: "Publications",   href: "/publications",      color: houseColor("/publications") },
+  { name: "Library",        href: "/library",           color: houseColor("/library") },
   { name: "People",         href: "/people",            color: SECTIONS.people.light },
 ];
+
+// Renders an internal wouter <Link> or, for external destinations, a plain
+// new-tab <a> — wouter's <Link> would otherwise try to client-route an absolute
+// URL. Used by every nav variant so external links behave everywhere.
+function SectionAnchor({
+  link,
+  className,
+  style,
+  children,
+}: {
+  link: SectionLink;
+  className?: string;
+  style?: React.CSSProperties;
+  children: React.ReactNode;
+}) {
+  if (link.external) {
+    return (
+      <a href={link.href} target="_blank" rel="noopener noreferrer" className={className} style={style}>
+        {children}
+      </a>
+    );
+  }
+  return (
+    <Link href={link.href} className={className} style={style}>
+      {children}
+    </Link>
+  );
+}
 
 // FRAC-32: Hide routes from every nav variant by deriving from the House data
 // model (`hideFromNavbar`). Non-house section links (e.g. "People", which has
@@ -42,13 +83,13 @@ const visibleSectionLinks = sectionLinks.filter(
 // Inner-page navbar hides all remaining section links. The home page navbar
 // and the full-screen overlay menu still expose the visible sections.
 const innerPageHiddenLinks = new Set([
-  "Story",
   "Campus",
-  "Visit",
+  "Co-Living",
+  "Accelerator",
   "Events",
-  "Education",
+  "FractalU",
   "Political Club",
-  "Publications",
+  "Library",
   "People",
 ]);
 const innerPageSectionLinks = visibleSectionLinks.filter(
@@ -59,16 +100,16 @@ const LEFT_TEXT =
   "In 2021, our small group of friends decided to live, learn, & build together. It started as just a single apartment with weekly dinners where people gave 5-minute talks & grew into A neighborhood & campus. now we are building A GOLDEN AGE PROTOCOL.";
 
 const RIGHT_TEXT =
-  "we believe small groups who share context deeply & build agentic tools for each other can move dramatically faster than individuals working alone, so We embrace experimentation, joyful cyborgism & fun-first collaboration to solve problems together with friends.";
+  "we believe small groups who share context deeply can move dramatically faster than individuals working alone, so We embrace experimentation, joyful cyborgism & fun-first collaboration to solve problems together with friends.";
 
-function NavLink({ name, href, color }: { name: string; href: string; color: string }) {
+function NavLink(link: SectionLink) {
+  const { name, color } = link;
   // Render each word's leading cap in Jacquard 24 (38px) and the remainder in
-  // light serif (22px). Multi-word labels like "New Liberal Arts" and
-  // "Political Club" therefore get a Jacquard cap on every word's first
-  // letter; single-word labels are unchanged.
+  // light serif (22px). Multi-word labels like "Political Club" therefore get a
+  // Jacquard cap on every word's first letter; single-word labels are unchanged.
   const words = name.split(" ");
   return (
-    <Link href={href} className="hover:opacity-70 transition-opacity" style={{ color }}>
+    <SectionAnchor link={link} className="hover:opacity-70 transition-opacity" style={{ color }}>
       {words.map((word, i) => (
         <Fragment key={i}>
           {i > 0 && (
@@ -108,7 +149,7 @@ function NavLink({ name, href, color }: { name: string; href: string; color: str
           </span>
         </Fragment>
       ))}
-    </Link>
+    </SectionAnchor>
   );
 }
 
@@ -231,9 +272,9 @@ export function Navbar() {
               {/* Nav letters row */}
               <nav className="flex items-baseline justify-between mt-2">
                 {visibleSectionLinks.map((link) => (
-                  <Link
+                  <SectionAnchor
                     key={link.name}
-                    href={link.href}
+                    link={link}
                     className="hover:opacity-70 transition-opacity"
                     style={{ color: link.color }}
                   >
@@ -244,13 +285,9 @@ export function Navbar() {
                         lineHeight: 1,
                       }}
                     >
-                      {link.name === "Education"
-                        ? "E"
-                        : link.name === "Political Club"
-                          ? "PC"
-                          : link.name[0]}
+                      {link.name === "Political Club" ? "PC" : link.name[0]}
                     </span>
-                  </Link>
+                  </SectionAnchor>
                 ))}
               </nav>
             </div>
@@ -277,9 +314,9 @@ export function Navbar() {
                 </Link>
                 <nav className="flex items-baseline gap-5">
                   {innerPageSectionLinks.map((link) => (
-                    <Link
+                    <SectionAnchor
                       key={link.name}
-                      href={link.href}
+                      link={link}
                       className="hover:opacity-70 transition-opacity font-serif"
                       style={{
                         fontSize: "18px",
@@ -288,7 +325,7 @@ export function Navbar() {
                       }}
                     >
                       {link.name}
-                    </Link>
+                    </SectionAnchor>
                   ))}
                 </nav>
                 <button
@@ -380,19 +417,18 @@ export function Navbar() {
         {/* Section page list */}
         <nav className="flex flex-col w-full pt-24 pb-8 px-6 max-w-md mx-auto">
           {visibleSectionLinks.map((link) => {
-            const letter =
-              link.name === "Education"
-                ? "E"
-                : link.name === "Political Club"
-                  ? "PC"
-                  : link.name[0];
+            const letter = link.name === "Political Club" ? "PC" : link.name[0];
             return (
               <button
                 key={link.name}
                 type="button"
                 onClick={() => {
-                  setLocation(link.href);
                   setMobileMenuOpen(false);
+                  if (link.external) {
+                    window.open(link.href, "_blank", "noopener,noreferrer");
+                  } else {
+                    setLocation(link.href);
+                  }
                 }}
                 className="flex items-center gap-5 min-h-[56px] py-3 border-b border-foreground-faint cursor-pointer hover:bg-foreground/5 active:bg-foreground/10 transition-colors text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-foreground"
                 style={{ borderLeft: `3px solid ${link.color}`, paddingLeft: "16px" }}

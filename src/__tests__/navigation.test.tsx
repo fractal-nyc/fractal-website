@@ -18,7 +18,7 @@ import { Navbar } from "@/components/layout/Navbar";
 // Helper: render the Navbar at a given route
 // ---------------------------------------------------------------------------
 
-function renderNavbar(path = "/story") {
+function renderNavbar(path = "/co-living") {
   const { hook } = memoryLocation({ path, static: true });
   return render(
     <WouterRouter hook={hook}>
@@ -28,22 +28,25 @@ function renderNavbar(path = "/story") {
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
-// Inner page navbar — the navbar shown on section pages like /story, /campus
+// Inner page navbar — the navbar shown on section pages like /co-living, /campus
 // ═══════════════════════════════════════════════════════════════════════════
 
 describe("Inner page navbar", () => {
   beforeEach(() => {
-    renderNavbar("/story");
+    renderNavbar("/co-living");
   });
 
   it("should render all 6 visible section links by name (FRAC-161: Political Club + People hidden)", () => {
+    // Content port: Story folded into Home (no longer a nav link); Visit →
+    // Co-Living, Publications → Library, and Accelerator was added. Education
+    // was renamed FractalU; it and Accelerator now link out externally.
     const expectedSections = [
-      "Story",
       "Campus",
-      "Visit",
+      "Co-Living",
+      "Accelerator",
       "Events",
-      "Education",
-      "Publications",
+      "FractalU",
+      "Library",
     ];
 
     for (const section of expectedSections) {
@@ -81,12 +84,12 @@ describe("Inner page navbar", () => {
     // is the full-screen overlay menu (buttons, not anchors). Verify each
     // visible section's button exists with the correct name.
     const expectedNames = [
-      "Story",
       "Campus",
-      "Visit",
+      "Co-Living",
+      "Accelerator",
       "Events",
-      "Education",
-      "Publications",
+      "FractalU",
+      "Library",
     ];
     const overlay = document.querySelector(".fixed.inset-0.z-40");
     expect(overlay).toBeTruthy();
@@ -159,14 +162,65 @@ describe("Home page navbar (full state)", () => {
   });
 
   it("should render mobile nav with abbreviated labels for long section names", () => {
-    // Mobile + tablet full navbar shows abbreviated labels. After FRAC-161
-    // (hide Political Club + People) and FRAC-163 (rename New Liberal Arts →
-    // Education, Lab → Publications), the mobile row shows 6 letters:
-    // S C V E E P. No "PC" anymore (Political Club is hidden).
+    // Mobile + tablet full navbar shows abbreviated labels. After the content
+    // port (Story folded into Home, Visit → Co-Living, Publications → Library,
+    // Accelerator added, Education renamed FractalU) the visible row shows 6
+    // letters: C C A E F L. No "PC" (Political Club is hidden per FRAC-161).
     const mobileSection = document.querySelector(".lg\\:hidden");
     expect(mobileSection).toBeTruthy();
     expect(mobileSection!.textContent).toContain("E");
+    expect(mobileSection!.textContent).toContain("F");
     expect(mobileSection!.textContent).not.toContain("PC");
+  });
+});
+
+// ═══════════════════════════════════════════════════════════════════════════
+// External vs internal section links — Accelerator and FractalU link out to
+// their standalone sites (new tab); the rest stay internal wouter routes.
+// ═══════════════════════════════════════════════════════════════════════════
+
+describe("External section links (Accelerator + FractalU)", () => {
+  beforeEach(() => {
+    renderNavbar("/");
+  });
+
+  it("renders Accelerator as an external new-tab anchor to fractalaccelerator.com", () => {
+    const links = Array.from(
+      document.querySelectorAll<HTMLAnchorElement>(
+        'a[href="https://www.fractalaccelerator.com/"]',
+      ),
+    );
+    expect(links.length).toBeGreaterThanOrEqual(1);
+    for (const a of links) {
+      expect(a.getAttribute("target")).toBe("_blank");
+      expect(a.getAttribute("rel")).toContain("noopener");
+    }
+  });
+
+  it("renders FractalU as an external new-tab anchor to fractalu.nyc", () => {
+    const links = Array.from(
+      document.querySelectorAll<HTMLAnchorElement>(
+        'a[href="https://www.fractalu.nyc/"]',
+      ),
+    );
+    expect(links.length).toBeGreaterThanOrEqual(1);
+    for (const a of links) {
+      expect(a.getAttribute("target")).toBe("_blank");
+      expect(a.getAttribute("rel")).toContain("noopener");
+    }
+  });
+
+  it("keeps internal section links (Campus, Co-Living, Events, Library) as same-tab wouter routes", () => {
+    for (const href of ["/campus", "/co-living", "/events", "/library"]) {
+      const anchors = Array.from(
+        document.querySelectorAll<HTMLAnchorElement>(`a[href="${href}"]`),
+      );
+      expect(anchors.length).toBeGreaterThanOrEqual(1);
+      // Internal wouter links must NOT open in a new tab.
+      for (const a of anchors) {
+        expect(a.getAttribute("target")).not.toBe("_blank");
+      }
+    }
   });
 });
 

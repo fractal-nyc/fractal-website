@@ -11,80 +11,53 @@ export interface GallerySection {
 
 const base = import.meta.env.BASE_URL;
 
-/**
- * All 17 Story page photos, sequentially numbered.
- * Aspect ratios classified from actual pixel dimensions.
- */
-const storyPhotos: StoryPhoto[] = [
-  { src: `${base}images/story/story-01.jpg`, alt: "Fractal NYC community gathering", aspect: "landscape" },
-  { src: `${base}images/story/story-02.jpg`, alt: "Weekly dinner and talks", aspect: "landscape" },
-  { src: `${base}images/story/story-03.jpg`, alt: "Community members in conversation", aspect: "landscape" },
-  { src: `${base}images/story/story-04.jpg`, alt: "Fractal house interior", aspect: "portrait" },
-  { src: `${base}images/story/story-05.jpg`, alt: "Neighborhood block party", aspect: "landscape" },
-  { src: `${base}images/story/story-06.jpg`, alt: "Co-working session at Campus", aspect: "landscape" },
-  { src: `${base}images/story/story-07.jpg`, alt: "Late night conversation", aspect: "landscape" },
-  { src: `${base}images/story/story-08.jpg`, alt: "Community event setup", aspect: "landscape" },
-  { src: `${base}images/story/story-09.jpg`, alt: "Fractal members collaborating", aspect: "landscape" },
-  { src: `${base}images/story/story-10.jpg`, alt: "Portrait of a Fractal member", aspect: "portrait" },
-  { src: `${base}images/story/story-11.avif`, alt: "Williamsburg streetscape panorama", aspect: "panoramic" },
-  { src: `${base}images/story/story-12.webp`, alt: "Rooftop gathering at sunset", aspect: "landscape" },
-  { src: `${base}images/story/story-13.avif`, alt: "The Campus courtyard", aspect: "square" },
-  { src: `${base}images/story/story-14.webp`, alt: "Community brunch spread", aspect: "landscape" },
-  { src: `${base}images/story/story-15.webp`, alt: "Fractal members at an event", aspect: "landscape" },
-  { src: `${base}images/story/story-16.webp`, alt: "Living room conversation", aspect: "landscape" },
-  { src: `${base}images/story/story-17.webp`, alt: "Fractal NYC from the street", aspect: "landscape" },
-];
+const photo = (
+  file: string,
+  alt: string,
+  aspect: StoryPhoto["aspect"],
+): StoryPhoto => ({ src: `${base}images/story/${file}`, alt, aspect });
 
 /**
- * Gallery sections arranged for visual rhythm.
- * Sequence: hero -> pair -> masonry -> panoramic -> pair -> pair -> masonry
+ * The Home story gallery, keyed to the Claude Design home mockup's photo
+ * sequence (12 images across 8 blocks). Each entry pairs a file with the alt
+ * text from the design.
+ */
+const P = {
+  gathering: photo("story-01.jpg", "Fractal NYC community gathering", "landscape"),
+  conversation: photo("story-03.jpg", "Community members in conversation", "landscape"),
+  movieNight: photo("story-06.jpg", "Movie night at a Fractal venue", "landscape"),
+  panorama: photo("story-11.avif", "Williamsburg streetscape panorama", "panoramic"),
+  lateNight: photo("story-07.jpg", "Late night conversation", "landscape"),
+  eventSetup: photo("story-08.jpg", "Community event setup", "landscape"),
+  courtyard: photo("story-13.avif", "The Campus courtyard", "square"),
+  rooftop: photo("story-12.webp", "Rooftop gathering at sunset", "landscape"),
+  event: photo("story-15.webp", "Fractal members at an event", "landscape"),
+  brunch: photo("story-14.webp", "Community brunch spread", "landscape"),
+  livingRoom: photo("story-16.webp", "Living room conversation", "landscape"),
+  street: photo("story-17.webp", "Fractal NYC from the street", "landscape"),
+} as const;
+
+/**
+ * Gallery sections arranged for visual rhythm, mirroring the Claude Design
+ * home mockup: hero -> pair -> panoramic -> pair -> pair -> hero -> pair -> hero.
  *
  * This layout creates a varied, editorial feel as the user scrolls.
  */
 export const gallerySections: GallerySection[] = [
-  // Section 1: Hero — single dramatic full-width image
-  {
-    type: "hero",
-    photos: [storyPhotos[0]], // story-01: community gathering
-  },
-  // Section 2: Pair — two landscapes side by side
-  {
-    type: "pair",
-    photos: [storyPhotos[1], storyPhotos[2]], // story-02, story-03
-  },
-  // Section 3: Masonry — portrait + two landscapes stacked
-  {
-    type: "masonry",
-    photos: [storyPhotos[3], storyPhotos[4], storyPhotos[5]], // portrait + 2 landscape
-  },
-  // Section 4: Panoramic — wide shot
-  {
-    type: "panoramic",
-    photos: [storyPhotos[10]], // story-11: panoramic streetscape
-  },
-  // Section 5: Pair — two small landscapes
-  {
-    type: "pair",
-    photos: [storyPhotos[6], storyPhotos[7]], // story-07, story-08
-  },
-  // Section 6: Masonry — portrait + square + landscape
-  {
-    type: "masonry",
-    photos: [storyPhotos[9], storyPhotos[12], storyPhotos[8]], // portrait, square, landscape
-  },
-  // Section 7: Pair — two large landscapes
-  {
-    type: "pair",
-    photos: [storyPhotos[11], storyPhotos[13]], // story-12, story-14
-  },
-  // Section 8: Hero — closing full-width image
-  {
-    type: "hero",
-    photos: [storyPhotos[14]], // story-15
-  },
-  // Section 9: Pair — final pair
-  {
-    type: "pair",
-    photos: [storyPhotos[15], storyPhotos[16]], // story-16, story-17
-  },
+  // 1: Hero — single dramatic full-width image
+  { type: "hero", photos: [P.gathering] },
+  // 2: Pair — conversation + movie night
+  { type: "pair", photos: [P.conversation, P.movieNight] },
+  // 3: Panoramic — Williamsburg streetscape
+  { type: "panoramic", photos: [P.panorama] },
+  // 4: Pair — late night + event setup
+  { type: "pair", photos: [P.lateNight, P.eventSetup] },
+  // 5: Pair — courtyard + rooftop
+  { type: "pair", photos: [P.courtyard, P.rooftop] },
+  // 6: Hero — full-width event
+  { type: "hero", photos: [P.event] },
+  // 7: Pair — brunch + living room
+  { type: "pair", photos: [P.brunch, P.livingRoom] },
+  // 8: Hero — closing streetscape
+  { type: "hero", photos: [P.street] },
 ];

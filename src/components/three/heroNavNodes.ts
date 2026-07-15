@@ -3,7 +3,7 @@
 // dragging the entire three.js dependency chain (three + @react-three/fiber +
 // drei + three-stdlib) onto the entry chunk. Importing from this module is
 // three-free — reach in here directly for OUTER_NAV_NODES / NavNode.
-import { HOUSES, SECTIONS } from "@/data/houses";
+import { HOUSES } from "@/data/houses";
 
 // Octahedron model gold — the graceful fallback when a section/house color is
 // missing. Shared by housePalette() below and the face materials in
@@ -25,11 +25,18 @@ export interface NavNode {
   vertexIndex: number;
 }
 
+// The six octahedron vertices map to the six main destinations. Story folded
+// into Home so its vertex became the Accelerator; the decorative Story FACE
+// texture is unaffected (faces and vertex nodes are independent — see
+// OctahedronHero). Two nodes are EXTERNAL: FractalU and the Accelerator link
+// out to their standalone sites rather than an internal page. Hero's
+// handleNavigate opens absolute-URL routes in a new tab, so no WebGL change is
+// needed — the nodes still carry their destination in `route`.
 export const OUTER_NAV_NODES: NavNode[] = [
-  { label: "Visit",          route: "/visit",        color: housePalette("neighborhood"), vertexIndex: 3 },
-  { label: "Events",         route: "/events",       color: housePalette("events"),       vertexIndex: 2 },
-  { label: "Campus",         route: "/campus",       color: housePalette("campus"),       vertexIndex: 0 },
-  { label: "Education",      route: "/education",    color: housePalette("school"),       vertexIndex: 1 },
-  { label: "Publications",   route: "/publications", color: housePalette("lab"),          vertexIndex: 5 },
-  { label: "Story",          route: "/story",        color: SECTIONS.story.accent,        vertexIndex: 4 },
+  { label: "Co-Living",   route: "/co-living",                         color: housePalette("neighborhood"), vertexIndex: 3 },
+  { label: "Events",      route: "/events",                            color: housePalette("events"),       vertexIndex: 2 },
+  { label: "Campus",      route: "/campus",                            color: housePalette("campus"),       vertexIndex: 0 },
+  { label: "FractalU",    route: "https://www.fractalu.nyc/",          color: housePalette("school"),       vertexIndex: 1 },
+  { label: "Library",     route: "/library",                           color: housePalette("lab"),          vertexIndex: 5 },
+  { label: "Accelerator", route: "https://www.fractalaccelerator.com/", color: housePalette("accelerator"), vertexIndex: 4 },
 ];

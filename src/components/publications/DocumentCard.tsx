@@ -1,4 +1,4 @@
-import { formatAuthors, type PublicationDocument, type DocumentCategory } from "@/data/publications-documents";
+import { type PublicationDocument, type DocumentCategory } from "@/data/publications-documents";
 import type { LucideIcon } from "lucide-react";
 import { MandelbrotCorners } from "@/components/ui/MandelbrotCorners";
 import { HOUSES } from "@/data/houses";
@@ -45,21 +45,19 @@ interface DocumentCardProps {
 export function DocumentCard({ document, className = "" }: DocumentCardProps) {
   const { icon: CategoryIcon, label: categoryLabel } =
     CATEGORY_META[document.category];
-  const authorName = formatAuthors(document.authors);
-  const isFeatured = document.featured;
 
   return (
-    <MandelbrotCorners size="xs" opacity={0.12}>
+    <MandelbrotCorners size="xs" opacity={0.12} className="h-full">
     <a
       href={document.url}
       target="_blank"
       rel="noopener noreferrer"
       className={`
-        group block rounded-lg border border-foreground-faint bg-background text-foreground
+        group flex flex-col h-full rounded-lg border border-foreground-faint bg-background text-foreground
         transition-all duration-200 ease-out
         hover:scale-[1.02] hover:shadow-lg hover:[border-color:var(--accent,currentColor)]
         focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground
-        ${isFeatured ? "p-6 md:p-8" : "p-6 md:p-6"}
+        p-6
         ${className}
       `}
     >
@@ -96,10 +94,10 @@ export function DocumentCard({ document, className = "" }: DocumentCardProps) {
       </h3>
 
       {/* Author */}
-      <p className="text-label text-foreground-muted mt-1">{authorName}</p>
+      <p className="text-label text-foreground-muted mt-1">{document.byline}</p>
 
-      {/* Description (featured only) */}
-      {isFeatured && document.description && (
+      {/* Description */}
+      {document.description && (
         <p className="text-body text-foreground-muted mt-3 leading-relaxed">
           {document.description}
         </p>
@@ -107,7 +105,7 @@ export function DocumentCard({ document, className = "" }: DocumentCardProps) {
 
       {/* Accent bar at bottom */}
       <div
-        className="mt-4 h-0.5 w-8 rounded-full opacity-40 group-hover:w-12 group-hover:opacity-70 transition-all duration-300"
+        className="mt-auto h-0.5 w-8 rounded-full opacity-40 group-hover:w-12 group-hover:opacity-70 transition-all duration-300"
         style={{ backgroundColor: LAB_DEEP }}
       />
     </a>

@@ -21,12 +21,26 @@ export interface SearchResult {
 // Static data: pages and concept aliases
 // ---------------------------------------------------------------------------
 
-const PAGES = [
+// FractalU (formerly the Education page) and the Accelerator have no internal
+// page — they link out to their standalone sites. Search results for them carry
+// `external: true` so Hero's navigateTo opens them in a new tab.
+const FRACTALU_URL = "https://www.fractalu.nyc/";
+const ACCELERATOR_URL = "https://www.fractalaccelerator.com/";
+
+interface PageEntry {
+  name: string;
+  href: string;
+  keywords: string[];
+  external?: boolean;
+}
+
+const PAGES: PageEntry[] = [
   { name: "Story", href: "/story", keywords: ["origin", "history", "founding", "about"] },
   { name: "Campus", href: "/campus", keywords: ["111 conselyea", "williamsburg", "coworking", "space", "rooftop"] },
   { name: "Visit", href: "/visit", keywords: ["neighborhood", "coliving", "co-living", "brooklyn", "mckibbin", "housing"] },
   { name: "Events", href: "/events", keywords: ["hackathon", "ai hacks", "singularity conference", "luma", "sidequest"] },
-  { name: "Education", href: "/education", keywords: ["new liberal arts", "liberal arts", "fractal u", "fractal university", "school", "education", "accelerator", "courses", "classes"] },
+  { name: "FractalU", href: FRACTALU_URL, external: true, keywords: ["new liberal arts", "liberal arts", "fractal u", "fractal university", "university", "school", "education", "courses", "classes"] },
+  { name: "Accelerator", href: ACCELERATOR_URL, external: true, keywords: ["accelerator", "ai", "cohort", "startup", "founders", "program"] },
   { name: "Political Club", href: "/political-club", keywords: ["maximum new york", "maximum nyc", "civic", "government", "forum", "manhattan institute"] },
   { name: "Publications", href: "/publications", keywords: ["lab", "research", "writing", "publishing", "fractal labs"] },
   { name: "People", href: "/people", keywords: ["team", "members", "network", "who"] },
@@ -37,11 +51,11 @@ const PAGES = [
 const CONCEPT_ALIASES: { term: string; results: SearchResult[] }[] = [
   {
     term: "fractal u",
-    results: [{ type: "page", title: "Education", subtitle: "Fractal University", href: "/education" }],
+    results: [{ type: "page", title: "FractalU", subtitle: "Fractal University", href: FRACTALU_URL, external: true }],
   },
   {
     term: "fractal university",
-    results: [{ type: "page", title: "Education", subtitle: "Fractal University", href: "/education" }],
+    results: [{ type: "page", title: "FractalU", subtitle: "Fractal University", href: FRACTALU_URL, external: true }],
   },
   {
     term: "maximum new york",
@@ -99,7 +113,13 @@ function searchPages(query: string): SearchResult[] {
     const score = Math.max(nameScore, keywordScore * 0.9);
     if (score > 0) {
       results.push({
-        result: { type: "page", title: page.name, subtitle: "Page", href: page.href },
+        result: {
+          type: "page",
+          title: page.name,
+          subtitle: "Page",
+          href: page.href,
+          ...(page.external ? { external: true } : {}),
+        },
         score,
       });
     }

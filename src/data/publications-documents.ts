@@ -18,16 +18,20 @@ export type DocumentCategory =
 /**
  * A document in the Lab archive (essay, podcast, talk, video, etc.).
  *
- * `authors` is a non-empty list of person IDs from `PEOPLE`. Order is credit
- * order — `authors[0]` is the primary author used wherever a single byline is
- * surfaced (e.g. search subtitle). Multi-author bylines are rendered via
- * `formatAuthors`.
+ * `authors` is a non-empty list of person IDs from `PEOPLE`, used for linking /
+ * global search (resolved via `formatAuthors`). The visible card byline uses the
+ * verbatim `byline` display string instead, since PEOPLE names are short/partial.
  */
 export interface PublicationDocument {
   id: string;
   title: string;
-  /** Person IDs from PEOPLE. Non-empty; `authors[0]` is primary / credit order. */
+  /** Person IDs from PEOPLE. Non-empty; `authors[0]` is primary / credit order.
+   *  Used for linking / global search — NOT for the visible byline. */
   authors: string[];
+  /** Verbatim display byline as shown in the design (e.g. "Ulysses Chuang and
+   *  Zu Shi"). Rendered on the card; decoupled from `authors` on purpose since
+   *  PEOPLE names are short/partial and multi-author bylines don't resolve. */
+  byline: string;
   description: string; // 1-2 sentence summary
   url: string;
   category: DocumentCategory;
@@ -40,23 +44,12 @@ export interface PublicationDocument {
 // ---------------------------------------------------------------------------
 
 export const PUBLICATION_DOCUMENTS: PublicationDocument[] = [
-  // ---- Regular documents ----
-  {
-    id: "unblocked-podcast",
-    title: "Unblocked Podcast",
-    authors: ["andrew"],
-    description:
-      "The Unblocked coaching series — conversations on building, shipping, and getting unstuck.",
-    url: "https://andrewjrose.substack.com/podcast",
-    category: "podcast",
-    tags: ["coaching", "building", "podcast"],
-  },
-
-  // ---- Core essays (Priya) ----
+  // ---- Featured ----
   {
     id: "how-to-live-near-friends",
     title: "How to Live Near Your Friends",
     authors: ["priya"],
+    byline: "Priya Rose",
     description:
       "People tell me that their friends talk about living near each other too. And yet, almost no one I've talked to has successfully clustered their friend group. So today I'm going to show you how to.",
     url: "https://prigoose.substack.com/p/how-to-live-near-your-friends",
@@ -65,9 +58,24 @@ export const PUBLICATION_DOCUMENTS: PublicationDocument[] = [
     featured: true,
   },
   {
+    id: "living-room-third-space",
+    title: "How to Turn Your Living Room into a Third Space",
+    // Byline in the design is "Ulysses Chuang and Zu Shi"; Zu Shi has no PEOPLE
+    // entry, so the primary (existing) author is credited.
+    authors: ["ulysses"],
+    byline: "Ulysses Chuang and Zu Shi",
+    description:
+      "On how Merlin's Place started, and how you can turn your living room into a third space.",
+    url: "https://supernuclear.substack.com/p/case-study-merlins-place",
+    category: "essay",
+    tags: ["neighborhood", "coliving", "community"],
+    featured: true,
+  },
+  {
     id: "how-to-start-school-friends",
     title: "How to Start a School With Your Friends",
     authors: ["priya"],
+    byline: "Priya Rose",
     description:
       "FractalU is a 'school' for adults, taught from living rooms in New York City. We've run over 100 classes and taught thousands of students. Classes meet weekly and are held on evenings and weekends, since most of our students and teachers are working professionals.",
     url: "https://prigoose.substack.com/p/how-to-start-a-university",
@@ -75,12 +83,11 @@ export const PUBLICATION_DOCUMENTS: PublicationDocument[] = [
     tags: ["education", "community", "teaching", "university"],
     featured: true,
   },
-
-  // ---- Core essays (Daniel) ----
   {
     id: "marry-your-city",
     title: "Marry Your City",
     authors: ["daniel"],
+    byline: "Daniel Golliher",
     description:
       "The benefits of a good marriage cannot be overstated. Where you choose to live should be regarded similarly: you should do it deliberately, and you should commit to a place.",
     url: "https://maximumnewyork.com/p/marry-your-city",
@@ -89,100 +96,60 @@ export const PUBLICATION_DOCUMENTS: PublicationDocument[] = [
     featured: true,
   },
 
-  // ---- Core essays (Andrew) ----
+  // ---- Regular documents ----
+  {
+    id: "take-some-responsibility",
+    title: "Take Some Responsibility!",
+    authors: ["andrew"],
+    byline: "Andrew Rose",
+    description:
+      "Andrew on taking responsibility for the places, people, and communities around you.",
+    url: "https://youtu.be/DoyJmUNWBMI?si=1J9Srbot_YgsHoGw",
+    category: "podcast",
+    tags: ["community", "leadership", "podcast"],
+  },
+  {
+    id: "fooming-the-fractal",
+    title: "Fooming the Fractal",
+    authors: ["tyler"],
+    byline: "Tyler Alterman",
+    description:
+      "Fractal is building a replicable microsociety: a model for vibrant, relationship-driven community life that integrates housing, education, the arts, technological innovation, and economic development. Our goal is to address modern crises of loneliness and disconnection by creating enduring ecosystems of human flourishing.",
+    url: "https://youtube.com/watch?v=JWLRizY6G-0",
+    category: "talk",
+    tags: ["community", "microsociety", "talks"],
+  },
+  {
+    id: "network-state-conference",
+    title: "The Network State Conference Talk",
+    authors: ["andrew", "priya"],
+    byline: "Andrew and Priya Rose",
+    description:
+      "Andrew and Priya's conference talk on Fractal: what it takes to build a real community in the physical world.",
+    url: "https://youtu.be/a3vhvAg-8yQ?si=BVYu1JZ0R098EtUT",
+    category: "talk",
+    tags: ["community", "coliving", "neighborhood", "talks"],
+  },
   {
     id: "reversing-centrifuge",
     title: "Reversing the Centrifuge of Modernity",
     authors: ["andrew"],
+    byline: "Andrew Rose",
     description:
       "With the right collaborators, you can do anything, and joyfully, too! The challenge is assembling a good team. Not just talents, but personalities that fit together.",
     url: "https://andrewjrose.substack.com/p/reversing-the-centrifuge-of-modernity",
     category: "essay",
     tags: ["community", "founding", "modernity", "neighborhood"],
-    featured: true,
-  },
-  {
-    id: "fractal-university-canon",
-    title: "Introducing The Fractal University Canon",
-    authors: ["andrew"],
-    description:
-      "First, we establish an Etiquette: Take yourself and others seriously. Be concrete; no bullshitting. Collaborate joyfully and publicly.",
-    url: "https://fractaluniversity.substack.com/p/introducing-the-fractal-university",
-    category: "essay",
-    tags: ["education", "canon", "university", "culture"],
-  },
-  {
-    id: "world-wide-intelligence",
-    title: "World Wide Intelligence",
-    authors: ["andrew"],
-    description:
-      "If the WWW created hyper-communication, then WWI could create hyper-coordination — a network of intelligences inspired by decentralized internet architecture.",
-    url: "https://andrewjrose.substack.com/p/world-wide-intelligence",
-    category: "essay",
-    tags: ["ai", "technology", "community", "culture"],
-  },
-
-  // ---- Core essays (Tyler) ----
-  {
-    id: "ea-garden-of-ends",
-    title: "Effective Altruism in the Garden of Ends",
-    authors: ["tyler"],
-    description:
-      "This truly isn't a new idea. Mutual dedication to one another's ends seems like a thing commonly present in religious and ethnic communities. But it seems quite uncommon to the demographic of secular idealists, like me.",
-    url: "https://forum.effectivealtruism.org/posts/AjxqsDmhGiW9g8ju6/effective-altruism-in-the-garden-of-ends",
-    category: "essay",
-    tags: ["altruism", "philosophy", "community", "social"],
-    featured: true,
-  },
-
-  // ---- Community ----
-  {
-    id: "christines-guide-tpot",
-    title: "Christine's Guide to TPOT",
-    authors: ["christine"],
-    description:
-      "Fractal originally emerged from an online scene of friendly ambitious nerds. If you'd like to have fun online and make friends, read Christine's guide to this part of Twitter.",
-    url: "https://docs.google.com/document/d/1Bd3PfKDL9pOM7YoxGbRBwO_qOWh6B7u5170Xw8VyK6s/edit",
-    category: "essay",
-    tags: ["tpot", "community", "social"],
-  },
-  {
-    id: "neighborhood-stroll",
-    title: "a neighborhood stroll",
-    authors: ["joce"],
-    description:
-      "I never want to forget why this walkable place, with all the people I love (and have yet to love), leaves me in awe.",
-    url: "https://joceorante.substack.com/p/a-neighborhood-stroll",
-    category: "essay",
-    tags: ["neighborhood", "reflection"],
-  },
-  {
-    id: "gardener-leader",
-    title: "The Gardener Leader",
-    authors: ["pav"],
-    description:
-      "A Garden is a complex, self-organizing system of organic entities and processes operating in chaotic harmony. A Factory is a tightly run ship where every detail is orchestrated to the last T.",
-    url: "https://chaosophia.substack.com/p/the-gardener-leader",
-    category: "essay",
-    tags: ["leadership", "community"],
-  },
-  {
-    id: "origin-story-of-fractal",
-    title: "The Origin Story of Fractal",
-    authors: ["priya"],
-    description:
-      "A personal telling of how Fractal started.",
-    url: "https://youtu.be/gEB-kkNM5L8?si=3g_pA5hPvrZKOnMk",
-    category: "video",
-    tags: ["origin", "founding"],
   },
   {
     id: "nyc-is-affordable-1",
     title: "New York City is Affordable (Part 1)",
     authors: ["daniel"],
+    byline: "Daniel Golliher",
     description:
-      "Daniel grew up on a farm in Indiana. In this video he shows how New York City can be more affordable than Indianapolis, Indiana.",
+      "Making the case that you can afford to live in New York — and how to think about the real numbers.",
     url: "https://youtu.be/EQyT8sNWYQ0?si=xIu-_E2ierZJhIma",
+    // Design category label "Video Essay" → nearest enum value "video".
     category: "video",
     tags: ["nyc", "affordability"],
   },
@@ -190,117 +157,87 @@ export const PUBLICATION_DOCUMENTS: PublicationDocument[] = [
     id: "nyc-is-affordable-2",
     title: "New York City is Affordable (Part 2)",
     authors: ["daniel"],
+    byline: "Daniel Golliher",
     description:
-      "Part 2 — continued affordability analysis of New York City versus the Midwest.",
+      "Part two: practical tactics for making the city affordable in practice.",
     url: "https://youtu.be/SnAKne5OmG8?si=u13IViKoKWSQ9bqc",
+    // Design category label "Video Essay" → nearest enum value "video".
     category: "video",
     tags: ["nyc", "affordability"],
   },
   {
-    id: "ebr-interview",
-    title: "An Interview with Elizabeth Barlow Rogers, Founder of the Central Park Conservancy",
-    authors: ["hailey"],
+    id: "tylers-guide-nyc",
+    title: "Tyler's Guide to Falling in Love with NYC",
+    authors: ["tyler"],
+    byline: "Tyler Alterman",
     description:
-      "Hailey interviews Elizabeth Barlow Rogers. Back in the 70s, Central Park was falling apart — EBR founded the Central Park Conservancy, a revolutionary public-private partnership which revived the park and continues to steward it to this day.",
-    url: "https://youtu.be/7Wyl8eUstdI?si=ltPh5BhYhMOrqJZM",
-    category: "video",
-    tags: ["nyc", "interview", "civic"],
+      "A field guide to making New York feel like home — the places, people, and practices that make the city easy to love.",
+    url: "https://tyleralterman.notion.site/Tyler-s-guide-to-falling-in-love-with-NYC-dc371f0f0f284f0bab2ca74b671c80e4",
+    category: "essay",
+    tags: ["nyc", "community", "neighborhood"],
   },
   {
     id: "social-fabric-nyc",
     title: "Social Fabric NYC",
     authors: ["liam"],
+    byline: "Liam Rosen",
     description:
-      "A directory of community groups and networks making up New York's social fabric.",
+      "An evolving directory of NYC's portals to connection — event hosts, third spaces, and communities sorted by interest and vibe.",
     url: "http://socialfabric.nyc",
     category: "project",
     tags: ["nyc", "directory", "community"],
   },
-
-  // ---- Teacher Spotlights & Rabbitholes ----
   {
-    id: "keesh-teacher-spotlight",
-    title: "Why I Quit My Tech Job to Teach Indian Cooking",
-    authors: ["keesh"],
+    id: "christines-guide-tpot",
+    title: "Christine's Guide to TPOT",
+    authors: ["christine"],
+    byline: "Christine",
     description:
-      "A Fractal University Teacher Spotlight on Keesh Lauria and his journey from tech to teaching improvisational Indian cooking.",
-    url: "https://fractaluniversity.substack.com/p/why-i-quit-my-tech-job-to-teach-indian",
+      "A primer on “this part of Twitter” — how to find your people and make real friends on the internet.",
+    url: "https://docs.google.com/document/d/1Bd3PfKDL9pOM7YoxGbRBwO_qOWh6B7u5170Xw8VyK6s/edit",
     category: "essay",
-    tags: ["food", "teaching", "university", "interview"],
+    tags: ["tpot", "community", "social"],
   },
   {
-    id: "teacher-spotlights",
-    title: "Fractal University Teacher Spotlights",
+    id: "fractal-university-canon",
+    title: "Introducing The Fractal University Canon",
     authors: ["andrew"],
+    byline: "Andrew Rose",
     description:
-      "Interview series with Fractal University teachers — from EDM production to fiction writing to teaching pedagogy.",
-    url: "https://fractaluniversity.substack.com/s/teacher-spotlights",
+      "The orientation guide behind FractalU: a shared etiquette and a canon of essays on science, the frontier, and the call to do great work.",
+    url: "https://ajr.fyi/files/fractal-canon.pdf",
     category: "essay",
-    tags: ["teaching", "university", "interview"],
+    tags: ["education", "canon", "university", "culture"],
   },
-  // TODO: update subject author when PEOPLE entry exists (FRAC-172 Phase B)
   {
-    id: "teacher-spotlight-andrew-blevins",
-    title: "Andrew Blevins on Writing Fiction, Rigor, and Teachers as Party Hosts",
-    authors: ["andrew"],
+    id: "gardener-leader",
+    title: "The Gardener Leader",
+    authors: ["pav"],
+    byline: "Pavitthra Pandurangan",
     description:
-      "A Fractal University Teacher Spotlight on Andrew Blevins — on writing fiction with rigor and treating teaching like hosting a party.",
-    url: "https://fractaluniversity.substack.com/p/teacher-spotlight-andrew-blevins",
+      "On people around whom things bloom: cultivating communities as gardens rather than running them as factories.",
+    url: "https://chaosophia.substack.com/p/the-gardener-leader",
     category: "essay",
-    tags: ["teaching", "university", "interview", "writing"],
+    tags: ["leadership", "community"],
   },
-  // TODO: update subject author when PEOPLE entry exists (FRAC-172 Phase B)
   {
-    id: "introducing-teachlab",
-    title: "Introducing TeachLab",
-    authors: ["andrew"],
+    id: "neighborhood-stroll",
+    title: "a neighborhood stroll",
+    authors: ["joce"],
+    byline: "Joce Orante",
     description:
-      "A Fractal University Teacher Spotlight introducing TeachLab — the lab-within-the-university for teachers to refine their craft.",
-    url: "https://fractaluniversity.substack.com/p/introducing-teachlab",
+      "Seven hours of wandering between friends, family, and neighbors — a portrait of what living near your people actually feels like.",
+    url: "https://joceorante.substack.com/p/a-neighborhood-stroll",
     category: "essay",
-    tags: ["teaching", "university", "interview"],
+    tags: ["neighborhood", "reflection"],
   },
-  // TODO: update subject author when PEOPLE entry exists (FRAC-172 Phase B)
-  {
-    id: "excerpts-illustrated-journal",
-    title: "Excerpts from My Illustrated Journal",
-    authors: ["andrew"],
-    description:
-      "A Fractal University Teacher Spotlight sharing excerpts from an illustrated journal — drawing, writing, and the teaching practice behind them.",
-    url: "https://fractaluniversity.substack.com/p/excerpts-from-my-illustrated-journal",
-    category: "essay",
-    tags: ["teaching", "university", "interview", "creative"],
-  },
-  // TODO: update subject author when PEOPLE entry exists (FRAC-172 Phase B)
-  {
-    id: "robert-hart-cruise-life-stage",
-    title: "Robert Hart on Cruise Life Stage",
-    authors: ["andrew"],
-    description:
-      "A Fractal University Teacher Spotlight on Robert Hart — on the cruise life stage and designing curriculum around it.",
-    url: "https://fractaluniversity.substack.com/p/robert-hart-on-cruise-life-stage",
-    category: "essay",
-    tags: ["teaching", "university", "interview"],
-  },
-  // TODO: update subject author when PEOPLE entry exists (FRAC-172 Phase B)
-  {
-    id: "david-shimel-edm-production",
-    title: "David Shimel on EDM Production",
-    authors: ["andrew"],
-    description:
-      "A Fractal University Teacher Spotlight on David Shimel — on EDM production and teaching music-making as a craft.",
-    url: "https://fractaluniversity.substack.com/p/david-shimel-on-edm-production",
-    category: "essay",
-    tags: ["teaching", "university", "interview", "creative"],
-  },
-
-  // ---- Podcasts & Talks ----
   {
     id: "scaling-coliving",
     title: "Scaling Coliving and Slouching Towards Utopia",
     authors: ["priya"],
+    byline: "Priya Rose",
     description:
-      "On how Fractal started as a casual coliving arrangement and expanded to dozens of people across multiple apartments, with a broader community of hundreds.",
+      "Priya on scaling coliving, building Fractal, and slouching towards utopia.",
     url: "https://open.spotify.com/episode/17rMg7X6JafICSrxkFaCAH",
     category: "podcast",
     tags: ["coliving", "founding", "community", "podcast"],
@@ -309,41 +246,34 @@ export const PUBLICATION_DOCUMENTS: PublicationDocument[] = [
     id: "friends-community-isolation",
     title: "Friends, Community, Isolation & Fearlessness",
     authors: ["andrew"],
+    byline: "Andrew Rose",
     description:
-      "How many friends do you look in the eyes per day? Andrew on building community, overcoming isolation, and the role of fearlessness in social life.",
+      "Andrew on friendship, community, modern isolation, and living fearlessly.",
     url: "https://podcasters.spotify.com/pod/show/a-o-o/episodes/019---Andrew-Rose-on-Friends--Community--Isolation---Fearlessness-e24vb4n",
     category: "podcast",
     tags: ["community", "fearlessness", "social", "podcast"],
   },
   {
-    id: "take-some-responsibility",
-    title: "Take Some Responsibility!",
-    authors: ["andrew"],
+    id: "ea-garden-of-ends",
+    title: "Effective Altruism in the Garden of Ends",
+    authors: ["tyler"],
+    byline: "Tyler Alterman",
     description:
-      "Andrew gets into the weeds of community building with Richard D. Bartlett — on what it actually takes to steward relationships and build social infrastructure.",
-    url: "https://www.everand.com/podcast/874410520/Take-Some-Responsibility-w-Andrew-Rose-Fractal-NYC-Richard-D-Bartlett",
-    category: "podcast",
-    tags: ["community", "leadership", "podcast"],
-  },
-  {
-    id: "network-state-conference",
-    title: "The Network State Conference Talk",
-    authors: ["andrew", "priya"],
-    description:
-      "Building a neighborhood is a coordination problem, not a money problem. We didn't put any money into Fractal beyond paying the rent on our own apartment. Friends who wanted to move near us simply sign their own lease.",
-    url: "https://prigoose.substack.com/p/i-gave-a-1000-person-conference-talk",
-    category: "talk",
-    tags: ["community", "coliving", "neighborhood", "talks"],
-  },
-  {
-    id: "merlins-place",
-    title: "Case Study: Merlin's Place",
-    authors: ["ulysses"],
-    description:
-      "On how Merlin's Place started as a Brooklyn loft and became a communal third space for the Fractal community — how you can turn your living room into a neighborhood hub.",
-    url: "https://supernuclear.substack.com/p/case-study-merlins-place",
+      "This truly isn't a new idea. Mutual dedication to one another's ends seems like a thing commonly present in religious and ethnic communities. But it seems quite uncommon to the demographic of secular idealists, like me.",
+    url: "https://forum.effectivealtruism.org/posts/AjxqsDmhGiW9g8ju6/effective-altruism-in-the-garden-of-ends",
     category: "essay",
-    tags: ["neighborhood", "coliving", "community"],
+    tags: ["altruism", "philosophy", "community", "social"],
+  },
+  {
+    id: "ebr-interview",
+    title: "An Interview with Elizabeth Barlow Rogers, Founder of the Central Park Conservancy",
+    authors: ["hailey"],
+    byline: "Hailey Phillips",
+    description:
+      "A conversation with the founder of the Central Park Conservancy on stewarding one of the world's great public spaces.",
+    url: "https://youtu.be/7Wyl8eUstdI?si=ltPh5BhYhMOrqJZM",
+    category: "podcast",
+    tags: ["nyc", "interview", "civic"],
   },
 ];
 

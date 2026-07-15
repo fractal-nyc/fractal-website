@@ -76,7 +76,7 @@ export function ArchiveSearch({ value, onChange }: ArchiveSearchProps) {
           bg-background border border-foreground-faint rounded-lg
           text-foreground placeholder:text-foreground-muted
           transition-colors duration-200
-          focus:outline-none focus:ring-2 focus:ring-house-publications-deep/40 focus:border-house-publications-deep/60
+          focus:outline-none focus:ring-2 focus:ring-house-library-deep/40 focus:border-house-library-deep/60
         "
       />
 
@@ -124,7 +124,7 @@ export function ArchiveSearch({ value, onChange }: ArchiveSearchProps) {
             p-1 rounded-md
             text-foreground-muted hover:text-foreground
             transition-colors duration-150
-            focus:outline-none focus:ring-2 focus:ring-house-publications-deep/40
+            focus:outline-none focus:ring-2 focus:ring-house-library-deep/40
           "
         >
           <X size={16} strokeWidth={1.5} />

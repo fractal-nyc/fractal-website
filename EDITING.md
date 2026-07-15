@@ -53,7 +53,7 @@ If step 5 fails, tell Claude what's wrong — one round of correction is usually
   - Two corner blurbs: `LEFT_TEXT` (*"In 2021, our small group of friends…"*) and `RIGHT_TEXT` (*"we believe small groups…"*).
   - Section links are derived from `houses.ts` plus hard-coded Story and People entries.
 - **Footer** — `src/components/layout/Footer.tsx`
-  - Discord CTA (*"If you're in NYC and would like to introduce yourself…"*), Discord invite URL, *"New York City"*, `hello@fractalnyc.com`, wordmark + *"New York City Collective"*, copyright line.
+  - **No editable copy.** The visible footer (Discord CTA, wordmark, copyright) was removed. `Footer.tsx` now renders only an empty `<footer data-site-footer>` marker kept for `useBannerAboveFooter` — don't add copy here. The old *"Curious about Fractal?"* Discord + one-on-one-chat-with-Ian CTA now lives in the Homepage (`src/pages/Home.tsx`).
 - **Browser tab title & head metadata** — `index.html`. Also holds the font loading and image preloads (see [Asset swaps](#pattern-e--asset-swaps)).
 
 ### Homepage (`/` — `src/pages/Home.tsx`)
@@ -85,11 +85,11 @@ The longest page; everything below is in `Campus.tsx`:
 
 ### Events (`/events` — `src/pages/EventsPage.tsx`)
 
-- Headlines *"Join Tech Events"*, *"Host an event in our space"*, *"Stay in the Loop"*; Luma calendar embed + link; hosting instructions; `crystal@fractalnyc.com`; Discord button — all in the page file.
+- Headline *"See You at Fractal"*, *"Host an event in our space"*; Luma calendar embed + link; hosting instructions; `crystal@fractalnyc.com` — all in the page file. (The *"Stay in the Loop"* heading and its Discord button were removed.)
 
-### Education (`/education` — copy in `src/components/sections/Education.tsx`)
+### FractalU / Accelerator — external, no page
 
-- Headline *"Tech, Entrepreneurship, Rhetoric, Civics"*, the *"coming June 2026"* note, the Fractal U blurb, CTA buttons (Substack, instructor application), and two body paragraphs.
+The **FractalU** (formerly Education) and **Accelerator** sectors no longer have an internal page or copy in this repo. Their nav links and octahedron nodes point out to standalone sites — `https://www.fractalu.nyc/` and `https://www.fractalaccelerator.com/`. To change where they point, edit the `FRACTALU_URL` / `ACCELERATOR_URL` constants in `src/components/layout/Navbar.tsx`, `src/App.tsx`, `src/hooks/use-global-search.ts`, and the two external `route` URLs in `src/components/three/heroNavNodes.ts`. Their house tokens and nav-letter colors still live in `src/data/houses.ts`.
 
 ### Publications (`/publications` — `src/pages/PublicationsPage.tsx`)
 
