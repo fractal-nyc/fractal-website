@@ -74,45 +74,53 @@ export function CoLivingPage() {
 
         {/* Where We Live */}
         <section className="w-full mt-16 md:mt-24">
-          <div className="px-6 md:px-8 max-w-5xl mx-auto">
-            <FadeIn>
-              <h2 className="text-title mb-4 md:mb-6">Where We Live</h2>
-            </FadeIn>
-            <FadeIn delay={0.1}>
-              <div className="bg-background text-foreground border border-foreground-faint rounded-md p-3 sm:p-5 md:p-8">
-                <HousingMap />
-              </div>
-            </FadeIn>
+          {/* FRAC-10: primary content tracks the Campus content column
+              (max-w-7xl px-[4.5%] frame + max-w-3xl column) so the two pages
+              line up. */}
+          <div className="max-w-7xl mx-auto px-6 md:px-[4.5%]">
+            <div className="max-w-3xl mx-auto">
+              <FadeIn>
+                <h2 className="text-title mb-4 md:mb-6">Where We Live</h2>
+              </FadeIn>
+              <FadeIn delay={0.1}>
+                <div className="bg-background text-foreground border border-foreground-faint rounded-md p-3 sm:p-5 md:p-8">
+                  <HousingMap />
+                </div>
+              </FadeIn>
+            </div>
           </div>
         </section>
 
         {/* Photo strip */}
         <section className="w-full mt-10 md:mt-14">
-          <div className="px-6 md:px-8 max-w-5xl mx-auto">
-            <FadeIn delay={0.1}>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {PHOTOS.map((photo) => (
-                  <div
-                    key={photo.src}
-                    className="overflow-hidden rounded-sm aspect-[4/3]"
-                  >
-                    <img
-                      src={photo.src}
-                      alt={photo.alt}
-                      loading="lazy"
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                ))}
-              </div>
-            </FadeIn>
+          <div className="max-w-7xl mx-auto px-6 md:px-[4.5%]">
+            <div className="max-w-3xl mx-auto">
+              <FadeIn delay={0.1}>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {PHOTOS.map((photo) => (
+                    <div
+                      key={photo.src}
+                      className="overflow-hidden rounded-sm aspect-[4/3]"
+                    >
+                      <img
+                        src={photo.src}
+                        alt={photo.alt}
+                        loading="lazy"
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                  ))}
+                </div>
+              </FadeIn>
+            </div>
           </div>
         </section>
 
         {/* Visiting NYC? callout */}
         <section className="w-full mt-16 md:mt-24">
-          <div className="px-6 md:px-8 max-w-xl mx-auto">
-            <FadeIn delay={0.1}>
+          <div className="max-w-7xl mx-auto px-6 md:px-[4.5%]">
+            <div className="max-w-3xl mx-auto">
+              <FadeIn delay={0.1}>
               <MandelbrotCorners
                 size="sm"
                 opacity={0.15}
@@ -147,6 +155,7 @@ export function CoLivingPage() {
                 </div>
               </MandelbrotCorners>
             </FadeIn>
+            </div>
           </div>
         </section>
       </div>
