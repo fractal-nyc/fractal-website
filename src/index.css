@@ -86,8 +86,13 @@
     @apply border-foreground-faint selection:bg-foreground selection:text-background;
   }
 
+  html,
   body {
-    @apply font-sans antialiased bg-background text-foreground;
+    background-color: var(--page-background, var(--color-background));
+  }
+
+  body {
+    @apply font-sans antialiased text-foreground;
   }
 
   /* Heading family default (FRAC-209): bare headings render in plain Fraunces
@@ -335,4 +340,3 @@
     opacity: 1;
   }
 }
-
