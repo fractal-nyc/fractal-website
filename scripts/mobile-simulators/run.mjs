@@ -7,17 +7,21 @@ import {
   APPIUM_HOME,
   EVIDENCE_ROOT,
   REPO_ROOT,
+  parseSelectionArgs,
   profilesFor,
 } from "./config.mjs";
 import { runDoctor } from "./doctor.mjs";
+import { validateAndroidRuntimeIdentity, validateAppleDeviceIdentity } from "./identity.mjs";
 import { runSimulatorSuite } from "./suite.mjs";
 
-const option = (name, fallback = null) => {
-  const index = process.argv.indexOf(name);
-  return index >= 0 ? process.argv[index + 1] : fallback;
-};
-const platformName = option("--platform", "all");
-const requestedProfile = option("--profile", "all");
+let selection;
+try {
+  selection = parseSelectionArgs(process.argv.slice(2));
+} catch (error) {
+  console.error(`Simulator run selection error: ${error.message}`);
+  process.exit(2);
+}
+const { platformName, requestedProfile } = selection;
 const profiles = profilesFor(platformName, requestedProfile);
 const runId = new Date().toISOString().replace(/[:.]/g, "-");
 const runRoot = join(EVIDENCE_ROOT, runId);
@@ -25,10 +29,6 @@ const children = new Set();
 const startedDevices = [];
 const logDescriptors = [];
 const androidEnv = { ...process.env, ANDROID_HOME, ANDROID_SDK_ROOT: ANDROID_HOME, JAVA_HOME: ANDROID_JAVA_HOME };
-
-if (!profiles.length) {
-  throw new Error(`No simulator profile matched --platform ${platformName} --profile ${requestedProfile}`);
-}
 
 function command(commandName, args, { env = process.env, allowFailure = false, timeout = 30_000 } = {}) {
   const result = spawnSync(commandName, args, { cwd: REPO_ROOT, env, encoding: "utf8", timeout });
@@ -115,9 +115,10 @@ async function bootAndroid(profile) {
   const getprop = (key) => command(adb, ["-s", serial, "shell", "getprop", key], { env: androidEnv }).stdout;
   const shell = (...args) => command(adb, ["-s", serial, "shell", ...args], { env: androidEnv, allowFailure: true }).stdout;
   const chromeDump = shell("dumpsys", "package", "com.android.chrome");
+  const actualAvdName = command(adb, ["-s", serial, "emu", "avd", "name"], { env: androidEnv }).stdout.split(/\r?\n/)[0];
   const identity = {
     serial,
-    avdName: profile.avdName,
+    avdName: actualAvdName,
     api: getprop("ro.build.version.sdk"),
     androidRelease: getprop("ro.build.version.release"),
     abi: getprop("ro.product.cpu.abi"),
@@ -131,6 +132,8 @@ async function bootAndroid(profile) {
     wasAlreadyBooted: Boolean(existing),
   };
   if (!identity.chromeVersion) throw new Error(`Chrome is unavailable on ${profile.avdName}. Boot it interactively and complete Chrome's first-run flow.`);
+  const validation = validateAndroidRuntimeIdentity(profile, identity);
+  if (!validation.ok) throw new Error(`Android runtime identity mismatch for ${profile.id}:\n- ${validation.violations.join("\n- ")}`);
   return identity;
 }
 
@@ -148,7 +151,12 @@ function applePlatformVersion(runtime) {
 async function bootApple(profile) {
   const matches = availableAppleDevices().filter(({ name }) => name === profile.deviceName);
   if (!matches.length) throw new Error(`No available CoreSimulator named "${profile.deviceName}". Run pnpm simulators:doctor for the creation guidance.`);
-  const device = matches.sort((a, b) => b.runtime.localeCompare(a.runtime, undefined, { numeric: true }))[0];
+  const validMatches = matches.filter((device) => validateAppleDeviceIdentity(profile, device).ok);
+  if (!validMatches.length) {
+    const details = matches.map((device) => validateAppleDeviceIdentity(profile, device).violations.join("; ")).join(" | ");
+    throw new Error(`CoreSimulator identity mismatch for ${profile.id}: ${details}`);
+  }
+  const device = validMatches.sort((a, b) => b.runtime.localeCompare(a.runtime, undefined, { numeric: true }))[0];
   const wasAlreadyBooted = device.state === "Booted";
   if (!wasAlreadyBooted) {
     command("xcrun", ["simctl", "boot", device.udid]);

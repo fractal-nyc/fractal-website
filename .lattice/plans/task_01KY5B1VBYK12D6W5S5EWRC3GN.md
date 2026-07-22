@@ -356,3 +356,23 @@ condition for running the no-cost local tools.
   hardware.
 - **CI cost:** keep simulators local/manual until runner quota is explicitly
   approved; retain the Linux Playwright gate for automatic coverage.
+
+## Review Cycle 1 Findings
+
+Independent review classified the following as implementation-level rework:
+
+1. Reject unknown `--platform` and `--profile` values in doctor, setup, and run
+   entry points. No empty selection may return `ok: true` or claim that zero
+   drivers are ready.
+2. Verify simulator identity beyond display names: Apple profiles must match the
+   declared CoreSimulator device type/runtime, while Android profiles must
+   inspect the AVD config/system image/API/ABI plus the S24-class or tablet
+   size/density contract before reporting readiness.
+3. Enforce simulator browser health per route. Browser/page errors and failed
+   first-party assets must be collected for each navigation and fail the run;
+   recording a single terminal browser-log snapshot is not sufficient.
+
+Re-run the doctor/setup negative cases, focused shared-contract tests, standard
+repository gates, and an independent cold review after these corrections.
+
+## Reset 2026-07-22 by agent:codex-root

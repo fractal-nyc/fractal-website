@@ -16,6 +16,7 @@
     "test:e2e:fast": "PW_MATRIX=fast playwright test",
     "test:e2e:full": "PW_MATRIX=full playwright test",
     "simulators:doctor": "node scripts/mobile-simulators/doctor.mjs",
+    "simulators:self-test": "node scripts/mobile-simulators/self-test.mjs",
     "simulators:setup-appium": "node scripts/mobile-simulators/setup-appium.mjs",
     "test:e2e:android-emulator": "node scripts/mobile-simulators/run.mjs --platform android",
     "test:e2e:ios-simulator": "node scripts/mobile-simulators/run.mjs --platform ios",

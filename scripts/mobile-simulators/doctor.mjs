@@ -1,17 +1,20 @@
-import { accessSync, constants, readFileSync } from "node:fs";
+import { accessSync, constants, existsSync, readFileSync } from "node:fs";
 import { arch, platform } from "node:os";
 import { join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { spawnSync } from "node:child_process";
 import {
   ANDROID_HOME,
+  ANDROID_AVD_HOME,
   ANDROID_JAVA_HOME,
   APPIUM_HOME,
   REPO_ROOT,
   SIMULATOR_PROFILES,
   TOOL_VERSIONS,
   profilesFor,
+  parseSelectionArgs,
 } from "./config.mjs";
+import { parseIni, validateAndroidAvdConfig, validateAppleDeviceIdentity } from "./identity.mjs";
 
 function executable(path) {
   try {
@@ -50,11 +53,21 @@ function parseJson(text) {
   }
 }
 
-function selectedProfiles(platformName, requestedProfile) {
-  return profilesFor(platformName, requestedProfile);
+function readAndroidAvdConfig(avdName) {
+  const pointerPath = join(ANDROID_AVD_HOME, `${avdName}.ini`);
+  const pointer = existsSync(pointerPath) ? parseIni(readFileSync(pointerPath, "utf8")) : {};
+  const configPath = pointer.path
+    || (pointer["path.rel"] ? resolve(ANDROID_AVD_HOME, "..", pointer["path.rel"]) : join(ANDROID_AVD_HOME, `${avdName}.avd`));
+  const avdConfigPath = join(configPath, "config.ini");
+  return {
+    pointerPath,
+    configPath: avdConfigPath,
+    config: existsSync(avdConfigPath) ? parseIni(readFileSync(avdConfigPath, "utf8")) : null,
+  };
 }
 
 export async function runDoctor({ platformName = "all", requestedProfile = "all" } = {}) {
+  const selected = profilesFor(platformName, requestedProfile);
   const checks = [];
   const wantsAndroid = platformName === "all" || platformName === "android";
   const wantsIos = platformName === "all" || platformName === "ios";
@@ -75,15 +88,21 @@ export async function runDoctor({ platformName = "all", requestedProfile = "all"
     const devicesResult = run("xcrun", ["simctl", "list", "devices", "available", "--json"]);
     const deviceGroups = parseJson(devicesResult.stdout)?.devices ?? {};
     const devices = Object.entries(deviceGroups).flatMap(([runtime, entries]) => entries.map((entry) => ({ runtime, ...entry })));
-    for (const profile of selectedProfiles(platformName, requestedProfile).filter(({ platform: family }) => family === "ios")) {
+    const availableRuntimeIds = iosRuntimes.map(({ identifier }) => identifier);
+    for (const profile of selected.filter(({ platform: family }) => family === "ios")) {
       const matches = devices.filter(({ name }) => name === profile.deviceName);
+      const validMatches = matches.filter((device) => validateAppleDeviceIdentity(profile, device, availableRuntimeIds).ok);
+      const identityDetails = matches.map((device) => {
+        const validation = validateAppleDeviceIdentity(profile, device, availableRuntimeIds);
+        return `${device.name} ${device.udid} ${device.runtime} ${device.deviceTypeIdentifier || "unknown-type"}: ${validation.ok ? "valid" : validation.violations.join("; ")}`;
+      }).join(", ");
       checks.push(check(
         profile.id,
-        matches.length > 0,
-        matches.map(({ name, udid, runtime, state }) => `${name} ${udid} ${runtime} ${state}`).join(", "),
+        validMatches.length > 0,
+        identityDetails,
         `Create an available ${profile.deviceTypeHint} simulator named "${profile.deviceName}" in Xcode, or set the corresponding IOS_*_SIMULATOR/IPADOS_PRO_SIMULATOR environment variable.`,
       ));
-      const booted = matches.filter(({ state }) => state === "Booted");
+      const booted = validMatches.filter(({ state }) => state === "Booted");
       checks.push(check(`${profile.id} boot state`, booted.length > 0, booted.map(({ udid }) => udid).join(", ") || "not booted (the runner can boot it)", null, false));
       if (booted[0]) {
         const safari = run("xcrun", ["simctl", "get_app_container", booted[0].udid, "com.apple.mobilesafari"]);
@@ -104,12 +123,14 @@ export async function runDoctor({ platformName = "all", requestedProfile = "all"
     const javaVersion = executable(java) ? run(java, ["-version"], { ...process.env, JAVA_HOME: ANDROID_JAVA_HOME }) : { ok: false, stdout: "", stderr: "", error: null };
     checks.push(check("Android Studio JBR/JAVA_HOME", javaVersion.ok, javaVersion.stderr || javaVersion.stdout || ANDROID_JAVA_HOME, "Install Android Studio and use its bundled JBR, or export JAVA_HOME to a compatible JDK."));
     const avdList = executable(emulator) ? run(emulator, ["-list-avds"]).stdout.split(/\r?\n/).filter(Boolean) : [];
-    for (const profile of selectedProfiles(platformName, requestedProfile).filter(({ platform: family }) => family === "android")) {
+    for (const profile of selected.filter(({ platform: family }) => family === "android")) {
+      const definition = readAndroidAvdConfig(profile.avdName);
+      const validation = definition.config ? validateAndroidAvdConfig(profile, definition.config) : { ok: false, violations: ["config.ini is missing"], actual: {} };
       checks.push(check(
         profile.id,
-        avdList.includes(profile.avdName),
-        profile.avdName,
-        `In Android Studio Device Manager create the ${profile.id} AVD named "${profile.avdName}" using an arm64 Android 14 (API 34) Google image.${profile.id.includes("s24") ? " This is S24-class geometry, not Samsung hardware." : ""}`,
+        avdList.includes(profile.avdName) && validation.ok,
+        `${profile.avdName}; ${definition.configPath}; ${validation.ok ? JSON.stringify(validation.actual) : validation.violations.join("; ")}`,
+        `In Android Studio Device Manager create or repair "${profile.avdName}" with ${profile.systemImagePackage}, ${profile.expectedWmSize} at ${profile.expectedWmDensity} dpi.${profile.id.includes("s24") ? " This is S24-class geometry, not Samsung hardware." : ""}`,
       ));
     }
     const adbDevices = executable(adb) ? run(adb, ["devices", "-l"]).stdout : "";
@@ -144,7 +165,7 @@ export async function runDoctor({ platformName = "all", requestedProfile = "all"
   return {
     ok: requiredFailures.length === 0,
     host: { platform: platform(), arch: arch() },
-    paths: { androidHome: ANDROID_HOME, javaHome: ANDROID_JAVA_HOME, appiumHome: APPIUM_HOME },
+    paths: { androidHome: ANDROID_HOME, androidAvdHome: ANDROID_AVD_HOME, javaHome: ANDROID_JAVA_HOME, appiumHome: APPIUM_HOME },
     profiles: SIMULATOR_PROFILES.map(({ id, platform: family }) => ({ id, platform: family })),
     checks,
     requiredFailures: requiredFailures.map(({ name, remediation }) => ({ name, remediation })),
@@ -152,10 +173,7 @@ export async function runDoctor({ platformName = "all", requestedProfile = "all"
 }
 
 async function main() {
-  const platformIndex = process.argv.indexOf("--platform");
-  const platformName = platformIndex >= 0 ? process.argv[platformIndex + 1] : "all";
-  const profileIndex = process.argv.indexOf("--profile");
-  const requestedProfile = profileIndex >= 0 ? process.argv[profileIndex + 1] : "all";
+  const { platformName, requestedProfile } = parseSelectionArgs(process.argv.slice(2), { booleanFlags: ["--json"] });
   const report = await runDoctor({ platformName, requestedProfile });
   if (process.argv.includes("--json")) {
     console.log(JSON.stringify(report, null, 2));
@@ -171,5 +189,10 @@ async function main() {
 }
 
 if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
-  await main();
+  try {
+    await main();
+  } catch (error) {
+    console.error(`Simulator doctor selection error: ${error.message}`);
+    process.exitCode = 2;
+  }
 }

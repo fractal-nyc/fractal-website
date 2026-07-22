@@ -77,10 +77,10 @@ role but override the local name with `IOS_COMPACT_SIMULATOR`,
 3. In Device Manager create:
 
    - `Fractal_Galaxy_S24_Class_API_34` — a supported Google phone definition
-     using the API 34 image, with recorded 1080x2340-class resolution/density
-     overrides where the Device Manager supports them.
+     using the ARM64 API 34 Google Play image, with 1080x2340 resolution and
+     420 dpi overrides.
    - `Fractal_Tablet_API_34` — a supported Google tablet definition using the
-     same API/image family.
+     same ARM64 API 34 Google Play image, with 1600x2560 resolution and 320 dpi.
 
 4. Boot each once, finish Chrome's first-run flow, use gesture navigation, and
    confirm it appears in `adb devices -l`.
@@ -95,6 +95,7 @@ Override nonstandard AVD names with `ANDROID_PHONE_AVD` and
 pnpm install
 pnpm simulators:setup-appium # exact-pinned Appium drivers in ignored local cache
 pnpm simulators:doctor       # read-only inventory and precise remediation
+pnpm simulators:self-test    # negative selector and device-identity contracts
 ```
 
 The harness pins Appium, WebdriverIO, UiAutomator2, and XCUITest. Driver state is
@@ -120,11 +121,18 @@ time, verifies its identity, and cleans up only processes/devices it started.
 Android reaches the host at `http://10.0.2.2:4173`; Apple Simulator uses the
 host loopback address. Port 4173 or 4723 already being occupied is an explicit
 doctor failure, preventing a stale server from being mistaken for this run.
+All three entry points reject unknown platforms, profiles, missing option
+values, and Android/iOS cross-family selections before setup or process startup.
 
 Evidence is written under ignored `test-results/mobile-simulators/<run-id>/`.
 Each profile manifest ties whole-screen screenshots, DOM probes, live viewport
 metrics, orientation, toolbar state, route, browser/runtime version, AVD/UDID,
-and timestamps to the run. An unchanged toolbar height is recorded as
+per-route page/console errors, first-party asset checks, and timestamps to the
+run. The Android adapter requires Chrome's browser-log channel and fails severe
+entries; when a driver does not expose that optional channel (notably some
+Mobile Safari/XCUITest combinations), the manifest says
+`unsupported-by-driver` while the shared in-page page-error, console-error, and
+same-origin asset probes remain enforced. An unchanged toolbar height is recorded as
 `inconclusive-manual-simulator-check-required`, never as a pass.
 
 ## Maintained coverage

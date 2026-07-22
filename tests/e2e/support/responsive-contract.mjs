@@ -48,6 +48,106 @@ export function collectEnvironmentMetrics(context = {}) {
   };
 }
 
+export function installRuntimeHealthCapture() {
+  if (window.__fractalSimulatorHealth) return;
+  const health = {
+    route: location.pathname,
+    startedAt: performance.now(),
+    pageErrors: [],
+    consoleErrors: [],
+    assetErrors: [],
+  };
+  window.__fractalSimulatorHealth = health;
+  const describe = (value) => {
+    if (value instanceof Error) return `${value.name}: ${value.message}\n${value.stack || ""}`;
+    try { return typeof value === "string" ? value : JSON.stringify(value); } catch { return String(value); }
+  };
+  addEventListener("error", (event) => {
+    const target = event.target;
+    if (target && target !== window) {
+      health.assetErrors.push({
+        tag: target.tagName || "unknown",
+        url: target.currentSrc || target.src || target.href || null,
+      });
+      return;
+    }
+    health.pageErrors.push({ message: event.message || "window error", source: event.filename || null, line: event.lineno || null, column: event.colno || null });
+  }, true);
+  addEventListener("unhandledrejection", (event) => {
+    health.pageErrors.push({ message: `Unhandled rejection: ${describe(event.reason)}` });
+  });
+  const originalError = console.error.bind(console);
+  console.error = (...values) => {
+    health.consoleErrors.push(values.map(describe).join(" "));
+    originalError(...values);
+  };
+}
+
+export function beginRuntimeHealthRoute(route) {
+  const health = window.__fractalSimulatorHealth;
+  if (!health) return false;
+  health.route = route;
+  health.startedAt = performance.now();
+  health.pageErrors.length = 0;
+  health.consoleErrors.length = 0;
+  health.assetErrors.length = 0;
+  performance.clearResourceTimings();
+  return true;
+}
+
+export async function probeRuntimeHealth() {
+  const health = window.__fractalSimulatorHealth;
+  if (!health) return { violations: ["runtime health capture is not installed"], details: null };
+  const resourceEntries = performance.getEntriesByType("resource")
+    .filter((entry) => {
+      try { return new URL(entry.name, location.href).origin === location.origin; } catch { return false; }
+    })
+    .map((entry) => ({ url: entry.name, initiatorType: entry.initiatorType, responseStatus: entry.responseStatus || null }));
+  const domAssetUrls = Array.from(document.querySelectorAll("script[src], link[rel=stylesheet][href], img[src], source[src], video[src]"))
+    .map((element) => element.currentSrc || element.src || element.href)
+    .filter(Boolean);
+  const urls = [...new Set([...resourceEntries.map(({ url }) => url), ...domAssetUrls])]
+    .filter((url) => {
+      try { return new URL(url, location.href).origin === location.origin; } catch { return false; }
+    });
+  const fetchFailures = (await Promise.all(urls.map(async (url) => {
+    try {
+      const response = await fetch(url, { cache: "force-cache", credentials: "same-origin" });
+      return response.ok ? null : { url, status: response.status };
+    } catch (error) {
+      return { url, error: error.message };
+    }
+  }))).filter(Boolean);
+  const statusFailures = resourceEntries.filter(({ responseStatus }) => responseStatus && responseStatus >= 400);
+  const incompleteMedia = Array.from(document.querySelectorAll("img[src], video[src]"))
+    .flatMap((element) => {
+      if (element.tagName === "IMG" && element.complete && element.naturalWidth === 0) return [{ tag: "IMG", url: element.currentSrc || element.src }];
+      if (element.tagName === "VIDEO" && element.error) return [{ tag: "VIDEO", url: element.currentSrc || element.src, code: element.error.code }];
+      return [];
+    });
+  const violations = [
+    ...health.pageErrors.map((entry) => `page error: ${entry.message}`),
+    ...health.consoleErrors.map((entry) => `console error: ${entry}`),
+    ...health.assetErrors.map((entry) => `asset error event: ${entry.tag} ${entry.url || "unknown URL"}`),
+    ...statusFailures.map((entry) => `first-party asset returned ${entry.responseStatus}: ${entry.url}`),
+    ...fetchFailures.map((entry) => `first-party asset fetch failed${entry.status ? ` (${entry.status})` : ""}: ${entry.url}${entry.error ? ` (${entry.error})` : ""}`),
+    ...incompleteMedia.map((entry) => `first-party media failed: ${entry.tag} ${entry.url}`),
+  ];
+  return {
+    violations,
+    details: {
+      route: health.route,
+      pageErrors: [...health.pageErrors],
+      consoleErrors: [...health.consoleErrors],
+      assetErrors: [...health.assetErrors],
+      resourceEntries,
+      statusFailures,
+      fetchFailures,
+      incompleteMedia,
+    },
+  };
+}
+
 export function probeHorizontalOverflow() {
   const clientWidth = document.documentElement.clientWidth;
   const offenders = Array.from(document.querySelectorAll("body *"))

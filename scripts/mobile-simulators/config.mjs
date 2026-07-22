@@ -13,6 +13,10 @@ export const APPIUM_HOME = resolve(REPO_ROOT, ".mobile-simulators/appium-home");
 export const EVIDENCE_ROOT = resolve(REPO_ROOT, "test-results/mobile-simulators");
 export const ANDROID_HOME = process.env.ANDROID_HOME || process.env.ANDROID_SDK_ROOT || resolve(homedir(), "Library/Android/sdk");
 export const ANDROID_JAVA_HOME = process.env.JAVA_HOME || "/Applications/Android Studio.app/Contents/jbr/Contents/Home";
+export const ANDROID_AVD_HOME = process.env.ANDROID_AVD_HOME
+  || resolve(process.env.ANDROID_USER_HOME || resolve(homedir(), ".android"), "avd");
+
+export const SUPPORTED_PLATFORMS = Object.freeze(["all", "android", "ios"]);
 
 export const SIMULATOR_PROFILES = Object.freeze([
   {
@@ -20,7 +24,10 @@ export const SIMULATOR_PROFILES = Object.freeze([
     platform: "android",
     avdName: process.env.ANDROID_PHONE_AVD || "Fractal_Galaxy_S24_Class_API_34",
     api: "34",
+    abi: "arm64-v8a",
+    systemImagePackage: "system-images;android-34;google_apis_playstore;arm64-v8a",
     expectedWmSize: "1080x2340",
+    expectedWmDensity: 420,
     emulatorPort: 5554,
     orientations: ["PORTRAIT", "LANDSCAPE"],
     routeSweep: true,
@@ -31,6 +38,10 @@ export const SIMULATOR_PROFILES = Object.freeze([
     platform: "android",
     avdName: process.env.ANDROID_TABLET_AVD || "Fractal_Tablet_API_34",
     api: "34",
+    abi: "arm64-v8a",
+    systemImagePackage: "system-images;android-34;google_apis_playstore;arm64-v8a",
+    expectedWmSize: "1600x2560",
+    expectedWmDensity: 320,
     emulatorPort: 5556,
     orientations: ["PORTRAIT", "LANDSCAPE"],
     routeSweep: false,
@@ -42,6 +53,7 @@ export const SIMULATOR_PROFILES = Object.freeze([
     deviceName: process.env.IOS_COMPACT_SIMULATOR || "Fractal Compact iPhone",
     deviceTypeHint: "iPhone SE",
     deviceTypePattern: /iPhone-SE/i,
+    runtimePattern: /^com\.apple\.CoreSimulator\.SimRuntime\.iOS-[0-9-]+$/,
     orientations: ["PORTRAIT", "LANDSCAPE"],
     routeSweep: true,
     interaction: true,
@@ -52,6 +64,7 @@ export const SIMULATOR_PROFILES = Object.freeze([
     deviceName: process.env.IOS_NOTCHED_SIMULATOR || "Fractal Notched iPhone",
     deviceTypeHint: "iPhone 16 Pro",
     deviceTypePattern: /iPhone-(?:1[5-9]|2[0-9])(?:-Pro)?/i,
+    runtimePattern: /^com\.apple\.CoreSimulator\.SimRuntime\.iOS-[0-9-]+$/,
     orientations: ["PORTRAIT", "LANDSCAPE"],
     routeSweep: false,
     interaction: false,
@@ -62,14 +75,51 @@ export const SIMULATOR_PROFILES = Object.freeze([
     deviceName: process.env.IPADOS_PRO_SIMULATOR || "Fractal iPad Pro 13-inch",
     deviceTypeHint: "iPad Pro (13-inch)",
     deviceTypePattern: /iPad-Pro.*13-inch/i,
+    runtimePattern: /^com\.apple\.CoreSimulator\.SimRuntime\.iOS-[0-9-]+$/,
     orientations: ["PORTRAIT", "LANDSCAPE"],
     routeSweep: false,
     interaction: false,
   },
 ]);
 
-export function profilesFor(platform, requestedProfile) {
-  const selected = SIMULATOR_PROFILES.filter((profile) => platform === "all" || profile.platform === platform);
-  if (!requestedProfile || requestedProfile === "all") return selected;
-  return selected.filter(({ id }) => id === requestedProfile);
+export function profilesFor(platformName, requestedProfile) {
+  if (!SUPPORTED_PLATFORMS.includes(platformName)) {
+    throw new Error(`Unknown --platform "${platformName}". Expected one of: ${SUPPORTED_PLATFORMS.join(", ")}.`);
+  }
+  if (typeof requestedProfile !== "string" || requestedProfile.length === 0) {
+    throw new Error("--profile requires a non-empty value.");
+  }
+  const profile = requestedProfile === "all"
+    ? null
+    : SIMULATOR_PROFILES.find(({ id }) => id === requestedProfile);
+  if (requestedProfile !== "all" && !profile) {
+    throw new Error(`Unknown --profile "${requestedProfile}". Expected "all" or one of: ${SIMULATOR_PROFILES.map(({ id }) => id).join(", ")}.`);
+  }
+  if (profile && platformName !== "all" && profile.platform !== platformName) {
+    throw new Error(`Profile "${requestedProfile}" belongs to --platform ${profile.platform}, not ${platformName}.`);
+  }
+  return SIMULATOR_PROFILES.filter((candidate) => (
+    (platformName === "all" || candidate.platform === platformName)
+    && (!profile || candidate.id === profile.id)
+  ));
+}
+
+export function parseSelectionArgs(argv, { booleanFlags = [] } = {}) {
+  const allowedBooleanFlags = new Set(booleanFlags);
+  const values = { platformName: "all", requestedProfile: "all" };
+  for (let index = 0; index < argv.length; index += 1) {
+    const argument = argv[index];
+    if (argument === "--") continue;
+    if (allowedBooleanFlags.has(argument)) continue;
+    if (argument !== "--platform" && argument !== "--profile") {
+      throw new Error(`Unknown simulator option "${argument}".`);
+    }
+    const value = argv[index + 1];
+    if (!value || value.startsWith("--")) throw new Error(`${argument} requires a non-empty value.`);
+    if (argument === "--platform") values.platformName = value;
+    else values.requestedProfile = value;
+    index += 1;
+  }
+  profilesFor(values.platformName, values.requestedProfile);
+  return values;
 }

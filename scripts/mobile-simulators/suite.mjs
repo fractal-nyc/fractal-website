@@ -2,14 +2,18 @@ import { mkdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { remote } from "webdriverio";
 import { INTERNAL_REDIRECTS, RENDERED_ROUTES } from "../../tests/e2e/support/routes.mjs";
+import { validateAndroidRuntimeIdentity, validateAppleDeviceIdentity } from "./identity.mjs";
 import {
   collectEnvironmentMetrics,
+  beginRuntimeHealthRoute,
+  installRuntimeHealthCapture,
   probeHeroComposition,
   probeHeroLabelSafeZone,
   probeHorizontalOverflow,
   probeNavbarContent,
   probePageGutters,
   probePrimaryContentIntegrity,
+  probeRuntimeHealth,
   probeTouchTargets,
 } from "../../tests/e2e/support/responsive-contract.mjs";
 
@@ -92,6 +96,7 @@ export async function runSimulatorSuite({ profile, identity, baseUrl, evidenceDi
         "appium:newCommandTimeout": 300,
         "appium:chromedriverAutodownload": true,
         "appium:orientation": "PORTRAIT",
+        "goog:loggingPrefs": { browser: "ALL" },
       }
     : {
         platformName: "iOS",
@@ -109,6 +114,32 @@ export async function runSimulatorSuite({ profile, identity, baseUrl, evidenceDi
   const browser = await remote({ hostname: "127.0.0.1", port: appiumPort, path: "/", logLevel: "info", capabilities });
   try {
     await webContext(browser);
+    await browser.url(`${baseUrl}/protocol?simulator-health-bootstrap=1`);
+    await waitForDocument(browser);
+    await browser.execute(installRuntimeHealthCapture);
+    if (!await browser.execute(() => Boolean(window.__fractalSimulatorHealth))) throw new Error("Unable to install the simulator runtime-health capture");
+
+    let browserLogChannel = "unknown";
+    const readBrowserLogs = async (route, { drain = false } = {}) => {
+      try {
+        const logs = await browser.getLogs("browser");
+        browserLogChannel = "supported";
+        if (drain) return [];
+        const severe = logs.filter(({ level }) => ["SEVERE", "ERROR"].includes(String(level).toUpperCase()));
+        record("route-browser-logs", { route, result: "supported", logs, severe });
+        if (severe.length) throw new Error(`browser console/page errors on ${route}:\n${severe.map((entry) => `${entry.level}: ${entry.message}`).join("\n")}`);
+        return logs;
+      } catch (error) {
+        if (browserLogChannel === "supported") throw error;
+        browserLogChannel = "unsupported-by-driver";
+        record("route-browser-logs", { route, result: "unsupported-by-driver", message: error.message });
+        if (profile.platform === "android") {
+          throw new Error(`Android Chrome browser-log channel is required but unavailable: ${error.message}`);
+        }
+        return [];
+      }
+    };
+    await readBrowserLogs("bootstrap", { drain: true });
 
     const metricsFor = async (orientation, route, state = "loaded") => browser.execute(collectEnvironmentMetrics, {
       build: process.env.GITHUB_SHA ?? "local",
@@ -132,16 +163,16 @@ export async function runSimulatorSuite({ profile, identity, baseUrl, evidenceDi
       if (metrics.hover) violations.push("mobile browser reports a hover-primary environment");
       if (metrics.dpr <= 1) violations.push("mobile browser DPR is not greater than one");
       if (profile.platform === "android") {
-        if (!identity.serial?.startsWith("emulator-")) violations.push(`ADB target is not an emulator: ${identity.serial}`);
-        if (identity.avdName !== profile.avdName) violations.push(`AVD mismatch: expected ${profile.avdName}, got ${identity.avdName}`);
-        if (`${identity.api}` !== `${profile.api}`) violations.push(`Android API mismatch: expected ${profile.api}, got ${identity.api}`);
-        if (profile.expectedWmSize && !identity.wmSize?.includes(profile.expectedWmSize)) violations.push(`S24-class screen mismatch: expected ${profile.expectedWmSize}, got ${identity.wmSize}`);
-        if (!/google/i.test(identity.fingerprint || "")) violations.push(`expected a supported Google Android image, got ${identity.fingerprint}`);
+        violations.push(...validateAndroidRuntimeIdentity(profile, identity).violations);
         if (`${identity.navigationMode}` !== "2") violations.push(`expected Android gesture navigation (navigation_mode=2), got ${identity.navigationMode}`);
         if (!android || !/Chrome/i.test(metrics.userAgent)) violations.push(`expected Chrome for Android UA, got ${metrics.userAgent}`);
       } else {
-        if (!identity.udid || identity.deviceName !== profile.deviceName) violations.push(`CoreSimulator identity mismatch: ${JSON.stringify(identity)}`);
-        if (profile.deviceTypePattern && !profile.deviceTypePattern.test(identity.deviceTypeIdentifier || "")) violations.push(`CoreSimulator device type mismatch: expected ${profile.deviceTypeHint}, got ${identity.deviceTypeIdentifier}`);
+        if (!identity.udid) violations.push(`CoreSimulator UDID is missing: ${JSON.stringify(identity)}`);
+        violations.push(...validateAppleDeviceIdentity(profile, {
+          name: identity.deviceName,
+          deviceTypeIdentifier: identity.deviceTypeIdentifier,
+          runtime: identity.runtime,
+        }).violations);
         if (!/Safari/i.test(metrics.userAgent) || /CriOS|Chrome/i.test(metrics.userAgent)) violations.push(`expected Mobile Safari UA, got ${metrics.userAgent}`);
         if (profile.id === "ipados-simulator-pro" ? !ipad : !iphone) violations.push(`Apple simulator family mismatch for ${profile.id}`);
       }
@@ -163,9 +194,22 @@ export async function runSimulatorSuite({ profile, identity, baseUrl, evidenceDi
       return path;
     };
 
-    const navigate = async (path, orientation, state = "loaded") => {
-      await browser.url(`${baseUrl}${path}`);
+    const navigate = async (path, orientation, state = "loaded", expectedPath = path) => {
+      const captureReset = await browser.execute(beginRuntimeHealthRoute, path);
+      if (!captureReset) throw new Error(`runtime-health capture disappeared before navigating to ${path}`);
+      await browser.execute((nextPath) => {
+        history.pushState({}, "", nextPath);
+        dispatchEvent(new PopStateEvent("popstate"));
+      }, path);
+      await browser.waitUntil(async () => new URL(await browser.getUrl()).pathname === expectedPath, {
+        timeout: 15_000,
+        timeoutMsg: `${path} did not reach expected route ${expectedPath}`,
+      });
       await waitForDocument(browser);
+      await browser.pause(100);
+      const runtimeHealth = assertProbe(`runtime health for ${path}`, await browser.execute(probeRuntimeHealth));
+      record("route-runtime-health", { route: path, actualRoute: expectedPath, result: "passed", browserLogChannel, probe: runtimeHealth });
+      await readBrowserLogs(path);
       const metrics = await metricsFor(orientation, path, state);
       const identityEvidence = await assertEnvironment(metrics, orientation);
       record("runtime-environment", { route: path, orientation, state, metrics, identityEvidence });
@@ -191,7 +235,7 @@ export async function runSimulatorSuite({ profile, identity, baseUrl, evidenceDi
     }
     if (profile.routeSweep) {
       for (const redirect of INTERNAL_REDIRECTS) {
-        const metrics = await navigate(redirect.from, "PORTRAIT", "redirect");
+        const metrics = await navigate(redirect.from, "PORTRAIT", "redirect", redirect.to);
         const actual = new URL(metrics.url).pathname;
         if (actual !== redirect.to) throw new Error(`${redirect.from} redirected to ${actual}, expected ${redirect.to}`);
         record("redirect", { from: redirect.from, to: redirect.to, actual });
@@ -311,12 +355,7 @@ export async function runSimulatorSuite({ profile, identity, baseUrl, evidenceDi
     await browser.setOrientation("PORTRAIT");
 
     manifest.manualChecks.push("Set the largest practical Android font/display scale or iOS Larger Text plus Safari Page Zoom interactively, then rerun the focused Home observations; private preference-file automation is intentionally not used.");
-    try {
-      const logs = await browser.getLogs("browser");
-      record("browser-logs", { logs });
-    } catch (error) {
-      record("browser-logs", { result: "unsupported-by-driver", message: error.message });
-    }
+    record("browser-log-capability", { result: browserLogChannel });
     manifest.finishedAt = new Date().toISOString();
     manifest.result = "passed";
     writeFileSync(manifestPath, JSON.stringify(manifest, null, 2));

@@ -1,11 +1,25 @@
 import { mkdirSync } from "node:fs";
 import { resolve } from "node:path";
 import { spawnSync } from "node:child_process";
-import { ANDROID_HOME, ANDROID_JAVA_HOME, APPIUM_HOME, REPO_ROOT, TOOL_VERSIONS } from "./config.mjs";
+import {
+  ANDROID_HOME,
+  ANDROID_JAVA_HOME,
+  APPIUM_HOME,
+  REPO_ROOT,
+  TOOL_VERSIONS,
+  parseSelectionArgs,
+  profilesFor,
+} from "./config.mjs";
 
 const appium = resolve(REPO_ROOT, "node_modules/.bin/appium");
-const platformIndex = process.argv.indexOf("--platform");
-const platformName = platformIndex >= 0 ? process.argv[platformIndex + 1] : "all";
+let selection;
+try {
+  selection = parseSelectionArgs(process.argv.slice(2));
+} catch (error) {
+  console.error(`Appium setup selection error: ${error.message}`);
+  process.exit(2);
+}
+const selectedFamilies = new Set(profilesFor(selection.platformName, selection.requestedProfile).map(({ platform }) => platform));
 const env = { ...process.env, APPIUM_HOME, ANDROID_HOME, ANDROID_SDK_ROOT: ANDROID_HOME, JAVA_HOME: ANDROID_JAVA_HOME };
 
 function run(args, { allowFailure = false } = {}) {
@@ -52,8 +66,8 @@ if (versionResult.stdout.trim() !== TOOL_VERSIONS.appium) {
 }
 
 const drivers = [
-  ...(platformName === "all" || platformName === "android" ? [{ name: "uiautomator2", packageName: "appium-uiautomator2-driver", version: TOOL_VERSIONS.uiautomator2 }] : []),
-  ...(platformName === "all" || platformName === "ios" ? [{ name: "xcuitest", packageName: "appium-xcuitest-driver", version: TOOL_VERSIONS.xcuitest }] : []),
+  ...(selectedFamilies.has("android") ? [{ name: "uiautomator2", packageName: "appium-uiautomator2-driver", version: TOOL_VERSIONS.uiautomator2 }] : []),
+  ...(selectedFamilies.has("ios") ? [{ name: "xcuitest", packageName: "appium-xcuitest-driver", version: TOOL_VERSIONS.xcuitest }] : []),
 ];
 
 for (const driver of drivers) installExact(driver);
