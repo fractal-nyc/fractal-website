@@ -184,6 +184,11 @@ export async function assertPrimaryContentIntegrity(page: Page): Promise<void> {
       const style = getComputedStyle(element);
       const box = element.getBoundingClientRect();
       if (box.width <= 0 || box.height <= 0 || style.display === "none" || style.visibility === "hidden" || Number(style.opacity) === 0) return [];
+      // Firefox correctly reports clientWidth=0 for inline anchors even when
+      // their rendered text box has width. A zero-width CSS content box cannot
+      // establish an overflow container, so compare scrollWidth only for
+      // elements that actually own a measurable content box.
+      if (element.clientWidth <= 0) return [];
       const uncontainedText = !/^(IMG|VIDEO|CANVAS)$/.test(element.tagName) && style.overflowX === "visible" && element.scrollWidth > element.clientWidth + 1;
       return uncontainedText ? [{ tag: element.tagName, text: element.textContent?.trim().replace(/\s+/g, " ").slice(0, 100), clientWidth: element.clientWidth, scrollWidth: element.scrollWidth }] : [];
     }));
