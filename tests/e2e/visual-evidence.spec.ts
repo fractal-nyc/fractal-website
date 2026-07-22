@@ -11,7 +11,7 @@ const VISUAL_PROFILES = new Set([
 
 test("representative Home and Library layouts match stable Chromium evidence", async ({ page, browserName }, testInfo) => {
   const profile = testInfo.project.metadata.profile as ResponsiveProfile | undefined;
-  test.skip(process.env.BROWSERSTACK_RUN === "1" || browserName !== "chromium" || !profile || !VISUAL_PROFILES.has(profile.name), "engine-specific Chromium baseline risk set");
+  test.skip(browserName !== "chromium" || !profile || !VISUAL_PROFILES.has(profile.name), "engine-specific Chromium baseline risk set");
   await page.emulateMedia({ reducedMotion: "reduce" });
 
   await page.goto("/", { waitUntil: "domcontentloaded" });

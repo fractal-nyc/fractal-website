@@ -1,433 +1,358 @@
-# FRAC-17: Real-device responsive test system and mobile hero validation
+# FRAC-17: Free simulator responsive test system and mobile Hero validation
 
-## Goal and operating principle
+## Human decision and truth boundary (2026-07-22)
 
-Build a layered responsive test system, then use it to repair the Home hero. A
-desktop Chromium window resized to a phone preset is useful as a fast layout
-stress test, but it is never evidence that a mobile environment passed. Mobile
-acceptance must run on a physical Android/iOS device and record the runtime's
-actual visual viewport, safe area, touch/hover state, OS, browser, orientation,
-and device-pixel ratio.
+The operator rejected paid BrowserStack. Replace the BrowserStack lane with the
+free Android Emulator supplied by Android Studio and Apple's free iOS/iPadOS
+Simulator supplied by Xcode. Keep the exhaustive local Playwright matrix as the
+fast rendered-layout gate.
 
-This task covers all internal routes and the complete compact-to-iPad-Pro layout
-range. It does **not** promise a session on every handset ever manufactured.
-Coverage is defined by layout/environment classes plus a maintained set of real
-representative devices. Device availability and browser versions are dated in
-the test documentation and reviewed periodically.
+The three layers must be named accurately everywhere:
 
-## Findings from the current repository
+1. **Playwright desktop-engine simulation**: desktop Chromium, Firefox, and
+   WebKit rendered at maintained viewport/touch profiles. This is fast layout
+   coverage, not a mobile OS or mobile browser.
+2. **Android Emulator / Apple Simulator**: Chrome for Android and Mobile Safari
+   running inside virtual Android/iOS/iPadOS environments, including simulated
+   system bars, browser chrome, safe areas, touch, orientation, and the live
+   `visualViewport`. This is substantially closer to a phone/tablet experience,
+   but is still virtual.
+3. **Physical-device observation**: optional release/ticket evidence from a
+   borrowed or owned handset/tablet. Only this layer may be called a real-device
+   or physical-device pass.
 
-- Vitest runs in jsdom (`vitest.config.ts`); it cannot calculate real layout,
-  initialize the WebGL scene, reproduce mobile browser chrome, or validate safe
-  areas. Some current tests only assign `window.innerWidth`, and `pages.test.tsx`
-  mocks the scene. Keep these tests for component behavior, not responsive proof.
-- The only current GitHub workflow is the zero-dependency color-conformance
-  check. Typecheck, unit tests, build, rendered layout, and mobile hardware are
-  not CI gates.
-- `Hero.tsx` is a `min-h-screen` flex container with two absolutely positioned
-  owners competing for the same lower area: a full-section WebGL canvas and the
-  mobile Story footer. The footer is limited to a 54%-wide blurb, so it becomes
-  tall on short phones. The section clips both axes. `FractalCityScene.tsx`
-  centers the scene in the entire Hero instead of the space remaining between
-  the fixed navbar and intrinsic footer. This reproduces the Galaxy failure by
-  construction, independent of a particular screenshot.
-- `index.html` uses `maximum-scale=1`, which prevents an honest user-zoom
-  acceptance test and should be removed. The viewport does not currently opt in
-  to `viewport-fit=cover`; if that is enabled, navbar/hero/footer top and bottom
-  safe-area ownership must be added in the same change.
-- FRAC-11 is real prior work, but it never reached `origin/master`. Commits
-  `b49b046` (standalone Playwright/Chromium layout gate), `eceb2cd` (projected
-  hero-label clamp plus gallery overflow containment), and `de3149b` (agent
-  layout guidance) exist on local branch
-  `frac-13-nav-links-search-affordances`. The gate proved red (7 violations at
-  375/414/768) and green on four routes at five fixed widths. Recover the useful
-  logic deliberately; do not cherry-pick stale package/lockfile or unrelated
-  skill changes wholesale. This task supersedes the fixed-height, Chromium-only
-  matrix with a shared Playwright Test suite.
+An Android Virtual Device can match the Galaxy S24's layout class, resolution,
+density, Android version, orientation, and navigation-bar pressure, but it is
+stock Google Android/Chrome rather than Samsung hardware, One UI, or Samsung
+Internet. An Apple Simulator runs simulated Mobile Safari rather than a physical
+iPhone/iPad. The task can complete with simulator evidence after this pivot, but
+must preserve those limitations in docs and reports. If the ticket owner later
+requires exact Galaxy S24/Samsung Internet certification, the no-cost route is a
+manual check on a borrowed/owned S24; do not silently restore a paid cloud lane.
 
-## Provider decision and credential boundary
+## Current repository state to preserve
 
-Use **BrowserStack Automate Mobile + Playwright Test** for the primary hardware
-lane:
+The branch `frac-17-real-device-responsive-testing` is six commits ahead of
+`origin/master`. It already contains and has independently reviewed:
 
-- BrowserStack's official Playwright docs support `deviceName`, `osVersion`, and
-  real Android Chrome projects, including Samsung devices.
-- BrowserStack's official iOS docs support Playwright on real iPhones and iPads
-  with Safari, and its device catalog includes Galaxy S24 Android 14 and iPad Pro
-  models.
-- Its official GitHub Actions integration supplies credentials and creates a
-  BrowserStack Local tunnel, allowing physical cloud devices to reach the Vite
-  preview server on the CI runner.
-- This preserves one assertion/spec API between local engines and physical
-  Android/iOS rather than rewriting the suite in Appium.
+- a Playwright Test matrix spanning 320x568 phones through 1366x1024 iPad-Pro
+  layout classes and 1920x1080 desktop, portrait/short landscape, touch/hover,
+  reduced motion, and 200% root-text stress;
+- all rendered routes and redirect coverage;
+- runtime capture for `visualViewport`, layout viewport, screen/orientation,
+  DPR, touch/hover/pointer, viewport units, safe-area probes, and failures;
+- the mobile Home Hero repair: an in-flow stage/footer grid, `100svh` minimum,
+  horizontal-only clipping, safe-area ownership, responsive background focal
+  point, projected-label clamp, full-width compact blurb, and reachable CTA;
+- rotation, WebGL touch, Story target, reduced-motion, overflow, navbar,
+  primary-content, and stable Chromium visual evidence checks;
+- green exhaustive Chromium/Firefox/WebKit validation recorded in Lattice.
 
-Official references checked 2026-07-22:
+Do not redo or weaken those changes. The pivot is to remove the paid provider,
+adapt environment-specific assertions, and add simulator execution/evidence.
 
-- <https://www.browserstack.com/docs/automate/playwright/playwright-android/nodejs>
-- <https://www.browserstack.com/docs/automate/playwright/playwright-ios/nodejs>
-- <https://www.browserstack.com/docs/automate/playwright/github-actions>
-- <https://www.browserstack.com/docs/automate/playwright/local-testing>
-- <https://www.browserstack.com/list-of-browsers-and-platforms/automate>
+## Local machine findings
 
-Credential-dependent work is an explicit boundary. The repository can contain
-and locally validate the specs, BrowserStack configuration, CI workflow,
-credential checks, tunnel lifecycle, and documentation without secrets. A real
-session cannot be run or certified until the operator provisions an Automate
-Mobile plan and adds `BROWSERSTACK_USERNAME` and `BROWSERSTACK_ACCESS_KEY` as
-GitHub Actions secrets (and local environment variables when running from a
-laptop). No such credentials are currently configured. Never commit them.
+This Mac is Apple Silicon (`arm64`), runs macOS 26.2, has Homebrew 6.0.11, and
+has about 246 GiB free, so it is capable of hosting both simulator stacks.
+Neither stack is installed yet:
 
-BrowserStack's documented Playwright Android examples target Chrome, not
-Samsung Internet. Therefore this task must not claim automated Samsung Internet
-coverage. Make Samsung Internet on a physical Galaxy S24 a manual release gate.
-If the operator later requires it in every CI run, create a follow-up task for a
-small Selenium/Automate lane after confirming the account's exact Samsung
-Internet capabilities; do not introduce and maintain a second automation stack
-speculatively here.
+- `xcode-select -p` points to `/Library/Developer/CommandLineTools`; full Xcode,
+  `xcodebuild`, `simctl`, Simulator.app, iOS runtimes, and simulator devices are
+  absent.
+- Android Studio, Android SDK, `adb`, `emulator`, `sdkmanager`, `avdmanager`,
+  Java/JDK, and AVD definitions are absent.
 
-### Dependency choice
+Installing the applications and system images requires a large network download
+and writing to `/Applications`/developer directories. Xcode may require App
+Store/Apple-ID interaction, license acceptance, first-launch component setup,
+and an iOS runtime selection. Android Studio requires its first-run Setup Wizard,
+SDK-license acceptance, and system-image download. These are one-time host setup
+steps, not repository test failures. Automate and document everything after the
+applications/runtimes exist; if an App Store login, admin password, license
+dialog, or first-run GUI blocks unattended work, stop with the exact required
+operator action rather than bypassing it.
 
-- Add `@playwright/test` as an exact dev dependency and commit the lockfile.
-  Choose the newest version explicitly listed by BrowserStack as compatible with
-  **both** real Android and real iOS on implementation day. The provider table
-  inspected during planning lists 1.59 for both platforms while its 1.60 row
-  omits Android; therefore do not blindly restore FRAC-11's `^1.61.1` range.
-  Confirm the table again before installation and record the chosen version in
-  `docs/responsive-testing.md`.
-- Use BrowserStack's Node Playwright SDK/configuration if its pinned version
-  supports that Playwright version. Prefer `browserstack.yml` and the SDK wrapper
-  over custom websocket/capability plumbing. Pin the SDK dependency and pin
-  GitHub Actions to immutable release SHAs rather than moving `@master` refs.
-- Do not add Percy or another screenshot subscription. Playwright screenshots,
-  traces, video, and BrowserStack session artifacts are enough for this task.
+## Supported tooling decision
 
-## Implementation phases
+Use **Appium 3 + WebdriverIO** for the simulator lane:
 
-### Phase 1 — Shared responsive contract and local rendered-browser gate
+- Appium's UiAutomator2 driver officially automates mobile web Chrome on Android
+  emulators and can switch between the native browser UI and web context.
+- Appium's XCUITest driver officially automates Safari on iOS/iPadOS simulators
+  with `browserName: Safari`.
+- Native context permits system/browser-bar gestures and whole-device evidence;
+  web context permits DOM geometry, navigation, interaction, and JavaScript
+  metrics.
+- One WebDriver adapter can execute the same runner-neutral page contracts on
+  Android and Apple simulators. Do not attempt to represent desktop Playwright
+  WebKit as Mobile Safari.
 
-Create a normal Playwright Test project (rather than another one-off Node loop)
-so the same specs run locally and remotely. Expected files are:
+Playwright's `_android` API is a viable experimental fallback for Android only,
+but it cannot cover iOS Simulator and its own documentation says not everything
+works. Prefer one supported simulator harness instead of introducing separate
+Android and iOS runner designs. Keep `@playwright/test` for the existing local
+matrix; it no longer needs to stay pinned for BrowserStack compatibility.
 
-- `playwright.config.ts` — local projects, production-preview `webServer`, trace,
-  screenshot, and retry policy.
-- `tests/e2e/responsive.spec.ts` — route-wide structural assertions.
-- `tests/e2e/hero-responsive.spec.ts` — Home hero geometry/footer/CTA contract.
-- `tests/e2e/support/routes.ts`, `profiles.ts`, and `layout-assertions.ts` (names
-  may be consolidated if clearer) — one source for routes, environment profiles,
-  metrics, and assertions.
-- `browserstack.yml` plus the minimum SDK fixture/config required to run the same
-  specs on real devices.
-- `docs/responsive-testing.md` — why emulation is not certification, commands,
-  matrix, secret setup, artifact interpretation, and physical release protocol.
-- `package.json`/`pnpm-lock.yaml` scripts and dependencies.
-- GitHub Actions workflow(s) described below.
+Official implementation references checked 2026-07-22:
 
-Recover FRAC-11's useful checks: horizontal overflow, `.page-gutter` bounds,
-WebGL label mount, and per-frame projected-label measurement. Expand them to
-measure height and the **actual visual viewport**, not a fixed width with height
-800. Each environment record attached to failures must include:
+- <https://developer.android.com/studio/run/emulator-commandline>
+- <https://developer.android.com/studio/run/managing-avds>
+- <https://developer.apple.com/documentation/safari-developer-tools/installing-xcode-and-simulators>
+- <https://developer.apple.com/documentation/xcode/xcode-command-line-tool-reference>
+- <https://github.com/appium/appium-uiautomator2-driver>
+- <https://appium.github.io/appium-xcuitest-driver/latest/>
+- <https://appium.github.io/appium-xcuitest-driver/latest/guides/capability-sets/>
 
-- `innerWidth`/`innerHeight` and `visualViewport` width, height, offsets, and
-  scale;
-- `screen` width/height, orientation, device-pixel ratio;
-- user agent/platform, `navigator.maxTouchPoints`, `(hover)`, `(pointer)`,
-  reduced-motion state;
-- computed 100vh/100svh/100dvh probe heights and computed safe-area probe
-  insets;
-- route, scroll position, browser/project, and timestamp/build identifier.
+## Phase 1 — Remove the paid-provider implementation cleanly
 
-Real-device specs must assert their environment before testing layout: Android
-projects report Android + touch/non-hover; iPhone projects report iOS/Safari
-characteristics; iPad desktop-style UA is handled by provider capability plus
-touch/maxTouchPoints rather than a brittle `iPad` substring. A remote project
-that silently falls back to desktop emulation must fail, not produce a false
-green result.
+Remove only the BrowserStack-specific layer:
 
-#### Route set
+- delete `browserstack.yml`, `browserstack.smoke.yml`, and
+  `scripts/run-browserstack.mjs`;
+- remove `browserstack-node-sdk` and the `test:e2e:real*` scripts, updating the
+  lockfile through pnpm rather than hand-editing it;
+- remove the credential/tunnel/physical-device job from
+  `.github/workflows/responsive.yml`, while retaining the local Playwright PR and
+  scheduled/manual matrix and its artifacts;
+- replace `BROWSERSTACK_RUN`, BrowserStack session APIs, exact provider-device
+  mappings, remote timeouts/video, and paid-secret instructions with explicit
+  simulator mode/identity;
+- rename report labels and comments from `real`, `physical`, and provider names
+  to `android-emulator`, `ios-simulator`, or `simulated-desktop` as appropriate.
 
-Run structural coverage on all current internal rendered views:
+Do not remove Playwright tests, screenshots, Hero fixes, metrics, the local CI
+job, or the truthful optional physical checklist.
 
-`/`, `/the-protocol`, `/co-living`, `/campus`, `/events`, `/political-club`,
-`/library`, `/people`, and a 404 URL. Add cheap redirect assertions for
-`/story`, `/visit`, `/publications`, `/neighborhood`, and `/lab`. Do not navigate
-to external FractalU/Accelerator destinations during layout sweeps.
+## Phase 2 — Reproducible host setup and doctor
 
-#### Local layout profiles (fast simulation, never labeled real-device proof)
+### One-time application/runtime setup
 
-- Phones portrait: 320x568, 360x640, 375x667, 390x844, 412x915.
-- Phones landscape/short: 568x320, 640x360, 844x390, 915x412.
-- Tablets: 768x1024, 820x1180, 1023x1366.
-- Structural boundary and iPad Pro: 1024x768, 1024x1366, 1366x1024.
-- Desktop: 1280x720, 1440x900, 1920x1080.
-- Stress profiles: representative phone, tablet, and desktop with injected
-  200%-root-font sizing; touch/non-hover and hover-capable projects; reduced
-  motion on and off where motion behavior itself is under test.
+Document the operator-visible first-run sequence and then record the discovered
+versions; do not hardcode a future marketing name when a runtime/device-type ID
+is available.
 
-The fast PR local gate may use Chromium and a smaller risk-based profile subset,
-but the scheduled full local gate runs Chromium, Firefox, and WebKit across the
-complete route/profile matrix. Playwright device descriptors may configure touch
-simulation locally, but reports and docs must call these projects simulated.
+Apple:
 
-#### Shared structural assertions
+1. Install full Xcode from Apple's supported distribution, launch it once,
+   accept its license/components, select it as the active developer directory,
+   and install one supported iOS Simulator runtime.
+2. Verify `xcodebuild -version`, `xcrun simctl list runtimes`, and
+   `xcrun simctl list devices available`.
+3. Create or select simulator devices for a compact iPhone, a current notched or
+   Dynamic-Island iPhone, and a 13-inch iPad Pro device type from the installed
+   runtime. Use stable local names but discover their UDIDs dynamically.
+4. Boot each once and clear any first-run Safari welcome/consent screen that
+   prevents automation.
 
-After navigation, wait for `document.fonts.ready`, route-specific lazy content,
-and a stable animation frame pair. Assert:
+Android:
 
-1. `scrollWidth <= clientWidth + 1` at the document and any full-bleed owner.
-2. Visible tracked content remains inside the visual viewport/safe gutter;
-   off-screen entrance-animation elements are ignored only while truly hidden
-   and must pass after entering.
-3. Navbar variant matches the `lg` contract; the fixed navbar does not cover the
-   first interactive/content owner and its controls have usable touch targets.
-4. `.page-gutter` resolves within the canonical DESIGN.md floor/ceiling and real
-   safe area. No test copies layout rules into production code.
-5. Primary headings, controls, cards, media, and footer never overlap, become
-   clipped, or create horizontal scroll under default and text-stress profiles.
-6. Every route loads without uncaught page errors, severe console errors,
-   failed first-party assets, or WebGL initialization errors.
-7. Portrait/landscape route rotation keeps the correct structural variant and
-   does not require a reload.
+1. Install Android Studio, complete its Setup Wizard, install current Platform
+   Tools/Emulator/Command-line Tools, and install an ARM64 Android 14 Google Play
+   image. Android Studio's bundled JBR can supply `JAVA_HOME`; do not require a
+   second arbitrary Java download unless the driver doctor rejects it.
+2. Create a phone AVD named as **Galaxy-S24-class**, not Galaxy S24 hardware. Use
+   a supported Google phone device definition plus recorded resolution/density
+   overrides approximating the 1080x2340 S24 layout class. Create a Google tablet
+   AVD for Android tablet coverage if the installed SDK supports it.
+3. Boot each once, accept Chrome's first-run screen, enable Chrome's required
+   testing/debugging state, and confirm `adb devices -l` reports it online.
+4. Record `getprop`, `wm size`, `wm density`, Chrome version, system-image
+   package/revision, navigation mode, and AVD name with every run.
 
-Use stable `data-*` hooks only where semantic locators cannot express a geometry
-owner. Do not assert Tailwind class strings as the layout contract.
+### Repository setup scripts
 
-#### Visual evidence
+Add idempotent, non-destructive scripts (exact filenames may be consolidated if
+the ownership is clearer):
 
-- Keep deterministic visual baselines to a representative risk set (Home and
-  one content-heavy route on compact phone, short landscape, tablet boundary,
-  iPad Pro, and desktop) under reduced motion. Separate baselines per local
-  browser engine; never compare one engine's font rasterization to another.
-- On real devices, structural assertions are authoritative and screenshots,
-  videos, network logs, and traces are retained for every failure. Do not use a
-  cross-device pixel-perfect baseline for the rotating WebGL hero.
-- Wait for the hero background, fonts, lazy scene, and texture readiness before
-  capture. Under reduced motion the initial WebGL pose is the deterministic
-  snapshot pose; a separate interaction test covers rotation.
+- `scripts/mobile-simulators/doctor.mjs`: checks macOS/arm64, full Xcode and
+  active developer path, available iOS runtime/device types, Android SDK tools,
+  `ANDROID_HOME`, Android Studio JBR/`JAVA_HOME`, required system image/AVDs,
+  Appium and installed drivers, device boot state, Chrome/Safari availability,
+  and ports. It exits with actionable setup text and never downloads or accepts
+  licenses implicitly.
+- `scripts/mobile-simulators/setup-appium.mjs`: exact-pins compatible Appium,
+  UiAutomator2, XCUITest, and WebdriverIO versions; installs drivers into a
+  documented local Appium home; and runs each driver's doctor. Generated SDK,
+  AVD, Appium-home, WebDriverAgent, and browser-driver caches stay ignored.
+- `scripts/mobile-simulators/run.mjs`: builds/serves the production preview on
+  `0.0.0.0:4173`, starts Appium bound to loopback, boots/selects one declared
+  simulator at a time, waits for readiness, runs the requested matrix, captures
+  logs/evidence, and closes only processes/devices it started in `finally`.
 
-### Phase 2 — Physical cloud matrix and CI tiers
+Add scripts such as `simulators:doctor`, `test:e2e:android-emulator`,
+`test:e2e:ios-simulator`, and `test:e2e:simulators`. No default `pnpm test` or PR
+command should trigger multi-gigabyte SDK downloads.
 
-Configure BrowserStack projects using actual `deviceName`/`osVersion` and
-`realMobile` capabilities. Confirm names against the live capability generator
-when implementing because the provider can deprecate devices.
+## Phase 3 — Share the responsive contract across runners
 
-Minimum maintained real-device classes:
+Refactor—not duplicate—the current geometry logic into runner-neutral browser
+functions that return serializable metrics and violations. Keep thin adapters:
 
-| Class | Primary device/browser | Why |
+- the existing Playwright adapter performs Playwright `expect` assertions and
+  attachments;
+- the Appium/WebdriverIO adapter executes the same page probes in the mobile web
+  context, asserts the returned violations, and attaches the same environment
+  schema plus simulator identity.
+
+The shared contract must retain:
+
+- every rendered internal route and redirect in `tests/e2e/support/routes.ts`;
+- document/body horizontal overflow, primary-content reflow, canonical gutters,
+  navbar/content relationship, touch-targets, page/console/first-party asset
+  errors where the driver exposes them;
+- Home stage/footer/blurb/CTA order, initial portrait visual-viewport
+  containment, scene readiness, safe-zone projected labels, Story target,
+  reduced motion, and reachability in short landscape/200% text stress;
+- actual `inner*`, `visualViewport`, screen/orientation, DPR, UA/platform,
+  touch/hover/pointer, `vh`/`svh`/`dvh`, safe-area, scroll, URL, timestamp,
+  profile, OS/runtime/browser version, and simulator/AVD identity.
+
+Simulator sessions must fail their environment preflight when:
+
+- Android is not an `emulator-*` ADB target with the declared AVD/API/image,
+  touch/non-hover Chrome UA, expected orientation, and live system/browser bars;
+- Apple is not a booted CoreSimulator UDID matching the declared iPhone/iPad
+  device type/runtime with Mobile Safari, touch semantics, and expected
+  orientation;
+- a desktop browser, WebView shell, different device, missing visual viewport,
+  or unexpected fallback is returned.
+
+Use native context for whole-screen screenshots and gestures, then web context
+for DOM assertions. Store evidence under ignored `test-results/mobile-simulators`
+and attach a manifest tying every screenshot/metric/log to profile, route,
+orientation, state, run ID, and timestamp.
+
+## Phase 4 — Simulator matrix and browser-chrome states
+
+### Automated matrix
+
+Run all rendered routes and redirects at least once per OS/browser family, with
+the focused Home contract in every orientation/profile:
+
+| Label in reports | Virtual environment | Required states |
 |---|---|---|
-| reported Android | Galaxy S24, Android 14, Chrome | exact reported hardware family and OEM |
-| second Android | Pixel 8, Android 14, Chrome | non-Samsung aspect/OEM |
-| short/narrow iPhone | iPhone 13 mini or available SE, Safari | compact-height pressure |
-| notched iPhone | iPhone 15 Pro, iOS 17, Safari | current safe-area/browser-bar behavior |
-| Android tablet | Galaxy Tab S9, Chrome | touch tablet below/around expanded layout |
-| iPad Pro | iPad Pro 12.9 2021 (or current equivalent), iOS 17, Safari | 1024/1366 touch layout |
+| `android-emulator-s24-class` | Android 14 ARM64 Google image + Chrome, S24-class phone geometry | portrait, landscape, expanded toolbar, collapsed-toolbar attempt, gesture navigation; default font/display |
+| `android-emulator-tablet` | supported Google tablet AVD + Chrome | portrait and landscape, touch tablet layout |
+| `ios-simulator-compact` | compact available iPhone (prefer SE class) + Mobile Safari | portrait and landscape, expanded/collapsed toolbar attempt |
+| `ios-simulator-notched` | current available notched/Dynamic-Island iPhone + Mobile Safari | portrait and landscape, safe-area evidence |
+| `ipados-simulator-pro` | available 13-inch iPad Pro + Mobile Safari | 1024/1366-class portrait and landscape, touch desktop-boundary behavior |
 
-Run portrait and landscape where the provider supports orientation. Do not set a
-fake viewport on real projects; read what the device/browser supplies. The Home
-test runs twice around browser chrome: initial top-of-page state, then after a
-real scroll intended to collapse controls and a return-to-top gesture intended
-to expand them. Record visual-viewport metrics before/after. If automation does
-not produce a viewport transition, mark that browser-bar case inconclusive and
-leave the physical release step mandatory; never infer it from a desktop size.
+Do not fake simulator browser dimensions with WebDriver window resizing. Select
+the simulator device and orientation, then read its actual viewport. The host is
+reachable from Android at `http://10.0.2.2:4173` and from Apple Simulator through
+the host loopback address; the runner must prove readiness before navigation.
 
-CI tiers:
+For browser chrome, capture whole-screen plus page metrics at initial load, use a
+native touch scroll to attempt collapse, capture again, return to the top to
+attempt expansion, and capture a third time. A visual-viewport height change is
+positive automated evidence. If the simulator/browser version does not expose a
+deterministic transition, record `inconclusive-manual-simulator-check-required`
+and complete the check interactively in that simulator; never convert an
+unchanged height into a pass.
 
-1. **Every PR, local:** frozen install; typecheck; Vitest; build; color
-   conformance; fast Chromium responsive suite across every route; upload
-   Playwright report/traces/screenshots on failure.
-2. **Every internal PR, real smoke (when secrets exist):** BrowserStack Local
-   tunnel to the same production preview; all routes on Galaxy S24 Chrome and a
-   current iPhone Safari in portrait, plus the focused Hero in landscape. Skip
-   safely (with an explicit summary) for fork PRs where secrets are unavailable.
-3. **Nightly and manual dispatch:** full local Chromium/Firefox/WebKit matrix and
-   full real device table, all internal routes, both orientations, default and
-   reduced motion. Avoid multiplying sessions per route: one device session may
-   visit all routes when isolation remains reliable.
-4. **Release:** nightly must be green plus the physical protocol below. Real
-   device failures are not made optional merely because the desktop suite is
-   green.
+Rotate without page reload and assert orientation/viewport changes, route state
+survives, content reflows, the Hero remains reachable, and no horizontal pan is
+introduced. Exercise a native drag on the WebGL model, a vertical page swipe,
+the mobile menu, Story CTA, and one node tap without duplicate navigation.
 
-The workflow builds and serves the site on `0.0.0.0` with a strict port, waits
-for readiness, starts a uniquely identified BrowserStack Local tunnel, runs the
-suite, and stops the tunnel in `always()` cleanup. Secrets are referenced only
-through GitHub Actions/environment variables. Set bounded retries (remote only),
-timeouts for WebGL/font readiness, concurrency no higher than the purchased
-parallel-session quota, and artifact retention. The no-credentials path must
-exit with a precise setup message rather than an opaque websocket error.
+### Text/accessibility stress
 
-### Phase 3 — Home Hero red-to-green repair
+Keep the automated 200% web text-reflow profile in Playwright. In simulator
+evidence also record:
 
-Add semantic geometry hooks (`data-hero-stage`, `data-hero-footer`,
-`data-hero-blurb`, `data-hero-cta`, `data-hero-label`, and a scene-ready signal)
-and capture the pre-fix red result. The ticket is reproduced when the initial
-Galaxy-class visual viewport shows any of the following: footer or arrow outside
-the visible rectangle, footer intersecting a visible projected label/geometry
-stage, horizontal label clipping, or content hidden by the section's clip.
+- Android's largest practical system font/display scale plus Chrome page text
+  behavior;
+- iOS Larger Text and Safari Page Zoom where those settings affect web content.
 
-Implement the structural hybrid rather than a height-specific transform patch:
+If those settings cannot be changed reliably through supported simulator APIs,
+make them a short, documented interactive simulator checklist rather than
+editing private preference files or claiming automation.
 
-1. Make the mobile Hero a two-row layout: a flexible, relative geometry stage
-   and an intrinsic Story footer in normal flow. The Canvas and hit-target region
-   fill the geometry stage, not the entire Hero. Preserve the desktop composition
-   at `lg` unless the new tests expose a real regression.
-2. Use `100vh` only as a fallback and `min-height: 100svh` as the mobile minimum
-   so initial expanded browser controls define the safe one-screen target. Never
-   force `height: 100vh`; short landscape/text-enlarged content may grow and
-   scroll instead of being clipped. Clip horizontal decorative overdraw only;
-   do not hide required vertical content.
-3. On compact phones, give the blurb the available content width and make the
-   Story CTA a compact inline text+arrow row below it. At `md` it may become the
-   current two-column relationship. Keep readable type; solve the ownership and
-   measure problem before reducing font size.
-4. Give the fixed mobile navbar real top-safe-area padding and the footer real
-   bottom-safe-area padding. Remove `maximum-scale=1`. Enable
-   `viewport-fit=cover` only in the same commit that proves all horizontal/top/
-   bottom safe-area owners on real notched devices.
-5. Recover FRAC-11's projected-label clamp, but clamp to the **computed** Hero
-   safe-zone/page-gutter bounds so landscape notch insets participate. Do not
-   merely copy its `Math.max(24, min(4.5vw, 64))`, which omitted real
-   `env(safe-area-inset-*)` values. Keep labels pointer-transparent and retain
-   front/back visibility and touch behavior.
-6. Center/size the octahedron within the remaining stage. If a compact-height
-   camera adjustment is still necessary after the structural change, derive it
-   from the stage's measured aspect/height and use a fluid clamp, not per-phone
-   media queries. The default portrait target keeps the geometry prominent; the
-   short-landscape fallback prioritizes no overlap and reachable content.
-7. Keep the background as one responsive `<picture>` and preserve preload/source
-   matching. After the stage/footer layout is correct, tune a responsive
-   `object-position`/focal point so the skyline/geometry relationship moves up
-   on compact screens without adding a request, changing DESIGN.md tokens, or
-   relying on an arbitrary transform for each handset.
-8. Carry over FRAC-11's `PhotoGallery` horizontal containment only if the new
-   route-wide red proof reproduces that independent overflow on current code.
+## Phase 5 — CI and cost policy
 
-Focused Hero assertions across every compact/tablet profile and all primary real
-devices:
+The existing Linux Playwright job remains the automatic PR and nightly/manual
+gate. Remove the paid BrowserStack job. Do not add an automatic macOS simulator
+job until the repository owner's GitHub Actions billing/quota is confirmed;
+Apple-hosted runner minutes are not guaranteed to be cost-free for every repo.
 
-- The initial portrait view on Galaxy S24 Chrome contains the navbar, complete
-  visible geometry/labels, full blurb, `Explore our Story`, and arrow within the
-  actual visual viewport, with no intersections.
-- At extreme short landscape, required content remains reachable by vertical
-  scroll and nothing is clipped by the Hero; one-screen containment is not
-  forced at the cost of lost content.
-- Every visible projected label stays within the computed safe gutter over a
-  sampled rotation; document width never changes as labels rotate.
-- Touch drag rotates the model without navigating; vertical swipe outside/through
-  the intended region scrolls; a tap on a node navigates exactly once.
-- The Story link reaches `#story` without the fixed navbar covering its heading.
-- Reduced motion freezes automatic motion/bounce but leaves navigation and
-  content intact.
-- 200% text stress grows/reflows the Hero rather than overlapping or clipping.
+Simulator scripts are initially local/manual and produce durable artifacts. A
+future opt-in `workflow_dispatch` job may use preinstalled GitHub runner Xcode
+and an Android-emulator action only after a separate cost/runner-compatibility
+decision. It must still label results virtual, cache SDKs safely, and never be a
+condition for running the no-cost local tools.
 
-### Phase 4 — Physical release protocol
+## Validation sequence
 
-Document a dated, checkable protocol whose results are attached to the release
-or Lattice review comment. Automation complements but does not erase OS/browser
-states that a provider cannot deterministically force.
-
-Required physical checks:
-
-- Galaxy S24 in Chrome **and Samsung Internet**, portrait and landscape.
-- Initial load with address/tab and OS navigation bars visible; scroll until
-  browser bars collapse; expand them again; rotate without reloading.
-- Android gesture navigation and three-button navigation when available.
-- Default and largest practical Android font/display settings, including 200%
-  text/reflow inspection.
-- Current iPhone Safari with notch/safe areas, default and Larger Text; browser
-  bars expanded/collapsed; portrait/landscape.
-- iPad Safari through iPad Pro size, portrait/landscape, touch labels at widths
-  where desktop structure appears.
-- Desktop Chrome, Safari, and Firefox at compact-height and standard desktop
-  windows.
-- Full Hero rotation/tap/swipe, mobile menu, Story CTA, all internal routes,
-  reduced motion, no horizontal pan, no clipped text/media, and console/network
-  sanity where inspection is available.
-
-Record device model, OS build, browser/version, navigation mode, font/display
-scale, orientation, observed `visualViewport` metrics, result, screenshot/video,
-tester, and date. A width-only Chrome DevTools screenshot is never accepted in
-this column.
-
-## Test and review sequence
-
-1. Restore/adapt the local Playwright foundation and prove the focused Hero
-   fails before its repair. Preserve red output in a Lattice comment or review
-   artifact.
-2. Implement the Hero and label/safe-area changes; make focused local tests green.
-3. Run the required repository gates in order: `pnpm typecheck`, `pnpm test`,
-   `pnpm build`, then design conformance and the fast rendered-layout suite.
-4. Run the full local three-engine matrix and inspect deterministic visual diffs.
-5. If BrowserStack credentials are available, run Galaxy S24, iPhone, and iPad
-   real-device suites, link the Automate build/session, and attach metrics and
-   failure artifacts. If credentials remain absent, do not claim this acceptance;
-   transition/report the task as requiring the two secrets/subscription after all
-   no-secret implementation is complete.
-6. Cold review compares the implementation to this plan, reruns local gates,
-   audits that remote projects are truly `realMobile`, and checks that CI never
-   exposes secrets or hangs a tunnel.
+1. Preserve the previously reviewed Hero/local-suite baseline and current
+   screenshots before provider removal.
+2. Remove BrowserStack code/dependency/CI and prove no provider/secret/tunnel
+   reference remains outside historical Lattice events.
+3. Install/initialize host tooling as far as permissions and first-run dialogs
+   allow; run `simulators:doctor` and record exact versions/device inventory.
+4. Refactor shared probes and keep `pnpm test:e2e:fast` and the complete local
+   three-engine matrix green.
+5. Bring up one Android phone AVD; run preflight, all routes, focused Home,
+   interaction/orientation/browser-chrome checks, and inspect device screenshots.
+6. Bring up compact/notched iPhone and iPad Pro simulators; run the corresponding
+   Mobile Safari matrix and inspect safe-area/browser-chrome screenshots.
+7. Run repository gates in order: `pnpm typecheck`, `pnpm test`, `pnpm build`,
+   `pnpm conformance`, `pnpm test:e2e:fast`, then the exhaustive local matrix and
+   complete simulator matrix.
+8. Cold review checks the diff, doctors, evidence manifests/screenshots, every
+   acceptance item, truthful terminology, process cleanup, and no user-level
+   generated simulator files committed.
 
 ## Acceptance criteria
 
-- One shared Playwright assertion suite covers every rendered internal route,
-  compact phones through iPad Pro and desktop, portrait/landscape, touch/hover,
-  reduced motion, safe-area/visual-viewport metrics, and text reflow.
-- Fast local responsive checks run on every PR; complete local and real-device
-  matrices are scheduled/manual; BrowserStack failure artifacts are retained.
-- Real Android/iOS projects use physical BrowserStack devices and self-verify
-  their environment. Documentation never calls local device descriptors real.
-- Secret/tunnel setup is documented and safe; missing credentials produce an
-  actionable result. No credential is added to the repository.
-- The Home Hero is red before repair and green after it, with no footer/geometry/
-  label overlap or clipped blurb/CTA/arrow on the Galaxy S24's measured initial
-  visual viewport; short landscape and 200% text remain reachable without loss.
-- All visible 3D labels remain within the computed page-gutter/safe area during
-  rotation, and all routes have no horizontal overflow.
-- Real Galaxy S24 Chrome, real iPhone Safari, and real iPad Safari runs are linked
-  as evidence before full completion. Samsung Internet remains an explicit
-  physical release result unless/until a separately approved Selenium lane is
-  implemented.
-- Existing interaction, route, performance/preload, reduced-motion, design-token,
-  unit, typecheck, and production-build contracts remain green.
+- BrowserStack configs, SDK, secrets, tunnel runner, scripts, documentation, and
+  CI job are gone; the local Playwright matrix and all Hero fixes remain.
+- One runner-neutral responsive contract is used by desktop Playwright and the
+  Appium simulator adapter; route and geometry rules are not copied into two
+  drifting suites.
+- `simulators:doctor` accurately detects this Mac's Xcode/iOS and Android/AVD/
+  JDK/Appium prerequisites and gives precise, non-destructive remediation.
+- Actual Chrome inside an Android 14 S24-class AVD passes every route plus the
+  focused Home contract in portrait and landscape, with whole-screen browser/
+  system-bar screenshots and recorded live visual-viewport metrics.
+- Actual Mobile Safari inside compact and notched iPhone simulators and an iPad
+  Pro simulator passes every route plus the focused Home contract in required
+  orientations, with safe-area/browser-toolbar evidence through iPad Pro size.
+- Initial portrait Home evidence contains the complete stage/labels, blurb,
+  `Explore our Story`, and arrow without intersection or visual-viewport clip;
+  short landscape and enlarged text grow/scroll without lost content.
+- Native toolbar-collapse/expand attempts, rotation without reload, WebGL drag,
+  page swipe, menu, CTA, and node navigation are recorded; unsupported toolbar
+  or accessibility-setting automation is explicitly marked for an interactive
+  simulator check.
+- Reports and docs call the environments emulators/simulators and never claim a
+  physical Galaxy S24, Samsung Internet, iPhone, or iPad pass. The S24-class AVD
+  limitation is visible in the main testing guide, not buried in a footnote.
+- No SDK, system image, AVD, CoreSimulator data, WebDriverAgent build, Appium
+  home, Chromedriver cache, credentials, or multi-gigabyte generated artifact is
+  committed.
+- Typecheck, Vitest, build, design conformance, fast Playwright, exhaustive
+  Chromium/Firefox/WebKit, and all configured simulator runs pass, or a genuine
+  one-time GUI/admin installation blocker is recorded as `needs_human` with the
+  exact action required.
 
 ## Risks and mitigations
 
-- **Paid vendor/credentials:** configuration can be completed without them, but
-  hardware certification cannot. Surface this as a human dependency, not a pass.
-- **Provider device/version drift:** keep the matrix in one file, date it, and use
-  documented device names; fail clearly when a device is retired.
-- **Playwright/provider version mismatch:** exact-pin the common supported
-  version and update deliberately; avoid caret drift.
-- **Browser chrome is gesture/stateful:** capture actual visual-viewport metrics
-  and retain the physical protocol when automation cannot trigger a transition.
-- **Samsung Internet gap:** state it plainly and test physically; do not label
-  Android Chrome as Samsung Internet coverage.
-- **Matrix cost/time:** tier PR/nightly/release coverage and reuse sessions across
-  routes without dropping any route from the full matrix.
-- **WebGL/font flake:** reduced-motion snapshot pose, explicit font/scene/texture
-  readiness, bounded remote retry, real device logs/video, and SwiftShader only
-  for local Chromium fallback. Never replace the real Hero with a mock in E2E.
-- **False visual diffs:** keep pixel baselines engine-specific and limited;
-  structural geometry assertions are the cross-device truth.
-- **Shared-worktree/stale FRAC-11 state:** port only attributable changes, inspect
-  current diffs before editing, and do not revert unrelated work.
-
-## Reset 2026-07-22 by agent:codex-root
-
-## Review Cycle 1 Findings
-
-Independent review requires implementation-level rework before acceptance:
-
-- Remove broad route/text-stress skips from the all-route responsive contract;
-  repair the underlying overflow where it is within FRAC-17 scope, and keep any
-  genuinely unsupported stress state explicit and narrowly justified.
-- Make initial visual-viewport containment assertions run on BrowserStack
-  projects as well as local metadata-driven profiles.
-- Validate configured real-device identity (Android Galaxy/Pixel/tablet versus
-  iPhone/iPad Safari) rather than accepting any generic mobile user agent.
-- Add executable coverage for rotation/orientation, touch interaction,
-  navbar/content overlap, reduced motion, and stable visual evidence. Where
-  browser-chrome expansion cannot be automated, preserve it as a clearly gated
-  physical release requirement and never count it as an automated pass.
-- Physical BrowserStack and Samsung Internet evidence remains required before
-  the task can move from reviewed implementation to full completion.
-
-## Reset 2026-07-22 by agent:codex-root
+- **First-run GUI/admin gate:** Xcode/App Store/license/runtime and Android Studio
+  Setup Wizard may require the operator. Detect and report one exact action;
+  continue all repository work that does not depend on it.
+- **Large downloads/disk:** check disk and installed inventory first; install one
+  supported ARM64 runtime/image per OS family and reuse it.
+- **Chrome/Chromedriver drift:** record Chrome and driver versions, exact-pin the
+  harness, use Appium's supported compatibility discovery only on loopback, and
+  fail with a version-specific message.
+- **Simulator version drift:** discover runtime/device-type IDs from `simctl`
+  rather than assuming a marketing model exists in every Xcode release.
+- **WebGL/gesture flake:** wait for font/texture/scene readiness, serialize
+  simulator sessions, use bounded retries only for boot/WDA startup, and retain
+  whole-screen screenshots/Appium/Xcode/ADB logs on failure.
+- **False physical claims:** encode environment type in project names, manifest,
+  filenames, docs, and test preflight. A matching viewport is not matching
+  hardware.
+- **CI cost:** keep simulators local/manual until runner quota is explicitly
+  approved; retain the Linux Playwright gate for automatic coverage.

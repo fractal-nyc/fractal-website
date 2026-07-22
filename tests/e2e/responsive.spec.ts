@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
-import { RENDERED_ROUTES, INTERNAL_REDIRECTS } from "./support/routes";
-import { assertNavbarDoesNotCoverContent, assertNoHorizontalOverflow, assertPageGutters, assertPrimaryContentIntegrity, assertRealMobileEnvironment, attachEnvironment, preparePage } from "./support/layout-assertions";
+import { RENDERED_ROUTES, INTERNAL_REDIRECTS } from "./support/routes.mjs";
+import { assertNavbarDoesNotCoverContent, assertNoHorizontalOverflow, assertPageGutters, assertPrimaryContentIntegrity, assertTouchTargets, attachEnvironment, preparePage } from "./support/layout-assertions";
 import type { ResponsiveProfile } from "./support/profiles";
 
 for (const route of RENDERED_ROUTES) {
@@ -23,19 +23,13 @@ for (const route of RENDERED_ROUTES) {
 
     await page.goto(route, { waitUntil: "domcontentloaded" });
     await preparePage(page, profile?.rootFontScale);
-    const metrics = await attachEnvironment(page, testInfo);
-    await assertRealMobileEnvironment(page, metrics, testInfo);
+    await attachEnvironment(page, testInfo);
     await assertNoHorizontalOverflow(page);
     await assertPageGutters(page);
     await assertNavbarDoesNotCoverContent(page);
     await assertPrimaryContentIntegrity(page);
 
-    const menu = page.getByRole("button", { name: /open menu|close menu/i }).first();
-    if (await menu.isVisible()) {
-      const box = await menu.boundingBox();
-      expect(box?.width ?? 0).toBeGreaterThanOrEqual(44);
-      expect(box?.height ?? 0).toBeGreaterThanOrEqual(44);
-    }
+    await assertTouchTargets(page);
 
     expect(pageErrors, `uncaught page errors: ${pageErrors.join("\n")}`).toEqual([]);
     // Some pages embed third-party services whose 4xx console string omits its

@@ -15,8 +15,11 @@
     "test:coverage": "vitest run --coverage",
     "test:e2e:fast": "PW_MATRIX=fast playwright test",
     "test:e2e:full": "PW_MATRIX=full playwright test",
-    "test:e2e:real:smoke": "node scripts/run-browserstack.mjs browserstack.smoke.yml",
-    "test:e2e:real": "node scripts/run-browserstack.mjs browserstack.yml",
+    "simulators:doctor": "node scripts/mobile-simulators/doctor.mjs",
+    "simulators:setup-appium": "node scripts/mobile-simulators/setup-appium.mjs",
+    "test:e2e:android-emulator": "node scripts/mobile-simulators/run.mjs --platform android",
+    "test:e2e:ios-simulator": "node scripts/mobile-simulators/run.mjs --platform ios",
+    "test:e2e:simulators": "node scripts/mobile-simulators/run.mjs --platform all",
     "build:hero-bg": "node scripts/build-hero-bg.mjs",
     "build:favicon": "node scripts/build-favicon.mjs",
     "build:banners": "node scripts/compress-banners.mjs"
@@ -49,13 +52,14 @@
     "@types/react-dom": "^19.2.0",
     "@types/three": "^0.183.1",
     "@vitejs/plugin-react": "^5.0.4",
-    "browserstack-node-sdk": "1.64.2",
+    "appium": "3.5.2",
     "jsdom": "^29.0.2",
     "png-to-ico": "^3.0.1",
     "sharp": "^0.34.5",
     "tailwindcss": "^4.1.14",
     "typescript": "~5.9.3",
     "vite": "^7.3.0",
-    "vitest": "^4.1.3"
+    "vitest": "^4.1.3",
+    "webdriverio": "9.29.1"
   }
 }

@@ -21,10 +21,10 @@ Thumbs.db
 # Netlify
 .netlify
 
-# Playwright / BrowserStack generated evidence (CI uploads these as artifacts)
+# Responsive-test evidence and repository-local simulator caches
 playwright-report/
 test-results/
-browserstack-artifacts/
+.mobile-simulators/
 
 # Claude Code worktrees
 .claude/worktrees/
