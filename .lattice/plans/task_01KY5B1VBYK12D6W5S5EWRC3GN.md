@@ -375,4 +375,23 @@ Independent review classified the following as implementation-level rework:
 Re-run the doctor/setup negative cases, focused shared-contract tests, standard
 repository gates, and an independent cold review after these corrections.
 
+## Review Cycle 2 Findings
+
+Independent review classified two remaining items as implementation-level
+rework:
+
+1. Android runtime identity must prove the declared Google Play system-image
+   family. It may not accept an arbitrary image merely because the build
+   fingerprint contains `google`; compare the declared/runtime image identity
+   and/or verify the Play Store package, and add a negative self-test.
+2. A valid profile-only selection must derive required platform families from
+   the selected profiles. Choosing only `android-emulator-s24-class` must not
+   require Xcode, iOS runtimes, or XCUITest when `--platform` is omitted (and the
+   inverse applies to an Apple-only profile).
+
+Re-run focused simulator self-tests, profile-only CLI cases, standard gates,
+and an independent cold review after these corrections.
+
+## Reset 2026-07-22 by agent:codex-root
+
 ## Reset 2026-07-22 by agent:codex-root

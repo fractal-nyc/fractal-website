@@ -129,6 +129,7 @@ async function bootAndroid(profile) {
     navigationMode: shell("settings", "get", "secure", "navigation_mode"),
     chromeVersion: chromeDump.match(/versionName=([^\s]+)/)?.[1] ?? null,
     systemImage: getprop("ro.system.build.fingerprint"),
+    playStorePackagePath: shell("pm", "path", "com.android.vending"),
     wasAlreadyBooted: Boolean(existing),
   };
   if (!identity.chromeVersion) throw new Error(`Chrome is unavailable on ${profile.avdName}. Boot it interactively and complete Chrome's first-run flow.`);

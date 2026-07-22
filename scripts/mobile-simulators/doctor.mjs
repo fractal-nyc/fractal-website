@@ -11,6 +11,7 @@ import {
   REPO_ROOT,
   SIMULATOR_PROFILES,
   TOOL_VERSIONS,
+  platformFamiliesForProfiles,
   profilesFor,
   parseSelectionArgs,
 } from "./config.mjs";
@@ -68,9 +69,10 @@ function readAndroidAvdConfig(avdName) {
 
 export async function runDoctor({ platformName = "all", requestedProfile = "all" } = {}) {
   const selected = profilesFor(platformName, requestedProfile);
+  const selectedFamilies = platformFamiliesForProfiles(selected);
   const checks = [];
-  const wantsAndroid = platformName === "all" || platformName === "android";
-  const wantsIos = platformName === "all" || platformName === "ios";
+  const wantsAndroid = selectedFamilies.has("android");
+  const wantsIos = selectedFamilies.has("ios");
 
   checks.push(check("macOS host", platform() === "darwin", `${platform()} ${arch()}`, "Run Apple/Android simulator tests on an Apple Silicon Mac."));
   checks.push(check("Apple Silicon", arch() === "arm64", arch(), "Use an arm64 Mac; the maintained Android images are arm64."));

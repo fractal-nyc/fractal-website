@@ -104,6 +104,10 @@ export function profilesFor(platformName, requestedProfile) {
   ));
 }
 
+export function platformFamiliesForProfiles(profiles) {
+  return new Set(profiles.map(({ platform: family }) => family));
+}
+
 export function parseSelectionArgs(argv, { booleanFlags = [] } = {}) {
   const allowedBooleanFlags = new Set(booleanFlags);
   const values = { platformName: "all", requestedProfile: "all" };

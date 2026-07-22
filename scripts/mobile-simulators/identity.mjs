@@ -66,6 +66,7 @@ export function validateAndroidRuntimeIdentity(profile, identity) {
   const violations = [];
   const actualSize = normalizeWmSize(identity.wmSize);
   const actualDensity = normalizeWmDensity(identity.wmDensity);
+  const imageFamily = profile.systemImagePackage.split(";").at(-2);
   if (!identity.serial?.startsWith("emulator-")) violations.push(`ADB target must be emulator-*, got ${identity.serial || "missing"}`);
   if (identity.avdName !== profile.avdName) violations.push(`AVD must be ${profile.avdName}, got ${identity.avdName || "missing"}`);
   if (`${identity.api}` !== `${profile.api}`) violations.push(`API must be ${profile.api}, got ${identity.api || "missing"}`);
@@ -73,7 +74,20 @@ export function validateAndroidRuntimeIdentity(profile, identity) {
   if (actualSize !== normalizeWmSize(profile.expectedWmSize)) violations.push(`runtime size must be ${normalizeWmSize(profile.expectedWmSize)}, got ${actualSize || "missing"}`);
   if (actualDensity !== profile.expectedWmDensity) violations.push(`runtime density must be ${profile.expectedWmDensity}, got ${actualDensity || "missing"}`);
   if (!/google/i.test(identity.fingerprint || "")) violations.push(`runtime fingerprint must identify a Google image, got ${identity.fingerprint || "missing"}`);
-  return { ok: violations.length === 0, violations, actual: { size: actualSize, density: actualDensity } };
+  if (imageFamily === "google_apis_playstore" && !identity.playStorePackagePath?.split(/\r?\n/).some((line) => /^package:\/\S+\.apk$/i.test(line.trim()))) {
+    violations.push(`runtime image family must be ${imageFamily}; com.android.vending package path is missing`);
+  }
+  return {
+    ok: violations.length === 0,
+    violations,
+    actual: {
+      size: actualSize,
+      density: actualDensity,
+      imageFamily,
+      systemFingerprint: identity.systemImage || null,
+      playStorePackagePath: identity.playStorePackagePath || null,
+    },
+  };
 }
 
 export function validateAppleDeviceIdentity(profile, device, availableRuntimeIds = []) {

@@ -8,6 +8,7 @@ import {
   REPO_ROOT,
   TOOL_VERSIONS,
   parseSelectionArgs,
+  platformFamiliesForProfiles,
   profilesFor,
 } from "./config.mjs";
 
@@ -19,7 +20,7 @@ try {
   console.error(`Appium setup selection error: ${error.message}`);
   process.exit(2);
 }
-const selectedFamilies = new Set(profilesFor(selection.platformName, selection.requestedProfile).map(({ platform }) => platform));
+const selectedFamilies = platformFamiliesForProfiles(profilesFor(selection.platformName, selection.requestedProfile));
 const env = { ...process.env, APPIUM_HOME, ANDROID_HOME, ANDROID_SDK_ROOT: ANDROID_HOME, JAVA_HOME: ANDROID_JAVA_HOME };
 
 function run(args, { allowFailure = false } = {}) {

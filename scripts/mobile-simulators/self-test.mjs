@@ -1,6 +1,11 @@
 import assert from "node:assert/strict";
 import { chromium } from "@playwright/test";
-import { SIMULATOR_PROFILES, parseSelectionArgs, profilesFor } from "./config.mjs";
+import {
+  SIMULATOR_PROFILES,
+  parseSelectionArgs,
+  platformFamiliesForProfiles,
+  profilesFor,
+} from "./config.mjs";
 import {
   parseIni,
   validateAndroidAvdConfig,
@@ -19,6 +24,9 @@ const compact = SIMULATOR_PROFILES.find(({ id }) => id === "ios-simulator-compac
 assert.deepEqual(parseSelectionArgs([]), { platformName: "all", requestedProfile: "all" });
 assert.deepEqual(parseSelectionArgs(["--", "--platform", "ios"]), { platformName: "ios", requestedProfile: "all" });
 assert.equal(profilesFor("android", "all").length, 2);
+assert.deepEqual([...platformFamiliesForProfiles(profilesFor("all", "android-emulator-s24-class"))], ["android"]);
+assert.deepEqual([...platformFamiliesForProfiles(profilesFor("all", "ios-simulator-compact"))], ["ios"]);
+assert.deepEqual([...platformFamiliesForProfiles(profilesFor("all", "all"))].sort(), ["android", "ios"]);
 assert.throws(() => parseSelectionArgs(["--platform"]), /requires a non-empty value/);
 assert.throws(() => parseSelectionArgs(["--profile", ""]), /requires a non-empty value/);
 assert.throws(() => parseSelectionArgs(["--platform", "nonsense"]), /Unknown --platform/);
@@ -52,10 +60,16 @@ const validRuntime = {
   wmSize: "Physical size: 1080x2340",
   wmDensity: "Physical density: 420",
   fingerprint: "google/sdk_gphone64_arm64/emu64a:14/test",
+  systemImage: "google/sdk_gphone64_arm64/emu64a:14/test",
+  playStorePackagePath: "package:/product/priv-app/Phonesky/Phonesky.apk",
 };
 assert.equal(validateAndroidRuntimeIdentity(phone, validRuntime).ok, true);
 assert.equal(validateAndroidRuntimeIdentity(phone, { ...validRuntime, wmSize: "Physical size: 720x1280\nOverride size: 1080x2340", wmDensity: "Physical density: 480\nOverride density: 420" }).ok, true);
 assert.equal(validateAndroidRuntimeIdentity(phone, { ...validRuntime, wmDensity: "Physical density: 480" }).ok, false);
+const genericGoogleApisRuntime = { ...validRuntime, playStorePackagePath: "" };
+const genericGoogleApisValidation = validateAndroidRuntimeIdentity(phone, genericGoogleApisRuntime);
+assert.equal(genericGoogleApisValidation.ok, false);
+assert.match(genericGoogleApisValidation.violations.join("\n"), /google_apis_playstore.*com\.android\.vending/);
 
 const validApple = {
   name: compact.deviceName,
