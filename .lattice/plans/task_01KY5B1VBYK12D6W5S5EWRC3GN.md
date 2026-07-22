@@ -392,6 +392,22 @@ rework:
 Re-run focused simulator self-tests, profile-only CLI cases, standard gates,
 and an independent cold review after these corrections.
 
+## Review Cycle 3 Findings
+
+Independent review confirmed platform-family isolation and all prior findings,
+but classified one remaining Android runtime false-green as
+implementation-level rework:
+
+- The `com.android.vending` package query currently accepts any non-empty APK
+  path. Require a recognized Play Store package-manager path shape (a modern
+  `/data/app/.../com.android.vending-.../*.apk` install or a privileged
+  `Phonesky` path under the Android system/product partitions) and reject temp,
+  unrelated-app, malformed, whitespace, and spoofed paths. Add representative
+  positive and negative pure self-tests.
+
+This is the third and final review-rework cycle. Re-run simulator self-tests,
+typecheck, focused CLI checks, diff/provider audit, and a final cold review.
+
 ## Reset 2026-07-22 by agent:codex-root
 
 ## Reset 2026-07-22 by agent:codex-root
