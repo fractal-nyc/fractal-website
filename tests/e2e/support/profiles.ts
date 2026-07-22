@@ -42,6 +42,7 @@ export const FAST_PROFILES = FULL_PROFILES.filter(({ name }) =>
     "boundary-1024x768",
     "desktop-1440x900",
     "phone-text-200",
+    "phone-reduced-motion",
   ].includes(name),
 );
 

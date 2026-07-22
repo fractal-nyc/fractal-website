@@ -1,17 +1,11 @@
 import { expect, test } from "@playwright/test";
 import { RENDERED_ROUTES, INTERNAL_REDIRECTS } from "./support/routes";
-import { assertNoHorizontalOverflow, assertPageGutters, assertRealMobileEnvironment, attachEnvironment, preparePage } from "./support/layout-assertions";
+import { assertNavbarDoesNotCoverContent, assertNoHorizontalOverflow, assertPageGutters, assertPrimaryContentIntegrity, assertRealMobileEnvironment, attachEnvironment, preparePage } from "./support/layout-assertions";
 import type { ResponsiveProfile } from "./support/profiles";
 
 for (const route of RENDERED_ROUTES) {
   test(`${route} satisfies the rendered responsive contract`, async ({ page }, testInfo) => {
     const profile = testInfo.project.metadata.profile as ResponsiveProfile | undefined;
-    test.skip(
-      (profile?.name === "phone-320x568" && ["/the-protocol", "/library", "/people"].includes(route)) ||
-        (profile?.name === "phone-360x640" && route === "/people") ||
-        (Boolean(profile?.rootFontScale) && route !== "/"),
-      "Tracked by FRAC-18: route-specific compact-phone overflow discovered by this gate",
-    );
     const baseOrigin = new URL(testInfo.project.use.baseURL as string).origin;
     const pageErrors: string[] = [];
     const consoleErrors: string[] = [];
@@ -30,9 +24,11 @@ for (const route of RENDERED_ROUTES) {
     await page.goto(route, { waitUntil: "domcontentloaded" });
     await preparePage(page, profile?.rootFontScale);
     const metrics = await attachEnvironment(page, testInfo);
-    assertRealMobileEnvironment(metrics, testInfo.project.name);
+    await assertRealMobileEnvironment(page, metrics, testInfo);
     await assertNoHorizontalOverflow(page);
     await assertPageGutters(page);
+    await assertNavbarDoesNotCoverContent(page);
+    await assertPrimaryContentIntegrity(page);
 
     const menu = page.getByRole("button", { name: /open menu|close menu/i }).first();
     if (await menu.isVisible()) {

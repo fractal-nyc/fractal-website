@@ -7,6 +7,10 @@ const matrix = process.env.PW_MATRIX === "full" ? "full" : "fast";
 export default defineConfig({
   testDir: "./tests/e2e",
   outputDir: "test-results",
+  // Keep one Chromium layout baseline across developer and Linux CI hosts.
+  // The bounded pixel ratios in the visual spec absorb font rasterization and
+  // real WebGL noise; project/profile names remain part of each explicit arg.
+  snapshotPathTemplate: "{testDir}/{testFilePath}-snapshots/{arg}{ext}",
   timeout: remote ? 90_000 : 45_000,
   expect: { timeout: remote ? 30_000 : 15_000 },
   fullyParallel: !remote,

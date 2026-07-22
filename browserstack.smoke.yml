@@ -9,14 +9,20 @@ platforms:
     deviceName: Samsung Galaxy S24
     deviceOrientation: portrait
     consoleLogs: errors
+    playwrightConfigOptions:
+      name: bs-galaxy-s24-portrait
   - browserName: chrome
     osVersion: "14.0"
     deviceName: Samsung Galaxy S24
     deviceOrientation: landscape
     consoleLogs: errors
+    playwrightConfigOptions:
+      name: bs-galaxy-s24-landscape
   - browserName: safari
     osVersion: "17.5"
     deviceName: iPhone 15 Pro Max
+    playwrightConfigOptions:
+      name: bs-iphone-15-pro-max-portrait
 parallelsPerPlatform: 1
 browserstackLocal: true
 browserStackLocalOptions:

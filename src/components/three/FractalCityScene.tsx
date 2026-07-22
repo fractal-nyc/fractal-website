@@ -91,12 +91,11 @@ export function FractalCityScene({
       >
         <div
           ref={eventSourceRef}
-          className="pointer-events-auto"
+          className="hero-hit-target pointer-events-auto"
           style={{
             width: "min(88%, 550px)",
             maxHeight: "100%",
             aspectRatio: "3 / 4",
-            touchAction: "pan-y",
           }}
         />
       </div>

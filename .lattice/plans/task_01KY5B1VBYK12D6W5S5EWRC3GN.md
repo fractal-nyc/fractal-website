@@ -409,3 +409,23 @@ this column.
   structural geometry assertions are the cross-device truth.
 - **Shared-worktree/stale FRAC-11 state:** port only attributable changes, inspect
   current diffs before editing, and do not revert unrelated work.
+
+## Reset 2026-07-22 by agent:codex-root
+
+## Review Cycle 1 Findings
+
+Independent review requires implementation-level rework before acceptance:
+
+- Remove broad route/text-stress skips from the all-route responsive contract;
+  repair the underlying overflow where it is within FRAC-17 scope, and keep any
+  genuinely unsupported stress state explicit and narrowly justified.
+- Make initial visual-viewport containment assertions run on BrowserStack
+  projects as well as local metadata-driven profiles.
+- Validate configured real-device identity (Android Galaxy/Pixel/tablet versus
+  iPhone/iPad Safari) rather than accepting any generic mobile user agent.
+- Add executable coverage for rotation/orientation, touch interaction,
+  navbar/content overlap, reduced motion, and stable visual evidence. Where
+  browser-chrome expansion cannot be automated, preserve it as a clearly gated
+  physical release requirement and never count it as an automated pass.
+- Physical BrowserStack and Samsung Internet evidence remains required before
+  the task can move from reviewed implementation to full completion.

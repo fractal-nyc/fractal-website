@@ -173,6 +173,14 @@
     z-index: 1;
   }
 
+  /* OrbitControls writes `touch-action: none` onto its DOM event source.
+     This hit target deliberately permits native vertical page gestures while
+     keeping horizontal drags available for orbiting, so the scoped important
+     declaration must win over that library-owned inline mutation. */
+  .hero-hit-target {
+    touch-action: pan-y !important;
+  }
+
   .hero-footer {
     position: relative;
     display: flex;
@@ -292,6 +300,7 @@
     text-transform: uppercase;
     letter-spacing: 0.04em;
     line-height: 1.1;
+    overflow-wrap: anywhere;
   }
 
   .text-title {
@@ -300,6 +309,7 @@
     font-weight: 350;
     text-transform: none;
     letter-spacing: 0.04em;
+    overflow-wrap: anywhere;
   }
 
   .text-subtitle {
@@ -308,6 +318,7 @@
     font-weight: 300;
     text-transform: none;
     letter-spacing: 0.04em;
+    overflow-wrap: anywhere;
   }
 
   /* Body tier (Inter, normal-case) */
@@ -315,6 +326,7 @@
     @apply font-sans text-base;
     font-weight: 400;
     text-transform: none;
+    overflow-wrap: anywhere;
   }
 
   .text-body-lead {
@@ -322,6 +334,7 @@
     font-weight: 300;
     text-transform: none;
     line-height: 1.7;
+    overflow-wrap: anywhere;
   }
 
   /* Aside tier — italic Inter weight 400 normal-case text-base
@@ -333,6 +346,7 @@
     font-style: italic;
     font-weight: 400;
     text-transform: none;
+    overflow-wrap: anywhere;
   }
 
   /* Chrome tier (JetBrains Mono, uppercase, widest tracking) */
@@ -341,6 +355,7 @@
     font-weight: 500;
     text-transform: uppercase;
     letter-spacing: 0.1em;
+    overflow-wrap: anywhere;
   }
 
   /* Mono-display tier — JetBrains Mono uppercase weight 100 responsive
@@ -352,6 +367,7 @@
      Resolves the FRAC-22 Home audit GAP. FRAC-45. */
   .text-mono-display {
     @apply font-mono text-sm md:text-base uppercase font-thin leading-relaxed;
+    overflow-wrap: anywhere;
   }
 
   /* Input tier (JetBrains Mono, uppercase, no tracking, text-base for
@@ -366,6 +382,7 @@
     font-weight: 400;
     text-transform: uppercase;
     letter-spacing: normal;
+    overflow-wrap: anywhere;
   }
 
   /* FRAC-33: visually-hidden until any descendant receives focus. Used

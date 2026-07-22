@@ -35,14 +35,20 @@ from being accepted as a mobile run.
 `tests/e2e/support/profiles.ts` is the single source of truth. It covers 320px
 compact phones through iPad Pro and desktop, portrait and short landscape,
 1023/1024 structural-boundary states, touch and hover, reduced motion, and 200%
-root-text stress. Root-text stress is focused on Home while route-specific
-stress defects found during rollout stay visible as linked, annotated skips.
+root-text stress. Every rendered route runs at 320px, 360px, and 200% root-text
+stress; there are no route or text-content overflow exemptions.
 `tests/e2e/support/routes.ts` lists all rendered routes and
 legacy internal redirects. External FractalU/Accelerator destinations are never
 opened during a route sweep.
 
 The local suite asserts document containment, canonical computed gutters, menu
-touch targets, errors/assets, and the Home Hero's stage/footer/CTA ownership.
+touch targets, navbar/content non-overlap, errors/assets, and the Home Hero's
+stage/footer/CTA ownership. A designated Chromium phone rotates portrait to
+landscape and back without reload. Another injects trusted touch input into the
+real WebGL canvas, verifies projected nodes move, checks that the stage retains
+vertical page scrolling, and confirms the reduced-motion contract. Stable Home
+and Library screenshots cover 320px portrait, 640px landscape, the 1024px
+structural boundary, and 1440px desktop.
 The Hero suite waits for the actual WebGL scene—never a mock—then samples visible
 projected labels against the computed page-gutter/safe-area box. Short landscape
 and enlarged text may make the Hero taller than one viewport; content must stay
@@ -71,6 +77,13 @@ orientation is fixed before each session by capability. BrowserStack Playwright
 does not reliably expose iOS landscape configuration, so iOS rotation remains
 a physical release step. Provider device names and OS versions drift; check the
 live capability inventory before changing the dated matrix.
+
+Each YAML platform has a unique Playwright project name. At runtime the suite
+requests BrowserStack session details and rejects the session unless its exact
+device, OS version, browser family, touch environment, and configured
+orientation match that project. The session details JSON is attached to the
+test result. This identity check is required evidence; a mobile-sized desktop
+fallback or a different provider device cannot satisfy it.
 
 BrowserStack Playwright automates Chrome on the Galaxy S24, **not Samsung
 Internet**. Never report the S24 Chrome lane as Samsung Internet coverage.
@@ -101,7 +114,9 @@ Story CTA, every internal route, and reduced motion. Confirm no horizontal pan,
 clipped copy/media, overlap, duplicate navigation, or failed first-party assets.
 For the Home browser-bar check, capture actual `visualViewport` before collapse,
 after collapse, and after expansion. If automation cannot change those metrics,
-mark that case inconclusive and complete it physically.
+the automated probe records `inconclusive-physical-check-required`; complete it
+physically before release. The remote Hero containment assertions still use the
+live `visualViewport` dimensions in every portrait physical-device session.
 
 ## CI tiers
 
