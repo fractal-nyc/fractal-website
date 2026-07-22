@@ -429,3 +429,5 @@ Independent review requires implementation-level rework before acceptance:
   physical release requirement and never count it as an automated pass.
 - Physical BrowserStack and Samsung Internet evidence remains required before
   the task can move from reviewed implementation to full completion.
+
+## Reset 2026-07-22 by agent:codex-root
