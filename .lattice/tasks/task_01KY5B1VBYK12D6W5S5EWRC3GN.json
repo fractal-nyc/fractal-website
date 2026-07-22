@@ -8,7 +8,7 @@
       "repo": null
     }
   ],
-  "comment_count": 8,
+  "comment_count": 10,
   "complexity": null,
   "created_at": "2026-07-22T16:37:58Z",
   "created_by": "agent:codex-root",
@@ -25,20 +25,25 @@
       "id": "ev_01KY5G7TQCVY1MXEPRM6CQM8TA",
       "role": "review",
       "source_type": "comment"
+    },
+    {
+      "id": "ev_01KY5HMKA4T9QA8JKPK3KKR37S",
+      "role": "review",
+      "source_type": "comment"
     }
   ],
   "id": "task_01KY5B1VBYK12D6W5S5EWRC3GN",
-  "last_event_id": "ev_01KY5HGPEVGQK90RVQQM8Z98AD",
-  "last_status_changed_at": "2026-07-22T18:30:56Z",
+  "last_event_id": "ev_01KY5HNBD8TTBVP0MNH08Y4Y5N",
+  "last_status_changed_at": "2026-07-22T18:33:29Z",
   "priority": "high",
   "relationships_out": [],
   "reopened_count": 2,
   "schema_version": 1,
   "short_id": "FRAC-17",
-  "status": "review",
+  "status": "needs_human",
   "tags": null,
   "title": "Real-device responsive test system and mobile hero validation",
   "type": "task",
-  "updated_at": "2026-07-22T18:30:56Z",
+  "updated_at": "2026-07-22T18:33:29Z",
   "urgency": null
 }
