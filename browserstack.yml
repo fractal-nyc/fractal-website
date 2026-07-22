@@ -1,0 +1,44 @@
+# Real hardware matrix. Local Playwright projects are simulations; only this
+# SDK-backed lane may be reported as Android/iOS device evidence.
+framework: playwright
+projectName: Fractal NYC
+buildName: responsive-real-devices
+buildIdentifier: "#${BUILD_NUMBER}"
+browserstackAutomation: true
+platforms:
+  - browserName: chrome
+    osVersion: "14.0"
+    deviceName: Samsung Galaxy S24
+    deviceOrientation: portrait
+    consoleLogs: errors
+  - browserName: chrome
+    osVersion: "14.0"
+    deviceName: Samsung Galaxy S24
+    deviceOrientation: landscape
+    consoleLogs: errors
+  - browserName: chrome
+    osVersion: "14.0"
+    deviceName: Google Pixel 8
+    deviceOrientation: portrait
+    consoleLogs: errors
+  - browserName: chrome
+    osVersion: "13.0"
+    deviceName: Samsung Galaxy Tab S9
+    deviceOrientation: portrait
+    consoleLogs: errors
+  - browserName: safari
+    osVersion: "15.4"
+    deviceName: iPhone SE 2022
+  - browserName: safari
+    osVersion: "17.5"
+    deviceName: iPhone 15 Pro Max
+  - browserName: safari
+    osVersion: "17.5"
+    deviceName: iPad Pro 13 2024
+parallelsPerPlatform: 1
+browserstackLocal: true
+browserStackLocalOptions:
+  localIdentifier: "${BROWSERSTACK_LOCAL_IDENTIFIER}"
+networkLogs: true
+debug: false
+testObservability: true

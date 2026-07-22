@@ -20,7 +20,7 @@ export function PhotoGallery({ sections }: PhotoGalleryProps) {
   const directions: Array<"up" | "left" | "right"> = ["up", "left", "right"];
 
   return (
-    <section className="py-16 md:py-24">
+    <section className="py-16 md:py-24 overflow-x-clip">
       <div className="max-w-7xl mx-auto page-gutter space-y-6 md:space-y-10">
         {sections.map((section, sectionIdx) => {
           const dir = directions[sectionIdx % directions.length];

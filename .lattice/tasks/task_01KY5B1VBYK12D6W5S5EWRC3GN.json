@@ -1,0 +1,33 @@
+{
+  "assigned_to": null,
+  "branch_links": [
+    {
+      "branch": "frac-17-real-device-responsive-testing",
+      "linked_at": "2026-07-22T16:38:10Z",
+      "linked_by": "agent:codex-root",
+      "repo": null
+    }
+  ],
+  "comment_count": 2,
+  "complexity": null,
+  "created_at": "2026-07-22T16:37:58Z",
+  "created_by": "agent:codex-root",
+  "custom_fields": {},
+  "description": "Build a layered responsive testing system that validates every route across accurate width/height, touch/hover, orientation, browser-engine, text-scaling, and safe-area conditions; add real Android/iOS device-cloud execution rather than relying on Chrome presets; reconcile prior FRAC-11 browser-gate work; use the suite to validate and repair the homepage hero clipping on Galaxy S24-class short visible viewports; document secrets and physical-device release acceptance.",
+  "done_at": null,
+  "evidence_refs": [],
+  "id": "task_01KY5B1VBYK12D6W5S5EWRC3GN",
+  "last_event_id": "ev_01KY5D52ECV0YW7WJ84QPG073H",
+  "last_status_changed_at": "2026-07-22T17:14:41Z",
+  "priority": "high",
+  "relationships_out": [],
+  "reopened_count": 0,
+  "schema_version": 1,
+  "short_id": "FRAC-17",
+  "status": "review",
+  "tags": null,
+  "title": "Real-device responsive test system and mobile hero validation",
+  "type": "task",
+  "updated_at": "2026-07-22T17:14:41Z",
+  "urgency": null
+}

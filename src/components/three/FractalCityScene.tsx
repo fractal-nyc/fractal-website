@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
 import * as THREE from "three";
@@ -41,11 +41,16 @@ export function FractalCityScene({
   //   user-driven one-finger orbit (FRAC-143) keeps working inside the
   //   centered area.
   const eventSourceRef = useRef<HTMLDivElement>(null);
+  const [sceneReady, setSceneReady] = useState(false);
 
   return (
     <>
       {/* Full-bleed visual canvas. eventSource decouples hit-testing from this. */}
-      <div className="absolute inset-0 z-[1]">
+      <div
+        className="absolute inset-0 z-[1]"
+        data-hero-scene
+        data-scene-ready={sceneReady ? "true" : "false"}
+      >
         <Canvas
           camera={{ position: [0, 0.8, 8], fov: 50, near: 0.1, far: 100 }}
           dpr={[1, 2]}
@@ -56,6 +61,7 @@ export function FractalCityScene({
           onCreated={({ gl }) => {
             gl.toneMapping = THREE.NoToneMapping;
             gl.setClearColor(0x000000, 0);
+            setSceneReady(true);
           }}
         >
           <SceneLighting />
@@ -80,12 +86,18 @@ export function FractalCityScene({
           right at the edge. The extra vertical room gives those top/bottom
           nav nodes some tap forgiveness. */}
       <div
-        className="absolute inset-x-0 top-16 bottom-20 z-[2] flex items-center justify-center pointer-events-none"
+        className="absolute inset-0 z-[2] flex items-center justify-center pointer-events-none"
+        data-hero-hit-region
       >
         <div
           ref={eventSourceRef}
           className="pointer-events-auto"
-          style={{ width: "min(90vmin, 550px)", aspectRatio: "3 / 4", touchAction: "pan-y" }}
+          style={{
+            width: "min(88%, 550px)",
+            maxHeight: "100%",
+            aspectRatio: "3 / 4",
+            touchAction: "pan-y",
+          }}
         />
       </div>
     </>

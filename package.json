@@ -13,6 +13,10 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
+    "test:e2e:fast": "PW_MATRIX=fast playwright test",
+    "test:e2e:full": "PW_MATRIX=full playwright test",
+    "test:e2e:real:smoke": "node scripts/run-browserstack.mjs browserstack.smoke.yml",
+    "test:e2e:real": "node scripts/run-browserstack.mjs browserstack.yml",
     "build:hero-bg": "node scripts/build-hero-bg.mjs",
     "build:favicon": "node scripts/build-favicon.mjs",
     "build:banners": "node scripts/compress-banners.mjs"
@@ -34,6 +38,7 @@
     "wouter": "^3.3.5"
   },
   "devDependencies": {
+    "@playwright/test": "1.59.1",
     "@tailwindcss/typography": "^0.5.15",
     "@tailwindcss/vite": "^4.1.14",
     "@testing-library/jest-dom": "^6.9.1",
@@ -44,6 +49,7 @@
     "@types/react-dom": "^19.2.0",
     "@types/three": "^0.183.1",
     "@vitejs/plugin-react": "^5.0.4",
+    "browserstack-node-sdk": "1.64.2",
     "jsdom": "^29.0.2",
     "png-to-ico": "^3.0.1",
     "sharp": "^0.34.5",

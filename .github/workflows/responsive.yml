@@ -1,0 +1,103 @@
+name: Responsive conformance
+
+on:
+  pull_request:
+  schedule:
+    - cron: "19 6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  local-responsive:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: corepack enable
+      - run: pnpm install --frozen-lockfile
+      - name: Install browser engines
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            pnpm exec playwright install --with-deps chromium
+          else
+            pnpm exec playwright install --with-deps chromium firefox webkit
+          fi
+      - run: pnpm typecheck
+      - run: pnpm test
+      - run: pnpm build
+      - run: pnpm conformance
+      - name: Responsive route matrix
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            pnpm test:e2e:fast
+          else
+            pnpm test:e2e:full
+          fi
+      - name: Upload Playwright evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: local-responsive-${{ github.run_id }}
+          path: |
+            playwright-report/
+            test-results/
+          if-no-files-found: ignore
+          retention-days: 14
+
+  real-device-responsive:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      BROWSERSTACK_USERNAME: ${{ secrets.BROWSERSTACK_USERNAME }}
+      BROWSERSTACK_ACCESS_KEY: ${{ secrets.BROWSERSTACK_ACCESS_KEY }}
+      BROWSERSTACK_LOCAL_IDENTIFIER: fractal-${{ github.run_id }}-${{ github.run_attempt }}
+      BUILD_NUMBER: ${{ github.run_number }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - name: Credential gate
+        id: credentials
+        shell: bash
+        run: |
+          if [ -n "$BROWSERSTACK_USERNAME" ] && [ -n "$BROWSERSTACK_ACCESS_KEY" ]; then
+            echo "available=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "available=false" >> "$GITHUB_OUTPUT"
+            echo "### Real-device responsive lane skipped" >> "$GITHUB_STEP_SUMMARY"
+            echo "BROWSERSTACK_USERNAME and BROWSERSTACK_ACCESS_KEY are not available (expected for forks/unconfigured repositories)." >> "$GITHUB_STEP_SUMMARY"
+          fi
+      - if: steps.credentials.outputs.available == 'true'
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: 22
+          cache: pnpm
+      - if: steps.credentials.outputs.available == 'true'
+        run: corepack enable
+      - if: steps.credentials.outputs.available == 'true'
+        run: pnpm install --frozen-lockfile
+      - if: steps.credentials.outputs.available == 'true'
+        run: pnpm build
+      - name: Run physical-device matrix
+        if: steps.credentials.outputs.available == 'true'
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            pnpm test:e2e:real:smoke
+          else
+            pnpm test:e2e:real
+          fi
+      - name: Upload real-device evidence
+        if: always() && steps.credentials.outputs.available == 'true'
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: real-device-responsive-${{ github.run_id }}
+          path: |
+            playwright-report/
+            test-results/
+            browserstack-artifacts/
+          if-no-files-found: ignore
+          retention-days: 30

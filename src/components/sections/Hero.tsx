@@ -163,7 +163,10 @@ export function Hero() {
   const noResults = query.trim().length > 1 && flatResults.length === 0;
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center pt-20 overflow-hidden bg-background text-foreground">
+    <section
+      className="hero-shell bg-background text-foreground"
+      data-hero-shell
+    >
       {/* FRAC-33: Keyboard skip-nav for the hero octahedron.
           The 3D nav nodes are only reachable via pointer events on the
           R3F mesh — keyboard users have no path. This parallel nav is
@@ -195,9 +198,14 @@ export function Hero() {
         </ul>
       </nav>
 
-      <Suspense fallback={null}>
-        <FractalCityScene onNavigate={handleNavigate} />
-      </Suspense>
+      <div className="hero-stage" data-hero-stage>
+        <div aria-hidden="true" className="absolute inset-0 page-gutter pointer-events-none">
+          <span className="block h-full w-full" data-hero-safe-zone />
+        </div>
+        <Suspense fallback={null}>
+          <FractalCityScene onNavigate={handleNavigate} />
+        </Suspense>
+      </div>
 
       {/* CTA — instructs visitors to use the Octant (the hero octahedron) as
           the primary navigation. Intentional hero-only treatment: italic
@@ -226,20 +234,27 @@ export function Hero() {
           pointer-events-none so it never blocks taps/swipes on the octant
           underneath — only the scroll link re-enables pointer events. Sizes
           step up from phone (<md) to small tablet (md..lg). */}
-      <div className="lg:hidden absolute inset-x-0 bottom-0 z-10 flex items-end justify-between gap-4 page-gutter pb-8 md:pb-12 pointer-events-none">
-        <p className="font-mono normal-case text-foreground/85 leading-relaxed max-w-[54%] md:max-w-[46%] text-[13px] md:text-[16px]">
+      <div
+        className="hero-footer lg:hidden z-10 page-gutter pointer-events-none"
+        data-hero-footer
+      >
+        <p
+          className="font-mono normal-case text-foreground/85 leading-relaxed min-w-0 text-[13px] md:text-[16px]"
+          data-hero-blurb
+        >
           In 2021, our small group of friends decided to live, learn, and build
           together in NYC.
         </p>
         <a
           href="#story"
           aria-label="Explore our Story — scroll to the Story section"
-          className="pointer-events-auto shrink-0 flex flex-col items-start gap-1.5 text-foreground/70 hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground rounded-sm px-1 pb-1"
+          className="pointer-events-auto shrink-0 inline-flex items-center gap-2 text-foreground/70 hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground rounded-sm py-2"
+          data-hero-cta
         >
           <span className="text-label text-[11px] md:text-[13px] whitespace-nowrap">
             Explore our Story
           </span>
-          <ArrowDown className="h-5 w-5 md:h-6 md:w-6 motion-safe:animate-bounce" />
+          <ArrowDown className="h-5 w-5 md:h-6 md:w-6 motion-safe:animate-bounce" data-hero-arrow />
         </a>
       </div>
 
@@ -417,8 +432,8 @@ export function Hero() {
       </div>
 
       {/* Hero background — responsive variants from FRAC-177 */}
-      <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
-        <picture>
+      <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden" data-hero-background>
+        <picture className="block h-full w-full">
           {/* FRAC-194: capped at 1280w. The background is decorative (opacity
               0.15, scale 1.35) — larger variants are imperceptible and the 2560w
               AVIF was the page's heaviest asset (242 KB). Keep srcset in sync with
@@ -442,11 +457,7 @@ export function Hero() {
           <img
             src={`${import.meta.env.BASE_URL}images/hero/fractal-background-fallback.png`}
             alt="NYC skyline backdrop"
-            className="w-full h-full object-cover object-bottom"
-            style={{
-              opacity: 0.15,
-              transform: "translate(2.75%, -8%) scale(1.35)",
-            }}
+            className="hero-background-image w-full h-full object-cover"
             loading="eager"
             fetchPriority="high"
           />

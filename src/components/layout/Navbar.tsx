@@ -249,7 +249,8 @@ export function Navbar() {
             ? { duration: 0 }
             : { duration: 0.4, ease: [0.25, 1, 0.5, 1] }
         }
-        className="fixed top-0 left-0 right-0 z-50 bg-transparent"
+        className="site-navbar fixed top-0 left-0 right-0 z-50 bg-transparent"
+        data-site-navbar
       >
         {showFull ? (
           <>
@@ -312,13 +313,13 @@ export function Navbar() {
                 className="flex items-baseline gap-1.5 tracking-tighter leading-none min-w-0"
               >
                 <span
-                  className="text-[clamp(30px,8.6vw,46px)]"
+                  className="text-[clamp(26px,8.6vw,46px)]"
                   style={{ fontFamily: "'Jacquard 24', system-ui" }}
                 >
                   Fractal
                 </span>
                 <span
-                  className="font-serif italic text-[clamp(19px,5.4vw,30px)]"
+                  className="font-serif italic text-[clamp(16px,5.4vw,30px)]"
                   style={{ textTransform: "none", fontWeight: 100 }}
                 >
                   Collective
@@ -328,7 +329,7 @@ export function Navbar() {
                 type="button"
                 aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
                 aria-expanded={mobileMenuOpen}
-                className="z-50 relative cursor-pointer transition-opacity duration-200 hover:opacity-70 active:opacity-90 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-offset-2 focus-visible:ring-offset-background rounded-md flex items-center justify-center p-3 -mr-3 shrink-0"
+                className="z-50 relative cursor-pointer transition-opacity duration-200 hover:opacity-70 active:opacity-90 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-offset-2 focus-visible:ring-offset-background rounded-md flex items-center justify-center p-2 -mr-2 shrink-0 min-h-11 min-w-11"
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               >
                 {mobileMenuOpen ? <X size={32} /> : <Menu size={32} />}
