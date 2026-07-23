@@ -8,13 +8,13 @@
       "repo": null
     }
   ],
-  "comment_count": 22,
+  "comment_count": 24,
   "complexity": null,
   "created_at": "2026-07-22T16:37:58Z",
   "created_by": "agent:codex-root",
   "custom_fields": {},
   "description": "Build a layered responsive testing system that validates every route across accurate width/height, touch/hover, orientation, browser-engine, text-scaling, and safe-area conditions; add real Android/iOS device-cloud execution rather than relying on Chrome presets; reconcile prior FRAC-11 browser-gate work; use the suite to validate and repair the homepage hero clipping on Galaxy S24-class short visible viewports; document secrets and physical-device release acceptance.",
-  "done_at": null,
+  "done_at": "2026-07-23T17:57:15Z",
   "evidence_refs": [
     {
       "id": "ev_01KY5DC4KMS4VQQDWB5DFT5Q1C",
@@ -50,20 +50,35 @@
       "id": "ev_01KY63YBDT48HDBW159ACR2XT8",
       "role": "review",
       "source_type": "comment"
+    },
+    {
+      "id": "ev_01KY81ZQVTZPWPDAQHENJGDDDA",
+      "role": "review",
+      "source_type": "comment"
+    },
+    {
+      "id": "art_01KY81ZQVTZPWPDAQHENJGDDD9",
+      "role": "review",
+      "source_type": "artifact"
+    },
+    {
+      "id": "ev_01KY820GFSGM9ERQPVDPEQ3JZE",
+      "role": "review",
+      "source_type": "comment"
     }
   ],
   "id": "task_01KY5B1VBYK12D6W5S5EWRC3GN",
-  "last_event_id": "ev_01KY81MYXMG4QMAM44Z6CEBKJ4",
-  "last_status_changed_at": "2026-07-23T17:51:22Z",
+  "last_event_id": "ev_01KY820GFSGM9ERQPVDPEQ3JZE",
+  "last_status_changed_at": "2026-07-23T17:57:15Z",
   "priority": "high",
   "relationships_out": [],
   "reopened_count": 6,
   "schema_version": 1,
   "short_id": "FRAC-17",
-  "status": "review",
+  "status": "done",
   "tags": null,
   "title": "Real-device responsive test system and mobile hero validation",
   "type": "task",
-  "updated_at": "2026-07-23T17:51:22Z",
+  "updated_at": "2026-07-23T17:57:40Z",
   "urgency": null
 }
