@@ -10,6 +10,7 @@ import {
   createAndroidChromeViewportRect,
   createNativeWebViewTransform,
   nativeWebViewSelector,
+  readNativeElementRect,
 } from "./native-coordinates.mjs";
 import {
   collectEnvironmentMetrics,
@@ -81,7 +82,7 @@ async function nativeWebViewTransform(browser, profile, metrics, nativeWindow) {
   const elements = await browser.$$(selector);
   const visibleRects = [];
   for (const element of elements) {
-    if (await element.isDisplayed()) visibleRects.push(await element.getRect());
+    if (await element.isDisplayed()) visibleRects.push(await readNativeElementRect(element));
   }
   let nativeRect = visibleRects[0];
   let nativeRectSource = "native-webview";
@@ -89,7 +90,7 @@ async function nativeWebViewTransform(browser, profile, metrics, nativeWindow) {
     const toolbarElements = await browser.$$(ANDROID_CHROME_TOOLBAR_SELECTOR);
     const toolbarRects = [];
     for (const element of toolbarElements) {
-      if (await element.isDisplayed()) toolbarRects.push(await element.getRect());
+      if (await element.isDisplayed()) toolbarRects.push(await readNativeElementRect(element));
     }
     if (toolbarRects.length !== 1) {
       throw new Error(`Expected exactly one visible Android Chrome toolbar (${ANDROID_CHROME_TOOLBAR_SELECTOR}) when the compressed native tree omitted ${selector}, found ${toolbarRects.length}`);

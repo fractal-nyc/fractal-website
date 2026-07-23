@@ -28,6 +28,7 @@ import {
   createAndroidChromeViewportRect,
   createNativeWebViewTransform,
   nativeWebViewSelector,
+  readNativeElementRect,
 } from "./native-coordinates.mjs";
 import {
   beginRuntimeHealthRoute,
@@ -126,6 +127,13 @@ const s24CoordinateTransform = createNativeWebViewTransform({
 });
 assert.equal(nativeWebViewSelector("android"), '//*[@class="android.webkit.WebView"]');
 assert.equal(nativeWebViewSelector("ios"), '//*[@type="XCUIElementTypeWebView"]');
+assert.deepEqual(
+  await readNativeElementRect({
+    async getLocation() { return { x: 0, y: 132 }; },
+    async getSize() { return { width: 1080, height: 147 }; },
+  }),
+  { x: 0, y: 132, width: 1080, height: 147 },
+);
 assert.equal(ANDROID_CHROME_TOOLBAR_SELECTOR, '//*[@resource-id="com.android.chrome:id/toolbar"]');
 const s24ToolbarViewport = createAndroidChromeViewportRect({
   toolbarRect: { x: 0, y: 132, width: 1080, height: 147 },

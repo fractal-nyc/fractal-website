@@ -8,6 +8,19 @@ export function nativeWebViewSelector(platform) {
     : '//*[@type="XCUIElementTypeWebView"]';
 }
 
+export async function readNativeElementRect(element) {
+  const [location, size] = await Promise.all([
+    element.getLocation(),
+    element.getSize(),
+  ]);
+  return {
+    x: location.x,
+    y: location.y,
+    width: size.width,
+    height: size.height,
+  };
+}
+
 function assertPositiveNumber(value, label) {
   if (!Number.isFinite(value) || value <= 0) {
     throw new Error(`${label} must be a positive finite number, got ${value}`);
