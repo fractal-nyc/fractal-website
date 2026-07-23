@@ -7,6 +7,7 @@ import {
   APPIUM_HOME,
   EVIDENCE_ROOT,
   REPO_ROOT,
+  buildAndroidEmulatorLaunchArgs,
   parseSelectionArgs,
   profilesFor,
 } from "./config.mjs";
@@ -106,7 +107,7 @@ async function bootAndroid(profile) {
     child = startProcess(
       `emulator-${profile.id}`,
       emulator,
-      ["-avd", profile.avdName, "-port", String(profile.emulatorPort), "-no-snapshot-save", "-no-boot-anim", "-gpu", "auto"],
+      buildAndroidEmulatorLaunchArgs(profile),
       androidEnv,
     );
     startedDevices.push({ platform: "android", serial, child });

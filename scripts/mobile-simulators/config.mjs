@@ -18,6 +18,20 @@ export const ANDROID_AVD_HOME = process.env.ANDROID_AVD_HOME
 
 export const SUPPORTED_PLATFORMS = Object.freeze(["all", "android", "ios"]);
 
+export function buildAndroidEmulatorLaunchArgs(profile) {
+  if (profile.platform !== "android") throw new Error(`Cannot build Android emulator arguments for ${profile.id}`);
+  return [
+    "-avd", profile.avdName,
+    "-port", String(profile.emulatorPort),
+    "-no-window",
+    "-gpu", "host",
+    "-no-snapshot-load",
+    "-no-snapshot-save",
+    "-no-boot-anim",
+    "-cores", "2",
+  ];
+}
+
 export const ANDROID_CHROME_113_WEBGL_WORKAROUND = Object.freeze({
   chromeMajorVersions: Object.freeze([113]),
   args: Object.freeze([

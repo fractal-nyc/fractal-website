@@ -3,6 +3,7 @@ import { chromium } from "@playwright/test";
 import {
   ANDROID_CHROME_113_WEBGL_WORKAROUND,
   SIMULATOR_PROFILES,
+  buildAndroidEmulatorLaunchArgs,
   parseSelectionArgs,
   platformFamiliesForProfiles,
   profilesFor,
@@ -42,6 +43,7 @@ import {
 } from "./suite.mjs";
 
 const phone = SIMULATOR_PROFILES.find(({ id }) => id === "android-emulator-s24-class");
+const tablet = SIMULATOR_PROFILES.find(({ id }) => id === "android-emulator-tablet");
 const compact = SIMULATOR_PROFILES.find(({ id }) => id === "ios-simulator-compact");
 
 assert.deepEqual(ANDROID_CHROME_113_WEBGL_WORKAROUND.args, [
@@ -49,6 +51,19 @@ assert.deepEqual(ANDROID_CHROME_113_WEBGL_WORKAROUND.args, [
   "--disable-vulkan",
   "--ignore-gpu-blocklist",
 ]);
+for (const profile of [phone, tablet]) {
+  assert.deepEqual(buildAndroidEmulatorLaunchArgs(profile), [
+    "-avd", profile.avdName,
+    "-port", String(profile.emulatorPort),
+    "-no-window",
+    "-gpu", "host",
+    "-no-snapshot-load",
+    "-no-snapshot-save",
+    "-no-boot-anim",
+    "-cores", "2",
+  ]);
+  assert.equal(buildAndroidEmulatorLaunchArgs(profile).includes("-memory"), false);
+}
 assert.deepEqual(
   buildNativeGestureActions([{ x: 100.4, y: 200.6 }], 80)[0].actions,
   [
