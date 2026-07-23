@@ -3,6 +3,7 @@ import { join } from "node:path";
 import { remote } from "webdriverio";
 import { INTERNAL_REDIRECTS, RENDERED_ROUTES } from "../../tests/e2e/support/routes.mjs";
 import { validateAndroidRuntimeIdentity, validateAppleDeviceIdentity } from "./identity.mjs";
+import { buildWebdriverCapabilities } from "./capabilities.mjs";
 import {
   collectEnvironmentMetrics,
   beginRuntimeHealthRoute,
@@ -67,7 +68,7 @@ async function nativeGesture(browser, points, pauseMs = 180) {
   await browser.releaseActions();
 }
 
-export async function runSimulatorSuite({ profile, identity, baseUrl, evidenceDir, appiumPort = 4723 }) {
+export async function runSimulatorSuite({ profile, identity, baseUrl, evidenceDir, androidChromeWorkaround = null, appiumPort = 4723 }) {
   mkdirSync(evidenceDir, { recursive: true });
   const startedAt = new Date().toISOString();
   const manifest = {
@@ -75,6 +76,7 @@ export async function runSimulatorSuite({ profile, identity, baseUrl, evidenceDi
     environment: profile.platform === "android" ? "android-emulator" : "apple-simulator",
     profile: profile.id,
     identity,
+    ...(profile.platform === "android" ? { androidChromeWorkaround } : {}),
     baseUrl,
     startedAt,
     records: [],
@@ -86,30 +88,7 @@ export async function runSimulatorSuite({ profile, identity, baseUrl, evidenceDi
     writeFileSync(manifestPath, JSON.stringify(manifest, null, 2));
   };
 
-  const capabilities = profile.platform === "android"
-    ? {
-        platformName: "Android",
-        browserName: "Chrome",
-        "appium:automationName": "UiAutomator2",
-        "appium:udid": identity.serial,
-        "appium:noReset": true,
-        "appium:newCommandTimeout": 300,
-        "appium:chromedriverAutodownload": true,
-        "appium:orientation": "PORTRAIT",
-        "goog:loggingPrefs": { browser: "ALL" },
-      }
-    : {
-        platformName: "iOS",
-        browserName: "Safari",
-        "appium:automationName": "XCUITest",
-        "appium:udid": identity.udid,
-        "appium:deviceName": identity.deviceName,
-        "appium:platformVersion": identity.platformVersion,
-        "appium:noReset": true,
-        "appium:newCommandTimeout": 300,
-        "appium:orientation": "PORTRAIT",
-        "appium:safariInitialUrl": `${baseUrl}/`,
-      };
+  const capabilities = buildWebdriverCapabilities({ profile, identity, baseUrl });
 
   const browser = await remote({ hostname: "127.0.0.1", port: appiumPort, path: "/", logLevel: "info", capabilities });
   try {
@@ -297,6 +276,7 @@ export async function runSimulatorSuite({ profile, identity, baseUrl, evidenceDi
       await browser.waitUntil(async () => new URL(await browser.getUrl()).hash === "#story", { timeout: 10_000, timeoutMsg: "Story CTA did not reach #story" });
       record("interaction", { name: "story-cta", result: "passed", url: await browser.getUrl() });
       await navigate("/", "PORTRAIT", "interaction-reset");
+      await browser.execute(() => scrollTo({ top: 0, behavior: "instant" }));
       await browser.waitUntil(async () => browser.execute(() => document.querySelectorAll("[data-hero-label]").length > 0), { timeout: 45_000 });
 
       const labelCentersBefore = await browser.execute(() => Array.from(document.querySelectorAll("[data-hero-label]")).map((element) => {

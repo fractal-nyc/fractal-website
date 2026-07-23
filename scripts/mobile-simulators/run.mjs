@@ -13,6 +13,7 @@ import {
 import { runDoctor } from "./doctor.mjs";
 import { validateAndroidRuntimeIdentity, validateAppleDeviceIdentity } from "./identity.mjs";
 import { runSimulatorSuite } from "./suite.mjs";
+import { cleanupAndroidChrome, prepareAndroidChrome } from "./android-chrome.mjs";
 
 let selection;
 try {
@@ -221,13 +222,45 @@ try {
     const identity = profile.platform === "android" ? await bootAndroid(profile) : await bootApple(profile);
     const baseUrl = profile.platform === "android" ? "http://10.0.2.2:4173" : "http://127.0.0.1:4173";
     const profileDir = join(runRoot, profile.id);
+    const executeAndroidShell = profile.platform === "android"
+      ? (args) => command(androidTool("platform-tools/adb"), ["-s", identity.serial, "shell", ...args], { env: androidEnv, allowFailure: true })
+      : null;
+    let chromePreparation = null;
+    let profileResult = null;
+    let profileError = null;
     try {
-      const result = await runSimulatorSuite({ profile, identity, baseUrl, evidenceDir: profileDir });
-      summary.results.push({ profile: profile.id, result: result.result, manifest: join(profileDir, "manifest.json") });
+      if (profile.platform === "android") {
+        chromePreparation = prepareAndroidChrome({
+          profile,
+          chromeVersion: identity.chromeVersion,
+          executeShell: executeAndroidShell,
+        });
+      }
+      const result = await runSimulatorSuite({
+        profile,
+        identity,
+        baseUrl,
+        evidenceDir: profileDir,
+        androidChromeWorkaround: chromePreparation?.metadata ?? null,
+      });
+      profileResult = { profile: profile.id, result: result.result, manifest: join(profileDir, "manifest.json") };
     } catch (error) {
-      summary.results.push({ profile: profile.id, result: "failed", message: error.message, manifest: join(profileDir, "manifest.json") });
-      throw error;
+      profileError = error;
+      profileResult = { profile: profile.id, result: "failed", message: error.message, manifest: join(profileDir, "manifest.json") };
     } finally {
+      if (chromePreparation) {
+        try {
+          chromePreparation.metadata.cleanup = cleanupAndroidChrome({
+            ownership: chromePreparation.ownership,
+            executeShell: executeAndroidShell,
+          }).state;
+        } catch (cleanupError) {
+          chromePreparation.metadata.cleanup = "failed";
+          chromePreparation.metadata.cleanupError = cleanupError.message;
+          if (!profileError) profileError = cleanupError;
+        }
+        profileResult.androidChromeWorkaround = chromePreparation.metadata;
+      }
       const started = startedDevices.find((device) => device.platform === profile.platform && (device.serial === identity.serial || device.udid === identity.udid));
       if (started) {
         if (started.platform === "android") {
@@ -239,7 +272,9 @@ try {
         startedDevices.splice(startedDevices.indexOf(started), 1);
       }
     }
+    summary.results.push(profileResult);
     writeFileSync(join(runRoot, "run.json"), JSON.stringify(summary, null, 2));
+    if (profileError) throw profileError;
   }
   summary.result = "passed";
 } catch (error) {

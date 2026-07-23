@@ -16,6 +16,7 @@ import {
   parseSelectionArgs,
 } from "./config.mjs";
 import { parseIni, validateAndroidAvdConfig, validateAppleDeviceIdentity } from "./identity.mjs";
+import { diagnoseAndroidChromeDebugState, inspectAndroidChromeDebugState } from "./android-chrome.mjs";
 
 function executable(path) {
   try {
@@ -137,10 +138,43 @@ export async function runDoctor({ platformName = "all", requestedProfile = "all"
     }
     const adbDevices = executable(adb) ? run(adb, ["devices", "-l"]).stdout : "";
     checks.push(check("ADB emulator boot state", /^emulator-\d+\s+device\b/m.test(adbDevices), adbDevices || "no booted emulator (the runner can boot it)", null, false));
-    if (/^emulator-\d+\s+device\b/m.test(adbDevices)) {
-      const serial = adbDevices.match(/^(emulator-\d+)\s+device\b/m)?.[1];
-      const chrome = serial ? run(adb, ["-s", serial, "shell", "dumpsys", "package", "com.android.chrome"]) : { ok: false, stdout: "", stderr: "" };
-      checks.push(check("Chrome for Android", chrome.ok && /versionName=/i.test(chrome.stdout), chrome.stdout.match(/versionName=[^\s]+/)?.[0] || chrome.stderr, "Boot the AVD, finish Chrome's first-run flow, and ensure Chrome is enabled."));
+    const bootedAndroid = [...adbDevices.matchAll(/^(emulator-\d+)\s+device\b/gm)].flatMap(([, serial]) => {
+      const name = run(adb, ["-s", serial, "emu", "avd", "name"]);
+      return name.ok && name.stdout ? [{ serial, avdName: name.stdout.split(/\r?\n/)[0] }] : [];
+    });
+    for (const profile of selected.filter(({ platform: family }) => family === "android")) {
+      const booted = bootedAndroid.find(({ avdName }) => avdName === profile.avdName);
+      if (!booted) continue;
+      const chrome = run(adb, ["-s", booted.serial, "shell", "dumpsys", "package", "com.android.chrome"]);
+      const chromeVersion = chrome.stdout.match(/versionName=([^\s]+)/)?.[1] ?? null;
+      checks.push(check(
+        `${profile.id} Chrome for Android`,
+        chrome.ok && Boolean(chromeVersion),
+        chromeVersion ? `Chrome ${chromeVersion} on ${booted.serial}` : chrome.stderr,
+        "Boot the AVD, finish Chrome's first-run flow, and ensure Chrome is enabled.",
+      ));
+      if (!chromeVersion) continue;
+      try {
+        const executeShell = (args) => {
+          const result = run(adb, ["-s", booted.serial, "shell", ...args]);
+          return { status: result.status, stdout: result.stdout, stderr: result.stderr };
+        };
+        const state = inspectAndroidChromeDebugState(executeShell);
+        const diagnosis = diagnoseAndroidChromeDebugState(profile, chromeVersion, state);
+        checks.push(check(
+          `${profile.id} Chrome WebGL preparation`,
+          diagnosis.ok,
+          `Chrome ${chromeVersion}; workaround ${diagnosis.workaround.required ? "required" : "not required"}; debug state ${diagnosis.disposition}`,
+          diagnosis.message ?? "Run adb shell am clear-debug-app, then rerun the simulator doctor.",
+        ));
+      } catch (error) {
+        checks.push(check(
+          `${profile.id} Chrome WebGL preparation`,
+          false,
+          error.message,
+          `Confirm ${booted.serial} accepts read-only settings queries, then rerun the simulator doctor.`,
+        ));
+      }
     }
   }
 

@@ -103,6 +103,23 @@ kept under ignored `.mobile-simulators/`; Android SDKs, AVDs, CoreSimulator
 data, WebDriverAgent builds, and Chromedriver caches remain outside version
 control. Re-running setup is idempotent for matching versions.
 
+The maintained API 34 Google Play images currently ship Chrome 113. On Apple
+Silicon Android Emulator, that runtime needs `--in-process-gpu`,
+`--disable-vulkan`, and `--ignore-gpu-blocklist` to expose the WebGL contexts
+used by the Home Hero. The runner applies those flags only to declared Android
+profiles actually reporting Chrome 113, through `goog:chromeOptions.args`.
+Chromedriver owns `/data/local/tmp/chrome-command-line` during session startup,
+so the harness never writes or races that temporary file itself.
+
+Chrome 113 also requires the package to be in persistent debug-app mode before
+Chromedriver launches it. The runner refuses an existing wait-for-debugger state
+or a different debug package, preserves compatible pre-existing Chrome debug
+state, and clears only state that the current run introduced—even on a failed
+test. The doctor reports this applicability and any conflict without changing
+the emulator. These are emulator-only launch mechanics, not production browser
+flags, and they do not turn S24-class virtual evidence into physical Galaxy S24
+certification.
+
 ## Simulator commands
 
 ```sh

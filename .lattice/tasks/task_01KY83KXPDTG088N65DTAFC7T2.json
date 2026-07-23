@@ -1,0 +1,41 @@
+{
+  "assigned_to": null,
+  "branch_links": [
+    {
+      "branch": "frac-19-stabilize-android-webgl",
+      "linked_at": "2026-07-23T18:30:17Z",
+      "linked_by": "agent:codex-root",
+      "repo": null
+    }
+  ],
+  "comment_count": 1,
+  "complexity": null,
+  "created_at": "2026-07-23T18:25:45Z",
+  "created_by": "agent:codex-root",
+  "custom_fields": {},
+  "description": null,
+  "done_at": null,
+  "evidence_refs": [],
+  "id": "task_01KY83KXPDTG088N65DTAFC7T2",
+  "last_event_id": "ev_01KY84DTRKX79S315N6122CD32",
+  "last_status_changed_at": "2026-07-23T18:39:54Z",
+  "priority": "medium",
+  "relationships_out": [
+    {
+      "created_at": "2026-07-23T18:30:17Z",
+      "created_by": "agent:codex-root",
+      "note": null,
+      "target_task_id": "task_01KY5B1VBYK12D6W5S5EWRC3GN",
+      "type": "subtask_of"
+    }
+  ],
+  "reopened_count": 0,
+  "schema_version": 1,
+  "short_id": "FRAC-19",
+  "status": "review",
+  "tags": null,
+  "title": "Stabilize WebGL in Android simulator Chrome",
+  "type": "task",
+  "updated_at": "2026-07-23T18:39:54Z",
+  "urgency": null
+}

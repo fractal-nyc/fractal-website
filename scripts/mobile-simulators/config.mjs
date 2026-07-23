@@ -18,6 +18,15 @@ export const ANDROID_AVD_HOME = process.env.ANDROID_AVD_HOME
 
 export const SUPPORTED_PLATFORMS = Object.freeze(["all", "android", "ios"]);
 
+export const ANDROID_CHROME_113_WEBGL_WORKAROUND = Object.freeze({
+  chromeMajorVersions: Object.freeze([113]),
+  args: Object.freeze([
+    "--in-process-gpu",
+    "--disable-vulkan",
+    "--ignore-gpu-blocklist",
+  ]),
+});
+
 export const SIMULATOR_PROFILES = Object.freeze([
   {
     id: "android-emulator-s24-class",
@@ -32,6 +41,7 @@ export const SIMULATOR_PROFILES = Object.freeze([
     orientations: ["PORTRAIT", "LANDSCAPE"],
     routeSweep: true,
     interaction: true,
+    androidChromeWorkaround: ANDROID_CHROME_113_WEBGL_WORKAROUND,
   },
   {
     id: "android-emulator-tablet",
@@ -46,6 +56,7 @@ export const SIMULATOR_PROFILES = Object.freeze([
     orientations: ["PORTRAIT", "LANDSCAPE"],
     routeSweep: false,
     interaction: false,
+    androidChromeWorkaround: ANDROID_CHROME_113_WEBGL_WORKAROUND,
   },
   {
     id: "ios-simulator-compact",

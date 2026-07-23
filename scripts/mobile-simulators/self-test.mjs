@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import { chromium } from "@playwright/test";
 import {
+  ANDROID_CHROME_113_WEBGL_WORKAROUND,
   SIMULATOR_PROFILES,
   parseSelectionArgs,
   platformFamiliesForProfiles,
@@ -14,6 +15,14 @@ import {
   validateAppleDeviceIdentity,
 } from "./identity.mjs";
 import {
+  ANDROID_CHROME_PACKAGE,
+  cleanupAndroidChrome,
+  diagnoseAndroidChromeDebugState,
+  prepareAndroidChrome,
+  resolveAndroidChromeWorkaround,
+} from "./android-chrome.mjs";
+import { buildWebdriverCapabilities } from "./capabilities.mjs";
+import {
   beginRuntimeHealthRoute,
   installRuntimeHealthCapture,
   probeRuntimeHealth,
@@ -21,6 +30,133 @@ import {
 
 const phone = SIMULATOR_PROFILES.find(({ id }) => id === "android-emulator-s24-class");
 const compact = SIMULATOR_PROFILES.find(({ id }) => id === "ios-simulator-compact");
+
+assert.deepEqual(ANDROID_CHROME_113_WEBGL_WORKAROUND.args, [
+  "--in-process-gpu",
+  "--disable-vulkan",
+  "--ignore-gpu-blocklist",
+]);
+assert.equal(resolveAndroidChromeWorkaround(phone, "113.0.5672.136").required, true);
+assert.deepEqual(resolveAndroidChromeWorkaround(phone, "113.0.5672.136").args, ANDROID_CHROME_113_WEBGL_WORKAROUND.args);
+assert.equal(resolveAndroidChromeWorkaround(phone, "114.0.5735.60").required, false);
+assert.equal(resolveAndroidChromeWorkaround(compact, "113.0.5672.136").required, false);
+
+const androidCapabilities = buildWebdriverCapabilities({
+  profile: phone,
+  identity: { serial: "emulator-5554", chromeVersion: "113.0.5672.136" },
+  baseUrl: "http://10.0.2.2:4173",
+});
+assert.deepEqual(androidCapabilities["goog:chromeOptions"], { args: ANDROID_CHROME_113_WEBGL_WORKAROUND.args });
+const newerAndroidCapabilities = buildWebdriverCapabilities({
+  profile: phone,
+  identity: { serial: "emulator-5554", chromeVersion: "114.0.5735.60" },
+  baseUrl: "http://10.0.2.2:4173",
+});
+assert.equal("goog:chromeOptions" in newerAndroidCapabilities, false);
+const iosCapabilities = buildWebdriverCapabilities({
+  profile: compact,
+  identity: { udid: "test-udid", deviceName: compact.deviceName, platformVersion: "18.5" },
+  baseUrl: "http://127.0.0.1:4173",
+});
+assert.equal("goog:chromeOptions" in iosCapabilities, false);
+
+function fakeAndroidShell({ debugApp = null, waitForDebugger = false, failForceStop = false } = {}) {
+  const state = { debugApp, waitForDebugger };
+  const calls = [];
+  return {
+    state,
+    calls,
+    executeShell(args) {
+      calls.push([...args]);
+      if (args.join(" ") === "settings get global debug_app") {
+        return { status: 0, stdout: state.debugApp ?? "null", stderr: "" };
+      }
+      if (args.join(" ") === "settings get global wait_for_debugger") {
+        return { status: 0, stdout: state.waitForDebugger ? "1" : "0", stderr: "" };
+      }
+      if (args[0] === "am" && args[1] === "set-debug-app") {
+        state.debugApp = args.at(-1);
+        state.waitForDebugger = args.includes("-w");
+        return { status: 0, stdout: "", stderr: "" };
+      }
+      if (args.join(" ") === `am force-stop ${ANDROID_CHROME_PACKAGE}`) {
+        return failForceStop
+          ? { status: 1, stdout: "", stderr: "forced failure" }
+          : { status: 0, stdout: "", stderr: "" };
+      }
+      if (args.join(" ") === "am clear-debug-app") {
+        state.debugApp = null;
+        state.waitForDebugger = false;
+        return { status: 0, stdout: "", stderr: "" };
+      }
+      return { status: 1, stdout: "", stderr: `unexpected fake command: ${args.join(" ")}` };
+    },
+  };
+}
+
+const availableDebugState = diagnoseAndroidChromeDebugState(phone, "113.0.5672.136", { debugApp: null, waitForDebugger: false });
+assert.equal(availableDebugState.ok, true);
+assert.equal(availableDebugState.disposition, "available");
+
+const ownedShell = fakeAndroidShell();
+const ownedPreparation = prepareAndroidChrome({
+  profile: phone,
+  chromeVersion: "113.0.5672.136",
+  executeShell: ownedShell.executeShell,
+});
+assert.deepEqual(ownedPreparation.metadata, {
+  required: true,
+  applied: true,
+  preExisting: false,
+  chromeVersion: "113.0.5672.136",
+  chromeMajor: 113,
+  args: ANDROID_CHROME_113_WEBGL_WORKAROUND.args,
+  state: "applied-by-run",
+});
+assert.equal(ownedShell.state.debugApp, ANDROID_CHROME_PACKAGE);
+assert.deepEqual(cleanupAndroidChrome({ ownership: ownedPreparation.ownership, executeShell: ownedShell.executeShell }), { state: "cleared-run-owned", cleared: true });
+assert.equal(ownedShell.state.debugApp, null);
+assert.deepEqual(cleanupAndroidChrome({ ownership: ownedPreparation.ownership, executeShell: ownedShell.executeShell }), { state: "already-clear", cleared: false });
+
+const compatibleShell = fakeAndroidShell({ debugApp: ANDROID_CHROME_PACKAGE });
+const compatiblePreparation = prepareAndroidChrome({ profile: phone, chromeVersion: "113.0.5672.136", executeShell: compatibleShell.executeShell });
+assert.equal(compatiblePreparation.metadata.preExisting, true);
+assert.equal(compatiblePreparation.metadata.applied, false);
+assert.deepEqual(cleanupAndroidChrome({ ownership: compatiblePreparation.ownership, executeShell: compatibleShell.executeShell }), { state: "not-owned", cleared: false });
+assert.equal(compatibleShell.state.debugApp, ANDROID_CHROME_PACKAGE);
+
+const conflictingShell = fakeAndroidShell({ debugApp: "com.example.debugger" });
+assert.throws(
+  () => prepareAndroidChrome({ profile: phone, chromeVersion: "113.0.5672.136", executeShell: conflictingShell.executeShell }),
+  /debug_app is com\.example\.debugger/,
+);
+assert.equal(conflictingShell.state.debugApp, "com.example.debugger");
+assert.equal(conflictingShell.calls.some((args) => args[0] === "am"), false);
+
+const waitingShell = fakeAndroidShell({ debugApp: ANDROID_CHROME_PACKAGE, waitForDebugger: true });
+assert.throws(
+  () => prepareAndroidChrome({ profile: phone, chromeVersion: "113.0.5672.136", executeShell: waitingShell.executeShell }),
+  /wait_for_debugger is enabled/,
+);
+
+const unaffectedShell = fakeAndroidShell({ debugApp: "com.example.debugger", waitForDebugger: true });
+const unaffectedPreparation = prepareAndroidChrome({ profile: phone, chromeVersion: "114.0.5735.60", executeShell: unaffectedShell.executeShell });
+assert.equal(unaffectedPreparation.metadata.required, false);
+assert.deepEqual(unaffectedShell.calls, []);
+
+const rollbackShell = fakeAndroidShell({ failForceStop: true });
+assert.throws(
+  () => prepareAndroidChrome({ profile: phone, chromeVersion: "113.0.5672.136", executeShell: rollbackShell.executeShell }),
+  /am force-stop com\.android\.chrome failed/,
+);
+assert.equal(rollbackShell.state.debugApp, null);
+
+const changedOwnerShell = fakeAndroidShell({ debugApp: "com.example.new-owner" });
+assert.deepEqual(
+  cleanupAndroidChrome({ ownership: { appliedByRun: true }, executeShell: changedOwnerShell.executeShell }),
+  { state: "ownership-state-changed", cleared: false },
+);
+assert.equal(changedOwnerShell.state.debugApp, "com.example.new-owner");
 
 assert.deepEqual(parseSelectionArgs([]), { platformName: "all", requestedProfile: "all" });
 assert.deepEqual(parseSelectionArgs(["--", "--platform", "ios"]), { platformName: "ios", requestedProfile: "all" });
