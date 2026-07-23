@@ -1,7 +1,11 @@
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
+import { relative, resolve, sep } from "node:path";
 import { chromium } from "@playwright/test";
 import {
   ANDROID_CHROME_113_WEBGL_WORKAROUND,
+  EVIDENCE_ROOT,
+  REPO_ROOT,
   SIMULATOR_PROFILES,
   buildAndroidEmulatorLaunchArgs,
   parseSelectionArgs,
@@ -45,6 +49,16 @@ import {
 const phone = SIMULATOR_PROFILES.find(({ id }) => id === "android-emulator-s24-class");
 const tablet = SIMULATOR_PROFILES.find(({ id }) => id === "android-emulator-tablet");
 const compact = SIMULATOR_PROFILES.find(({ id }) => id === "ios-simulator-compact");
+
+const playwrightConfigSource = readFileSync(resolve(REPO_ROOT, "playwright.config.ts"), "utf8");
+const playwrightOutputRoot = resolve(REPO_ROOT, "test-results/playwright");
+const isWithin = (parent, candidate) => {
+  const pathFromParent = relative(parent, candidate);
+  return pathFromParent === "" || (pathFromParent !== ".." && !pathFromParent.startsWith(`..${sep}`));
+};
+assert.match(playwrightConfigSource, /outputDir:\s*["']test-results\/playwright["']/);
+assert.equal(isWithin(playwrightOutputRoot, EVIDENCE_ROOT), false, "Playwright cleanup must not contain simulator evidence");
+assert.equal(isWithin(EVIDENCE_ROOT, playwrightOutputRoot), false, "Simulator evidence must not contain Playwright output");
 
 assert.deepEqual(ANDROID_CHROME_113_WEBGL_WORKAROUND.args, [
   "--in-process-gpu",
