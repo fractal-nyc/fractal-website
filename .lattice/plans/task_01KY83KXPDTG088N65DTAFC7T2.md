@@ -17,3 +17,11 @@ Automate the API 34 / Chrome 113 Apple-Silicon emulator workaround without chang
 - Existing site-health and WebGL interaction checks remain mandatory; no skips, console suppression, fallback content, or relaxed timeouts/assertions are introduced.
 - `pnpm simulators:self-test`, `pnpm simulators:doctor -- --platform android`, `pnpm typecheck`, `pnpm test`, and `pnpm build` pass.
 - Focused real-environment validation passes on `android-emulator-s24-class`, then on `android-emulator-tablet`, with manifests showing Chrome 113, workaround metadata, WebGL Hero readiness, and the existing native interaction evidence.
+
+## Review Cycle 1 Findings
+
+- Static review passed: Chrome 113/profile gating, exact Appium flags, iOS/newer-Chrome isolation, safe debug-app ownership/cleanup, doctor behavior, self-tests, typecheck, Vitest, and build are correct.
+- Complete a full S24-class run after the scroll-reset fix, including the native node tap, and then a full tablet run.
+- The S24 rerun reached `/political-club` with all first-party health checks green but failed on `source: network` 403s emitted by the embedded Luma iframe's external Sentry endpoint. Treat only cross-origin third-party network log failures as evidence-only; keep first-party network failures and all JavaScript, console, and page errors fatal. Add focused self-test coverage for this classification before rerunning both profiles.
+
+## Reset 2026-07-23 by agent:codex-root

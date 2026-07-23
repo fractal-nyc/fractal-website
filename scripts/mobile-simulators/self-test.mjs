@@ -22,6 +22,7 @@ import {
   resolveAndroidChromeWorkaround,
 } from "./android-chrome.mjs";
 import { buildWebdriverCapabilities } from "./capabilities.mjs";
+import { classifyBrowserLogs } from "./browser-logs.mjs";
 import {
   beginRuntimeHealthRoute,
   installRuntimeHealthCapture,
@@ -59,6 +60,57 @@ const iosCapabilities = buildWebdriverCapabilities({
   baseUrl: "http://127.0.0.1:4173",
 });
 assert.equal("goog:chromeOptions" in iosCapabilities, false);
+
+const externalNetworkFailure = {
+  level: "SEVERE",
+  source: "network",
+  message: "https://o370968.ingest.us.sentry.io/api/5182504/envelope/ - Failed to load resource: the server responded with a status of 403 ()",
+};
+const firstPartyNetworkFailure = {
+  level: "SEVERE",
+  source: "network",
+  message: "http://10.0.2.2:4173/assets/app.js - Failed to load resource: the server responded with a status of 500 ()",
+};
+const relativeNetworkFailure = {
+  level: "ERROR",
+  source: "network",
+  message: "/assets/app.js - Failed to load resource",
+};
+const javascriptFailure = {
+  level: "SEVERE",
+  source: "javascript",
+  message: "https://third-party.example/embed.js 1:2 Uncaught TypeError: broken",
+};
+const consoleFailure = {
+  level: "ERROR",
+  source: "console-api",
+  message: "https://third-party.example/embed.js 1:2 intentional console error",
+};
+const pageFailure = {
+  level: "SEVERE",
+  source: "page",
+  message: "https://third-party.example/embed 1:2 page crashed",
+};
+const warning = {
+  level: "WARNING",
+  source: "javascript",
+  message: "warning only",
+};
+assert.deepEqual(
+  classifyBrowserLogs([
+    externalNetworkFailure,
+    firstPartyNetworkFailure,
+    relativeNetworkFailure,
+    javascriptFailure,
+    consoleFailure,
+    pageFailure,
+    warning,
+  ], "http://10.0.2.2:4173"),
+  {
+    fatal: [firstPartyNetworkFailure, relativeNetworkFailure, javascriptFailure, consoleFailure, pageFailure],
+    externalNetwork: [externalNetworkFailure],
+  },
+);
 
 function fakeAndroidShell({ debugApp = null, waitForDebugger = false, failForceStop = false } = {}) {
   const state = { debugApp, waitForDebugger };

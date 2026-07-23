@@ -4,6 +4,7 @@ import { remote } from "webdriverio";
 import { INTERNAL_REDIRECTS, RENDERED_ROUTES } from "../../tests/e2e/support/routes.mjs";
 import { validateAndroidRuntimeIdentity, validateAppleDeviceIdentity } from "./identity.mjs";
 import { buildWebdriverCapabilities } from "./capabilities.mjs";
+import { classifyBrowserLogs } from "./browser-logs.mjs";
 import {
   collectEnvironmentMetrics,
   beginRuntimeHealthRoute,
@@ -104,9 +105,9 @@ export async function runSimulatorSuite({ profile, identity, baseUrl, evidenceDi
         const logs = await browser.getLogs("browser");
         browserLogChannel = "supported";
         if (drain) return [];
-        const severe = logs.filter(({ level }) => ["SEVERE", "ERROR"].includes(String(level).toUpperCase()));
-        record("route-browser-logs", { route, result: "supported", logs, severe });
-        if (severe.length) throw new Error(`browser console/page errors on ${route}:\n${severe.map((entry) => `${entry.level}: ${entry.message}`).join("\n")}`);
+        const { fatal, externalNetwork } = classifyBrowserLogs(logs, baseUrl);
+        record("route-browser-logs", { route, result: "supported", logs, fatal, externalNetwork });
+        if (fatal.length) throw new Error(`fatal browser errors on ${route}:\n${fatal.map((entry) => `${entry.level}: ${entry.message}`).join("\n")}`);
         return logs;
       } catch (error) {
         if (browserLogChannel === "supported") throw error;
