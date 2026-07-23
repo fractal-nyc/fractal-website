@@ -23,7 +23,7 @@ import {
 } from "./android-chrome.mjs";
 import { buildWebdriverCapabilities } from "./capabilities.mjs";
 import { classifyBrowserLogs } from "./browser-logs.mjs";
-import { createNativeWebViewTransform } from "./native-coordinates.mjs";
+import { createNativeWebViewTransform, nativeWebViewSelector } from "./native-coordinates.mjs";
 import {
   beginRuntimeHealthRoute,
   installRuntimeHealthCapture,
@@ -119,6 +119,8 @@ const s24CoordinateTransform = createNativeWebViewTransform({
   cssViewport: { width: 412.19049072265625, height: 762.2857055664062, offsetLeft: 0, offsetTop: 0, scale: 1 },
   cssScreen: { width: 412, height: 892 },
 });
+assert.equal(nativeWebViewSelector("android"), '//*[@class="android.webkit.WebView"]');
+assert.equal(nativeWebViewSelector("ios"), '//*[@type="XCUIElementTypeWebView"]');
 const s24MappedTarget = s24CoordinateTransform.mapPoint({ x: 206, y: 300 });
 assert.ok(Math.abs(s24MappedTarget.x - 539.75) < 0.01);
 assert.ok(Math.abs(s24MappedTarget.y - 1066.5) < 0.01);

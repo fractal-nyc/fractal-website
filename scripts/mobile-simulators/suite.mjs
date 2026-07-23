@@ -5,7 +5,7 @@ import { INTERNAL_REDIRECTS, RENDERED_ROUTES } from "../../tests/e2e/support/rou
 import { validateAndroidRuntimeIdentity, validateAppleDeviceIdentity } from "./identity.mjs";
 import { buildWebdriverCapabilities } from "./capabilities.mjs";
 import { classifyBrowserLogs } from "./browser-logs.mjs";
-import { createNativeWebViewTransform } from "./native-coordinates.mjs";
+import { createNativeWebViewTransform, nativeWebViewSelector } from "./native-coordinates.mjs";
 import {
   collectEnvironmentMetrics,
   beginRuntimeHealthRoute,
@@ -71,7 +71,7 @@ async function nativeGesture(browser, points, pauseMs = 180) {
 }
 
 async function nativeWebViewTransform(browser, profile, metrics, nativeWindow) {
-  const selector = profile.platform === "android" ? "//android.webkit.WebView" : "//XCUIElementTypeWebView";
+  const selector = nativeWebViewSelector(profile.platform);
   const elements = await browser.$$(selector);
   const visibleRects = [];
   for (const element of elements) {

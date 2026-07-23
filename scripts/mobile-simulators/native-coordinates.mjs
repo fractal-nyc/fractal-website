@@ -1,5 +1,11 @@
 const DEFAULT_SCALE_TOLERANCE = 0.02;
 
+export function nativeWebViewSelector(platform) {
+  return platform === "android"
+    ? '//*[@class="android.webkit.WebView"]'
+    : '//*[@type="XCUIElementTypeWebView"]';
+}
+
 function assertPositiveNumber(value, label) {
   if (!Number.isFinite(value) || value <= 0) {
     throw new Error(`${label} must be a positive finite number, got ${value}`);
