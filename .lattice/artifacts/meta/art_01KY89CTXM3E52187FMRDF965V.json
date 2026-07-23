@@ -1,0 +1,19 @@
+{
+  "created_at": "2026-07-23T20:06:44Z",
+  "created_by": "agent:codex-frac20-reviewer",
+  "custom_fields": {},
+  "id": "art_01KY89CTXM3E52187FMRDF965V",
+  "model": null,
+  "payload": {
+    "content_type": "text/markdown",
+    "file": "art_01KY89CTXM3E52187FMRDF965V.md",
+    "size_bytes": 1900
+  },
+  "schema_version": 1,
+  "sensitive": false,
+  "summary": "PASS \u2014 independent cold review of FRAC-20 commit faa3ca5 against the canonical plan and acceptance criteria. No substantive findings. The change replaces R3F client-prefix normalization with live canv",
+  "tags": [],
+  "title": "Review findings",
+  "token_usage": null,
+  "type": "note"
+}
