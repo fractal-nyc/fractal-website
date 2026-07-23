@@ -35,7 +35,11 @@ import {
   installRuntimeHealthCapture,
   probeRuntimeHealth,
 } from "../../tests/e2e/support/responsive-contract.mjs";
-import { buildNativeGestureActions, projectedAnchorFromLabelMetrics } from "./suite.mjs";
+import {
+  browserToolbarTransitionState,
+  buildNativeGestureActions,
+  projectedAnchorFromLabelMetrics,
+} from "./suite.mjs";
 
 const phone = SIMULATOR_PROFILES.find(({ id }) => id === "android-emulator-s24-class");
 const compact = SIMULATOR_PROFILES.find(({ id }) => id === "ios-simulator-compact");
@@ -66,6 +70,36 @@ assert.deepEqual(
 assert.deepEqual(
   projectedAnchorFromLabelMetrics({ label: "CO-LIVING", x: 120, y: 272, width: 172, height: 36, m41: 0, m42: -28 }),
   { label: "CO-LIVING", x: 206, y: 318 },
+);
+assert.deepEqual(
+  browserToolbarTransitionState(
+    { inner: { height: 762 }, visualViewport: { height: 762 } },
+    { inner: { height: 762 }, visualViewport: { height: 818 } },
+    { inner: { height: 762 }, visualViewport: { height: 762 } },
+  ),
+  {
+    initialHeight: 762,
+    collapsedHeight: 818,
+    expandedHeight: 762,
+    collapseObserved: true,
+    expansionObserved: true,
+    result: "observed",
+  },
+);
+assert.equal(
+  browserToolbarTransitionState(
+    { inner: { height: 1128 }, visualViewport: { height: 1128 } },
+    { inner: { height: 1128 }, visualViewport: { height: 1131 } },
+  ).collapseObserved,
+  false,
+);
+assert.equal(
+  browserToolbarTransitionState(
+    { inner: { height: 1128 }, visualViewport: { height: 1128 } },
+    { inner: { height: 1128 }, visualViewport: { height: 1128 } },
+    { inner: { height: 1128 }, visualViewport: { height: 1128 } },
+  ).result,
+  "inconclusive-manual-simulator-check-required",
 );
 assert.equal(resolveAndroidChromeWorkaround(phone, "113.0.5672.136").required, true);
 assert.deepEqual(resolveAndroidChromeWorkaround(phone, "113.0.5672.136").args, ANDROID_CHROME_113_WEBGL_WORKAROUND.args);

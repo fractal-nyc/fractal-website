@@ -86,6 +86,30 @@ export function projectedAnchorFromLabelMetrics({ label, x, y, width, height, m4
   };
 }
 
+const TOOLBAR_HEIGHT_TOLERANCE_PX = 4;
+
+function liveViewportHeight(metrics) {
+  return metrics.visualViewport?.height ?? metrics.inner.height;
+}
+
+export function browserToolbarTransitionState(initialMetrics, collapsedMetrics, expandedMetrics = null, tolerance = TOOLBAR_HEIGHT_TOLERANCE_PX) {
+  const initialHeight = liveViewportHeight(initialMetrics);
+  const collapsedHeight = liveViewportHeight(collapsedMetrics);
+  const expandedHeight = expandedMetrics ? liveViewportHeight(expandedMetrics) : null;
+  const collapseObserved = collapsedHeight - initialHeight > tolerance;
+  const expansionObserved = collapseObserved
+    && expandedHeight !== null
+    && Math.abs(expandedHeight - initialHeight) <= tolerance;
+  return {
+    initialHeight,
+    collapsedHeight,
+    expandedHeight,
+    collapseObserved,
+    expansionObserved,
+    result: expansionObserved ? "observed" : "inconclusive-manual-simulator-check-required",
+  };
+}
+
 async function nativeGesture(browser, points, pauseMs = 180) {
   await browser.performActions(buildNativeGestureActions(points, pauseMs));
   await browser.releaseActions();
@@ -317,20 +341,44 @@ export async function runSimulatorSuite({ profile, identity, baseUrl, evidenceDi
     await browser.pause(750);
     const collapsedMetrics = await metricsFor("PORTRAIT", "/", "collapsed-toolbar-attempt");
     await saveDeviceScreenshot("home-portrait-collapsed-toolbar-attempt", { orientation: "PORTRAIT", state: "collapsed-attempt" });
-    await browser.execute(() => scrollTo({ top: 0, behavior: "instant" }));
-    await nativeContext(browser);
-    await nativeGesture(browser, [
-      { x: nativeSize.width * 0.5, y: nativeSize.height * 0.28 },
-      { x: nativeSize.width * 0.5, y: nativeSize.height * 0.72 },
-    ]);
-    await webContext(browser);
-    await browser.pause(750);
-    const expandedMetrics = await metricsFor("PORTRAIT", "/", "expanded-toolbar-attempt");
+    const collapseState = browserToolbarTransitionState(initialMetrics, collapsedMetrics);
+    let expandedMetrics;
+    let expansionGestureAttempted = false;
+    if (collapseState.collapseObserved) {
+      expansionGestureAttempted = true;
+      await nativeContext(browser);
+      await nativeGesture(browser, [
+        { x: nativeSize.width * 0.5, y: nativeSize.height * 0.28 },
+        { x: nativeSize.width * 0.5, y: nativeSize.height * 0.72 },
+      ]);
+      await webContext(browser);
+      await browser.pause(750);
+      expandedMetrics = await metricsFor("PORTRAIT", "/", "expanded-toolbar-attempt");
+    } else {
+      expandedMetrics = await metricsFor("PORTRAIT", "/", "expanded-toolbar-skipped-no-collapse");
+    }
     await saveDeviceScreenshot("home-portrait-expanded-toolbar-attempt", { orientation: "PORTRAIT", state: "expanded-attempt" });
-    const heights = [initialMetrics, collapsedMetrics, expandedMetrics].map((entry) => Math.round(entry.visualViewport?.height ?? entry.inner.height));
-    const chromeResult = new Set(heights).size > 1 ? "observed" : "inconclusive-manual-simulator-check-required";
+    await browser.execute(() => scrollTo({ top: 0, behavior: "instant" }));
+    await waitForDocument(browser);
+    await ensureRuntimeHealthCapture("after browser-toolbar transition");
+    const restoredMetrics = await metricsFor("PORTRAIT", "/", "browser-toolbar-transition-complete");
+    if (Math.abs(restoredMetrics.scroll.y) > 1) throw new Error(`browser-toolbar transition did not restore scrollTop 0 (got ${restoredMetrics.scroll.y})`);
+
+    const transitionState = browserToolbarTransitionState(initialMetrics, collapsedMetrics, expandedMetrics);
+    const heights = [transitionState.initialHeight, transitionState.collapsedHeight, transitionState.expandedHeight].map(Math.round);
+    const chromeResult = transitionState.result;
     if (chromeResult !== "observed") manifest.manualChecks.push("Interactively collapse and expand the browser toolbar in this simulator and confirm the live visualViewport changes without Hero clipping.");
-    record("browser-chrome-transition", { result: chromeResult, heights, initialMetrics, collapsedMetrics, expandedMetrics });
+    record("browser-chrome-transition", {
+      result: chromeResult,
+      heights,
+      collapseObserved: transitionState.collapseObserved,
+      expansionObserved: transitionState.expansionObserved,
+      expansionGestureAttempted,
+      initialMetrics,
+      collapsedMetrics,
+      expandedMetrics,
+      restoredMetrics,
+    });
 
     if (profile.interaction) {
       await browser.execute(() => document.querySelector('[data-site-navbar] button[aria-label="Open menu"]')?.click());
