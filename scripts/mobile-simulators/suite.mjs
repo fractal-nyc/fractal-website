@@ -5,7 +5,12 @@ import { INTERNAL_REDIRECTS, RENDERED_ROUTES } from "../../tests/e2e/support/rou
 import { validateAndroidRuntimeIdentity, validateAppleDeviceIdentity } from "./identity.mjs";
 import { buildWebdriverCapabilities } from "./capabilities.mjs";
 import { classifyBrowserLogs } from "./browser-logs.mjs";
-import { createNativeWebViewTransform, nativeWebViewSelector } from "./native-coordinates.mjs";
+import {
+  ANDROID_CHROME_TOOLBAR_SELECTOR,
+  createAndroidChromeViewportRect,
+  createNativeWebViewTransform,
+  nativeWebViewSelector,
+} from "./native-coordinates.mjs";
 import {
   collectEnvironmentMetrics,
   beginRuntimeHealthRoute,
@@ -71,22 +76,42 @@ async function nativeGesture(browser, points, pauseMs = 180) {
 }
 
 async function nativeWebViewTransform(browser, profile, metrics, nativeWindow) {
+  if (!metrics.visualViewport) throw new Error("Cannot map native gestures without a live visualViewport");
   const selector = nativeWebViewSelector(profile.platform);
   const elements = await browser.$$(selector);
   const visibleRects = [];
   for (const element of elements) {
     if (await element.isDisplayed()) visibleRects.push(await element.getRect());
   }
-  if (visibleRects.length !== 1) {
+  let nativeRect = visibleRects[0];
+  let nativeRectSource = "native-webview";
+  if (profile.platform === "android" && visibleRects.length === 0) {
+    const toolbarElements = await browser.$$(ANDROID_CHROME_TOOLBAR_SELECTOR);
+    const toolbarRects = [];
+    for (const element of toolbarElements) {
+      if (await element.isDisplayed()) toolbarRects.push(await element.getRect());
+    }
+    if (toolbarRects.length !== 1) {
+      throw new Error(`Expected exactly one visible Android Chrome toolbar (${ANDROID_CHROME_TOOLBAR_SELECTOR}) when the compressed native tree omitted ${selector}, found ${toolbarRects.length}`);
+    }
+    nativeRect = createAndroidChromeViewportRect({
+      toolbarRect: toolbarRects[0],
+      nativeWindow,
+      cssViewport: metrics.visualViewport,
+      cssScreen: metrics.screen,
+      dpr: metrics.dpr,
+    });
+    nativeRectSource = "android-chrome-toolbar";
+  } else if (visibleRects.length !== 1) {
     throw new Error(`Expected exactly one visible native WebView (${selector}), found ${visibleRects.length}`);
   }
-  if (!metrics.visualViewport) throw new Error("Cannot map native gestures without a live visualViewport");
-  return createNativeWebViewTransform({
-    nativeRect: visibleRects[0],
+  const transform = createNativeWebViewTransform({
+    nativeRect,
     nativeWindow,
     cssViewport: metrics.visualViewport,
     cssScreen: metrics.screen,
   });
+  return { ...transform, nativeRectSource };
 }
 
 export async function runSimulatorSuite({ profile, identity, baseUrl, evidenceDir, androidChromeWorkaround = null, appiumPort = 4723 }) {
@@ -326,6 +351,7 @@ export async function runSimulatorSuite({ profile, identity, baseUrl, evidenceDi
         coordinateTransform.mapPoint({ x: center.x + 50, y: center.y }),
       ]);
       record("native-coordinate-space", {
+        nativeRectSource: coordinateTransform.nativeRectSource,
         nativeWebViewRect: coordinateTransform.nativeRect,
         scaleX: coordinateTransform.scaleX,
         scaleY: coordinateTransform.scaleY,

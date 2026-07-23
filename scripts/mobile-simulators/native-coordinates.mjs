@@ -1,5 +1,7 @@
 const DEFAULT_SCALE_TOLERANCE = 0.02;
 
+export const ANDROID_CHROME_TOOLBAR_SELECTOR = '//*[@resource-id="com.android.chrome:id/toolbar"]';
+
 export function nativeWebViewSelector(platform) {
   return platform === "android"
     ? '//*[@class="android.webkit.WebView"]'
@@ -20,6 +22,64 @@ function assertFiniteNumber(value, label) {
 
 function relativeDifference(actual, expected) {
   return Math.abs(actual - expected) / expected;
+}
+
+function assertNativeRectWithinWindow(nativeRect, nativeWindow, label) {
+  const rectRight = nativeRect.x + nativeRect.width;
+  const rectBottom = nativeRect.y + nativeRect.height;
+  if (nativeRect.x < 0 || nativeRect.y < 0 || rectRight > nativeWindow.width + 1 || rectBottom > nativeWindow.height + 1) {
+    throw new Error(`${label} is outside the native window: ${JSON.stringify({ nativeRect, nativeWindow })}`);
+  }
+}
+
+export function createAndroidChromeViewportRect({
+  toolbarRect,
+  nativeWindow,
+  cssViewport,
+  cssScreen,
+  dpr,
+  scaleTolerance = DEFAULT_SCALE_TOLERANCE,
+}) {
+  for (const [label, value] of [
+    ["toolbarRect.x", toolbarRect?.x],
+    ["toolbarRect.y", toolbarRect?.y],
+  ]) assertFiniteNumber(value, label);
+  for (const [label, value] of [
+    ["toolbarRect.width", toolbarRect?.width],
+    ["toolbarRect.height", toolbarRect?.height],
+    ["nativeWindow.width", nativeWindow?.width],
+    ["nativeWindow.height", nativeWindow?.height],
+    ["cssViewport.width", cssViewport?.width],
+    ["cssViewport.height", cssViewport?.height],
+    ["cssViewport.scale", cssViewport?.scale],
+    ["cssScreen.width", cssScreen?.width],
+    ["cssScreen.height", cssScreen?.height],
+    ["dpr", dpr],
+    ["scaleTolerance", scaleTolerance],
+  ]) assertPositiveNumber(value, label);
+  assertNativeRectWithinWindow(toolbarRect, nativeWindow, "Android Chrome toolbar rect");
+
+  const scale = dpr * cssViewport.scale;
+  const expectedScaleX = (nativeWindow.width / cssScreen.width) * cssViewport.scale;
+  const expectedScaleY = (nativeWindow.height / cssScreen.height) * cssViewport.scale;
+  const scaleViolations = [
+    ["horizontal", scale, expectedScaleX],
+    ["vertical", scale, expectedScaleY],
+    ["viewport width", cssViewport.width * scale, nativeWindow.width],
+    ["toolbar width", toolbarRect.width, nativeWindow.width],
+  ].filter(([, actual, expected]) => relativeDifference(actual, expected) > scaleTolerance);
+  if (toolbarRect.x > 1 || scaleViolations.length) {
+    throw new Error(`Android Chrome toolbar does not establish a valid viewport scale: ${scaleViolations.map(([axis, actual, expected]) => `${axis} ${actual.toFixed(4)} vs ${expected.toFixed(4)}`).join("; ") || `toolbar x ${toolbarRect.x}`}`);
+  }
+
+  const nativeRect = {
+    x: 0,
+    y: toolbarRect.y + toolbarRect.height,
+    width: nativeWindow.width,
+    height: cssViewport.height * scale,
+  };
+  assertNativeRectWithinWindow(nativeRect, nativeWindow, "Derived Android Chrome viewport rect");
+  return nativeRect;
 }
 
 export function createNativeWebViewTransform({
@@ -48,11 +108,7 @@ export function createNativeWebViewTransform({
   ]) assertPositiveNumber(value, label);
   assertPositiveNumber(scaleTolerance, "scaleTolerance");
 
-  const rectRight = nativeRect.x + nativeRect.width;
-  const rectBottom = nativeRect.y + nativeRect.height;
-  if (nativeRect.x < 0 || nativeRect.y < 0 || rectRight > nativeWindow.width + 1 || rectBottom > nativeWindow.height + 1) {
-    throw new Error(`Native WebView rect is outside the native window: ${JSON.stringify({ nativeRect, nativeWindow })}`);
-  }
+  assertNativeRectWithinWindow(nativeRect, nativeWindow, "Native WebView rect");
 
   const scaleX = nativeRect.width / cssViewport.width;
   const scaleY = nativeRect.height / cssViewport.height;
