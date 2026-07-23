@@ -35,6 +35,7 @@ import {
   installRuntimeHealthCapture,
   probeRuntimeHealth,
 } from "../../tests/e2e/support/responsive-contract.mjs";
+import { buildNativeGestureActions, projectedAnchorFromLabelMetrics } from "./suite.mjs";
 
 const phone = SIMULATOR_PROFILES.find(({ id }) => id === "android-emulator-s24-class");
 const compact = SIMULATOR_PROFILES.find(({ id }) => id === "ios-simulator-compact");
@@ -44,6 +45,28 @@ assert.deepEqual(ANDROID_CHROME_113_WEBGL_WORKAROUND.args, [
   "--disable-vulkan",
   "--ignore-gpu-blocklist",
 ]);
+assert.deepEqual(
+  buildNativeGestureActions([{ x: 100.4, y: 200.6 }], 80)[0].actions,
+  [
+    { type: "pointerMove", duration: 0, x: 100, y: 201 },
+    { type: "pointerDown", button: 0 },
+    { type: "pause", duration: 80 },
+    { type: "pointerUp", button: 0 },
+  ],
+);
+assert.deepEqual(
+  buildNativeGestureActions([{ x: 100, y: 200 }, { x: 160, y: 200 }], 180)[0].actions,
+  [
+    { type: "pointerMove", duration: 0, x: 100, y: 200 },
+    { type: "pointerDown", button: 0 },
+    { type: "pointerMove", duration: 180, x: 160, y: 200 },
+    { type: "pointerUp", button: 0 },
+  ],
+);
+assert.deepEqual(
+  projectedAnchorFromLabelMetrics({ label: "CO-LIVING", x: 120, y: 272, width: 172, height: 36, m41: 0, m42: -28 }),
+  { label: "CO-LIVING", x: 206, y: 318 },
+);
 assert.equal(resolveAndroidChromeWorkaround(phone, "113.0.5672.136").required, true);
 assert.deepEqual(resolveAndroidChromeWorkaround(phone, "113.0.5672.136").args, ANDROID_CHROME_113_WEBGL_WORKAROUND.args);
 assert.equal(resolveAndroidChromeWorkaround(phone, "114.0.5735.60").required, false);

@@ -60,19 +60,34 @@ async function nativeContext(browser) {
   await browser.switchContext("NATIVE_APP");
 }
 
-async function nativeGesture(browser, points, pauseMs = 180) {
-  const actions = [{
+export function buildNativeGestureActions(points, pauseMs = 180) {
+  if (!points.length) throw new Error("Native gesture requires at least one point");
+  const pointerActions = [
+    { type: "pointerMove", duration: 0, x: Math.round(points[0].x), y: Math.round(points[0].y) },
+    { type: "pointerDown", button: 0 },
+    ...(points.length === 1
+      ? [{ type: "pause", duration: pauseMs }]
+      : points.slice(1).map((point) => ({ type: "pointerMove", duration: pauseMs, x: Math.round(point.x), y: Math.round(point.y) }))),
+    { type: "pointerUp", button: 0 },
+  ];
+  return [{
     type: "pointer",
     id: "finger1",
     parameters: { pointerType: "touch" },
-    actions: [
-      { type: "pointerMove", duration: 0, x: Math.round(points[0].x), y: Math.round(points[0].y) },
-      { type: "pointerDown", button: 0 },
-      ...points.slice(1).map((point) => ({ type: "pointerMove", duration: pauseMs, x: Math.round(point.x), y: Math.round(point.y) })),
-      { type: "pointerUp", button: 0 },
-    ],
+    actions: pointerActions,
   }];
-  await browser.performActions(actions);
+}
+
+export function projectedAnchorFromLabelMetrics({ label, x, y, width, height, m41, m42 }) {
+  return {
+    label,
+    x: x + width / 2 - m41,
+    y: y + height / 2 - m42,
+  };
+}
+
+async function nativeGesture(browser, points, pauseMs = 180) {
+  await browser.performActions(buildNativeGestureActions(points, pauseMs));
   await browser.releaseActions();
 }
 
@@ -361,23 +376,36 @@ export async function runSimulatorSuite({ profile, identity, baseUrl, evidenceDi
       });
       await webContext(browser);
       await browser.pause(350);
-      const labelCentersAfter = await browser.execute(() => Array.from(document.querySelectorAll("[data-hero-label]")).map((element) => {
+      const labelMetricsAfter = await browser.execute(() => Array.from(document.querySelectorAll("[data-hero-label]")).map((element) => {
         const box = element.getBoundingClientRect();
-        return { label: element.dataset.heroLabel, x: box.x + box.width / 2, y: box.y + box.height / 2 };
+        const computedTransform = getComputedStyle(element).transform;
+        const transform = computedTransform === "none" ? new DOMMatrix() : new DOMMatrix(computedTransform);
+        return {
+          label: element.dataset.heroLabel,
+          x: box.x,
+          y: box.y,
+          width: box.width,
+          height: box.height,
+          m41: transform.m41,
+          m42: transform.m42,
+        };
       }));
-      const moved = labelCentersAfter.some((after) => {
+      const moved = labelMetricsAfter.some((after) => {
         const before = labelCentersBefore.find(({ label }) => label === after.label);
-        return before && Math.hypot(after.x - before.x, after.y - before.y) > 2;
+        const centerX = after.x + after.width / 2;
+        const centerY = after.y + after.height / 2;
+        return before && Math.hypot(centerX - before.x, centerY - before.y) > 2;
       });
       if (!moved) throw new Error("native drag did not move the real WebGL projected labels");
       record("interaction", { name: "native-webgl-drag", result: "passed" });
 
-      const target = labelCentersAfter.find(({ label }) => /events|campus|co-living|library/i.test(label));
-      if (!target) throw new Error("no visible internal Hero node is available for native tap evidence");
+      const targetLabel = labelMetricsAfter.find(({ label }) => /events|campus|co-living|library/i.test(label));
+      if (!targetLabel) throw new Error("no visible internal Hero node is available for native tap evidence");
+      const target = projectedAnchorFromLabelMetrics(targetLabel);
       const beforeUrl = await browser.getUrl();
       await nativeContext(browser);
       const nativeTarget = coordinateTransform.mapPoint(target);
-      await nativeGesture(browser, [nativeTarget, nativeTarget], 80);
+      await nativeGesture(browser, [nativeTarget], 80);
       await webContext(browser);
       await browser.waitUntil(async () => (await browser.getUrl()) !== beforeUrl, { timeout: 10_000, timeoutMsg: `native tap on ${target.label} did not navigate` });
       const afterUrl = await browser.getUrl();
