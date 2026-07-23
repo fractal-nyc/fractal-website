@@ -7,6 +7,7 @@ import {
   profilesFor,
 } from "./config.mjs";
 import {
+  isRecognizedPlayStorePackageOutput,
   parseIni,
   validateAndroidAvdConfig,
   validateAndroidRuntimeIdentity,
@@ -63,6 +64,40 @@ const validRuntime = {
   systemImage: "google/sdk_gphone64_arm64/emu64a:14/test",
   playStorePackagePath: "package:/product/priv-app/Phonesky/Phonesky.apk",
 };
+
+for (const packageOutput of [
+  "package:/system/priv-app/Phonesky/Phonesky.apk",
+  "package:/product/priv-app/Phonesky/Phonesky.apk",
+  "package:/system/product/priv-app/Phonesky/Phonesky.apk",
+  "package:/system_ext/priv-app/Phonesky/Phonesky.apk",
+  "package:/data/app/~~1dlB0QiSoZaEu1gIzSdBhA==/com.android.vending-P-vV8qvM7RwYF8xYFb0cAw==/base.apk",
+  "package:/data/app/~~1dlB0QiSoZaEu1gIzSdBhA==/com.android.vending-P-vV8qvM7RwYF8xYFb0cAw==/base.apk\npackage:/data/app/~~1dlB0QiSoZaEu1gIzSdBhA==/com.android.vending-P-vV8qvM7RwYF8xYFb0cAw==/split_config.arm64_v8a.apk",
+  "package:/data/app/com.android.vending-1/base.apk",
+]) {
+  assert.equal(isRecognizedPlayStorePackageOutput(packageOutput), true, `${packageOutput} must be accepted`);
+  assert.equal(validateAndroidRuntimeIdentity(phone, { ...validRuntime, playStorePackagePath: packageOutput }).ok, true, `${packageOutput} must prove Play Store identity`);
+}
+
+for (const packageOutput of [
+  "",
+  "package:/data/app/~~spoof/base.apk",
+  "package:/data/app/~~session/com.android.vending.evil-token/base.apk",
+  "package:/data/app/~~session/evil.com.android.vending-token/base.apk",
+  "package:/data/app/~~session/com.android.vending-token/../../tmp/fake.apk",
+  "package:/data/app/~~session/com.android.vending-token/not an apk.apk",
+  "package:/tmp/fake.apk",
+  "package:/system/app/Unrelated/Unrelated.apk",
+  "package:/product/priv-app/PhoneskyEvil/Phonesky.apk",
+  "package:/product/priv-app/Phonesky/NotPhonesky.apk",
+  "package:/no-spaces.apk",
+  " package:/product/priv-app/Phonesky/Phonesky.apk",
+  "package:/product/priv-app/Phonesky/Phonesky.apk ",
+  "package:/product/priv-app/Phonesky/Phonesky.apk\npackage:/tmp/fake.apk",
+]) {
+  assert.equal(isRecognizedPlayStorePackageOutput(packageOutput), false, `${JSON.stringify(packageOutput)} must be rejected`);
+  assert.equal(validateAndroidRuntimeIdentity(phone, { ...validRuntime, playStorePackagePath: packageOutput }).ok, false, `${JSON.stringify(packageOutput)} must not prove Play Store identity`);
+}
+
 assert.equal(validateAndroidRuntimeIdentity(phone, validRuntime).ok, true);
 assert.equal(validateAndroidRuntimeIdentity(phone, { ...validRuntime, wmSize: "Physical size: 720x1280\nOverride size: 1080x2340", wmDensity: "Physical density: 480\nOverride density: 420" }).ok, true);
 assert.equal(validateAndroidRuntimeIdentity(phone, { ...validRuntime, wmDensity: "Physical density: 480" }).ok, false);

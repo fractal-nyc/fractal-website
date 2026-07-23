@@ -40,6 +40,19 @@ export function normalizeWmDensity(value = "") {
   return match ? Number(match[1]) : null;
 }
 
+const PLAY_STORE_DATA_APK = /^package:\/data\/app\/(?:~~[A-Za-z0-9_-]+={0,2}\/)?com\.android\.vending-[A-Za-z0-9_-]+={0,2}\/[A-Za-z0-9][A-Za-z0-9._-]*\.apk$/;
+const PLAY_STORE_PRIVILEGED_APK = /^package:\/(?:system|product|system\/product|system_ext)\/priv-app\/Phonesky\/Phonesky\.apk$/;
+
+export function isRecognizedPlayStorePackageOutput(value = "") {
+  if (typeof value !== "string" || !value || value !== value.trim()) return false;
+  const lines = value.split(/\r?\n/);
+  return lines.length > 0 && lines.every((line) => (
+    line !== ""
+    && line === line.trim()
+    && (PLAY_STORE_DATA_APK.test(line) || PLAY_STORE_PRIVILEGED_APK.test(line))
+  ));
+}
+
 export function validateAndroidAvdConfig(profile, config) {
   const violations = [];
   const actualPackage = normalizeSystemImagePackage(config["image.sysdir.1"] || "");
@@ -74,8 +87,8 @@ export function validateAndroidRuntimeIdentity(profile, identity) {
   if (actualSize !== normalizeWmSize(profile.expectedWmSize)) violations.push(`runtime size must be ${normalizeWmSize(profile.expectedWmSize)}, got ${actualSize || "missing"}`);
   if (actualDensity !== profile.expectedWmDensity) violations.push(`runtime density must be ${profile.expectedWmDensity}, got ${actualDensity || "missing"}`);
   if (!/google/i.test(identity.fingerprint || "")) violations.push(`runtime fingerprint must identify a Google image, got ${identity.fingerprint || "missing"}`);
-  if (imageFamily === "google_apis_playstore" && !identity.playStorePackagePath?.split(/\r?\n/).some((line) => /^package:\/\S+\.apk$/i.test(line.trim()))) {
-    violations.push(`runtime image family must be ${imageFamily}; com.android.vending package path is missing`);
+  if (imageFamily === "google_apis_playstore" && !isRecognizedPlayStorePackageOutput(identity.playStorePackagePath)) {
+    violations.push(`runtime image family must be ${imageFamily}; com.android.vending package path is missing or unrecognized`);
   }
   return {
     ok: violations.length === 0,
