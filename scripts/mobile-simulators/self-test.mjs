@@ -321,6 +321,12 @@ try {
   });
   const assetResult = await page.evaluate(probeRuntimeHealth);
   assert.match(assetResult.violations.join("\n"), /asset error event: IMG/);
+
+  await page.reload();
+  assert.equal(await page.evaluate(() => Boolean(window.__fractalSimulatorHealth)), false);
+  await page.evaluate(installRuntimeHealthCapture);
+  assert.equal(await page.evaluate(() => Boolean(window.__fractalSimulatorHealth)), true);
+  assert.equal(await page.evaluate(beginRuntimeHealthRoute, "/post-navigation-self-test"), true);
 } finally {
   await browser.close();
 }

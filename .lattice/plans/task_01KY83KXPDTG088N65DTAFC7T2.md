@@ -24,4 +24,12 @@ Automate the API 34 / Chrome 113 Apple-Silicon emulator workaround without chang
 - Complete a full S24-class run after the scroll-reset fix, including the native node tap, and then a full tablet run.
 - The S24 rerun reached `/political-club` with all first-party health checks green but failed on `source: network` 403s emitted by the embedded Luma iframe's external Sentry endpoint. Treat only cross-origin third-party network log failures as evidence-only; keep first-party network failures and all JavaScript, console, and page errors fatal. Add focused self-test coverage for this classification before rerunning both profiles.
 
+## Review Cycle 2 Findings
+
+- S24 host-GPU evidence `2026-07-23T18-49-59-899Z` passed the complete route sweep, homepage WebGL readiness, native drag/tap interaction, and CTA navigation to `/#story`.
+- The expected CTA navigation reloads the document, so the suite's injected runtime-health capture no longer exists when it resets to `/`. Reinstall and verify the same capture immediately after the CTA navigation before beginning the next route; do not relax any health, WebGL, or interaction assertion.
+- Rerun S24-class and tablet profiles to completion.
+
+## Reset 2026-07-23 by agent:codex-root
+
 ## Reset 2026-07-23 by agent:codex-root

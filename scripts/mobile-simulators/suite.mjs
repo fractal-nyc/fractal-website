@@ -93,11 +93,17 @@ export async function runSimulatorSuite({ profile, identity, baseUrl, evidenceDi
 
   const browser = await remote({ hostname: "127.0.0.1", port: appiumPort, path: "/", logLevel: "info", capabilities });
   try {
+    const ensureRuntimeHealthCapture = async (context) => {
+      await browser.execute(installRuntimeHealthCapture);
+      if (!await browser.execute(() => Boolean(window.__fractalSimulatorHealth))) {
+        throw new Error(`Unable to install the simulator runtime-health capture ${context}`);
+      }
+    };
+
     await webContext(browser);
     await browser.url(`${baseUrl}/protocol?simulator-health-bootstrap=1`);
     await waitForDocument(browser);
-    await browser.execute(installRuntimeHealthCapture);
-    if (!await browser.execute(() => Boolean(window.__fractalSimulatorHealth))) throw new Error("Unable to install the simulator runtime-health capture");
+    await ensureRuntimeHealthCapture("during bootstrap");
 
     let browserLogChannel = "unknown";
     const readBrowserLogs = async (route, { drain = false } = {}) => {
@@ -275,6 +281,8 @@ export async function runSimulatorSuite({ profile, identity, baseUrl, evidenceDi
 
       await browser.execute(() => document.querySelector("[data-hero-cta]")?.click());
       await browser.waitUntil(async () => new URL(await browser.getUrl()).hash === "#story", { timeout: 10_000, timeoutMsg: "Story CTA did not reach #story" });
+      await waitForDocument(browser);
+      await ensureRuntimeHealthCapture("after Story CTA navigation");
       record("interaction", { name: "story-cta", result: "passed", url: await browser.getUrl() });
       await navigate("/", "PORTRAIT", "interaction-reset");
       await browser.execute(() => scrollTo({ top: 0, behavior: "instant" }));
