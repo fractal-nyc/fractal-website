@@ -15,6 +15,37 @@ async function dispatchTouchGesture(page: import("@playwright/test").Page, point
   await session.detach();
 }
 
+const INTERNAL_HERO_ROUTES: Record<string, string> = {
+  "CO-LIVING": "/co-living",
+  EVENTS: "/events",
+  CAMPUS: "/campus",
+  LIBRARY: "/library",
+};
+
+async function visibleInternalNodeAnchor(page: import("@playwright/test").Page) {
+  const target = await page.locator("[data-hero-label]").evaluateAll((labels, routes) => {
+    const region = document.querySelector("[data-hero-hit-region] > div")?.getBoundingClientRect();
+    if (!region) return null;
+    for (const label of labels) {
+      const name = (label as HTMLElement).dataset.heroLabel?.toUpperCase() ?? "";
+      const route = routes[name];
+      if (!route) continue;
+      const box = label.getBoundingClientRect();
+      if (box.width === 0 || box.height === 0) continue;
+      const transformValue = getComputedStyle(label).transform;
+      const transform = transformValue === "none" ? new DOMMatrixReadOnly() : new DOMMatrixReadOnly(transformValue);
+      const x = box.x + box.width / 2 - transform.m41;
+      const y = box.y + box.height / 2 - transform.m42;
+      if (x >= region.left && x <= region.right && y >= region.top && y <= region.bottom) {
+        return { label: name, route, x, y };
+      }
+    }
+    return null;
+  }, INTERNAL_HERO_ROUTES);
+  expect(target, "a visible internal Hero node must have a projected anchor inside the hit target").toBeTruthy();
+  return target;
+}
+
 test.beforeEach(async ({ page }, testInfo) => {
   const profile = testInfo.project.metadata.profile as ResponsiveProfile | undefined;
   if (profile?.reducedMotion) await page.emulateMedia({ reducedMotion: profile.reducedMotion });
@@ -115,6 +146,29 @@ test("trusted touch drag rotates and the Hero stage permits page scroll", async 
   await page.mouse.move(center.x, center.y);
   await page.mouse.wheel(0, 500);
   await expect.poll(() => page.evaluate(() => scrollY)).toBeGreaterThan(0);
+});
+
+test("trusted touch and mouse taps navigate from the projected Hero node anchor", async ({ page, browserName }, testInfo) => {
+  const profile = testInfo.project.metadata.profile as ResponsiveProfile | undefined;
+  test.skip(browserName !== "chromium" || profile?.name !== "phone-reduced-motion", "one stable touch profile exercises trusted Hero taps");
+  await expect(page.locator('[data-hero-scene][data-scene-ready="true"]')).toBeAttached({ timeout: 30_000 });
+  await expect.poll(() => page.locator("[data-hero-label]").count(), { timeout: 30_000 }).toBeGreaterThan(0);
+
+  const touchTarget = await visibleInternalNodeAnchor(page);
+  if (!touchTarget) return;
+  await dispatchTouchGesture(page, [{ x: touchTarget.x, y: touchTarget.y }]);
+  await expect(page).toHaveURL(new RegExp(`${touchTarget.route}$`));
+  await page.waitForTimeout(500);
+  expect(new URL(page.url()).pathname).toBe(touchTarget.route);
+
+  await page.goto("/", { waitUntil: "domcontentloaded" });
+  await preparePage(page);
+  await expect(page.locator('[data-hero-scene][data-scene-ready="true"]')).toBeAttached({ timeout: 30_000 });
+  await expect.poll(() => page.locator("[data-hero-label]").count(), { timeout: 30_000 }).toBeGreaterThan(0);
+  const mouseTarget = await visibleInternalNodeAnchor(page);
+  if (!mouseTarget) return;
+  await page.mouse.click(mouseTarget.x, mouseTarget.y);
+  await expect(page).toHaveURL(new RegExp(`${mouseTarget.route}$`));
 });
 
 test("reduced motion freezes Hero motion while preserving content", async ({ page }, testInfo) => {

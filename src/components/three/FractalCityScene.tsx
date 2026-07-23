@@ -1,11 +1,27 @@
 import { useRef, useState } from "react";
-import { Canvas } from "@react-three/fiber";
+import { Canvas, events } from "@react-three/fiber";
+import type { DomEvent, RootState, RootStore } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
 import * as THREE from "three";
 import { TOUCH } from "three";
 // Hero geometry variants — swap the import to try different shapes
 // import { FractalObject } from "./MetatronCube";        // Nested hexahedra (Metatron's Cube)
 import { FractalObject } from "./OctahedronHero";         // Octahedron
+import { clientToCanvasNdc } from "./pointerCoordinates";
+
+function canvasLocalEvents(store: RootStore) {
+  const manager = events(store);
+
+  return {
+    ...manager,
+    compute: (event: DomEvent, state: RootState) => {
+      const rect = state.gl.domElement.getBoundingClientRect();
+      const pointer = clientToCanvasNdc(event.clientX, event.clientY, rect);
+      state.pointer.set(pointer.x, pointer.y);
+      state.raycaster.setFromCamera(state.pointer, state.camera);
+    },
+  };
+}
 
 function SceneLighting() {
   return (
@@ -55,8 +71,8 @@ export function FractalCityScene({
           camera={{ position: [0, 0.8, 8], fov: 50, near: 0.1, far: 100 }}
           dpr={[1, 2]}
           gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
+          events={canvasLocalEvents}
           eventSource={eventSourceRef as React.RefObject<HTMLElement>}
-          eventPrefix="client"
           style={{ background: "transparent" }}
           onCreated={({ gl }) => {
             gl.toneMapping = THREE.NoToneMapping;
