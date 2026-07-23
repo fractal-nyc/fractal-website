@@ -1,0 +1,19 @@
+{
+  "created_at": "2026-07-23T21:46:53Z",
+  "created_by": "agent:codex-frac21-reviewer",
+  "custom_fields": {},
+  "id": "art_01KY8F46XFBMY9PJ5KASD81AMM",
+  "model": null,
+  "payload": {
+    "content_type": "text/markdown",
+    "file": "art_01KY8F46XFBMY9PJ5KASD81AMM.md",
+    "size_bytes": 1821
+  },
+  "schema_version": 1,
+  "sensitive": false,
+  "summary": "Independent cold review of commit 9d9aa91 against the FRAC-21 plan found no product-level defects. Layout ownership remains coherent: the compact fixed header owns the larger masthead/descriptor, hero",
+  "tags": [],
+  "title": "Review findings",
+  "token_usage": null,
+  "type": "note"
+}

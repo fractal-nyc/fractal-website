@@ -8,17 +8,28 @@
       "repo": null
     }
   ],
-  "comment_count": 0,
+  "comment_count": 1,
   "complexity": null,
   "created_at": "2026-07-23T21:06:10Z",
   "created_by": "agent:codex-root",
   "custom_fields": {},
   "description": "Implement the approved mobile hero experiment: enlarge the Fractal Collective masthead, add a concise neighborhood-campus descriptor, lift the complete octant interaction region, enlarge the intro blurb and Story CTA, and art-direct the decorative skyline background for portrait phones. Preserve desktop behavior, normal-flow clipping safety, accessibility, and validate from compact phones through tablets in the real S24-class Android emulator.",
-  "done_at": null,
-  "evidence_refs": [],
+  "done_at": "2026-07-23T21:46:53Z",
+  "evidence_refs": [
+    {
+      "id": "ev_01KY8F46XFBMY9PJ5KASD81AMN",
+      "role": "review",
+      "source_type": "comment"
+    },
+    {
+      "id": "art_01KY8F46XFBMY9PJ5KASD81AMM",
+      "role": "review",
+      "source_type": "artifact"
+    }
+  ],
   "id": "task_01KY8CSN5EACX337B9Y5PE87EF",
-  "last_event_id": "ev_01KY8E8S7YEYDM5WKRPFMHEGQN",
-  "last_status_changed_at": "2026-07-23T21:31:55Z",
+  "last_event_id": "ev_01KY8F46XFBMY9PJ5KASD81AMQ",
+  "last_status_changed_at": "2026-07-23T21:46:53Z",
   "priority": "high",
   "relationships_out": [
     {
@@ -32,10 +43,10 @@
   "reopened_count": 0,
   "schema_version": 1,
   "short_id": "FRAC-21",
-  "status": "review",
+  "status": "done",
   "tags": null,
   "title": "Refine mobile homepage hero composition",
   "type": "task",
-  "updated_at": "2026-07-23T21:31:55Z",
+  "updated_at": "2026-07-23T21:46:53Z",
   "urgency": null
 }

@@ -1,0 +1,34 @@
+{
+  "assigned_to": null,
+  "branch_links": [],
+  "comment_count": 0,
+  "complexity": null,
+  "created_at": "2026-07-23T21:46:34Z",
+  "created_by": "agent:codex-frac21-reviewer",
+  "custom_fields": {},
+  "description": "The trusted projected-node tap test can miss R3F pointer delivery when two headless Chromium WebGL contexts run concurrently, despite passing in serialized/settled runs and on the real S24-class Appium native tap. Reproduce with the phone-reduced-motion project at --workers=2 --repeat-each, distinguish event-source readiness from GPU contention, and make the automated interaction lane deterministic without weakening the native contract.",
+  "done_at": null,
+  "evidence_refs": [],
+  "id": "task_01KY8F3KXN59CJY7ST0R69QBA4",
+  "last_event_id": "ev_01KY8F3RC25NHY27459EJPJR1F",
+  "last_status_changed_at": "2026-07-23T21:46:34Z",
+  "priority": "medium",
+  "relationships_out": [
+    {
+      "created_at": "2026-07-23T21:46:38Z",
+      "created_by": "agent:codex-frac21-reviewer",
+      "note": null,
+      "target_task_id": "task_01KY8CSN5EACX337B9Y5PE87EF",
+      "type": "related_to"
+    }
+  ],
+  "reopened_count": 0,
+  "schema_version": 1,
+  "short_id": "FRAC-22",
+  "status": "backlog",
+  "tags": null,
+  "title": "Stabilize parallel Playwright Hero tap readiness",
+  "type": "bug",
+  "updated_at": "2026-07-23T21:46:38Z",
+  "urgency": null
+}
