@@ -221,7 +221,10 @@ export function probePageGutters() {
 
 export function probeNavbarContent() {
   const navbar = document.querySelector("[data-site-navbar]")?.getBoundingClientRect();
-  const desktopHome = location.pathname === "/" && innerWidth >= 1024;
+  // The Home stage is an intentional transparent overlay: its containing box
+  // may sit beneath fixed chrome while the actual projected labels remain
+  // below it. `probeHeroLabelSafeZone` owns that visible-content relationship.
+  const homeHero = location.pathname === "/";
   const selector = location.pathname === "/" ? "[data-hero-stage]" : "main h1, main h2, main h3, main p";
   const candidates = Array.from(document.querySelectorAll(selector))
     .filter((element) => !element.closest("[data-site-navbar]") && !element.closest("[data-hero-label]") && !element.closest(".sr-only-focusable") && !element.closest('[aria-hidden="true"]'))
@@ -232,12 +235,12 @@ export function probeNavbarContent() {
   const first = candidates.find(({ box }) => box.bottom > 0);
   const details = {
     navbar: navbar ? { top: navbar.top, bottom: navbar.bottom } : null,
-    exempt: desktopHome,
+    exempt: homeHero,
     first: first ? { tag: first.element.tagName, text: first.element.textContent?.trim().replace(/\s+/g, " ").slice(0, 80), top: first.box.top, bottom: first.box.bottom } : null,
   };
   const violations = [];
-  if (navbar && !desktopHome && !first) violations.push("route does not expose a primary content owner");
-  if (navbar && !desktopHome && first && first.box.top < navbar.bottom - 1) violations.push(`navbar covers primary content: ${JSON.stringify(details)}`);
+  if (navbar && !homeHero && !first) violations.push("route does not expose a primary content owner");
+  if (navbar && !homeHero && first && first.box.top < navbar.bottom - 1) violations.push(`navbar covers primary content: ${JSON.stringify(details)}`);
   return { violations, details };
 }
 
@@ -262,39 +265,75 @@ export function probeHeroComposition(options = {}) {
       : { left: box.left, right: box.right, top: box.top, bottom: box.bottom, width: box.width, height: box.height };
   };
   const stage = visibleBox("[data-hero-stage]");
+  const scene = visibleBox("[data-hero-scene]");
+  const hitRegion = visibleBox("[data-hero-hit-region]");
   const footer = visibleBox("[data-hero-footer]");
   const blurb = visibleBox("[data-hero-blurb]");
   const cta = visibleBox("[data-hero-cta]");
   const navbar = visibleBox("[data-site-navbar]");
+  const mobileHeader = visibleBox("[data-home-mobile-header]");
+  const masthead = visibleBox("[data-home-mobile-masthead]");
+  const wordmark = visibleBox("[data-home-mobile-wordmark]");
+  const descriptor = visibleBox("[data-home-mobile-descriptor]");
+  const menu = visibleBox('[data-home-mobile-header] button[aria-label*="menu" i]');
+  const background = visibleBox("[data-hero-background]");
+  const backgroundImage = visibleBox("[data-hero-background-image]");
   const vv = visualViewport;
   const visual = { left: vv?.offsetLeft ?? 0, top: vv?.offsetTop ?? 0, right: (vv?.offsetLeft ?? 0) + (vv?.width ?? innerWidth), bottom: (vv?.offsetTop ?? 0) + (vv?.height ?? innerHeight) };
   const compact = innerWidth < 1024;
   const violations = [];
   if (!stage) violations.push("Hero stage is not visible");
   if (compact) {
+    if (!mobileHeader) violations.push("compact Home masthead is not visible");
+    if (!masthead) violations.push("compact Home masthead link is not visible");
+    if (!wordmark) violations.push("compact Home wordmark is not visible");
+    if (!descriptor) violations.push("compact Home descriptor is not visible");
+    if (masthead && mobileHeader && (masthead.left < mobileHeader.left - 1 || masthead.right > mobileHeader.right + 1)) violations.push("compact Home masthead escapes its header owner");
+    if (descriptor && masthead && (descriptor.left < masthead.left - 1 || descriptor.right > masthead.right + 1)) violations.push("compact Home descriptor escapes its masthead owner");
+    if (masthead && menu && masthead.right > menu.left + 1) violations.push("compact Home masthead overlaps the menu control");
     if (!footer) violations.push("compact Hero footer is not visible");
     if (!blurb) violations.push("compact Hero blurb is not visible");
     if (!cta) violations.push("compact Hero CTA is not visible");
     if (stage && footer && stage.bottom > footer.top + 1) violations.push("Hero stage overlaps its in-flow footer");
     if (blurb && footer && (blurb.left < footer.left - 1 || blurb.right > footer.right + 1)) violations.push("Hero blurb escapes its footer owner");
-    if (cta && footer && cta.bottom > footer.bottom + 1) violations.push("Hero CTA escapes its footer owner");
+    if (cta && footer && (cta.left < footer.left - 1 || cta.right > footer.right + 1 || cta.top < footer.top - 1 || cta.bottom > footer.bottom + 1)) violations.push("Hero CTA escapes its footer owner");
+    if (cta && (cta.width < 44 || cta.height < 44)) violations.push(`Hero CTA touch target is under 44px: ${JSON.stringify(cta)}`);
+    if (blurb) {
+      const blurbFontSize = Number.parseFloat(getComputedStyle(document.querySelector("[data-hero-blurb]")).fontSize);
+      if (blurbFontSize < 16) violations.push(`compact Hero blurb is under 16px: ${blurbFontSize}`);
+    }
     if (options.requireInitialContainment && navbar && (navbar.top < visual.top - 1 || navbar.bottom > visual.bottom + 1)) violations.push("navbar does not fit the initial visual viewport");
     if (options.requireInitialContainment && footer && footer.bottom > visual.bottom + 1) violations.push("portrait Hero footer does not fit the initial visual viewport");
-  } else if (footer) {
-    violations.push("compact Hero footer is unexpectedly visible in the desktop composition");
+  } else {
+    if (footer) violations.push("compact Hero footer is unexpectedly visible in the desktop composition");
+    if (mobileHeader || masthead || descriptor) violations.push("compact Home masthead treatment is unexpectedly visible in the desktop composition");
   }
-  return { violations, details: { compact, stage, footer, blurb, cta, navbar, visual } };
+  for (const [label, layer] of [["scene", scene], ["hit region", hitRegion]]) {
+    if (!layer) {
+      violations.push(`Hero ${label} is not visible`);
+    } else if (stage && (Math.abs(layer.left - stage.left) > 1 || Math.abs(layer.right - stage.right) > 1 || Math.abs(layer.top - stage.top) > 1 || Math.abs(layer.bottom - stage.bottom) > 1)) {
+      violations.push(`Hero ${label} does not share the stage coordinate space`);
+    }
+  }
+  if (compact && background && backgroundImage && (backgroundImage.left > background.left + 1 || backgroundImage.right < background.right - 1 || backgroundImage.top > background.top + 1 || backgroundImage.bottom < background.bottom - 1)) {
+    violations.push("Hero background image exposes an empty edge");
+  }
+  return { violations, details: { compact, stage, scene, hitRegion, footer, blurb, cta, navbar, mobileHeader, masthead, wordmark, descriptor, menu, background, backgroundImage, visual } };
 }
 
 export function probeHeroLabelSafeZone() {
   const safe = document.querySelector("[data-hero-safe-zone]")?.getBoundingClientRect();
   if (!safe) return { violations: ["missing Hero safe zone"], details: null };
+  const compact = innerWidth < 1024;
+  const navbar = compact ? document.querySelector("[data-site-navbar]")?.getBoundingClientRect() : null;
+  const footerElement = compact ? document.querySelector("[data-hero-footer]") : null;
+  const footer = footerElement && getComputedStyle(footerElement).display !== "none" ? footerElement.getBoundingClientRect() : null;
   const failures = Array.from(document.querySelectorAll("[data-hero-label]"))
     .filter((element) => getComputedStyle(element).visibility !== "hidden")
     .flatMap((element) => {
       const box = element.getBoundingClientRect();
-      return box.left < safe.left - 1 || box.right > safe.right + 1
-        ? [{ label: element.dataset.heroLabel, left: box.left, right: box.right, safeLeft: safe.left, safeRight: safe.right }]
+      return box.left < safe.left - 1 || box.right > safe.right + 1 || (navbar && box.top < navbar.bottom - 1) || (footer && box.bottom > footer.top + 1)
+        ? [{ label: element.dataset.heroLabel, left: box.left, right: box.right, top: box.top, bottom: box.bottom, safeLeft: safe.left, safeRight: safe.right, navbarBottom: navbar?.bottom, footerTop: footer?.top }]
         : [];
     });
   return { violations: failures.map((failure) => `projected Hero label escapes safe zone: ${JSON.stringify(failure)}`), details: failures };

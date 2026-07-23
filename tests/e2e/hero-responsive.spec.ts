@@ -55,6 +55,8 @@ test.beforeEach(async ({ page }, testInfo) => {
 });
 
 test("stage, Story footer, and CTA remain reachable without overlap", async ({ page }, testInfo) => {
+  test.slow();
+  await expect(page.locator('[data-hero-scene][data-scene-ready="true"]')).toBeAttached({ timeout: 30_000 });
   const width = testInfo.project.use.viewport?.width ?? (await page.evaluate(() => innerWidth));
   const profile = testInfo.project.metadata.profile as ResponsiveProfile | undefined;
   const metrics = await environmentMetrics(page);
@@ -63,6 +65,57 @@ test("stage, Story footer, and CTA remain reachable without overlap", async ({ p
   await assertHeroComposition(page, requiresInitialContainment);
   await assertNoHorizontalOverflow(page);
   await assertNavbarDoesNotCoverContent(page);
+});
+
+test("mobile masthead and portrait art direction split cleanly at lg", async ({ page }, testInfo) => {
+  const width = testInfo.project.use.viewport?.width ?? (await page.evaluate(() => innerWidth));
+  const mobileHeader = page.locator("[data-home-mobile-header]");
+  const descriptor = page.locator("[data-home-mobile-descriptor]");
+  const footer = page.locator("[data-hero-footer]");
+  const background = page.locator("[data-hero-background-image]");
+
+  if (width < 1024) {
+    await expect(mobileHeader).toBeVisible();
+    await expect(descriptor).toBeVisible();
+    await expect(descriptor).toHaveText("A neighborhood campus in NYC");
+    await expect(footer).toBeVisible();
+    const treatment = await page.evaluate(() => {
+      const fractal = document.querySelector<HTMLElement>("[data-home-mobile-wordmark] > span:first-child");
+      const blurb = document.querySelector<HTMLElement>("[data-hero-blurb]");
+      const cta = document.querySelector<HTMLElement>("[data-hero-cta]");
+      const stage = document.querySelector<HTMLElement>("[data-hero-stage]");
+      const image = document.querySelector<HTMLElement>("[data-hero-background-image]");
+      const ctaBox = cta?.getBoundingClientRect();
+      return {
+        mastheadFontSize: Number.parseFloat(getComputedStyle(fractal!).fontSize),
+        blurbFontSize: Number.parseFloat(getComputedStyle(blurb!).fontSize),
+        ctaWidth: ctaBox?.width ?? 0,
+        ctaHeight: ctaBox?.height ?? 0,
+        stageTranslate: getComputedStyle(stage!).translate,
+        objectPosition: getComputedStyle(image!).objectPosition,
+      };
+    });
+    expect(treatment.mastheadFontSize).toBeGreaterThanOrEqual(32);
+    expect(treatment.blurbFontSize).toBeGreaterThanOrEqual(16);
+    expect(treatment.ctaWidth).toBeGreaterThanOrEqual(44);
+    expect(treatment.ctaHeight).toBeGreaterThanOrEqual(44);
+    expect(treatment.stageTranslate).not.toBe("none");
+    expect(treatment.objectPosition).toBe("72% 100%");
+  } else {
+    await expect(mobileHeader).toBeHidden();
+    await expect(descriptor).toBeHidden();
+    await expect(footer).toBeHidden();
+    const desktopTreatment = await page.evaluate(() => {
+      const stage = document.querySelector<HTMLElement>("[data-hero-stage]");
+      const image = document.querySelector<HTMLElement>("[data-hero-background-image]");
+      return {
+        stageTranslate: getComputedStyle(stage!).translate,
+        objectPosition: getComputedStyle(image!).objectPosition,
+      };
+    });
+    expect(desktopTreatment.stageTranslate).toBe("none");
+    expect(desktopTreatment.objectPosition).toBe("50% 100%");
+  }
 });
 
 test("WebGL scene signals readiness and projected labels stay in the computed safe zone", async ({ page }, testInfo) => {

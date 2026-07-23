@@ -239,7 +239,7 @@ export function Hero() {
         data-hero-footer
       >
         <p
-          className="font-mono normal-case text-foreground/85 leading-relaxed min-w-0 text-[13px] md:text-[16px]"
+          className="text-body text-foreground/85 leading-relaxed min-w-0 md:text-lg"
           data-hero-blurb
         >
           In 2021, our small group of friends decided to live, learn, and build
@@ -248,13 +248,13 @@ export function Hero() {
         <a
           href="#story"
           aria-label="Explore our Story — scroll to the Story section"
-          className="pointer-events-auto shrink-0 inline-flex items-center gap-2 text-foreground/70 hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground rounded-sm py-2"
+          className="pointer-events-auto shrink-0 inline-flex max-w-full min-h-11 min-w-11 items-center gap-2 text-foreground/70 hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground rounded-sm py-2"
           data-hero-cta
         >
-          <span className="text-label text-[11px] md:text-[13px] whitespace-nowrap">
+          <span className="text-label">
             Explore our Story
           </span>
-          <ArrowDown className="h-5 w-5 md:h-6 md:w-6 motion-safe:animate-bounce" data-hero-arrow />
+          <ArrowDown className="h-6 w-6 shrink-0 md:h-7 md:w-7 motion-safe:animate-bounce" data-hero-arrow />
         </a>
       </div>
 
@@ -458,6 +458,7 @@ export function Hero() {
             src={`${import.meta.env.BASE_URL}images/hero/fractal-background-fallback.png`}
             alt="NYC skyline backdrop"
             className="hero-background-image w-full h-full object-cover"
+            data-hero-background-image
             loading="eager"
             fetchPriority="high"
           />

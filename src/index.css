@@ -156,13 +156,17 @@
      browser controls expanded. Required content may grow taller on short
      landscape screens or under text zoom instead of being clipped. */
   .hero-shell {
+    --hero-stage-lift: clamp(2rem, 6svh, 4rem);
     position: relative;
     isolation: isolate;
     display: grid;
-    grid-template-rows: minmax(clamp(20rem, 56svh, 42rem), 1fr) auto;
+    grid-template-rows: minmax(clamp(17rem, 46svh, 42rem), 1fr) auto;
     min-height: 100vh;
     min-height: 100svh;
-    padding-top: calc(5rem + env(safe-area-inset-top));
+    /* Reserve the maximum compact masthead block plus the amount the stage is
+       lifted. Subtracting that same lift on `.hero-stage` keeps the stage's
+       visible top clear of fixed chrome while raising its centered contents. */
+    padding-top: calc(6.25rem + var(--hero-stage-lift) + env(safe-area-inset-top));
     overflow-x: clip;
   }
 
@@ -171,6 +175,10 @@
     min-width: 0;
     min-height: 0;
     z-index: 1;
+    /* FRAC-21: the stage is the sole owner of the compact composition lift.
+       Moving this containing block keeps the canvas, projected DOM labels,
+       safe zone, and native pointer target in the same coordinate space. */
+    translate: 0 calc(-1 * var(--hero-stage-lift));
   }
 
   /* OrbitControls writes `touch-action: none` onto its DOM event source.
@@ -186,16 +194,18 @@
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    gap: 0.5rem;
+    gap: 0.75rem;
     padding-top: 0.5rem;
     padding-bottom: max(1.25rem, env(safe-area-inset-bottom));
   }
 
   .hero-background-image {
     opacity: 0.15;
-    object-position: 52% 68%;
-    transform: scale(1.25);
-    transform-origin: center;
+    /* Portrait art direction: retain more of the skyline and anchor its
+       building mass to the lower-right instead of magnifying blank sky. */
+    object-position: 72% bottom;
+    transform: scale(1.06);
+    transform-origin: 72% bottom;
   }
 
   @media (min-width: 768px) {
@@ -226,6 +236,7 @@
     .hero-stage {
       position: absolute;
       inset: 0;
+      translate: none;
     }
 
     .hero-footer {

@@ -299,30 +299,40 @@ export function Navbar() {
             </div>
 
             {/* Home mobile + tablet header — shown at < 1024px (lg).
-                FRAC-3 redesign: a single-line "Fractal Collective" wordmark on
-                the left and the hamburger on the right, replacing the old
-                stacked title + 8px blurb + row of single-letter nav caps. The
-                three-column desktop grid can't fit below lg, and the old
-                letter-row was cramped and illegible; navigation now lives in the
-                overlay menu (same one every other breakpoint uses), while the
-                hero octant remains a parallel, interactive nav. Sizes step up
-                from phone (<md) to small tablet (md..lg). */}
-            <div className="lg:hidden flex items-center justify-between page-gutter pt-5 pb-3">
+                FRAC-21 gives the signature wordmark more presence and uses a
+                concise descriptor to make the previously empty header zone
+                intentional. The wordmark itself remains one line; the
+                descriptor is supporting chrome beneath it. Navigation stays in
+                the overlay menu, while the octant remains a parallel interactive
+                nav. The desktop three-column header is unchanged. */}
+            <div
+              className="lg:hidden flex items-start justify-between gap-2 page-gutter pt-5 pb-3"
+              data-home-mobile-header
+            >
               <Link
                 href="/"
-                className="flex items-baseline gap-1.5 tracking-tighter leading-none min-w-0"
+                className="flex min-w-0 flex-col gap-1 tracking-tighter leading-none"
+                data-home-mobile-masthead
               >
-                <span
-                  className="text-[clamp(26px,8.6vw,46px)]"
-                  style={{ fontFamily: "'Jacquard 24', system-ui" }}
-                >
-                  Fractal
+                <span className="flex items-baseline gap-1.5 whitespace-nowrap" data-home-mobile-wordmark>
+                  <span
+                    className="text-[clamp(32px,10.5vw,50px)]"
+                    style={{ fontFamily: "'Jacquard 24', system-ui" }}
+                  >
+                    Fractal
+                  </span>
+                  <span
+                    className="font-serif italic text-[clamp(19px,6.25vw,31px)]"
+                    style={{ textTransform: "none", fontWeight: 100 }}
+                  >
+                    Collective
+                  </span>
                 </span>
                 <span
-                  className="font-serif italic text-[clamp(16px,5.4vw,30px)]"
-                  style={{ textTransform: "none", fontWeight: 100 }}
+                  className="font-mono text-[clamp(8px,2.5vw,11px)] font-medium uppercase leading-tight tracking-[0.12em] whitespace-nowrap text-foreground/70"
+                  data-home-mobile-descriptor
                 >
-                  Collective
+                  A neighborhood campus in NYC
                 </span>
               </Link>
               <button
