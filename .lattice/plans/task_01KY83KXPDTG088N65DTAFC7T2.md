@@ -30,6 +30,15 @@ Automate the API 34 / Chrome 113 Apple-Silicon emulator workaround without chang
 - The expected CTA navigation reloads the document, so the suite's injected runtime-health capture no longer exists when it resets to `/`. Reinstall and verify the same capture immediately after the CTA navigation before beginning the next route; do not relax any health, WebGL, or interaction assertion.
 - Rerun S24-class and tablet profiles to completion.
 
+## Review Cycle 3 Findings
+
+- S24 evidence `2026-07-23T18-54-40-927Z` passed the route sweep, real browser-chrome height transition, homepage WebGL, Story CTA, runtime-health recovery, and native WebGL drag, then missed the Co-Living label during the native tap.
+- The suite's inferred `browserTop` treated all non-web height as top browser chrome. On this device that is 340 physical pixels, but 63 pixels are the bottom Android navigation bar. The native hierarchy reports the exact Chrome WebView bounds as `[0,279][1080,2280]`; the old mapping therefore tapped 61 pixels below the label.
+- Resolve the actual native WebView rectangle after switching to native context (`android.webkit.WebView` on Android and the corresponding `XCUIElementTypeWebView` on Apple), validate its dimensions against the CSS visual viewport, and map CSS points from that rect. Add a pure/testable coordinate transform with focused coverage. Do not silently fall back to the inaccurate subtraction heuristic.
+- Rerun S24-class and tablet profiles to completion. This is the final permitted review-rework cycle.
+
+## Reset 2026-07-23 by agent:codex-root
+
 ## Reset 2026-07-23 by agent:codex-root
 
 ## Reset 2026-07-23 by agent:codex-root

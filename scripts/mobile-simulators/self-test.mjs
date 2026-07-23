@@ -23,6 +23,7 @@ import {
 } from "./android-chrome.mjs";
 import { buildWebdriverCapabilities } from "./capabilities.mjs";
 import { classifyBrowserLogs } from "./browser-logs.mjs";
+import { createNativeWebViewTransform } from "./native-coordinates.mjs";
 import {
   beginRuntimeHealthRoute,
   installRuntimeHealthCapture,
@@ -110,6 +111,30 @@ assert.deepEqual(
     fatal: [firstPartyNetworkFailure, relativeNetworkFailure, javascriptFailure, consoleFailure, pageFailure],
     externalNetwork: [externalNetworkFailure],
   },
+);
+
+const s24CoordinateTransform = createNativeWebViewTransform({
+  nativeRect: { x: 0, y: 279, width: 1080, height: 2001 },
+  nativeWindow: { width: 1080, height: 2340 },
+  cssViewport: { width: 412.19049072265625, height: 762.2857055664062, offsetLeft: 0, offsetTop: 0, scale: 1 },
+  cssScreen: { width: 412, height: 892 },
+});
+const s24MappedTarget = s24CoordinateTransform.mapPoint({ x: 206, y: 300 });
+assert.ok(Math.abs(s24MappedTarget.x - 539.75) < 0.01);
+assert.ok(Math.abs(s24MappedTarget.y - 1066.5) < 0.01);
+assert.ok(Math.abs(s24CoordinateTransform.scaleX - s24CoordinateTransform.scaleY) / s24CoordinateTransform.scaleX < 0.002);
+assert.throws(
+  () => createNativeWebViewTransform({
+    nativeRect: { x: 0, y: 340, width: 1080, height: 1937 },
+    nativeWindow: { width: 1080, height: 2340 },
+    cssViewport: { width: 412.19049072265625, height: 762.2857055664062, offsetLeft: 0, offsetTop: 0, scale: 1 },
+    cssScreen: { width: 412, height: 892 },
+  }),
+  /does not match the live CSS viewport scale/,
+);
+assert.throws(
+  () => s24CoordinateTransform.mapPoint({ x: 206, y: 800 }),
+  /outside the live visual viewport/,
 );
 
 function fakeAndroidShell({ debugApp = null, waitForDebugger = false, failForceStop = false } = {}) {

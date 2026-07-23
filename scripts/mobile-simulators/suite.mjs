@@ -5,6 +5,7 @@ import { INTERNAL_REDIRECTS, RENDERED_ROUTES } from "../../tests/e2e/support/rou
 import { validateAndroidRuntimeIdentity, validateAppleDeviceIdentity } from "./identity.mjs";
 import { buildWebdriverCapabilities } from "./capabilities.mjs";
 import { classifyBrowserLogs } from "./browser-logs.mjs";
+import { createNativeWebViewTransform } from "./native-coordinates.mjs";
 import {
   collectEnvironmentMetrics,
   beginRuntimeHealthRoute,
@@ -67,6 +68,25 @@ async function nativeGesture(browser, points, pauseMs = 180) {
   }];
   await browser.performActions(actions);
   await browser.releaseActions();
+}
+
+async function nativeWebViewTransform(browser, profile, metrics, nativeWindow) {
+  const selector = profile.platform === "android" ? "//android.webkit.WebView" : "//XCUIElementTypeWebView";
+  const elements = await browser.$$(selector);
+  const visibleRects = [];
+  for (const element of elements) {
+    if (await element.isDisplayed()) visibleRects.push(await element.getRect());
+  }
+  if (visibleRects.length !== 1) {
+    throw new Error(`Expected exactly one visible native WebView (${selector}), found ${visibleRects.length}`);
+  }
+  if (!metrics.visualViewport) throw new Error("Cannot map native gestures without a live visualViewport");
+  return createNativeWebViewTransform({
+    nativeRect: visibleRects[0],
+    nativeWindow,
+    cssViewport: metrics.visualViewport,
+    cssScreen: metrics.screen,
+  });
 }
 
 export async function runSimulatorSuite({ profile, identity, baseUrl, evidenceDir, androidChromeWorkaround = null, appiumPort = 4723 }) {
@@ -298,11 +318,20 @@ export async function runSimulatorSuite({ profile, identity, baseUrl, evidenceDi
       });
       if (!stage) throw new Error("Hero hit region is unavailable for native gesture evidence");
       const currentMetrics = await metricsFor("PORTRAIT", "/", "before-native-drag");
-      const scale = nativeSize.width / currentMetrics.screen.width;
-      const browserTop = Math.max(0, nativeSize.height - currentMetrics.inner.height * scale);
-      const center = { x: (stage.x + stage.width / 2) * scale, y: browserTop + (stage.y + stage.height / 2) * scale };
       await nativeContext(browser);
-      await nativeGesture(browser, [{ x: center.x - 50 * scale, y: center.y }, { x: center.x + 50 * scale, y: center.y }]);
+      const coordinateTransform = await nativeWebViewTransform(browser, profile, currentMetrics, nativeSize);
+      const center = { x: stage.x + stage.width / 2, y: stage.y + stage.height / 2 };
+      await nativeGesture(browser, [
+        coordinateTransform.mapPoint({ x: center.x - 50, y: center.y }),
+        coordinateTransform.mapPoint({ x: center.x + 50, y: center.y }),
+      ]);
+      record("native-coordinate-space", {
+        nativeWebViewRect: coordinateTransform.nativeRect,
+        scaleX: coordinateTransform.scaleX,
+        scaleY: coordinateTransform.scaleY,
+        expectedScaleX: coordinateTransform.expectedScaleX,
+        expectedScaleY: coordinateTransform.expectedScaleY,
+      });
       await webContext(browser);
       await browser.pause(350);
       const labelCentersAfter = await browser.execute(() => Array.from(document.querySelectorAll("[data-hero-label]")).map((element) => {
@@ -320,7 +349,8 @@ export async function runSimulatorSuite({ profile, identity, baseUrl, evidenceDi
       if (!target) throw new Error("no visible internal Hero node is available for native tap evidence");
       const beforeUrl = await browser.getUrl();
       await nativeContext(browser);
-      await nativeGesture(browser, [{ x: target.x * scale, y: browserTop + target.y * scale }, { x: target.x * scale, y: browserTop + target.y * scale }], 80);
+      const nativeTarget = coordinateTransform.mapPoint(target);
+      await nativeGesture(browser, [nativeTarget, nativeTarget], 80);
       await webContext(browser);
       await browser.waitUntil(async () => (await browser.getUrl()) !== beforeUrl, { timeout: 10_000, timeoutMsg: `native tap on ${target.label} did not navigate` });
       const afterUrl = await browser.getUrl();

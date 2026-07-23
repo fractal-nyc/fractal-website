@@ -8,7 +8,7 @@
       "repo": null
     }
   ],
-  "comment_count": 6,
+  "comment_count": 8,
   "complexity": null,
   "created_at": "2026-07-23T18:25:45Z",
   "created_by": "agent:codex-root",
@@ -28,8 +28,8 @@
     }
   ],
   "id": "task_01KY83KXPDTG088N65DTAFC7T2",
-  "last_event_id": "ev_01KY856ZD15QNZJ0RZR7WNDTHF",
-  "last_status_changed_at": "2026-07-23T18:53:38Z",
+  "last_event_id": "ev_01KY85RTR18QAGH4032SZJEJRC",
+  "last_status_changed_at": "2026-07-23T19:03:23Z",
   "priority": "medium",
   "relationships_out": [
     {
@@ -40,13 +40,13 @@
       "type": "subtask_of"
     }
   ],
-  "reopened_count": 2,
+  "reopened_count": 3,
   "schema_version": 1,
   "short_id": "FRAC-19",
   "status": "review",
   "tags": null,
   "title": "Stabilize WebGL in Android simulator Chrome",
   "type": "task",
-  "updated_at": "2026-07-23T18:53:38Z",
+  "updated_at": "2026-07-23T19:03:23Z",
   "urgency": null
 }
