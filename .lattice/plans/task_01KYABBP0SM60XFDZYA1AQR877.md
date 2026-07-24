@@ -63,6 +63,12 @@ Add a final **Native browser evidence** strip using the runner's fresh whole-dev
 
 ## Reset 2026-07-24 by agent:codex-root
 
+## Operator review rework: restore desktop crop
+
+The compact background treatment is approved below 1024px and must remain unchanged. At the 1024px desktop boundary, explicitly restore the pre-FRAC-21 desktop `transform-origin: center`; otherwise the unchanged desktop transform inherits the compact `72% bottom` origin and produces a different crop. Verify the computed background position, transform, and origin immediately below and at the breakpoint, and confirm the 1024/1440 desktop visual baselines match the original desktop reference.
+
 ## Review Cycle 1 Findings
 
 Native Galaxy S24 inspection showed that the source bitmap itself contains a rectangular border about 4.5% below its top edge. The initial `scale(1.10)` crop produced only about 4% top overscan, so the border remained visible even though the image covered the element bounds. Increase only the compact background scale to `1.12`, retaining `translateY(6%)`, `object-position: 72% bottom`, `transform-origin: 72% bottom`, and the existing `lg` rule. Update compact top-overscan contracts to 5–7%; bottom overscan remains 5–7%. Regenerate and inspect only the compact Home baselines, then run focused composition/visual checks and representative cross-engine crop checks. Geometry, typography, CTA, native/gallery work, and the full 528-case matrix are outside this rework pass.
+
+## Reset 2026-07-24 by agent:codex-root

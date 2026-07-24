@@ -96,6 +96,8 @@ test("mobile masthead and portrait art direction split cleanly at lg", async ({ 
       const backgroundBox = background?.getBoundingClientRect();
       const imageBox = image?.getBoundingClientRect();
       const blurbStyle = getComputedStyle(blurb!);
+      const imageStyle = getComputedStyle(image!);
+      const [originX, originY] = imageStyle.transformOrigin.split(" ").map(Number.parseFloat);
       return {
         mastheadFontSize: Number.parseFloat(getComputedStyle(fractal!).fontSize),
         blurbFontSize: Number.parseFloat(blurbStyle.fontSize),
@@ -109,8 +111,12 @@ test("mobile masthead and portrait art direction split cleanly at lg", async ({ 
           : null,
         arrowAnimation: ctaArrow ? getComputedStyle(ctaArrow).animationName : null,
         stageTranslate: getComputedStyle(stage!).translate,
-        objectPosition: getComputedStyle(image!).objectPosition,
-        imageDisplay: getComputedStyle(image!).display,
+        objectPosition: imageStyle.objectPosition,
+        imageDisplay: imageStyle.display,
+        transformOriginRatio: {
+          x: originX / Number.parseFloat(imageStyle.width),
+          y: originY / Number.parseFloat(imageStyle.height),
+        },
         backgroundBox: backgroundBox ? { top: backgroundBox.top, bottom: backgroundBox.bottom, height: backgroundBox.height } : null,
         imageBox: imageBox ? { top: imageBox.top, bottom: imageBox.bottom } : null,
       };
@@ -128,6 +134,8 @@ test("mobile masthead and portrait art direction split cleanly at lg", async ({ 
     expect(treatment.stageTranslate).not.toBe("none");
     expect(treatment.objectPosition).toBe("72% 100%");
     expect(treatment.imageDisplay).toBe("block");
+    expect(treatment.transformOriginRatio.x).toBeCloseTo(0.72, 2);
+    expect(treatment.transformOriginRatio.y).toBeCloseTo(1, 2);
     expect(treatment.backgroundBox).toBeTruthy();
     expect(treatment.imageBox).toBeTruthy();
     if (treatment.backgroundBox && treatment.imageBox) {
@@ -145,15 +153,23 @@ test("mobile masthead and portrait art direction split cleanly at lg", async ({ 
     const desktopTreatment = await page.evaluate(() => {
       const stage = document.querySelector<HTMLElement>("[data-hero-stage]");
       const image = document.querySelector<HTMLElement>("[data-hero-background-image]");
+      const imageStyle = getComputedStyle(image!);
+      const [originX, originY] = imageStyle.transformOrigin.split(" ").map(Number.parseFloat);
       return {
         stageTranslate: getComputedStyle(stage!).translate,
-        objectPosition: getComputedStyle(image!).objectPosition,
-        backgroundScale: new DOMMatrixReadOnly(getComputedStyle(image!).transform).a,
+        objectPosition: imageStyle.objectPosition,
+        backgroundScale: new DOMMatrixReadOnly(imageStyle.transform).a,
+        transformOriginRatio: {
+          x: originX / Number.parseFloat(imageStyle.width),
+          y: originY / Number.parseFloat(imageStyle.height),
+        },
       };
     });
     expect(desktopTreatment.stageTranslate).toBe("none");
     expect(desktopTreatment.objectPosition).toBe("50% 100%");
     expect(desktopTreatment.backgroundScale).toBeCloseTo(1.35, 4);
+    expect(desktopTreatment.transformOriginRatio.x).toBeCloseTo(0.5, 2);
+    expect(desktopTreatment.transformOriginRatio.y).toBeCloseTo(0.5, 2);
   }
 });
 

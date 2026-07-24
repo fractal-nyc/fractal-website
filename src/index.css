@@ -247,6 +247,7 @@
     .hero-background-image {
       object-position: center bottom;
       transform: translate(2.75%, -8%) scale(1.35);
+      transform-origin: center;
     }
   }
 
