@@ -6,6 +6,12 @@
       "linked_at": "2026-07-24T15:19:49Z",
       "linked_by": "agent:codex-root",
       "repo": null
+    },
+    {
+      "branch": "responsive-mobile-redesign-and-testing",
+      "linked_at": "2026-07-24T18:55:23Z",
+      "linked_by": "human:operator",
+      "repo": null
     }
   ],
   "comment_count": 15,
@@ -43,7 +49,7 @@
     }
   ],
   "id": "task_01KYABBP0SM60XFDZYA1AQR877",
-  "last_event_id": "ev_01KYAP9TG0MN8DEYQDQB74JB87",
+  "last_event_id": "ev_01KYAQPWBVDP87XF3058HHYA5X",
   "last_status_changed_at": "2026-07-24T18:30:46Z",
   "priority": "high",
   "relationships_out": [
@@ -62,6 +68,6 @@
   "tags": null,
   "title": "Polish compact hero and document viewport set",
   "type": "bug",
-  "updated_at": "2026-07-24T18:30:46Z",
+  "updated_at": "2026-07-24T18:55:23Z",
   "urgency": null
 }
