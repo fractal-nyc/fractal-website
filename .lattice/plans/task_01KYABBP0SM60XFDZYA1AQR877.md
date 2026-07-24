@@ -60,3 +60,9 @@ Add a final **Native browser evidence** strip using the runner's fresh whole-dev
 - Compact background coverage has no exposed edge: top overscan is 3–5%, bottom overscan remains 5–7%, and visual inspection shows the ground line at the viewport bottom. Desktop crop is unchanged.
 - Typecheck, unit tests, conformance, build, focused visual tests, full cross-browser responsive matrix, and fresh S24/tablet native Android suites pass.
 - The Paper document contains all 12 labeled viewport captures plus native Android evidence, with simulation/native provenance explicit and a shareable document reference in the handoff.
+
+## Reset 2026-07-24 by agent:codex-root
+
+## Review Cycle 1 Findings
+
+Native Galaxy S24 inspection showed that the source bitmap itself contains a rectangular border about 4.5% below its top edge. The initial `scale(1.10)` crop produced only about 4% top overscan, so the border remained visible even though the image covered the element bounds. Increase only the compact background scale to `1.12`, retaining `translateY(6%)`, `object-position: 72% bottom`, `transform-origin: 72% bottom`, and the existing `lg` rule. Update compact top-overscan contracts to 5–7%; bottom overscan remains 5–7%. Regenerate and inspect only the compact Home baselines, then run focused composition/visual checks and representative cross-engine crop checks. Geometry, typography, CTA, native/gallery work, and the full 528-case matrix are outside this rework pass.

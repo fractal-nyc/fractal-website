@@ -364,8 +364,8 @@ export function probeHeroComposition(options = {}) {
     violations.push("Hero background image exposes an empty edge");
   }
   if (compact && backgroundImageStyle?.display !== "block") violations.push(`compact Hero background image is not block-level: ${backgroundImageStyle?.display}`);
-  if (compact && backgroundTopOverscanRatio !== null && (backgroundTopOverscanRatio < 0.03 || backgroundTopOverscanRatio > 0.05)) {
-    violations.push(`compact Hero background top overscan is outside the 3–5% crop range: ${backgroundTopOverscanRatio}`);
+  if (compact && backgroundTopOverscanRatio !== null && (backgroundTopOverscanRatio < 0.05 || backgroundTopOverscanRatio > 0.07)) {
+    violations.push(`compact Hero background top overscan is outside the 5–7% crop range: ${backgroundTopOverscanRatio}`);
   }
   if (compact && backgroundBottomOverscanRatio !== null && (backgroundBottomOverscanRatio < 0.05 || backgroundBottomOverscanRatio > 0.07)) {
     violations.push(`compact Hero background bottom overscan is outside the 5–7% crop range: ${backgroundBottomOverscanRatio}`);

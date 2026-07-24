@@ -133,8 +133,8 @@ test("mobile masthead and portrait art direction split cleanly at lg", async ({ 
     if (treatment.backgroundBox && treatment.imageBox) {
       const topOverscanRatio = (treatment.backgroundBox.top - treatment.imageBox.top) / treatment.backgroundBox.height;
       const bottomOverscanRatio = (treatment.imageBox.bottom - treatment.backgroundBox.bottom) / treatment.backgroundBox.height;
-      expect(topOverscanRatio).toBeGreaterThanOrEqual(0.03);
-      expect(topOverscanRatio).toBeLessThanOrEqual(0.05);
+      expect(topOverscanRatio).toBeGreaterThanOrEqual(0.05);
+      expect(topOverscanRatio).toBeLessThanOrEqual(0.07);
       expect(bottomOverscanRatio).toBeGreaterThanOrEqual(0.05);
       expect(bottomOverscanRatio).toBeLessThanOrEqual(0.07);
     }
