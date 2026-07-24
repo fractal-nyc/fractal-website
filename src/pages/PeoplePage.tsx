@@ -34,7 +34,7 @@ export function PeoplePage() {
                 <p className="text-display text-foreground mb-6 text-center">
                   A Fractal Is a Friendship Infrastructure
                 </p>
-                <Button asChild className="max-w-xs w-full mb-8 text-center">
+                <Button asChild className="max-w-xs w-full mb-8 text-center whitespace-normal">
                   <a
                     href="https://discord.gg/Er974gPTXe"
                     target="_blank"

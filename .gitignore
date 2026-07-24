@@ -21,6 +21,14 @@ Thumbs.db
 # Netlify
 .netlify
 
+# Responsive-test evidence and repository-local simulator caches
+playwright-report/
+test-results/
+.mobile-simulators/
+
+# Local agent coordination state (required locally; never commit)
+.lattice/
+
 # Claude Code worktrees
 .claude/worktrees/
 

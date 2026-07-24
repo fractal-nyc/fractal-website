@@ -165,15 +165,14 @@ describe("Home page navbar (full state)", () => {
     expect(desktopNav).toBeTruthy();
   });
 
-  it("renders the mobile home header as a one-line wordmark + hamburger (FRAC-3)", () => {
-    // FRAC-3 redesign: below lg the home header no longer crams a row of
-    // single-letter section caps. It shows a single-line "Fractal Collective"
-    // wordmark on the left and a hamburger toggle on the right; section
-    // navigation moved entirely to the overlay menu (covered by its own tests).
-    const mobileSection = document.querySelector(".lg\\:hidden");
+  it("renders the mobile home header as a prominent one-line wordmark, descriptor, and hamburger (FRAC-21)", () => {
+    const mobileSection = document.querySelector("[data-home-mobile-header]");
     expect(mobileSection).toBeTruthy();
-    expect(mobileSection!.textContent).toContain("Fractal");
-    expect(mobileSection!.textContent).toContain("Collective");
+    const wordmark = mobileSection!.querySelector("[data-home-mobile-wordmark]");
+    const descriptor = mobileSection!.querySelector("[data-home-mobile-descriptor]");
+    expect(wordmark?.textContent).toContain("Fractal");
+    expect(wordmark?.textContent).toContain("Collective");
+    expect(descriptor?.textContent).toBe("A neighborhood campus in NYC");
     // Hamburger toggle present inside the mobile header.
     const menuButton = mobileSection!.querySelector(
       'button[aria-label="Open menu"]',

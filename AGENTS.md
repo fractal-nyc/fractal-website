@@ -119,6 +119,14 @@ Outward-facing actions (pushing, opening/merging PRs, deploys) also need a go-ah
 
 Lattice is file-based, event-sourced task tracking built for minds that think in tokens and act in tool calls. It is tool-agnostic — any agent uses the `lattice` CLI. The `.lattice/` directory is the coordination state — it lives alongside the code, not behind an API.
 
+### Local-only state
+
+Lattice remains mandatory for local coordination, but `.lattice/` is local-only state: never stage, commit, or push it. The legacy bootstrap files `.lattice/config.json`, `.lattice/context.md`, and `.lattice/ids.json` are still tracked on `master`, so `.gitignore` alone does not protect them. Stage explicit product or documentation paths instead of using blanket adds. Before every commit, verify that this prints nothing:
+
+```sh
+git diff --cached --name-only -- .lattice
+```
+
 ### Creating Tasks (Non-Negotiable)
 
 Before you plan, implement, or touch a single file — the task must exist in Lattice. This is the first thing you do when work arrives.

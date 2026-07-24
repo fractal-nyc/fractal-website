@@ -809,6 +809,7 @@ function NavNodeMesh({
   const meshRef = useRef<THREE.Mesh>(null);
   const materialRef = useRef<THREE.MeshStandardMaterial>(null);
   const labelRef = useRef<HTMLDivElement>(null);
+  const clampX = useRef(0);
   const [hovered, setHovered] = useState(false);
   // FRAC-14: this node is also "active" when the matching navbar section link is
   // hovered/focused — the navbar publishes its route through the shared hover
@@ -841,6 +842,29 @@ function NavNodeMesh({
       _nodeDir.subVectors(_nodeWorld, _centerWorld).normalize();
       const facingAway = _nodeDir.dot(_camDir) > FACING_AWAY_DOT;
       labelRef.current.style.visibility = facingAway ? "hidden" : "visible";
+
+      // Keep the projected DOM label inside the Hero's computed content box.
+      // The safe-zone element uses the same .page-gutter rule as page content,
+      // including landscape notch insets; visualViewport offsets account for
+      // browser chrome and pinch-zoom without copying the gutter formula here.
+      const el = labelRef.current;
+      const safeZone = document.querySelector<HTMLElement>("[data-hero-safe-zone]");
+      const visual = window.visualViewport;
+      const viewportLeft = visual?.offsetLeft ?? 0;
+      const viewportRight = viewportLeft + (visual?.width ?? window.innerWidth);
+      const safeRect = safeZone?.getBoundingClientRect();
+      const leftBound = Math.max(viewportLeft, safeRect?.left ?? viewportLeft);
+      const rightBound = Math.min(viewportRight, safeRect?.right ?? viewportRight);
+      const rect = el.getBoundingClientRect();
+      const naturalLeft = rect.left - clampX.current;
+      const naturalRight = rect.right - clampX.current;
+      let offset = 0;
+      if (naturalLeft < leftBound) offset = leftBound - naturalLeft;
+      else if (naturalRight > rightBound) offset = rightBound - naturalRight;
+      if (Math.abs(offset - clampX.current) > 0.5) {
+        clampX.current = offset;
+        el.style.transform = `translate(${offset}px, -28px)`;
+      }
     }
     if (meshRef.current) {
       // FRAC-28: scale-pulse is the decorative breathing on each nav node.
@@ -905,7 +929,7 @@ function NavNodeMesh({
             camera shows no popup. */}
         {showLabel && (
           <Html center distanceFactor={8} style={{ pointerEvents: "none" }}>
-            <div ref={labelRef} style={tooltipStyle(node.color)}>
+            <div ref={labelRef} data-hero-label={node.label} style={tooltipStyle(node.color)}>
               {node.label}
             </div>
           </Html>
@@ -992,9 +1016,11 @@ const AXIS_NODE_TILT = 0.62;
 export function FractalObject({
   imagePath: _imagePath,
   onNavigate,
+  sceneScale = 1,
 }: {
   imagePath?: string;
   onNavigate: (route: string) => void;
+  sceneScale?: number;
 }) {
   const groupRef = useRef<THREE.Group>(null);
   const prefersReducedMotion = usePrefersReducedMotion();
@@ -1062,7 +1088,7 @@ export function FractalObject({
   });
 
   return (
-    <group ref={groupRef} position={[0, 0.35, 0]}>
+    <group ref={groupRef} position={[0, 0.35, 0]} scale={sceneScale}>
       {/* Subdivided wireframe shells for rounder visual */}
       <mesh>
         <octahedronGeometry args={[1.7, 1]} />

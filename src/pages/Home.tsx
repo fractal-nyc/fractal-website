@@ -58,7 +58,7 @@ export function Home() {
         <div className="relative z-10 max-w-6xl mx-auto page-gutter w-full">
           <SectorHeader letter="S" name="Story" color={STORY_COLOR} />
           <FadeIn>
-            <p className="text-display mb-12 text-center">
+            <p className="text-display mb-12 text-center break-words">
               From a Single Apartment to a Neighborhood Campus
             </p>
           </FadeIn>

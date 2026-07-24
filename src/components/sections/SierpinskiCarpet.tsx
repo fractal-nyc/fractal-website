@@ -192,7 +192,11 @@ export function SierpinskiCarpet({
       container.clientWidth - padding,
       container.clientHeight - padding
     );
-    s.cellPx = Math.max(4, Math.floor(max / SIZE));
+    // A 4px minimum makes the 81-cell carpet at least 324px wide, which is
+    // larger than the content column on a 320px phone. Preserve the integral
+    // cell grid, but let compact containers render 1–3px cells rather than
+    // forcing the document wider than the viewport.
+    s.cellPx = Math.max(1, Math.floor(max / SIZE));
     s.totalPx = s.cellPx * SIZE;
 
     const dpr = window.devicePixelRatio || 1;
@@ -293,7 +297,7 @@ export function SierpinskiCarpet({
     >
       <canvas
         ref={canvasRef}
-        style={{ display: "block" }}
+        style={{ display: "block", maxWidth: "100%", height: "auto" }}
       />
     </div>
   );

@@ -90,6 +90,13 @@
     @apply font-sans antialiased bg-background text-foreground;
   }
 
+  /* The fixed navbar owns the top display cutout after viewport-fit=cover.
+     Keeping this on the header (rather than every navbar variant) makes the
+     ownership identical for Home, inner pages, and the scrolled compact bar. */
+  .site-navbar {
+    padding-top: env(safe-area-inset-top);
+  }
+
   /* Heading family default (FRAC-209): bare headings render in plain Fraunces
      with NO forced case/style/weight. The visual TIER is set explicitly at the
      call site via the semantic utilities (.text-display, .text-title,
@@ -141,6 +148,107 @@
       env(safe-area-inset-left),
       env(safe-area-inset-right)
     );
+  }
+
+  /* FRAC-17 — the mobile Hero has two explicit layout owners: the stage owns
+     the 3D overlay and the footer owns its intrinsic copy/CTA height. `100vh`
+     is the legacy fallback; `100svh` targets the initial mobile viewport with
+     browser controls expanded. Required content may grow taller on short
+     landscape screens or under text zoom instead of being clipped. */
+  .hero-shell {
+    --hero-stage-lift: clamp(2rem, 6svh, 4rem);
+    position: relative;
+    isolation: isolate;
+    display: grid;
+    grid-template-rows: minmax(clamp(17rem, 46svh, 42rem), 1fr) auto;
+    min-height: 100vh;
+    min-height: 100svh;
+    /* Reserve the maximum compact masthead block plus the amount the stage is
+       lifted. Subtracting that same lift on `.hero-stage` keeps the stage's
+       visible top clear of fixed chrome while raising its centered contents. */
+    padding-top: calc(6.25rem + var(--hero-stage-lift) + env(safe-area-inset-top));
+    overflow-x: clip;
+  }
+
+  .hero-stage {
+    position: relative;
+    min-width: 0;
+    min-height: 0;
+    z-index: 1;
+    /* FRAC-21: the stage is the sole owner of the compact composition lift.
+       Moving this containing block keeps the canvas, projected DOM labels,
+       safe zone, and native pointer target in the same coordinate space. */
+    translate: 0 calc(-1 * var(--hero-stage-lift));
+  }
+
+  /* OrbitControls writes `touch-action: none` onto its DOM event source.
+     This hit target deliberately permits native vertical page gestures while
+     keeping horizontal drags available for orbiting, so the scoped important
+     declaration must win over that library-owned inline mutation. */
+  .hero-hit-target {
+    touch-action: pan-y !important;
+  }
+
+  .hero-footer {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding-top: 0.5rem;
+    padding-bottom: max(1.25rem, env(safe-area-inset-bottom));
+  }
+
+  .hero-background-image {
+    opacity: 0.15;
+    /* Compact art direction: retain more of the skyline, anchor its building
+       mass to the lower-right, and crop the source art's trailing credit
+       margin below the Hero so its visible ground line meets the lower edge. */
+    object-position: 72% bottom;
+    transform: translateY(6%) scale(1.12);
+    transform-origin: 72% bottom;
+  }
+
+  @media (min-width: 768px) {
+    .hero-footer {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: end;
+      gap: 1.5rem;
+      padding-top: 0.75rem;
+      padding-bottom: max(3rem, env(safe-area-inset-bottom));
+    }
+
+    .hero-footer [data-hero-blurb] {
+      max-width: 36rem;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .hero-shell {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding-top: 5rem;
+      overflow: hidden;
+    }
+
+    .hero-stage {
+      position: absolute;
+      inset: 0;
+      translate: none;
+    }
+
+    .hero-footer {
+      display: none;
+    }
+
+    .hero-background-image {
+      object-position: center bottom;
+      transform: translate(2.75%, -8%) scale(1.35);
+      transform-origin: center;
+    }
   }
 
   .border-grid {
@@ -205,6 +313,7 @@
     text-transform: uppercase;
     letter-spacing: 0.04em;
     line-height: 1.1;
+    overflow-wrap: anywhere;
   }
 
   .text-title {
@@ -213,6 +322,7 @@
     font-weight: 350;
     text-transform: none;
     letter-spacing: 0.04em;
+    overflow-wrap: anywhere;
   }
 
   .text-subtitle {
@@ -221,6 +331,7 @@
     font-weight: 300;
     text-transform: none;
     letter-spacing: 0.04em;
+    overflow-wrap: anywhere;
   }
 
   /* Body tier (Inter, normal-case) */
@@ -228,6 +339,7 @@
     @apply font-sans text-base;
     font-weight: 400;
     text-transform: none;
+    overflow-wrap: anywhere;
   }
 
   .text-body-lead {
@@ -235,6 +347,7 @@
     font-weight: 300;
     text-transform: none;
     line-height: 1.7;
+    overflow-wrap: anywhere;
   }
 
   /* Aside tier — italic Inter weight 400 normal-case text-base
@@ -246,6 +359,7 @@
     font-style: italic;
     font-weight: 400;
     text-transform: none;
+    overflow-wrap: anywhere;
   }
 
   /* Chrome tier (JetBrains Mono, uppercase, widest tracking) */
@@ -254,6 +368,7 @@
     font-weight: 500;
     text-transform: uppercase;
     letter-spacing: 0.1em;
+    overflow-wrap: anywhere;
   }
 
   /* Mono-display tier — JetBrains Mono uppercase weight 100 responsive
@@ -265,6 +380,7 @@
      Resolves the FRAC-22 Home audit GAP. FRAC-45. */
   .text-mono-display {
     @apply font-mono text-sm md:text-base uppercase font-thin leading-relaxed;
+    overflow-wrap: anywhere;
   }
 
   /* Input tier (JetBrains Mono, uppercase, no tracking, text-base for
@@ -279,6 +395,7 @@
     font-weight: 400;
     text-transform: uppercase;
     letter-spacing: normal;
+    overflow-wrap: anywhere;
   }
 
   /* FRAC-33: visually-hidden until any descendant receives focus. Used
@@ -335,4 +452,3 @@
     opacity: 1;
   }
 }
-

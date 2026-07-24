@@ -1,11 +1,28 @@
-import { useRef } from "react";
-import { Canvas } from "@react-three/fiber";
+import { useRef, useState } from "react";
+import { Canvas, events } from "@react-three/fiber";
+import type { DomEvent, RootState, RootStore } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
 import * as THREE from "three";
 import { TOUCH } from "three";
 // Hero geometry variants — swap the import to try different shapes
 // import { FractalObject } from "./MetatronCube";        // Nested hexahedra (Metatron's Cube)
 import { FractalObject } from "./OctahedronHero";         // Octahedron
+import { clientToCanvasNdc } from "./pointerCoordinates";
+import { useMediaQuery } from "@/hooks/useMediaQuery";
+
+function canvasLocalEvents(store: RootStore) {
+  const manager = events(store);
+
+  return {
+    ...manager,
+    compute: (event: DomEvent, state: RootState) => {
+      const rect = state.gl.domElement.getBoundingClientRect();
+      const pointer = clientToCanvasNdc(event.clientX, event.clientY, rect);
+      state.pointer.set(pointer.x, pointer.y);
+      state.raycaster.setFromCamera(state.pointer, state.camera);
+    },
+  };
+}
 
 function SceneLighting() {
   return (
@@ -41,25 +58,34 @@ export function FractalCityScene({
   //   user-driven one-finger orbit (FRAC-143) keeps working inside the
   //   centered area.
   const eventSourceRef = useRef<HTMLDivElement>(null);
+  const [sceneReady, setSceneReady] = useState(false);
+  const isPhone = useMediaQuery("(max-width: 767px)");
+  const sceneScale = isPhone ? 1.08 : 1;
 
   return (
     <>
       {/* Full-bleed visual canvas. eventSource decouples hit-testing from this. */}
-      <div className="absolute inset-0 z-[1]">
+      <div
+        className="absolute inset-0 z-[1]"
+        data-hero-scene
+        data-scene-ready={sceneReady ? "true" : "false"}
+        data-scene-scale={sceneScale}
+      >
         <Canvas
           camera={{ position: [0, 0.8, 8], fov: 50, near: 0.1, far: 100 }}
           dpr={[1, 2]}
           gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
+          events={canvasLocalEvents}
           eventSource={eventSourceRef as React.RefObject<HTMLElement>}
-          eventPrefix="client"
           style={{ background: "transparent" }}
           onCreated={({ gl }) => {
             gl.toneMapping = THREE.NoToneMapping;
             gl.setClearColor(0x000000, 0);
+            setSceneReady(true);
           }}
         >
           <SceneLighting />
-          <FractalObject imagePath={imagePath} onNavigate={onNavigate} />
+          <FractalObject imagePath={imagePath} onNavigate={onNavigate} sceneScale={sceneScale} />
           <OrbitControls
             enableZoom={false}
             enablePan={false}
@@ -80,12 +106,17 @@ export function FractalCityScene({
           right at the edge. The extra vertical room gives those top/bottom
           nav nodes some tap forgiveness. */}
       <div
-        className="absolute inset-x-0 top-16 bottom-20 z-[2] flex items-center justify-center pointer-events-none"
+        className="absolute inset-0 z-[2] flex items-center justify-center pointer-events-none"
+        data-hero-hit-region
       >
         <div
           ref={eventSourceRef}
-          className="pointer-events-auto"
-          style={{ width: "min(90vmin, 550px)", aspectRatio: "3 / 4", touchAction: "pan-y" }}
+          className="hero-hit-target pointer-events-auto"
+          style={{
+            width: "min(88%, 550px)",
+            maxHeight: "100%",
+            aspectRatio: "3 / 4",
+          }}
         />
       </div>
     </>

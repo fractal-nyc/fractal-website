@@ -13,6 +13,17 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
+    "test:e2e:fast": "pnpm test:e2e:matrix:fast && pnpm test:e2e:hero-interaction",
+    "test:e2e:full": "pnpm test:e2e:matrix:full && pnpm test:e2e:hero-interaction",
+    "test:e2e:matrix:fast": "PW_MATRIX=fast PW_LANE=matrix playwright test",
+    "test:e2e:matrix:full": "PW_MATRIX=full PW_LANE=matrix playwright test",
+    "test:e2e:hero-interaction": "PW_MATRIX=fast PW_LANE=hero-interaction playwright test tests/e2e/hero-responsive.spec.ts --workers=1 --retries=0",
+    "simulators:doctor": "node scripts/mobile-simulators/doctor.mjs",
+    "simulators:self-test": "node scripts/mobile-simulators/self-test.mjs",
+    "simulators:setup-appium": "node scripts/mobile-simulators/setup-appium.mjs",
+    "test:e2e:android-emulator": "node scripts/mobile-simulators/run.mjs --platform android",
+    "test:e2e:ios-simulator": "node scripts/mobile-simulators/run.mjs --platform ios",
+    "test:e2e:simulators": "node scripts/mobile-simulators/run.mjs --platform all",
     "build:hero-bg": "node scripts/build-hero-bg.mjs",
     "build:favicon": "node scripts/build-favicon.mjs",
     "build:banners": "node scripts/compress-banners.mjs"
@@ -34,6 +45,7 @@
     "wouter": "^3.3.5"
   },
   "devDependencies": {
+    "@playwright/test": "1.59.1",
     "@tailwindcss/typography": "^0.5.15",
     "@tailwindcss/vite": "^4.1.14",
     "@testing-library/jest-dom": "^6.9.1",
@@ -44,12 +56,14 @@
     "@types/react-dom": "^19.2.0",
     "@types/three": "^0.183.1",
     "@vitejs/plugin-react": "^5.0.4",
+    "appium": "3.5.2",
     "jsdom": "^29.0.2",
     "png-to-ico": "^3.0.1",
     "sharp": "^0.34.5",
     "tailwindcss": "^4.1.14",
     "typescript": "~5.9.3",
     "vite": "^7.3.0",
-    "vitest": "^4.1.3"
+    "vitest": "^4.1.3",
+    "webdriverio": "9.29.1"
   }
 }

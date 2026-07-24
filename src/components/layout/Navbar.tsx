@@ -249,7 +249,8 @@ export function Navbar() {
             ? { duration: 0 }
             : { duration: 0.4, ease: [0.25, 1, 0.5, 1] }
         }
-        className="fixed top-0 left-0 right-0 z-50 bg-transparent"
+        className="site-navbar fixed top-0 left-0 right-0 z-50 bg-transparent"
+        data-site-navbar
       >
         {showFull ? (
           <>
@@ -298,37 +299,47 @@ export function Navbar() {
             </div>
 
             {/* Home mobile + tablet header — shown at < 1024px (lg).
-                FRAC-3 redesign: a single-line "Fractal Collective" wordmark on
-                the left and the hamburger on the right, replacing the old
-                stacked title + 8px blurb + row of single-letter nav caps. The
-                three-column desktop grid can't fit below lg, and the old
-                letter-row was cramped and illegible; navigation now lives in the
-                overlay menu (same one every other breakpoint uses), while the
-                hero octant remains a parallel, interactive nav. Sizes step up
-                from phone (<md) to small tablet (md..lg). */}
-            <div className="lg:hidden flex items-center justify-between page-gutter pt-5 pb-3">
+                FRAC-21 gives the signature wordmark more presence and uses a
+                concise descriptor to make the previously empty header zone
+                intentional. The wordmark itself remains one line; the
+                descriptor is supporting chrome beneath it. Navigation stays in
+                the overlay menu, while the octant remains a parallel interactive
+                nav. The desktop three-column header is unchanged. */}
+            <div
+              className="lg:hidden flex items-start justify-between gap-2 page-gutter pt-5 pb-3"
+              data-home-mobile-header
+            >
               <Link
                 href="/"
-                className="flex items-baseline gap-1.5 tracking-tighter leading-none min-w-0"
+                className="flex min-w-0 flex-col gap-1 tracking-tighter leading-none"
+                data-home-mobile-masthead
               >
-                <span
-                  className="text-[clamp(30px,8.6vw,46px)]"
-                  style={{ fontFamily: "'Jacquard 24', system-ui" }}
-                >
-                  Fractal
+                <span className="flex items-baseline gap-1.5 whitespace-nowrap" data-home-mobile-wordmark>
+                  <span
+                    className="text-[clamp(32px,10.5vw,50px)]"
+                    style={{ fontFamily: "'Jacquard 24', system-ui" }}
+                  >
+                    Fractal
+                  </span>
+                  <span
+                    className="font-serif italic text-[clamp(19px,6.25vw,31px)]"
+                    style={{ textTransform: "none", fontWeight: 100 }}
+                  >
+                    Collective
+                  </span>
                 </span>
                 <span
-                  className="font-serif italic text-[clamp(19px,5.4vw,30px)]"
-                  style={{ textTransform: "none", fontWeight: 100 }}
+                  className="font-mono text-[clamp(8px,2.5vw,11px)] font-medium uppercase leading-tight tracking-[0.12em] whitespace-nowrap text-foreground/70"
+                  data-home-mobile-descriptor
                 >
-                  Collective
+                  A neighborhood campus in NYC
                 </span>
               </Link>
               <button
                 type="button"
                 aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
                 aria-expanded={mobileMenuOpen}
-                className="z-50 relative cursor-pointer transition-opacity duration-200 hover:opacity-70 active:opacity-90 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-offset-2 focus-visible:ring-offset-background rounded-md flex items-center justify-center p-3 -mr-3 shrink-0"
+                className="z-50 relative cursor-pointer transition-opacity duration-200 hover:opacity-70 active:opacity-90 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-offset-2 focus-visible:ring-offset-background rounded-md flex items-center justify-center p-2 -mr-2 shrink-0 min-h-11 min-w-11"
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               >
                 {mobileMenuOpen ? <X size={32} /> : <Menu size={32} />}

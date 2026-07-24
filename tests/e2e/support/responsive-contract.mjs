@@ -1,0 +1,402 @@
+/**
+ * Runner-neutral DOM probes for the responsive contract.
+ *
+ * Every exported function is intentionally self-contained: Playwright and
+ * WebDriver serialize the function into the page, so it must not close over
+ * module state. Each probe returns plain JSON instead of throwing or importing
+ * a runner assertion library.
+ */
+
+export function collectEnvironmentMetrics(context = {}) {
+  const lengthProbe = (value) => {
+    const element = document.createElement("div");
+    element.style.cssText = `position:fixed;visibility:hidden;pointer-events:none;height:${value}`;
+    document.body.append(element);
+    const height = element.getBoundingClientRect().height;
+    element.remove();
+    return height;
+  };
+  const safe = document.createElement("div");
+  safe.style.cssText = "position:fixed;visibility:hidden;pointer-events:none;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)";
+  document.body.append(safe);
+  const safeStyle = getComputedStyle(safe);
+  const safeArea = {
+    top: parseFloat(safeStyle.paddingTop) || 0,
+    right: parseFloat(safeStyle.paddingRight) || 0,
+    bottom: parseFloat(safeStyle.paddingBottom) || 0,
+    left: parseFloat(safeStyle.paddingLeft) || 0,
+  };
+  safe.remove();
+  const vv = visualViewport;
+  return {
+    inner: { width: innerWidth, height: innerHeight },
+    visualViewport: vv ? { width: vv.width, height: vv.height, offsetLeft: vv.offsetLeft, offsetTop: vv.offsetTop, scale: vv.scale } : null,
+    screen: { width: screen.width, height: screen.height, orientation: screen.orientation?.type ?? null },
+    dpr: devicePixelRatio,
+    userAgent: navigator.userAgent,
+    platform: navigator.platform,
+    maxTouchPoints: navigator.maxTouchPoints,
+    hover: matchMedia("(hover: hover)").matches,
+    pointer: matchMedia("(pointer: coarse)").matches ? "coarse" : matchMedia("(pointer: fine)").matches ? "fine" : "none",
+    reducedMotion: matchMedia("(prefers-reduced-motion: reduce)").matches,
+    viewportUnits: { vh: lengthProbe("100vh"), svh: lengthProbe("100svh"), dvh: lengthProbe("100dvh") },
+    safeArea,
+    scroll: { x: scrollX, y: scrollY },
+    url: location.href,
+    timestamp: new Date().toISOString(),
+    ...context,
+  };
+}
+
+export function installRuntimeHealthCapture() {
+  if (window.__fractalSimulatorHealth) return;
+  const health = {
+    route: location.pathname,
+    startedAt: performance.now(),
+    pageErrors: [],
+    consoleErrors: [],
+    assetErrors: [],
+  };
+  window.__fractalSimulatorHealth = health;
+  const describe = (value) => {
+    if (value instanceof Error) return `${value.name}: ${value.message}\n${value.stack || ""}`;
+    try { return typeof value === "string" ? value : JSON.stringify(value); } catch { return String(value); }
+  };
+  addEventListener("error", (event) => {
+    const target = event.target;
+    if (target && target !== window) {
+      health.assetErrors.push({
+        tag: target.tagName || "unknown",
+        url: target.currentSrc || target.src || target.href || null,
+      });
+      return;
+    }
+    health.pageErrors.push({ message: event.message || "window error", source: event.filename || null, line: event.lineno || null, column: event.colno || null });
+  }, true);
+  addEventListener("unhandledrejection", (event) => {
+    health.pageErrors.push({ message: `Unhandled rejection: ${describe(event.reason)}` });
+  });
+  const originalError = console.error.bind(console);
+  console.error = (...values) => {
+    health.consoleErrors.push(values.map(describe).join(" "));
+    originalError(...values);
+  };
+}
+
+export function beginRuntimeHealthRoute(route) {
+  const health = window.__fractalSimulatorHealth;
+  if (!health) return false;
+  health.route = route;
+  health.startedAt = performance.now();
+  health.pageErrors.length = 0;
+  health.consoleErrors.length = 0;
+  health.assetErrors.length = 0;
+  performance.clearResourceTimings();
+  return true;
+}
+
+export async function probeRuntimeHealth() {
+  const health = window.__fractalSimulatorHealth;
+  if (!health) return { violations: ["runtime health capture is not installed"], details: null };
+  const resourceEntries = performance.getEntriesByType("resource")
+    .filter((entry) => {
+      try { return new URL(entry.name, location.href).origin === location.origin; } catch { return false; }
+    })
+    .map((entry) => ({ url: entry.name, initiatorType: entry.initiatorType, responseStatus: entry.responseStatus || null }));
+  const domAssetUrls = Array.from(document.querySelectorAll("script[src], link[rel=stylesheet][href], img[src], source[src], video[src]"))
+    .map((element) => element.currentSrc || element.src || element.href)
+    .filter(Boolean);
+  const urls = [...new Set([...resourceEntries.map(({ url }) => url), ...domAssetUrls])]
+    .filter((url) => {
+      try { return new URL(url, location.href).origin === location.origin; } catch { return false; }
+    });
+  const fetchFailures = (await Promise.all(urls.map(async (url) => {
+    try {
+      const response = await fetch(url, { cache: "force-cache", credentials: "same-origin" });
+      return response.ok ? null : { url, status: response.status };
+    } catch (error) {
+      return { url, error: error.message };
+    }
+  }))).filter(Boolean);
+  const statusFailures = resourceEntries.filter(({ responseStatus }) => responseStatus && responseStatus >= 400);
+  const incompleteMedia = Array.from(document.querySelectorAll("img[src], video[src]"))
+    .flatMap((element) => {
+      if (element.tagName === "IMG" && element.complete && element.naturalWidth === 0) return [{ tag: "IMG", url: element.currentSrc || element.src }];
+      if (element.tagName === "VIDEO" && element.error) return [{ tag: "VIDEO", url: element.currentSrc || element.src, code: element.error.code }];
+      return [];
+    });
+  const violations = [
+    ...health.pageErrors.map((entry) => `page error: ${entry.message}`),
+    ...health.consoleErrors.map((entry) => `console error: ${entry}`),
+    ...health.assetErrors.map((entry) => `asset error event: ${entry.tag} ${entry.url || "unknown URL"}`),
+    ...statusFailures.map((entry) => `first-party asset returned ${entry.responseStatus}: ${entry.url}`),
+    ...fetchFailures.map((entry) => `first-party asset fetch failed${entry.status ? ` (${entry.status})` : ""}: ${entry.url}${entry.error ? ` (${entry.error})` : ""}`),
+    ...incompleteMedia.map((entry) => `first-party media failed: ${entry.tag} ${entry.url}`),
+  ];
+  return {
+    violations,
+    details: {
+      route: health.route,
+      pageErrors: [...health.pageErrors],
+      consoleErrors: [...health.consoleErrors],
+      assetErrors: [...health.assetErrors],
+      resourceEntries,
+      statusFailures,
+      fetchFailures,
+      incompleteMedia,
+    },
+  };
+}
+
+export function probeHorizontalOverflow() {
+  const clientWidth = document.documentElement.clientWidth;
+  const offenders = Array.from(document.querySelectorAll("body *"))
+    .map((element) => {
+      const box = element.getBoundingClientRect();
+      const swiper = element.parentElement?.closest(".swiper");
+      const ancestors = swiper ? [swiper].map((ancestor) => {
+        const ancestorBox = ancestor.getBoundingClientRect();
+        const style = getComputedStyle(ancestor);
+        return `${ancestor.className}:${ancestorBox.left.toFixed(1)}..${ancestorBox.right.toFixed(1)}:${style.overflowX}`;
+      }) : [];
+      return {
+        tag: element.tagName.toLowerCase(),
+        className: typeof element.className === "string" ? element.className.slice(0, 160) : "",
+        text: element.textContent?.trim().replace(/\s+/g, " ").slice(0, 100) ?? "",
+        left: Number(box.left.toFixed(1)),
+        right: Number(box.right.toFixed(1)),
+        width: Number(box.width.toFixed(1)),
+        ancestors,
+      };
+    })
+    .filter(({ left, right, width }) => width > 0 && (left < -1 || right > clientWidth + 1))
+    .sort((a, b) => Math.max(b.right - clientWidth, -b.left) - Math.max(a.right - clientWidth, -a.left))
+    .slice(0, 12);
+  const scrollOffenders = Array.from(document.querySelectorAll("body *"))
+    .map((element) => ({
+      tag: element.tagName.toLowerCase(),
+      className: typeof element.className === "string" ? element.className.slice(0, 160) : "",
+      text: element.textContent?.trim().replace(/\s+/g, " ").slice(0, 100) ?? "",
+      clientWidth: element.clientWidth,
+      scrollWidth: element.scrollWidth,
+    }))
+    .filter(({ clientWidth: width, scrollWidth }) => width > 0 && scrollWidth > width + 1)
+    .sort((a, b) => (b.scrollWidth - b.clientWidth) - (a.scrollWidth - a.clientWidth))
+    .slice(0, 12);
+  const documentOverflow = document.documentElement.scrollWidth - clientWidth;
+  const bodyOverflow = document.body.scrollWidth - clientWidth;
+  return {
+    violations: [
+      ...(documentOverflow > 1 ? [`document is ${documentOverflow}px wider than the layout viewport`] : []),
+      ...(bodyOverflow > 1 ? [`body is ${bodyOverflow}px wider than the layout viewport`] : []),
+    ],
+    details: { document: documentOverflow, body: bodyOverflow, offenders, scrollOffenders },
+  };
+}
+
+export function probePrimaryContentIntegrity() {
+  const failures = Array.from(document.querySelectorAll("main h1, main h2, main h3, main p, main a, main button, main img, main video, main canvas"))
+    .filter((element) => !element.closest("[data-site-navbar]") && !element.closest("[data-hero-label]") && !element.closest(".sr-only-focusable") && !element.closest('[aria-hidden="true"]'))
+    .flatMap((element) => {
+      const style = getComputedStyle(element);
+      const box = element.getBoundingClientRect();
+      if (box.width <= 0 || box.height <= 0 || style.display === "none" || style.visibility === "hidden" || Number(style.opacity) === 0 || element.clientWidth <= 0) return [];
+      const uncontainedText = !/^(IMG|VIDEO|CANVAS)$/.test(element.tagName) && style.overflowX === "visible" && element.scrollWidth > element.clientWidth + 1;
+      return uncontainedText ? [{ tag: element.tagName, text: element.textContent?.trim().replace(/\s+/g, " ").slice(0, 100), clientWidth: element.clientWidth, scrollWidth: element.scrollWidth }] : [];
+    });
+  return { violations: failures.map((failure) => `primary content clips instead of reflowing: ${JSON.stringify(failure)}`), details: failures };
+}
+
+export function probePageGutters() {
+  const failures = Array.from(document.querySelectorAll(".page-gutter")).flatMap((element) => {
+    const style = getComputedStyle(element);
+    const left = parseFloat(style.paddingLeft) || 0;
+    const right = parseFloat(style.paddingRight) || 0;
+    return left < 23 || right < 23 || left > 128 || right > 128
+      ? [{ left, right, tag: element.tagName, text: element.textContent?.trim().slice(0, 60) }]
+      : [];
+  });
+  return { violations: failures.map((failure) => `invalid computed .page-gutter: ${JSON.stringify(failure)}`), details: failures };
+}
+
+export function probeNavbarContent() {
+  const navbar = document.querySelector("[data-site-navbar]")?.getBoundingClientRect();
+  // The Home stage is an intentional transparent overlay: its containing box
+  // may sit beneath fixed chrome while the actual projected labels remain
+  // below it. `probeHeroLabelSafeZone` owns that visible-content relationship.
+  const homeHero = location.pathname === "/";
+  const selector = location.pathname === "/" ? "[data-hero-stage]" : "main h1, main h2, main h3, main p";
+  const candidates = Array.from(document.querySelectorAll(selector))
+    .filter((element) => !element.closest("[data-site-navbar]") && !element.closest("[data-hero-label]") && !element.closest(".sr-only-focusable") && !element.closest('[aria-hidden="true"]'))
+    .map((element) => ({ element, box: element.getBoundingClientRect(), style: getComputedStyle(element) }))
+    .filter(({ box, style }) => box.width > 0 && box.height > 0 && style.display !== "none" && style.visibility !== "hidden" && Number(style.opacity) > 0)
+    .filter(({ style }) => style.position !== "fixed" && style.position !== "absolute")
+    .sort((a, b) => a.box.top - b.box.top);
+  const first = candidates.find(({ box }) => box.bottom > 0);
+  const details = {
+    navbar: navbar ? { top: navbar.top, bottom: navbar.bottom } : null,
+    exempt: homeHero,
+    first: first ? { tag: first.element.tagName, text: first.element.textContent?.trim().replace(/\s+/g, " ").slice(0, 80), top: first.box.top, bottom: first.box.bottom } : null,
+  };
+  const violations = [];
+  if (navbar && !homeHero && !first) violations.push("route does not expose a primary content owner");
+  if (navbar && !homeHero && first && first.box.top < navbar.bottom - 1) violations.push(`navbar covers primary content: ${JSON.stringify(details)}`);
+  return { violations, details };
+}
+
+export function probeTouchTargets() {
+  const failures = Array.from(document.querySelectorAll('[data-site-navbar] button[aria-label*="menu" i]')).flatMap((element) => {
+    const style = getComputedStyle(element);
+    const box = element.getBoundingClientRect();
+    if (style.display === "none" || style.visibility === "hidden" || box.width <= 0 || box.height <= 0) return [];
+    return box.width < 44 || box.height < 44 ? [{ label: element.getAttribute("aria-label"), width: box.width, height: box.height }] : [];
+  });
+  return { violations: failures.map((failure) => `mobile-menu touch target is under 44px: ${JSON.stringify(failure)}`), details: failures };
+}
+
+export function probeHeroComposition(options = {}) {
+  const visibleBox = (selector) => {
+    const element = document.querySelector(selector);
+    if (!element) return null;
+    const style = getComputedStyle(element);
+    const box = element.getBoundingClientRect();
+    return style.display === "none" || style.visibility === "hidden" || Number(style.opacity) === 0 || box.width <= 0 || box.height <= 0
+      ? null
+      : { left: box.left, right: box.right, top: box.top, bottom: box.bottom, width: box.width, height: box.height };
+  };
+  const stage = visibleBox("[data-hero-stage]");
+  const scene = visibleBox("[data-hero-scene]");
+  const hitRegion = visibleBox("[data-hero-hit-region]");
+  const hitTarget = visibleBox("[data-hero-hit-region] > div");
+  const footer = visibleBox("[data-hero-footer]");
+  const blurb = visibleBox("[data-hero-blurb]");
+  const cta = visibleBox("[data-hero-cta]");
+  const ctaLabel = visibleBox("[data-hero-cta-label]");
+  const ctaArrow = visibleBox("[data-hero-arrow]");
+  const navbar = visibleBox("[data-site-navbar]");
+  const mobileHeader = visibleBox("[data-home-mobile-header]");
+  const masthead = visibleBox("[data-home-mobile-masthead]");
+  const wordmark = visibleBox("[data-home-mobile-wordmark]");
+  const descriptor = visibleBox("[data-home-mobile-descriptor]");
+  const menu = visibleBox('[data-home-mobile-header] button[aria-label*="menu" i]');
+  const background = visibleBox("[data-hero-background]");
+  const backgroundImage = visibleBox("[data-hero-background-image]");
+  const vv = visualViewport;
+  const visual = { left: vv?.offsetLeft ?? 0, top: vv?.offsetTop ?? 0, right: (vv?.offsetLeft ?? 0) + (vv?.width ?? innerWidth), bottom: (vv?.offsetTop ?? 0) + (vv?.height ?? innerHeight) };
+  const compact = innerWidth < 1024;
+  const phone = innerWidth < 768;
+  const sceneScale = Number.parseFloat(document.querySelector("[data-hero-scene]")?.dataset.sceneScale ?? "NaN");
+  const expectedSceneScale = phone ? 1.08 : 1;
+  const blurbStyle = document.querySelector("[data-hero-blurb]") ? getComputedStyle(document.querySelector("[data-hero-blurb]")) : null;
+  const arrowStyle = document.querySelector("[data-hero-arrow]") ? getComputedStyle(document.querySelector("[data-hero-arrow]")) : null;
+  const backgroundImageStyle = document.querySelector("[data-hero-background-image]") ? getComputedStyle(document.querySelector("[data-hero-background-image]")) : null;
+  const ctaCenterDelta = ctaLabel && ctaArrow
+    ? Math.abs((ctaLabel.top + ctaLabel.height / 2) - (ctaArrow.top + ctaArrow.height / 2))
+    : null;
+  const backgroundTopOverscanRatio = background && backgroundImage
+    ? (background.top - backgroundImage.top) / background.height
+    : null;
+  const backgroundBottomOverscanRatio = background && backgroundImage
+    ? (backgroundImage.bottom - background.bottom) / background.height
+    : null;
+  const violations = [];
+  if (!stage) violations.push("Hero stage is not visible");
+  if (compact) {
+    if (!mobileHeader) violations.push("compact Home masthead is not visible");
+    if (!masthead) violations.push("compact Home masthead link is not visible");
+    if (!wordmark) violations.push("compact Home wordmark is not visible");
+    if (!descriptor) violations.push("compact Home descriptor is not visible");
+    if (masthead && mobileHeader && (masthead.left < mobileHeader.left - 1 || masthead.right > mobileHeader.right + 1)) violations.push("compact Home masthead escapes its header owner");
+    if (descriptor && masthead && (descriptor.left < masthead.left - 1 || descriptor.right > masthead.right + 1)) violations.push("compact Home descriptor escapes its masthead owner");
+    if (masthead && menu && masthead.right > menu.left + 1) violations.push("compact Home masthead overlaps the menu control");
+    if (!footer) violations.push("compact Hero footer is not visible");
+    if (!blurb) violations.push("compact Hero blurb is not visible");
+    if (!cta) violations.push("compact Hero CTA is not visible");
+    if (stage && footer && stage.bottom > footer.top + 1) violations.push("Hero stage overlaps its in-flow footer");
+    if (blurb && footer && (blurb.left < footer.left - 1 || blurb.right > footer.right + 1)) violations.push("Hero blurb escapes its footer owner");
+    if (cta && footer && (cta.left < footer.left - 1 || cta.right > footer.right + 1 || cta.top < footer.top - 1 || cta.bottom > footer.bottom + 1)) violations.push("Hero CTA escapes its footer owner");
+    if (cta && (cta.width < 44 || cta.height < 44)) violations.push(`Hero CTA touch target is under 44px: ${JSON.stringify(cta)}`);
+    if (ctaCenterDelta === null) violations.push("Hero CTA label or arrow is not visible");
+    else if (ctaCenterDelta > 1) violations.push(`Hero CTA label/arrow centers differ by more than 1px: ${ctaCenterDelta}`);
+    if (arrowStyle?.animationName !== "none") violations.push(`Hero CTA arrow unexpectedly animates: ${arrowStyle?.animationName}`);
+    if (blurb) {
+      const blurbFontSize = Number.parseFloat(blurbStyle.fontSize);
+      if (blurbFontSize < 16) violations.push(`compact Hero blurb is under 16px: ${blurbFontSize}`);
+      if (!blurbStyle.fontFamily.toLowerCase().includes("inter")) violations.push(`compact Hero blurb does not use Inter: ${blurbStyle.fontFamily}`);
+      if (blurbStyle.fontWeight !== "400") violations.push(`compact Hero blurb is not weight 400: ${blurbStyle.fontWeight}`);
+      if (blurbStyle.textTransform !== "none") violations.push(`compact Hero blurb is not normal case: ${blurbStyle.textTransform}`);
+    }
+    if (options.requireInitialContainment && navbar && (navbar.top < visual.top - 1 || navbar.bottom > visual.bottom + 1)) violations.push("navbar does not fit the initial visual viewport");
+    if (options.requireInitialContainment && footer && footer.bottom > visual.bottom + 1) violations.push("portrait Hero footer does not fit the initial visual viewport");
+  } else {
+    if (footer) violations.push("compact Hero footer is unexpectedly visible in the desktop composition");
+    if (mobileHeader || masthead || descriptor) violations.push("compact Home masthead treatment is unexpectedly visible in the desktop composition");
+  }
+  for (const [label, layer] of [["scene", scene], ["hit region", hitRegion]]) {
+    if (!layer) {
+      violations.push(`Hero ${label} is not visible`);
+    } else if (stage && (Math.abs(layer.left - stage.left) > 1 || Math.abs(layer.right - stage.right) > 1 || Math.abs(layer.top - stage.top) > 1 || Math.abs(layer.bottom - stage.bottom) > 1)) {
+      violations.push(`Hero ${label} does not share the stage coordinate space`);
+    }
+  }
+  if (!Number.isFinite(sceneScale) || Math.abs(sceneScale - expectedSceneScale) > 0.001) {
+    violations.push(`Hero scene scale is ${sceneScale}; expected ${expectedSceneScale} at ${innerWidth}px`);
+  }
+  // The compact scale change applies only below md, where labels are always
+  // visible and the shared event-source target is the phone interaction
+  // contract. Expanded layouts intentionally allow hover labels to project
+  // beyond that centered touch box.
+  if (phone && hitTarget) {
+    const projectedAnchorFailures = Array.from(document.querySelectorAll("[data-hero-label]"))
+      .filter((element) => getComputedStyle(element).visibility !== "hidden")
+      .flatMap((element) => {
+        const box = element.getBoundingClientRect();
+        const transformValue = getComputedStyle(element).transform;
+        const transform = transformValue === "none" ? new DOMMatrixReadOnly() : new DOMMatrixReadOnly(transformValue);
+        const anchor = { x: box.x + box.width / 2 - transform.m41, y: box.y + box.height / 2 - transform.m42 };
+        return anchor.x < hitTarget.left - 1 || anchor.x > hitTarget.right + 1 || anchor.y < hitTarget.top - 1 || anchor.y > hitTarget.bottom + 1
+          ? [{ label: element.dataset.heroLabel, ...anchor }]
+          : [];
+      });
+    if (projectedAnchorFailures.length) violations.push(`projected Hero anchors escape the hit target: ${JSON.stringify(projectedAnchorFailures)}`);
+  }
+  if (compact && background && backgroundImage && (backgroundImage.left > background.left + 1 || backgroundImage.right < background.right - 1 || backgroundImage.top > background.top + 1 || backgroundImage.bottom < background.bottom - 1)) {
+    violations.push("Hero background image exposes an empty edge");
+  }
+  if (compact && backgroundImageStyle?.display !== "block") violations.push(`compact Hero background image is not block-level: ${backgroundImageStyle?.display}`);
+  if (compact && backgroundTopOverscanRatio !== null && (backgroundTopOverscanRatio < 0.05 || backgroundTopOverscanRatio > 0.07)) {
+    violations.push(`compact Hero background top overscan is outside the 5–7% crop range: ${backgroundTopOverscanRatio}`);
+  }
+  if (compact && backgroundBottomOverscanRatio !== null && (backgroundBottomOverscanRatio < 0.05 || backgroundBottomOverscanRatio > 0.07)) {
+    violations.push(`compact Hero background bottom overscan is outside the 5–7% crop range: ${backgroundBottomOverscanRatio}`);
+  }
+  return { violations, details: { compact, phone, stage, scene, sceneScale, hitRegion, hitTarget, footer, blurb, blurbTypography: blurbStyle ? { fontFamily: blurbStyle.fontFamily, fontWeight: blurbStyle.fontWeight, textTransform: blurbStyle.textTransform } : null, cta, ctaLabel, ctaArrow, ctaCenterDelta, arrowAnimation: arrowStyle?.animationName ?? null, navbar, mobileHeader, masthead, wordmark, descriptor, menu, background, backgroundImage, backgroundImageDisplay: backgroundImageStyle?.display ?? null, backgroundTopOverscanRatio, backgroundBottomOverscanRatio, visual } };
+}
+
+export function probeHeroLabelSafeZone() {
+  const safe = document.querySelector("[data-hero-safe-zone]")?.getBoundingClientRect();
+  if (!safe) return { violations: ["missing Hero safe zone"], details: null };
+  const compact = innerWidth < 1024;
+  const navbar = compact ? document.querySelector("[data-site-navbar]")?.getBoundingClientRect() : null;
+  const footerElement = compact ? document.querySelector("[data-hero-footer]") : null;
+  const footer = footerElement && getComputedStyle(footerElement).display !== "none" ? footerElement.getBoundingClientRect() : null;
+  const failures = Array.from(document.querySelectorAll("[data-hero-label]"))
+    .filter((element) => getComputedStyle(element).visibility !== "hidden")
+    .flatMap((element) => {
+      const box = element.getBoundingClientRect();
+      return box.left < safe.left - 1 || box.right > safe.right + 1 || (navbar && box.top < navbar.bottom - 1) || (footer && box.bottom > footer.top + 1)
+        ? [{ label: element.dataset.heroLabel, left: box.left, right: box.right, top: box.top, bottom: box.bottom, safeLeft: safe.left, safeRight: safe.right, navbarBottom: navbar?.bottom, footerTop: footer?.top }]
+        : [];
+    });
+  return { violations: failures.map((failure) => `projected Hero label escapes safe zone: ${JSON.stringify(failure)}`), details: failures };
+}
+
+export function probeVisualBounds() {
+  const vv = visualViewport;
+  return {
+    left: vv?.offsetLeft ?? 0,
+    top: vv?.offsetTop ?? 0,
+    right: (vv?.offsetLeft ?? 0) + (vv?.width ?? innerWidth),
+    bottom: (vv?.offsetTop ?? 0) + (vv?.height ?? innerHeight),
+  };
+}

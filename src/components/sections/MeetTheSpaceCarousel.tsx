@@ -72,13 +72,19 @@ export function MeetTheSpaceCarousel({
     // The site has no grid — content tracks the width of the primary
     // text/content column (max-w-3xl, same as the section's heading + body).
     // The carousel matches that column exactly.
-    <div className="mx-auto w-full max-w-3xl">
+    <div className="mx-auto w-full min-w-0 max-w-3xl">
       {/* Stage: clip the coverflow to the content column so the fan never
           reaches the flanking banners, with a soft horizontal edge-fade so the
           receding side cards dissolve rather than hard-cut. */}
       <div
-        className="overflow-hidden py-4"
+        className="min-w-0 max-w-full overflow-hidden py-4"
         style={{
+          // Swiper positions loop clones far outside its own box. Chromium's
+          // mask compositing can otherwise leak those transformed descendants
+          // into document scrollWidth at large text settings even though this
+          // stage is overflow-hidden. Paint containment makes the existing
+          // carousel clipping ownership explicit without clipping page copy.
+          contain: "paint",
           maskImage:
             "linear-gradient(to right, transparent, #000 12%, #000 88%, transparent)",
           WebkitMaskImage:
@@ -157,7 +163,7 @@ export function MeetTheSpaceCarousel({
 
       {/* Controls: prev · dots · next, with a slim NN / TT counter. The loop
           means the arrows never disable — they wrap. */}
-      <div className="mt-4 flex items-center justify-center gap-5">
+      <div className="mt-4 flex flex-wrap items-center justify-center gap-5">
         <button
           type="button"
           onClick={() => swiper?.slidePrev()}

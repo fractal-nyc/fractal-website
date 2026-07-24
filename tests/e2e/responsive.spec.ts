@@ -1,0 +1,50 @@
+import { expect, test } from "@playwright/test";
+import { RENDERED_ROUTES, INTERNAL_REDIRECTS } from "./support/routes.mjs";
+import { assertNavbarDoesNotCoverContent, assertNoHorizontalOverflow, assertPageGutters, assertPrimaryContentIntegrity, assertTouchTargets, attachEnvironment, preparePage } from "./support/layout-assertions";
+import type { ResponsiveProfile } from "./support/profiles";
+
+for (const route of RENDERED_ROUTES) {
+  test(`${route} satisfies the rendered responsive contract`, async ({ page }, testInfo) => {
+    const profile = testInfo.project.metadata.profile as ResponsiveProfile | undefined;
+    const baseOrigin = new URL(testInfo.project.use.baseURL as string).origin;
+    const pageErrors: string[] = [];
+    const consoleErrors: string[] = [];
+    const failedAssets: string[] = [];
+    page.on("pageerror", (error) => pageErrors.push(error.message));
+    page.on("console", (message) => {
+      if (message.type() === "error") consoleErrors.push(message.text());
+    });
+    page.on("response", (response) => {
+      const url = new URL(response.url());
+      if (url.origin === baseOrigin && response.status() >= 400) {
+        failedAssets.push(`${response.status()} ${url.pathname}`);
+      }
+    });
+
+    await page.goto(route, { waitUntil: "domcontentloaded" });
+    await preparePage(page, profile?.rootFontScale);
+    await attachEnvironment(page, testInfo);
+    await assertNoHorizontalOverflow(page);
+    await assertPageGutters(page);
+    await assertNavbarDoesNotCoverContent(page);
+    await assertPrimaryContentIntegrity(page);
+
+    await assertTouchTargets(page);
+
+    expect(pageErrors, `uncaught page errors: ${pageErrors.join("\n")}`).toEqual([]);
+    // Some pages embed third-party services whose 4xx console string omits its
+    // URL. First-party response failures are checked separately with origins;
+    // keep this channel for actual runtime/WebGL crashes.
+    expect(consoleErrors.filter((entry) => /webgl|uncaught/i.test(entry)), `severe console errors: ${consoleErrors.join("\n")}`).toEqual([]);
+    expect(failedAssets.filter((entry) => !entry.includes("responsive-test-404")), `failed first-party resources: ${failedAssets.join("\n")}`).toEqual([]);
+  });
+}
+
+test.describe("legacy internal routes", () => {
+  for (const redirect of INTERNAL_REDIRECTS) {
+    test(`${redirect.from} redirects to ${redirect.to}`, async ({ page }) => {
+      await page.goto(redirect.from);
+      await expect.poll(() => new URL(page.url()).pathname).toBe(redirect.to);
+    });
+  }
+});
