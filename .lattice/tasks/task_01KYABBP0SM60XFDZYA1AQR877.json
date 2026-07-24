@@ -8,7 +8,7 @@
       "repo": null
     }
   ],
-  "comment_count": 7,
+  "comment_count": 10,
   "complexity": null,
   "created_at": "2026-07-24T15:19:33Z",
   "created_by": "agent:codex-root",
@@ -20,11 +20,16 @@
       "id": "ev_01KYAKRT7069MJ0Q1Y7ZT2E580",
       "role": "review",
       "source_type": "comment"
+    },
+    {
+      "id": "ev_01KYAMH20KRSAM6Z78J56M5ST6",
+      "role": "review",
+      "source_type": "comment"
     }
   ],
   "id": "task_01KYABBP0SM60XFDZYA1AQR877",
-  "last_event_id": "ev_01KYAM76WK0G2FP8ABAW3DSDT1",
-  "last_status_changed_at": "2026-07-24T17:54:23Z",
+  "last_event_id": "ev_01KYAMH2CA1J4FFVJNKR92AQBG",
+  "last_status_changed_at": "2026-07-24T17:59:46Z",
   "priority": "high",
   "relationships_out": [
     {
@@ -38,10 +43,10 @@
   "reopened_count": 2,
   "schema_version": 1,
   "short_id": "FRAC-24",
-  "status": "in_progress",
+  "status": "needs_human",
   "tags": null,
   "title": "Polish compact hero and document viewport set",
   "type": "bug",
-  "updated_at": "2026-07-24T17:54:23Z",
+  "updated_at": "2026-07-24T17:59:46Z",
   "urgency": null
 }
