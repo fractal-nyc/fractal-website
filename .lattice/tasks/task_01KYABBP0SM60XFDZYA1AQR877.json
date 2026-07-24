@@ -8,7 +8,7 @@
       "repo": null
     }
   ],
-  "comment_count": 10,
+  "comment_count": 12,
   "complexity": null,
   "created_at": "2026-07-24T15:19:33Z",
   "created_by": "agent:codex-root",
@@ -28,8 +28,8 @@
     }
   ],
   "id": "task_01KYABBP0SM60XFDZYA1AQR877",
-  "last_event_id": "ev_01KYAMH2CA1J4FFVJNKR92AQBG",
-  "last_status_changed_at": "2026-07-24T17:59:46Z",
+  "last_event_id": "ev_01KYANJ21510FBKHXN3ZNHEH4D",
+  "last_status_changed_at": "2026-07-24T18:17:47Z",
   "priority": "high",
   "relationships_out": [
     {
@@ -40,13 +40,13 @@
       "type": "depends_on"
     }
   ],
-  "reopened_count": 2,
+  "reopened_count": 3,
   "schema_version": 1,
   "short_id": "FRAC-24",
   "status": "needs_human",
   "tags": null,
   "title": "Polish compact hero and document viewport set",
   "type": "bug",
-  "updated_at": "2026-07-24T17:59:46Z",
+  "updated_at": "2026-07-24T18:17:47Z",
   "urgency": null
 }
