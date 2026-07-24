@@ -8,6 +8,7 @@ import { TOUCH } from "three";
 // import { FractalObject } from "./MetatronCube";        // Nested hexahedra (Metatron's Cube)
 import { FractalObject } from "./OctahedronHero";         // Octahedron
 import { clientToCanvasNdc } from "./pointerCoordinates";
+import { useMediaQuery } from "@/hooks/useMediaQuery";
 
 function canvasLocalEvents(store: RootStore) {
   const manager = events(store);
@@ -58,6 +59,8 @@ export function FractalCityScene({
   //   centered area.
   const eventSourceRef = useRef<HTMLDivElement>(null);
   const [sceneReady, setSceneReady] = useState(false);
+  const isPhone = useMediaQuery("(max-width: 767px)");
+  const sceneScale = isPhone ? 1.08 : 1;
 
   return (
     <>
@@ -66,6 +69,7 @@ export function FractalCityScene({
         className="absolute inset-0 z-[1]"
         data-hero-scene
         data-scene-ready={sceneReady ? "true" : "false"}
+        data-scene-scale={sceneScale}
       >
         <Canvas
           camera={{ position: [0, 0.8, 8], fov: 50, near: 0.1, far: 100 }}
@@ -81,7 +85,7 @@ export function FractalCityScene({
           }}
         >
           <SceneLighting />
-          <FractalObject imagePath={imagePath} onNavigate={onNavigate} />
+          <FractalObject imagePath={imagePath} onNavigate={onNavigate} sceneScale={sceneScale} />
           <OrbitControls
             enableZoom={false}
             enablePan={false}

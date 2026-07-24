@@ -1016,9 +1016,11 @@ const AXIS_NODE_TILT = 0.62;
 export function FractalObject({
   imagePath: _imagePath,
   onNavigate,
+  sceneScale = 1,
 }: {
   imagePath?: string;
   onNavigate: (route: string) => void;
+  sceneScale?: number;
 }) {
   const groupRef = useRef<THREE.Group>(null);
   const prefersReducedMotion = usePrefersReducedMotion();
@@ -1086,7 +1088,7 @@ export function FractalObject({
   });
 
   return (
-    <group ref={groupRef} position={[0, 0.35, 0]}>
+    <group ref={groupRef} position={[0, 0.35, 0]} scale={sceneScale}>
       {/* Subdivided wireframe shells for rounder visual */}
       <mesh>
         <octahedronGeometry args={[1.7, 1]} />

@@ -267,9 +267,12 @@ export function probeHeroComposition(options = {}) {
   const stage = visibleBox("[data-hero-stage]");
   const scene = visibleBox("[data-hero-scene]");
   const hitRegion = visibleBox("[data-hero-hit-region]");
+  const hitTarget = visibleBox("[data-hero-hit-region] > div");
   const footer = visibleBox("[data-hero-footer]");
   const blurb = visibleBox("[data-hero-blurb]");
   const cta = visibleBox("[data-hero-cta]");
+  const ctaLabel = visibleBox("[data-hero-cta-label]");
+  const ctaArrow = visibleBox("[data-hero-arrow]");
   const navbar = visibleBox("[data-site-navbar]");
   const mobileHeader = visibleBox("[data-home-mobile-header]");
   const masthead = visibleBox("[data-home-mobile-masthead]");
@@ -281,6 +284,18 @@ export function probeHeroComposition(options = {}) {
   const vv = visualViewport;
   const visual = { left: vv?.offsetLeft ?? 0, top: vv?.offsetTop ?? 0, right: (vv?.offsetLeft ?? 0) + (vv?.width ?? innerWidth), bottom: (vv?.offsetTop ?? 0) + (vv?.height ?? innerHeight) };
   const compact = innerWidth < 1024;
+  const phone = innerWidth < 768;
+  const sceneScale = Number.parseFloat(document.querySelector("[data-hero-scene]")?.dataset.sceneScale ?? "NaN");
+  const expectedSceneScale = phone ? 1.08 : 1;
+  const blurbStyle = document.querySelector("[data-hero-blurb]") ? getComputedStyle(document.querySelector("[data-hero-blurb]")) : null;
+  const arrowStyle = document.querySelector("[data-hero-arrow]") ? getComputedStyle(document.querySelector("[data-hero-arrow]")) : null;
+  const backgroundImageStyle = document.querySelector("[data-hero-background-image]") ? getComputedStyle(document.querySelector("[data-hero-background-image]")) : null;
+  const ctaCenterDelta = ctaLabel && ctaArrow
+    ? Math.abs((ctaLabel.top + ctaLabel.height / 2) - (ctaArrow.top + ctaArrow.height / 2))
+    : null;
+  const backgroundTopOverscanRatio = background && backgroundImage
+    ? (background.top - backgroundImage.top) / background.height
+    : null;
   const backgroundBottomOverscanRatio = background && backgroundImage
     ? (backgroundImage.bottom - background.bottom) / background.height
     : null;
@@ -301,9 +316,15 @@ export function probeHeroComposition(options = {}) {
     if (blurb && footer && (blurb.left < footer.left - 1 || blurb.right > footer.right + 1)) violations.push("Hero blurb escapes its footer owner");
     if (cta && footer && (cta.left < footer.left - 1 || cta.right > footer.right + 1 || cta.top < footer.top - 1 || cta.bottom > footer.bottom + 1)) violations.push("Hero CTA escapes its footer owner");
     if (cta && (cta.width < 44 || cta.height < 44)) violations.push(`Hero CTA touch target is under 44px: ${JSON.stringify(cta)}`);
+    if (ctaCenterDelta === null) violations.push("Hero CTA label or arrow is not visible");
+    else if (ctaCenterDelta > 1) violations.push(`Hero CTA label/arrow centers differ by more than 1px: ${ctaCenterDelta}`);
+    if (arrowStyle?.animationName !== "none") violations.push(`Hero CTA arrow unexpectedly animates: ${arrowStyle?.animationName}`);
     if (blurb) {
-      const blurbFontSize = Number.parseFloat(getComputedStyle(document.querySelector("[data-hero-blurb]")).fontSize);
+      const blurbFontSize = Number.parseFloat(blurbStyle.fontSize);
       if (blurbFontSize < 16) violations.push(`compact Hero blurb is under 16px: ${blurbFontSize}`);
+      if (!blurbStyle.fontFamily.toLowerCase().includes("inter")) violations.push(`compact Hero blurb does not use Inter: ${blurbStyle.fontFamily}`);
+      if (blurbStyle.fontWeight !== "400") violations.push(`compact Hero blurb is not weight 400: ${blurbStyle.fontWeight}`);
+      if (blurbStyle.textTransform !== "none") violations.push(`compact Hero blurb is not normal case: ${blurbStyle.textTransform}`);
     }
     if (options.requireInitialContainment && navbar && (navbar.top < visual.top - 1 || navbar.bottom > visual.bottom + 1)) violations.push("navbar does not fit the initial visual viewport");
     if (options.requireInitialContainment && footer && footer.bottom > visual.bottom + 1) violations.push("portrait Hero footer does not fit the initial visual viewport");
@@ -318,13 +339,38 @@ export function probeHeroComposition(options = {}) {
       violations.push(`Hero ${label} does not share the stage coordinate space`);
     }
   }
+  if (!Number.isFinite(sceneScale) || Math.abs(sceneScale - expectedSceneScale) > 0.001) {
+    violations.push(`Hero scene scale is ${sceneScale}; expected ${expectedSceneScale} at ${innerWidth}px`);
+  }
+  // The compact scale change applies only below md, where labels are always
+  // visible and the shared event-source target is the phone interaction
+  // contract. Expanded layouts intentionally allow hover labels to project
+  // beyond that centered touch box.
+  if (phone && hitTarget) {
+    const projectedAnchorFailures = Array.from(document.querySelectorAll("[data-hero-label]"))
+      .filter((element) => getComputedStyle(element).visibility !== "hidden")
+      .flatMap((element) => {
+        const box = element.getBoundingClientRect();
+        const transformValue = getComputedStyle(element).transform;
+        const transform = transformValue === "none" ? new DOMMatrixReadOnly() : new DOMMatrixReadOnly(transformValue);
+        const anchor = { x: box.x + box.width / 2 - transform.m41, y: box.y + box.height / 2 - transform.m42 };
+        return anchor.x < hitTarget.left - 1 || anchor.x > hitTarget.right + 1 || anchor.y < hitTarget.top - 1 || anchor.y > hitTarget.bottom + 1
+          ? [{ label: element.dataset.heroLabel, ...anchor }]
+          : [];
+      });
+    if (projectedAnchorFailures.length) violations.push(`projected Hero anchors escape the hit target: ${JSON.stringify(projectedAnchorFailures)}`);
+  }
   if (compact && background && backgroundImage && (backgroundImage.left > background.left + 1 || backgroundImage.right < background.right - 1 || backgroundImage.top > background.top + 1 || backgroundImage.bottom < background.bottom - 1)) {
     violations.push("Hero background image exposes an empty edge");
+  }
+  if (compact && backgroundImageStyle?.display !== "block") violations.push(`compact Hero background image is not block-level: ${backgroundImageStyle?.display}`);
+  if (compact && backgroundTopOverscanRatio !== null && (backgroundTopOverscanRatio < 0.03 || backgroundTopOverscanRatio > 0.05)) {
+    violations.push(`compact Hero background top overscan is outside the 3–5% crop range: ${backgroundTopOverscanRatio}`);
   }
   if (compact && backgroundBottomOverscanRatio !== null && (backgroundBottomOverscanRatio < 0.05 || backgroundBottomOverscanRatio > 0.07)) {
     violations.push(`compact Hero background bottom overscan is outside the 5–7% crop range: ${backgroundBottomOverscanRatio}`);
   }
-  return { violations, details: { compact, stage, scene, hitRegion, footer, blurb, cta, navbar, mobileHeader, masthead, wordmark, descriptor, menu, background, backgroundImage, backgroundBottomOverscanRatio, visual } };
+  return { violations, details: { compact, phone, stage, scene, sceneScale, hitRegion, hitTarget, footer, blurb, blurbTypography: blurbStyle ? { fontFamily: blurbStyle.fontFamily, fontWeight: blurbStyle.fontWeight, textTransform: blurbStyle.textTransform } : null, cta, ctaLabel, ctaArrow, ctaCenterDelta, arrowAnimation: arrowStyle?.animationName ?? null, navbar, mobileHeader, masthead, wordmark, descriptor, menu, background, backgroundImage, backgroundImageDisplay: backgroundImageStyle?.display ?? null, backgroundTopOverscanRatio, backgroundBottomOverscanRatio, visual } };
 }
 
 export function probeHeroLabelSafeZone() {

@@ -205,7 +205,7 @@
        mass to the lower-right, and crop the source art's trailing credit
        margin below the Hero so its visible ground line meets the lower edge. */
     object-position: 72% bottom;
-    transform: translateY(6%) scale(1.07);
+    transform: translateY(6%) scale(1.10);
     transform-origin: 72% bottom;
   }
 

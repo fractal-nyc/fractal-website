@@ -72,6 +72,9 @@ test("mobile masthead and portrait art direction split cleanly at lg", async ({ 
   const mobileHeader = page.locator("[data-home-mobile-header]");
   const descriptor = page.locator("[data-home-mobile-descriptor]");
   const footer = page.locator("[data-hero-footer]");
+  const expectedSceneScale = width < 768 ? "1.08" : "1";
+
+  await expect(page.locator("[data-hero-scene]")).toHaveAttribute("data-scene-scale", expectedSceneScale);
 
   if (width < 1024) {
     await expect(mobileHeader).toBeVisible();
@@ -82,34 +85,56 @@ test("mobile masthead and portrait art direction split cleanly at lg", async ({ 
       const fractal = document.querySelector<HTMLElement>("[data-home-mobile-wordmark] > span:first-child");
       const blurb = document.querySelector<HTMLElement>("[data-hero-blurb]");
       const cta = document.querySelector<HTMLElement>("[data-hero-cta]");
+      const ctaLabel = document.querySelector<HTMLElement>("[data-hero-cta-label]");
+      const ctaArrow = document.querySelector<HTMLElement>("[data-hero-arrow]");
       const stage = document.querySelector<HTMLElement>("[data-hero-stage]");
       const background = document.querySelector<HTMLElement>("[data-hero-background]");
       const image = document.querySelector<HTMLElement>("[data-hero-background-image]");
       const ctaBox = cta?.getBoundingClientRect();
+      const ctaLabelBox = ctaLabel?.getBoundingClientRect();
+      const ctaArrowBox = ctaArrow?.getBoundingClientRect();
       const backgroundBox = background?.getBoundingClientRect();
       const imageBox = image?.getBoundingClientRect();
+      const blurbStyle = getComputedStyle(blurb!);
       return {
         mastheadFontSize: Number.parseFloat(getComputedStyle(fractal!).fontSize),
-        blurbFontSize: Number.parseFloat(getComputedStyle(blurb!).fontSize),
+        blurbFontSize: Number.parseFloat(blurbStyle.fontSize),
+        blurbFontFamily: blurbStyle.fontFamily,
+        blurbFontWeight: blurbStyle.fontWeight,
+        blurbTextTransform: blurbStyle.textTransform,
         ctaWidth: ctaBox?.width ?? 0,
         ctaHeight: ctaBox?.height ?? 0,
+        ctaCenterDelta: ctaLabelBox && ctaArrowBox
+          ? Math.abs((ctaLabelBox.top + ctaLabelBox.height / 2) - (ctaArrowBox.top + ctaArrowBox.height / 2))
+          : null,
+        arrowAnimation: ctaArrow ? getComputedStyle(ctaArrow).animationName : null,
         stageTranslate: getComputedStyle(stage!).translate,
         objectPosition: getComputedStyle(image!).objectPosition,
+        imageDisplay: getComputedStyle(image!).display,
         backgroundBox: backgroundBox ? { top: backgroundBox.top, bottom: backgroundBox.bottom, height: backgroundBox.height } : null,
         imageBox: imageBox ? { top: imageBox.top, bottom: imageBox.bottom } : null,
       };
     });
     expect(treatment.mastheadFontSize).toBeGreaterThanOrEqual(32);
     expect(treatment.blurbFontSize).toBeGreaterThanOrEqual(16);
+    expect(treatment.blurbFontFamily.toLowerCase()).toContain("inter");
+    expect(treatment.blurbFontWeight).toBe("400");
+    expect(treatment.blurbTextTransform).toBe("none");
     expect(treatment.ctaWidth).toBeGreaterThanOrEqual(44);
     expect(treatment.ctaHeight).toBeGreaterThanOrEqual(44);
+    expect(treatment.ctaCenterDelta).not.toBeNull();
+    expect(treatment.ctaCenterDelta ?? Number.POSITIVE_INFINITY).toBeLessThanOrEqual(1);
+    expect(treatment.arrowAnimation).toBe("none");
     expect(treatment.stageTranslate).not.toBe("none");
     expect(treatment.objectPosition).toBe("72% 100%");
+    expect(treatment.imageDisplay).toBe("block");
     expect(treatment.backgroundBox).toBeTruthy();
     expect(treatment.imageBox).toBeTruthy();
     if (treatment.backgroundBox && treatment.imageBox) {
+      const topOverscanRatio = (treatment.backgroundBox.top - treatment.imageBox.top) / treatment.backgroundBox.height;
       const bottomOverscanRatio = (treatment.imageBox.bottom - treatment.backgroundBox.bottom) / treatment.backgroundBox.height;
-      expect(treatment.imageBox.top).toBeLessThanOrEqual(treatment.backgroundBox.top + 1);
+      expect(topOverscanRatio).toBeGreaterThanOrEqual(0.03);
+      expect(topOverscanRatio).toBeLessThanOrEqual(0.05);
       expect(bottomOverscanRatio).toBeGreaterThanOrEqual(0.05);
       expect(bottomOverscanRatio).toBeLessThanOrEqual(0.07);
     }
@@ -123,10 +148,12 @@ test("mobile masthead and portrait art direction split cleanly at lg", async ({ 
       return {
         stageTranslate: getComputedStyle(stage!).translate,
         objectPosition: getComputedStyle(image!).objectPosition,
+        backgroundScale: new DOMMatrixReadOnly(getComputedStyle(image!).transform).a,
       };
     });
     expect(desktopTreatment.stageTranslate).toBe("none");
     expect(desktopTreatment.objectPosition).toBe("50% 100%");
+    expect(desktopTreatment.backgroundScale).toBeCloseTo(1.35, 4);
   }
 });
 
