@@ -1,0 +1,19 @@
+{
+  "created_at": "2026-07-24T18:30:46Z",
+  "created_by": "agent:codex-frac24-reviewer",
+  "custom_fields": {},
+  "id": "art_01KYAP9TG0MN8DEYQDQB74JB84",
+  "model": null,
+  "payload": {
+    "content_type": "text/markdown",
+    "file": "art_01KYAP9TG0MN8DEYQDQB74JB84.md",
+    "size_bytes": 268
+  },
+  "schema_version": 1,
+  "sensitive": false,
+  "summary": "Final viewport gallery and Paper deliverable accepted: 12 labeled simulations plus 2 native Android frames are present, provenance is explicit, manifests/logs are clean, and Paper file 01KYANVS5MZJC53",
+  "tags": [],
+  "title": "Review findings",
+  "token_usage": null,
+  "type": "note"
+}

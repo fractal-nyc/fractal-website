@@ -1,0 +1,1 @@
+Final viewport gallery and Paper deliverable accepted: 12 labeled simulations plus 2 native Android frames are present, provenance is explicit, manifests/logs are clean, and Paper file 01KYANVS5MZJC53MFGTTT17GJQ visibly contains the imported Webpage simulations board.
