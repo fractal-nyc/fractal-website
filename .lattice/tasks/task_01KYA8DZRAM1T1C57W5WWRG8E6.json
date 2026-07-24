@@ -8,17 +8,28 @@
       "repo": null
     }
   ],
-  "comment_count": 0,
+  "comment_count": 1,
   "complexity": null,
   "created_at": "2026-07-24T14:28:22Z",
   "created_by": "agent:codex-root",
   "custom_fields": {},
   "description": "Adjust only the compact (<1024px) homepage hero background art direction so the illustration's bottom ground line lands at the bottom of the real visual viewport on phones and remains well composed through tablet widths. Preserve FRAC-21 masthead, geometry, footer, interaction alignment, normal-flow clipping safety, and the expanded desktop composition. Validate in automated responsive contracts plus fresh S24-class and tablet Android emulator views with browser chrome.",
-  "done_at": null,
-  "evidence_refs": [],
+  "done_at": "2026-07-24T15:16:01Z",
+  "evidence_refs": [
+    {
+      "id": "ev_01KYAB56VVY4J38NWD9Y61TVAD",
+      "role": "review",
+      "source_type": "comment"
+    },
+    {
+      "id": "art_01KYAB56VVY4J38NWD9Y61TVAC",
+      "role": "review",
+      "source_type": "artifact"
+    }
+  ],
   "id": "task_01KYA8DZRAM1T1C57W5WWRG8E6",
-  "last_event_id": "ev_01KYA9T4837C624QRZE3RN17DR",
-  "last_status_changed_at": "2026-07-24T14:52:29Z",
+  "last_event_id": "ev_01KYAB56VVY4J38NWD9Y61TVAF",
+  "last_status_changed_at": "2026-07-24T15:16:01Z",
   "priority": "high",
   "relationships_out": [
     {
@@ -32,10 +43,10 @@
   "reopened_count": 0,
   "schema_version": 1,
   "short_id": "FRAC-23",
-  "status": "review",
+  "status": "done",
   "tags": null,
   "title": "Lower compact homepage background crop",
   "type": "bug",
-  "updated_at": "2026-07-24T14:52:29Z",
+  "updated_at": "2026-07-24T15:16:01Z",
   "urgency": null
 }
