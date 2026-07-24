@@ -10,7 +10,11 @@ async function dispatchTouchGesture(page: import("@playwright/test").Page, point
     await page.waitForTimeout(60);
     await session.send("Input.dispatchTouchEvent", { type: "touchMove", touchPoints: touch(point) });
   }
-  await page.waitForTimeout(60);
+  // A one-point gesture is a tap. Keep its trusted down/up pair close enough
+  // that a contended headless worker cannot stretch the harness delay past the
+  // production 350 ms tap discriminator. Multi-point drags retain the settled
+  // 60 ms cadence used to exercise real scene rotation.
+  if (points.length > 1) await page.waitForTimeout(60);
   await session.send("Input.dispatchTouchEvent", { type: "touchEnd", touchPoints: [] });
   await session.detach();
 }
@@ -22,13 +26,14 @@ const INTERNAL_HERO_ROUTES: Record<string, string> = {
   LIBRARY: "/library",
 };
 
-async function visibleInternalNodeAnchor(page: import("@playwright/test").Page) {
-  const target = await page.locator("[data-hero-label]").evaluateAll((labels, routes) => {
+async function visibleInternalNodeAnchor(page: import("@playwright/test").Page, preferredLabel?: string) {
+  const target = await page.locator("[data-hero-label]").evaluateAll((labels, options) => {
     const region = document.querySelector("[data-hero-hit-region] > div")?.getBoundingClientRect();
     if (!region) return null;
     for (const label of labels) {
       const name = (label as HTMLElement).dataset.heroLabel?.toUpperCase() ?? "";
-      const route = routes[name];
+      if (options.preferredLabel && name !== options.preferredLabel) continue;
+      const route = options.routes[name];
       if (!route) continue;
       const box = label.getBoundingClientRect();
       if (box.width === 0 || box.height === 0) continue;
@@ -41,9 +46,32 @@ async function visibleInternalNodeAnchor(page: import("@playwright/test").Page) 
       }
     }
     return null;
-  }, INTERNAL_HERO_ROUTES);
-  expect(target, "a visible internal Hero node must have a projected anchor inside the hit target").toBeTruthy();
+  }, { routes: INTERNAL_HERO_ROUTES, preferredLabel });
   return target;
+}
+
+async function waitForInteractiveNodeAnchor(page: import("@playwright/test").Page) {
+  let target = await visibleInternalNodeAnchor(page);
+  await expect.poll(async () => {
+    target = await visibleInternalNodeAnchor(page);
+    if (!target) return false;
+    await page.mouse.move(target.x, target.y);
+    return page.evaluate(() => getComputedStyle(document.body).cursor === "pointer");
+  }, {
+    message: "Hero event source and raycaster must deliver a trusted hover to a projected internal node",
+    timeout: 30_000,
+    intervals: [50, 100, 250, 500],
+  }).toBeTruthy();
+  expect(target, "an interactive internal Hero node must remain available after the raycast readiness probe").toBeTruthy();
+  return target;
+}
+
+async function clearHeroHover(page: import("@playwright/test").Page): Promise<void> {
+  await page.mouse.move(1, 1);
+  await expect.poll(
+    () => page.evaluate(() => getComputedStyle(document.body).cursor),
+    { message: "Hero node hover must clear before the next trusted gesture" },
+  ).not.toBe("pointer");
 }
 
 test.beforeEach(async ({ page }, testInfo) => {
@@ -222,61 +250,72 @@ test("portrait-to-landscape rotation reflows without a reload", async ({ page, b
   expect(await page.evaluate(() => performance.getEntriesByType("navigation").length)).toBe(navigationEntries);
 });
 
-test("trusted touch drag rotates and the Hero stage permits page scroll", async ({ page, browserName }, testInfo) => {
-  const profile = testInfo.project.metadata.profile as ResponsiveProfile | undefined;
-  test.skip(browserName !== "chromium" || profile?.name !== "phone-reduced-motion", "CDP touch injection is a deterministic simulated Chromium interaction contract; simulator gestures run in the Appium lane");
-  await expect(page.locator('[data-hero-scene][data-scene-ready="true"]')).toBeAttached({ timeout: 30_000 });
-  await expect.poll(() => page.locator("[data-hero-label]").count(), { timeout: 30_000 }).toBeGreaterThan(0);
-  const region = await page.locator("[data-hero-hit-region] > div").boundingBox();
-  expect(region).toBeTruthy();
-  if (!region) return;
-  const labelPositions = () => page.locator("[data-hero-label]").evaluateAll((labels) => labels.map((label) => {
-    const box = label.getBoundingClientRect();
-    return { name: (label as HTMLElement).dataset.heroLabel, x: box.x, y: box.y };
-  }));
-  const before = await labelPositions();
-  const center = { x: region.x + region.width / 2, y: region.y + region.height / 2 };
-  await dispatchTouchGesture(page, [
-    { x: center.x - 55, y: center.y },
-    { x: center.x - 15, y: center.y },
-    { x: center.x + 35, y: center.y },
-  ]);
-  await page.waitForTimeout(250);
-  const after = await labelPositions();
-  const moved = after.some((label) => {
-    const prior = before.find(({ name }) => name === label.name);
-    return prior && Math.hypot(label.x - prior.x, label.y - prior.y) > 2;
+test.describe("trusted Hero input", { tag: "@hero-interaction" }, () => {
+  test("trusted touch drag rotates and the Hero stage permits page scroll", async ({ page }) => {
+    await expect(page.locator('[data-hero-scene][data-scene-ready="true"]')).toBeAttached({ timeout: 30_000 });
+    await expect.poll(() => page.locator("[data-hero-label]").count(), { timeout: 30_000 }).toBeGreaterThan(0);
+    await waitForInteractiveNodeAnchor(page);
+    await clearHeroHover(page);
+
+    const region = await page.locator("[data-hero-hit-region] > div").boundingBox();
+    expect(region).toBeTruthy();
+    if (!region) return;
+    const labelPositions = () => page.locator("[data-hero-label]").evaluateAll((labels) => labels.map((label) => {
+      const box = label.getBoundingClientRect();
+      return { name: (label as HTMLElement).dataset.heroLabel, x: box.x, y: box.y };
+    }));
+    const before = await labelPositions();
+    const center = { x: region.x + region.width / 2, y: region.y + region.height / 2 };
+    await dispatchTouchGesture(page, [
+      { x: center.x - 55, y: center.y },
+      { x: center.x - 15, y: center.y },
+      { x: center.x + 35, y: center.y },
+    ]);
+    await page.waitForTimeout(250);
+    const after = await labelPositions();
+    const moved = after.some((label) => {
+      const prior = before.find(({ name }) => name === label.name);
+      return prior && Math.hypot(label.x - prior.x, label.y - prior.y) > 2;
+    });
+    expect(moved, "horizontal touch drag must rotate the real WebGL scene").toBeTruthy();
+    expect(new URL(page.url()).pathname).toBe("/");
+
+    expect(await page.locator("[data-hero-hit-region] > div").evaluate((element) => getComputedStyle(element).touchAction)).toBe("pan-y");
+    await page.mouse.move(center.x, center.y);
+    await page.mouse.wheel(0, 500);
+    await expect.poll(() => page.evaluate(() => scrollY)).toBeGreaterThan(0);
   });
-  expect(moved, "horizontal touch drag must rotate the real WebGL scene").toBeTruthy();
-  expect(new URL(page.url()).pathname).toBe("/");
 
-  expect(await page.locator("[data-hero-hit-region] > div").evaluate((element) => getComputedStyle(element).touchAction)).toBe("pan-y");
-  await page.mouse.move(center.x, center.y);
-  await page.mouse.wheel(0, 500);
-  await expect.poll(() => page.evaluate(() => scrollY)).toBeGreaterThan(0);
-});
+  test("trusted touch and mouse taps navigate from the projected Hero node anchor", async ({ page }) => {
+    await expect(page.locator('[data-hero-scene][data-scene-ready="true"]')).toBeAttached({ timeout: 30_000 });
+    await expect.poll(() => page.locator("[data-hero-label]").count(), { timeout: 30_000 }).toBeGreaterThan(0);
 
-test("trusted touch and mouse taps navigate from the projected Hero node anchor", async ({ page, browserName }, testInfo) => {
-  const profile = testInfo.project.metadata.profile as ResponsiveProfile | undefined;
-  test.skip(browserName !== "chromium" || profile?.name !== "phone-reduced-motion", "one stable touch profile exercises trusted Hero taps");
-  await expect(page.locator('[data-hero-scene][data-scene-ready="true"]')).toBeAttached({ timeout: 30_000 });
-  await expect.poll(() => page.locator("[data-hero-label]").count(), { timeout: 30_000 }).toBeGreaterThan(0);
+    const readyTarget = await waitForInteractiveNodeAnchor(page);
+    await clearHeroHover(page);
+    const touchTarget = await visibleInternalNodeAnchor(page, readyTarget?.label);
+    expect(touchTarget, "a projected internal Hero node must remain available for trusted touch").toBeTruthy();
+    if (!touchTarget) return;
+    await dispatchTouchGesture(page, [{ x: touchTarget.x, y: touchTarget.y }]);
+    await expect(
+      page,
+      `trusted touch must navigate to ${touchTarget.route} after the event-source/raycast readiness probe`,
+    ).toHaveURL(new RegExp(`${touchTarget.route}$`));
+    await page.waitForTimeout(500);
+    expect(new URL(page.url()).pathname).toBe(touchTarget.route);
 
-  const touchTarget = await visibleInternalNodeAnchor(page);
-  if (!touchTarget) return;
-  await dispatchTouchGesture(page, [{ x: touchTarget.x, y: touchTarget.y }]);
-  await expect(page).toHaveURL(new RegExp(`${touchTarget.route}$`));
-  await page.waitForTimeout(500);
-  expect(new URL(page.url()).pathname).toBe(touchTarget.route);
-
-  await page.goto("/", { waitUntil: "domcontentloaded" });
-  await preparePage(page);
-  await expect(page.locator('[data-hero-scene][data-scene-ready="true"]')).toBeAttached({ timeout: 30_000 });
-  await expect.poll(() => page.locator("[data-hero-label]").count(), { timeout: 30_000 }).toBeGreaterThan(0);
-  const mouseTarget = await visibleInternalNodeAnchor(page);
-  if (!mouseTarget) return;
-  await page.mouse.click(mouseTarget.x, mouseTarget.y);
-  await expect(page).toHaveURL(new RegExp(`${mouseTarget.route}$`));
+    await page.goto("/", { waitUntil: "domcontentloaded" });
+    await preparePage(page);
+    await expect(page.locator('[data-hero-scene][data-scene-ready="true"]')).toBeAttached({ timeout: 30_000 });
+    await expect.poll(() => page.locator("[data-hero-label]").count(), { timeout: 30_000 }).toBeGreaterThan(0);
+    const mouseTarget = await waitForInteractiveNodeAnchor(page);
+    expect(mouseTarget, "a projected internal Hero node must remain available for trusted mouse input").toBeTruthy();
+    if (!mouseTarget) return;
+    await page.mouse.click(mouseTarget.x, mouseTarget.y);
+    await expect(
+      page,
+      `trusted mouse click must navigate to ${mouseTarget.route} after the event-source/raycast readiness probe`,
+    ).toHaveURL(new RegExp(`${mouseTarget.route}$`));
+  });
 });
 
 test("reduced motion freezes Hero motion while preserving content", async ({ page }, testInfo) => {

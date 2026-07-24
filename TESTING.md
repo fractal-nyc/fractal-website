@@ -36,8 +36,9 @@ All commands run from the repository root after `pnpm install`.
 | `pnpm test` | `UNIT` / Vitest + jsdom | Fast behavior and regression suite | All `src/__tests__/**/*.test.{ts,tsx}` files | Vitest result on stdout |
 | `pnpm test:watch` | `UNIT` / Vitest + jsdom | Focused development feedback | Same suite, rerun interactively on changes | Interactive terminal result |
 | `pnpm test:coverage` | `UNIT` / Vitest coverage | Local coverage inspection | Same suite; requires a compatible Vitest coverage provider to be installed | Coverage summary and, when configured, local `coverage/` output; no threshold is enforced |
-| `pnpm test:e2e:fast` | `BROWSER-CONTRACT` + `VISUAL` / Playwright Chromium | Pull-request responsive confidence | 8 representative profiles; Chromium browser binary installed; Vite preview is started automatically | List reporter locally; failure traces/screenshots in `test-results/playwright/` |
-| `pnpm test:e2e:full` | `BROWSER-CONTRACT` + `VISUAL` / Playwright | Scheduled/manual exhaustive browser matrix | 22 profiles across Chromium, Firefox, and WebKit; browser binaries must be installed | Local list output; failure evidence in `test-results/playwright/`; CI HTML report in `playwright-report/` |
+| `pnpm test:e2e:fast` | `BROWSER-CONTRACT` + `VISUAL` / Playwright Chromium | Pull-request responsive confidence | 8 representative profiles in the two-worker matrix, followed by the two-test Hero trusted-input lane with one worker and no retries; Chromium installed; Vite preview starts automatically | Matrix and interaction evidence coexist under `test-results/playwright/matrix-fast/` and `test-results/playwright/hero-interaction/` |
+| `pnpm test:e2e:full` | `BROWSER-CONTRACT` + `VISUAL` / Playwright | Scheduled/manual exhaustive browser matrix | 22 profiles across Chromium, Firefox, and WebKit, followed by the same isolated Chromium Hero trusted-input lane; all browser binaries must be installed | Matrix and interaction evidence coexist under `test-results/playwright/matrix-full/` and `test-results/playwright/hero-interaction/`; matching CI reports are under `playwright-report/` |
+| `pnpm test:e2e:hero-interaction` | `BROWSER-CONTRACT` / Playwright Chromium trusted input | Focused Hero drag, scroll-through, touch navigation, and mouse navigation | One normal-motion 390×844 touch profile, one worker, no retries; tagged tests are not scheduled in the responsive matrix | Failure traces/screenshots under `test-results/playwright/hero-interaction/`; CI HTML report under `playwright-report/hero-interaction/` |
 | `pnpm simulators:doctor` | `NATIVE` / local host | Read-only prerequisite and identity diagnosis | Android SDK/AVDs and/or Xcode simulators, Appium, drivers, and host tooling | Diagnostic stdout; no device suite run |
 | `pnpm simulators:self-test` | `NATIVE` / Node + headless Chromium | Verify harness logic without launching devices | Repository dependencies and Chromium browser binary installed | Assertions on stdout; no product/device evidence |
 | `pnpm simulators:setup-appium` | `NATIVE` / local host | Install and doctor pinned Appium drivers | Network access and platform SDK prerequisites | Repository-local drivers in `.mobile-simulators/appium-home/` plus stdout |
@@ -70,9 +71,11 @@ scripts/mobile-simulators/             NATIVE harness and harness self-tests
 scripts/design-conformance.mjs         GATE implementation
 scripts/design-conformance.baseline.json  Grandfathered conformance baseline
 .github/workflows/                     Hosted GATE orchestration
-test-results/playwright/               Ignored Playwright run artifacts
+test-results/playwright/matrix-*/      Ignored responsive-matrix run artifacts
+test-results/playwright/hero-interaction/  Ignored isolated trusted-input artifacts
 test-results/mobile-simulators/        Ignored timestamped native evidence
-playwright-report/                     Ignored local/CI Playwright HTML report
+playwright-report/matrix-*/            Ignored responsive-matrix CI HTML reports
+playwright-report/hero-interaction/    Ignored trusted-input CI HTML report
 ```
 
 ## `UNIT`: Vitest suites
@@ -106,22 +109,22 @@ This layer deliberately does not validate actual CSS geometry, WebGL rendering, 
 
 ## `BROWSER-CONTRACT` and `VISUAL`: Playwright
 
-Playwright exercises the production Vite preview, not the development server. The `fast` matrix uses 8 representative Chromium projects. The `full` matrix uses all 22 profiles across Chromium, Firefox, and WebKit, producing 66 browser/profile projects before per-spec skips. These are simulated browser viewports; even touch-enabled projects do not include a phone's physical frame or browser/system bars.
+Playwright exercises the production Vite preview, not the development server. The `fast` matrix uses 8 representative Chromium projects. The `full` matrix uses all 22 profiles across Chromium, Firefox, and WebKit, producing 66 browser/profile projects before per-spec skips. The two `@hero-interaction` tests are filtered out before either matrix is scheduled, so irrelevant projects never initialize a WebGL scene for those tests. Each aggregate command then invokes the dedicated normal-motion 390×844 Chromium touch project once with one worker and no retries. These are simulated browser viewports; even touch-enabled projects do not include a phone's physical frame or browser/system bars.
 
 ### Suites
 
 | Label | File | Purpose and notes | Command | Evidence |
 | --- | --- | --- | --- | --- |
 | Cross-route responsive contract | [`responsive.spec.ts`](./tests/e2e/responsive.spec.ts) | Sweeps rendered routes and legacy redirects; checks horizontal overflow, gutters, navbar/content overlap, primary-content clipping/reflow, 44px touch targets, runtime/WebGL errors, and failed first-party assets | `pnpm test:e2e:fast` or `pnpm test:e2e:full` | Reporter output; failure screenshots/traces under `test-results/playwright/` |
-| Homepage Hero responsive contract | [`hero-responsive.spec.ts`](./tests/e2e/hero-responsive.spec.ts) | Checks stage/footer/CTA reachability, the `lg` art-direction split, WebGL readiness and label safe zones, Story CTA, resize/orientation without reload, trusted touch/mouse drag and navigation, and reduced motion | `pnpm test:e2e:fast` or `pnpm test:e2e:full` | Environment attachments and failure evidence under `test-results/playwright/` |
+| Homepage Hero responsive contract | [`hero-responsive.spec.ts`](./tests/e2e/hero-responsive.spec.ts) | Matrix cases check composition, art direction, WebGL labels, Story CTA, resize/orientation, and independent reduced-motion behavior. Tagged trusted-input cases first prove the R3F external event source and raycaster with a real mouse hover, then assert real CDP touch drag/tap, scroll-through, and mouse navigation in the isolated lane | `pnpm test:e2e:fast`, `pnpm test:e2e:full`, or focused `pnpm test:e2e:hero-interaction` | Matrix and trusted-input failure evidence stay in their separate subdirectories under `test-results/playwright/` |
 | Reviewed visual baselines | [`visual-evidence.spec.ts`](./tests/e2e/visual-evidence.spec.ts) | Compares selected Home and Library Chromium views with versioned baselines; bounded pixel ratios accommodate real WebGL and font raster variance | `pnpm test:e2e:fast` or `pnpm test:e2e:full` | Snapshot diff evidence under `test-results/playwright/`; references beside the spec |
 
 ### Support and configuration
 
 | Label | File | Purpose and notes |
 | --- | --- | --- |
-| Playwright orchestration | [`playwright.config.ts`](./playwright.config.ts) | Starts Vite preview on port 4173, selects fast/full projects, uses two workers because WebGL contexts are resource-heavy, retries once in CI, retains traces/screenshots on failure, and writes run output to `test-results/playwright/`. CI also writes `playwright-report/`. |
-| Responsive profiles | [`profiles.ts`](./tests/e2e/support/profiles.ts) | Defines the 22 full profiles, 8 fast representatives, touch flags, 200% root-font cases, reduced motion, and browser-project expansion. |
+| Playwright orchestration | [`playwright.config.ts`](./playwright.config.ts) | Starts Vite preview on port 4173 and selects either the fast/full two-worker matrix or the tagged single-worker/no-retry Hero interaction lane. Lane-specific output and HTML-report directories prevent the second aggregate invocation from erasing the first invocation's evidence. |
+| Responsive profiles | [`profiles.ts`](./tests/e2e/support/profiles.ts) | Defines the 22 full profiles, 8 fast representatives, touch flags, 200% root-font cases, independent reduced motion, browser-project expansion, and the dedicated normal-motion 390×844 trusted-input profile. |
 | Shared routes | [`routes.mjs`](./tests/e2e/support/routes.mjs) | One source for 9 rendered routes and 5 internal redirects, reused by Playwright and native simulators. |
 | Runner-neutral probes | [`responsive-contract.mjs`](./tests/e2e/support/responsive-contract.mjs) | Collects environment metrics and exposes DOM probes for overflow, content integrity, gutters, navbar relationships, touch targets, Hero composition/safe zones, and toolbar transitions. It contains no Playwright/WebdriverIO assumptions. |
 | Playwright adapters | [`layout-assertions.ts`](./tests/e2e/support/layout-assertions.ts) | Stabilizes fonts/animations/pages, attaches environment details, and wraps shared probes in Playwright assertions with diagnostic output. |
@@ -144,6 +147,13 @@ Update [`routes.mjs`](./tests/e2e/support/routes.mjs) when adding a rendered rou
 | Desktop | 1280×720, 1440×900, 1920×1080 | 1440×900 |
 | 200% text | phone 390×844, tablet 820×1180, desktop 1440×900 | phone 390×844 |
 | Reduced motion | phone 390×844 | phone 390×844 |
+| Hero trusted input | normal-motion touch 390×844 Chromium, isolated from the matrix | always runs once after either matrix |
+
+### Why trusted Hero input is isolated
+
+The Hero uses resource-heavy WebGL plus a React Three Fiber event source separate from its canvas. Merely seeing `[data-scene-ready="true"]` or projected DOM labels does not prove that the external event source has connected and can raycast the projected node. The trusted-input tests therefore perform a real mouse hover and wait for the mesh's existing pointer-cursor effect before sending touch or mouse activation.
+
+These tests run in a dedicated lane because runtime skips still execute `beforeEach`; in the responsive matrix that would open otherwise unused Hero canvases on concurrent projects. Filtering the `@hero-interaction` tag in configuration prevents those hooks and WebGL contexts from being scheduled at all. The shipping lane is deliberately one worker with zero retries. The separate `phone-reduced-motion` matrix profile remains the accessibility contract and is not reused as an interaction-stability mechanism.
 
 ### Versioned screenshot references
 
@@ -218,8 +228,9 @@ Native lanes are intentionally local/manual because GitHub's Ubuntu runners do n
 | Typecheck, build, conformance, unit results | Terminal or CI logs | CI logs only | A pass/fail record; `dist/` is ignored build output |
 | Optional Vitest coverage | Terminal and coverage-provider output (normally `coverage/`) | No by default | Local diagnostic; no repository or CI threshold is configured |
 | Reviewed visual references | `tests/e2e/visual-evidence.spec.ts-snapshots/` | Yes | Durable baselines; every changed image requires human review |
-| Playwright traces, diffs, failure screenshots | `test-results/playwright/` | No | Local run artifacts; uploaded by responsive CI |
-| Playwright HTML report | `playwright-report/` | No | Produced in CI; uploaded with test results |
+| Responsive-matrix traces, diffs, failure screenshots | `test-results/playwright/matrix-fast/` or `test-results/playwright/matrix-full/` | No | Local run artifacts; uploaded by responsive CI |
+| Hero trusted-input traces and failure screenshots | `test-results/playwright/hero-interaction/` | No | Kept separate so the aggregate command's second invocation does not erase matrix evidence |
+| Playwright HTML reports | `playwright-report/matrix-fast/`, `playwright-report/matrix-full/`, and `playwright-report/hero-interaction/` | No | Produced in CI; uploaded with test results |
 | Native run summary, manifests, metrics, logs, screenshots | `test-results/mobile-simulators/<timestamp>/` | No | Local run proof; not automatically a shared durable record |
 | Responsive CI artifact | GitHub Actions `local-responsive-<run-id>` | External artifact | Retained for 14 days |
 
@@ -231,7 +242,8 @@ Ignored local evidence can be deleted or overwritten outside version control. Do
 | --- | --- |
 | Pure logic, component semantics, content/route regression, or data/token synchronization | `src/__tests__/*.test.ts(x)` (`UNIT`) |
 | Layout behavior across routes, viewport families, or browser engines | `tests/e2e/responsive.spec.ts`, preferably through a shared probe (`BROWSER-CONTRACT`) |
-| Homepage 3D, touch, CTA, orientation reflow, or reduced-motion behavior | `tests/e2e/hero-responsive.spec.ts` (`BROWSER-CONTRACT`) |
+| Homepage 3D composition, CTA, orientation reflow, or reduced-motion behavior | `tests/e2e/hero-responsive.spec.ts` in the normal matrix (`BROWSER-CONTRACT`) |
+| Homepage trusted drag, scroll-through, touch tap, or mouse navigation | `tests/e2e/hero-responsive.spec.ts` inside the `@hero-interaction` describe block; run the isolated lane (`BROWSER-CONTRACT`) |
 | Deliberately stable pixel composition at a selected risk view | `tests/e2e/visual-evidence.spec.ts` plus reviewed snapshots (`VISUAL`) |
 | Browser toolbar, live visual viewport, safe-area pressure, native touch coordinates, device identity, or actual rotation | Runner-neutral probe where possible plus `scripts/mobile-simulators/suite.mjs` (`NATIVE`) |
 | A new rendered route or internal redirect | `tests/e2e/support/routes.mjs`; do not duplicate route lists in a spec |

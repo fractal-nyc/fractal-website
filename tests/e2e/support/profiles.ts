@@ -46,6 +46,13 @@ export const FAST_PROFILES = FULL_PROFILES.filter(({ name }) =>
   ].includes(name),
 );
 
+export const HERO_INTERACTION_PROFILE: ResponsiveProfile = {
+  name: "hero-interaction-390x844",
+  viewport: { width: 390, height: 844 },
+  hasTouch: true,
+  reducedMotion: "no-preference",
+};
+
 export function localProjects(matrix: "fast" | "full"): Project[] {
   const profiles = matrix === "full" ? FULL_PROFILES : FAST_PROFILES;
   const browsers: BrowserName[] = matrix === "full" ? ["chromium", "firefox", "webkit"] : ["chromium"];
@@ -64,4 +71,20 @@ export function localProjects(matrix: "fast" | "full"): Project[] {
       },
     })),
   );
+}
+
+export function heroInteractionProjects(): Project[] {
+  const profile = HERO_INTERACTION_PROFILE;
+  return [{
+    name: `simulated-chromium-${profile.name}`,
+    metadata: { profile },
+    use: {
+      browserName: "chromium",
+      viewport: profile.viewport,
+      hasTouch: true,
+      isMobile: true,
+      deviceScaleFactor: 2,
+      reducedMotion: profile.reducedMotion,
+    },
+  }];
 }

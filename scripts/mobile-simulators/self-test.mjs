@@ -56,7 +56,7 @@ const isWithin = (parent, candidate) => {
   const pathFromParent = relative(parent, candidate);
   return pathFromParent === "" || (pathFromParent !== ".." && !pathFromParent.startsWith(`..${sep}`));
 };
-assert.match(playwrightConfigSource, /outputDir:\s*["']test-results\/playwright["']/);
+assert.match(playwrightConfigSource, /outputDir:\s*`test-results\/playwright\/\$\{evidenceSuffix\}`/);
 assert.equal(isWithin(playwrightOutputRoot, EVIDENCE_ROOT), false, "Playwright cleanup must not contain simulator evidence");
 assert.equal(isWithin(EVIDENCE_ROOT, playwrightOutputRoot), false, "Simulator evidence must not contain Playwright output");
 
