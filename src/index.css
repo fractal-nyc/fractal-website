@@ -201,10 +201,11 @@
 
   .hero-background-image {
     opacity: 0.15;
-    /* Portrait art direction: retain more of the skyline and anchor its
-       building mass to the lower-right instead of magnifying blank sky. */
+    /* Compact art direction: retain more of the skyline, anchor its building
+       mass to the lower-right, and crop the source art's trailing credit
+       margin below the Hero so its visible ground line meets the lower edge. */
     object-position: 72% bottom;
-    transform: scale(1.06);
+    transform: translateY(6%) scale(1.07);
     transform-origin: 72% bottom;
   }
 

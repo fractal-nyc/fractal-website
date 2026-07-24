@@ -281,6 +281,9 @@ export function probeHeroComposition(options = {}) {
   const vv = visualViewport;
   const visual = { left: vv?.offsetLeft ?? 0, top: vv?.offsetTop ?? 0, right: (vv?.offsetLeft ?? 0) + (vv?.width ?? innerWidth), bottom: (vv?.offsetTop ?? 0) + (vv?.height ?? innerHeight) };
   const compact = innerWidth < 1024;
+  const backgroundBottomOverscanRatio = background && backgroundImage
+    ? (backgroundImage.bottom - background.bottom) / background.height
+    : null;
   const violations = [];
   if (!stage) violations.push("Hero stage is not visible");
   if (compact) {
@@ -318,7 +321,10 @@ export function probeHeroComposition(options = {}) {
   if (compact && background && backgroundImage && (backgroundImage.left > background.left + 1 || backgroundImage.right < background.right - 1 || backgroundImage.top > background.top + 1 || backgroundImage.bottom < background.bottom - 1)) {
     violations.push("Hero background image exposes an empty edge");
   }
-  return { violations, details: { compact, stage, scene, hitRegion, footer, blurb, cta, navbar, mobileHeader, masthead, wordmark, descriptor, menu, background, backgroundImage, visual } };
+  if (compact && backgroundBottomOverscanRatio !== null && (backgroundBottomOverscanRatio < 0.05 || backgroundBottomOverscanRatio > 0.07)) {
+    violations.push(`compact Hero background bottom overscan is outside the 5–7% crop range: ${backgroundBottomOverscanRatio}`);
+  }
+  return { violations, details: { compact, stage, scene, hitRegion, footer, blurb, cta, navbar, mobileHeader, masthead, wordmark, descriptor, menu, background, backgroundImage, backgroundBottomOverscanRatio, visual } };
 }
 
 export function probeHeroLabelSafeZone() {

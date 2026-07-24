@@ -72,7 +72,6 @@ test("mobile masthead and portrait art direction split cleanly at lg", async ({ 
   const mobileHeader = page.locator("[data-home-mobile-header]");
   const descriptor = page.locator("[data-home-mobile-descriptor]");
   const footer = page.locator("[data-hero-footer]");
-  const background = page.locator("[data-hero-background-image]");
 
   if (width < 1024) {
     await expect(mobileHeader).toBeVisible();
@@ -84,8 +83,11 @@ test("mobile masthead and portrait art direction split cleanly at lg", async ({ 
       const blurb = document.querySelector<HTMLElement>("[data-hero-blurb]");
       const cta = document.querySelector<HTMLElement>("[data-hero-cta]");
       const stage = document.querySelector<HTMLElement>("[data-hero-stage]");
+      const background = document.querySelector<HTMLElement>("[data-hero-background]");
       const image = document.querySelector<HTMLElement>("[data-hero-background-image]");
       const ctaBox = cta?.getBoundingClientRect();
+      const backgroundBox = background?.getBoundingClientRect();
+      const imageBox = image?.getBoundingClientRect();
       return {
         mastheadFontSize: Number.parseFloat(getComputedStyle(fractal!).fontSize),
         blurbFontSize: Number.parseFloat(getComputedStyle(blurb!).fontSize),
@@ -93,6 +95,8 @@ test("mobile masthead and portrait art direction split cleanly at lg", async ({ 
         ctaHeight: ctaBox?.height ?? 0,
         stageTranslate: getComputedStyle(stage!).translate,
         objectPosition: getComputedStyle(image!).objectPosition,
+        backgroundBox: backgroundBox ? { top: backgroundBox.top, bottom: backgroundBox.bottom, height: backgroundBox.height } : null,
+        imageBox: imageBox ? { top: imageBox.top, bottom: imageBox.bottom } : null,
       };
     });
     expect(treatment.mastheadFontSize).toBeGreaterThanOrEqual(32);
@@ -101,6 +105,14 @@ test("mobile masthead and portrait art direction split cleanly at lg", async ({ 
     expect(treatment.ctaHeight).toBeGreaterThanOrEqual(44);
     expect(treatment.stageTranslate).not.toBe("none");
     expect(treatment.objectPosition).toBe("72% 100%");
+    expect(treatment.backgroundBox).toBeTruthy();
+    expect(treatment.imageBox).toBeTruthy();
+    if (treatment.backgroundBox && treatment.imageBox) {
+      const bottomOverscanRatio = (treatment.imageBox.bottom - treatment.backgroundBox.bottom) / treatment.backgroundBox.height;
+      expect(treatment.imageBox.top).toBeLessThanOrEqual(treatment.backgroundBox.top + 1);
+      expect(bottomOverscanRatio).toBeGreaterThanOrEqual(0.05);
+      expect(bottomOverscanRatio).toBeLessThanOrEqual(0.07);
+    }
   } else {
     await expect(mobileHeader).toBeHidden();
     await expect(descriptor).toBeHidden();
