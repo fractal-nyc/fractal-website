@@ -1,0 +1,33 @@
+{
+  "assigned_to": null,
+  "branch_links": [
+    {
+      "branch": "frac-25-testing-handbook",
+      "linked_at": "2026-07-24T18:38:44Z",
+      "linked_by": "agent:codex-root",
+      "repo": null
+    }
+  ],
+  "comment_count": 2,
+  "complexity": null,
+  "created_at": "2026-07-24T18:34:09Z",
+  "created_by": "agent:codex-root",
+  "custom_fields": {},
+  "description": "Create a durable testing handbook that labels every test suite/file by category, runner, environment, purpose, command, and evidence output; explain the accuracy hierarchy and known gaps; add guidance for where new tests belong; link the guide from README without moving existing test files.",
+  "done_at": null,
+  "evidence_refs": [],
+  "id": "task_01KYAPG16DAY6CGYMJD52AGN31",
+  "last_event_id": "ev_01KYAQ0P6DZN1Y8EPHX8NPHF4K",
+  "last_status_changed_at": "2026-07-24T18:43:15Z",
+  "priority": "medium",
+  "relationships_out": [],
+  "reopened_count": 0,
+  "schema_version": 1,
+  "short_id": "FRAC-25",
+  "status": "review",
+  "tags": null,
+  "title": "Document and organize the testing system",
+  "type": "chore",
+  "updated_at": "2026-07-24T18:43:15Z",
+  "urgency": null
+}
