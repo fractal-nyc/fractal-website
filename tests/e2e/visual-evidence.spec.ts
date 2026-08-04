@@ -28,6 +28,14 @@ test("representative Home and Library layouts match stable Chromium evidence", a
 
   await page.goto("/library", { waitUntil: "domcontentloaded" });
   await preparePage(page);
+  if (["boundary-1024x768", "desktop-1440x900"].includes(profile.name)) {
+    const introColumn = page.locator("section .max-w-3xl").filter({
+      hasText: "The Art and Science of Campus Building",
+    });
+    const introBox = await introColumn.boundingBox();
+    expect(introBox).not.toBeNull();
+    expect(Math.abs(introBox!.width - 768)).toBeLessThanOrEqual(1);
+  }
   await expect(page).toHaveScreenshot(`chromium-${profile.name}-library.png`, {
     animations: "disabled",
     caret: "hide",

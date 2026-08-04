@@ -45,15 +45,17 @@ export function LibraryPage() {
       <div className="relative z-10">
         {/* Publications heading + description */}
         <section className="flex flex-col items-center justify-start pt-16 md:pt-24 pb-12 md:pb-20 w-full">
-          <div className="page-gutter mx-auto max-w-2xl w-full">
-            <SectorHeader letter="L" name="Library" color="var(--color-house-library-deep)" />
-            <FadeIn delay={0.1}>
-              <div className="text-center">
-                <p className="text-display mb-6 text-center">
-                  The Art and Science of Campus Building
-                </p>
-              </div>
-            </FadeIn>
+          <div className="w-full max-w-7xl mx-auto page-gutter">
+            <div className="max-w-3xl mx-auto">
+              <SectorHeader letter="L" name="Library" color="var(--color-house-library-deep)" />
+              <FadeIn delay={0.1}>
+                <div className="text-center">
+                  <p className="text-display mb-6 text-center">
+                    The Art and Science of Campus Building
+                  </p>
+                </div>
+              </FadeIn>
+            </div>
           </div>
         </section>
 
