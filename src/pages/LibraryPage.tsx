@@ -32,6 +32,7 @@ export function LibraryPage() {
       <div
         ref={bannerRef}
         aria-hidden="true"
+        data-testid="library-desktop-pennants"
         className="pointer-events-none fixed inset-x-4 sm:inset-x-8 md:inset-x-12 lg:inset-x-16 top-28 md:top-36 z-0 hidden md:flex md:justify-between"
         style={{ height: "min(72vh, 660px)" }}
       >
@@ -46,11 +47,14 @@ export function LibraryPage() {
         {/* Publications heading + description */}
         <section className="flex flex-col items-center justify-start pt-16 md:pt-24 pb-12 md:pb-20 w-full">
           <div className="w-full max-w-7xl mx-auto page-gutter">
-            <div className="max-w-3xl mx-auto">
+            <div data-testid="library-intro-column" className="max-w-3xl mx-auto">
               <SectorHeader letter="L" name="Library" color="var(--color-house-library-deep)" />
               <FadeIn delay={0.1}>
                 <div className="text-center">
-                  <p className="text-display mb-6 text-center">
+                  <p
+                    data-testid="library-headline"
+                    className="text-display mb-6 mx-auto text-center lg:max-w-2xl xl:max-w-3xl"
+                  >
                     The Art and Science of Campus Building
                   </p>
                 </div>
