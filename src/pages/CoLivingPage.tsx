@@ -49,26 +49,28 @@ export function CoLivingPage() {
       <div className="relative z-10 min-h-screen flex flex-col items-center justify-start pt-16 md:pt-24 pb-32 md:pb-48 w-full">
         {/* Hero */}
         <section className="w-full">
-          <div className="page-gutter mx-auto max-w-2xl text-center">
+          <div className="page-gutter w-full">
             <SectorHeader
               letter="H"
               name="Fractal Co-Living"
               color="var(--color-house-co-living-deep)"
             />
 
-            <FadeIn>
-              <p className="text-display mb-4 md:mb-6 text-center">
-                Live Near Your Friends
-              </p>
-            </FadeIn>
+            <div className="text-center max-w-4xl mx-auto">
+              <FadeIn>
+                <p className="text-display mb-4 md:mb-6 text-center">
+                  Live Near Your Friends
+                </p>
+              </FadeIn>
 
-            <FadeIn delay={0.15}>
-              <p className="text-subtitle text-foreground max-w-2xl mx-auto">
-                Fractal is an extended network of friends living in shared homes
-                across NYC. Fractal homes often host FractalU classes,
-                gatherings, and serve as social hubs for our community.
-              </p>
-            </FadeIn>
+              <FadeIn delay={0.15}>
+                <p className="text-subtitle text-foreground max-w-2xl mx-auto">
+                  Fractal is an extended network of friends living in shared homes
+                  across NYC. Fractal homes often host FractalU classes,
+                  gatherings, and serve as social hubs for our community.
+                </p>
+              </FadeIn>
+            </div>
           </div>
         </section>
 

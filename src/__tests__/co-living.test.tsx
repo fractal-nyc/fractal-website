@@ -45,6 +45,26 @@ describe("Co-Living page — content", () => {
     expect(screen.getByText(/Live Near Your Friends/i)).toBeTruthy();
   });
 
+  it("uses the Campus-aligned hero column without capping the page gutter", () => {
+    renderCoLiving();
+
+    const heading = screen.getByText("Live Near Your Friends");
+    const heroColumn = heading.closest(".max-w-4xl");
+    expect(heroColumn).toBeTruthy();
+    expect(heroColumn).toHaveClass("mx-auto", "text-center");
+
+    const gutterShell = heroColumn!.closest(".page-gutter");
+    expect(gutterShell).toBeTruthy();
+    expect(gutterShell).toHaveClass("w-full");
+    expect(gutterShell).not.toHaveClass("max-w-2xl");
+
+    const subtitle = screen.getByText(
+      /Fractal is an extended network of friends living in shared homes/,
+    );
+    expect(heroColumn).toContainElement(subtitle);
+    expect(subtitle).toHaveClass("max-w-2xl", "mx-auto");
+  });
+
   it("should have a housing-interest-form Airtable link", () => {
     renderCoLiving();
     const formLink = screen.getByText("housing interest form");
