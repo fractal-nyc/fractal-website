@@ -51,7 +51,7 @@ export function CoLivingPage() {
         <section className="w-full">
           <div className="page-gutter w-full">
             <SectorHeader
-              letter="H"
+              letter="CL"
               name="Fractal Co-Living"
               color="var(--color-house-co-living-deep)"
             />

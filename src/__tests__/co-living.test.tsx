@@ -31,11 +31,10 @@ function renderCoLiving() {
 // ═══════════════════════════════════════════════════════════════════════════
 
 describe("Co-Living page — content", () => {
-  it("should display the SectorHeader with letter H and name 'Fractal Co-Living'", () => {
+  it("should display the SectorHeader with monogram CL and name 'Fractal Co-Living'", () => {
     renderCoLiving();
-    // "H" is the SectorHeader letter — no visible navbar link abbreviates to H
-    // (visible letters are C, C, A, E, E, L), so it is unique to the header.
-    expect(screen.getAllByText("H").length).toBeGreaterThanOrEqual(1);
+    // "CL" is the Co-Living monogram and is unique to the SectorHeader.
+    expect(screen.getByText("CL")).toBeTruthy();
     // The SectorHeader name renders the full "Fractal Co-Living" label.
     expect(screen.getByText("Fractal Co-Living")).toBeTruthy();
   });
