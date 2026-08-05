@@ -44,65 +44,66 @@ export function EventsPage() {
         </div>
       </div>
       <div className="relative z-10 min-h-screen flex flex-col items-center justify-start pt-16 md:pt-24 pb-32 md:pb-48 w-full">
-        <section className="w-full page-gutter mx-auto max-w-2xl text-center">
-          <SectorHeader letter="E" name="Events" color="var(--color-house-events-deep)" />
+        <section className="w-full max-w-7xl mx-auto page-gutter text-center">
+          <div className="max-w-3xl mx-auto">
+            <SectorHeader letter="E" name="Events" color="var(--color-house-events-deep)" />
 
-          <FadeIn delay={0.1}>
-            <p className="text-display mb-6 text-center">
-              See You at Fractal
-            </p>
-            {/*
-              Luma embed: calendar-ID URL from luma.com/nyc-tech > Manage > Embed.
-              Uses the stable `cal-` calendar ID rather than the `nyc-tech` slug.
-            */}
-            <div className="relative w-full max-w-5xl mx-auto rounded-md overflow-hidden border [border-color:var(--accent,currentColor)] bg-foreground/[0.03] h-[80vh] min-h-[600px] md:h-[850px] mb-6">
-              <CornerDecorations size="xs" />
-              <iframe
-                src="https://luma.com/embed/calendar/cal-RHI1LJC6K8JRBLI/events"
-                title="Fractal Tech NYC Events Calendar"
-                className="w-full h-full"
-                style={{ border: "none" }}
-                allowFullScreen
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-              />
-            </div>
-            <a
-              href={LUMA_EVENTS_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="block max-w-3xl mx-auto mb-12 text-label text-foreground/90 text-center underline decoration-foreground/40 hover:decoration-foreground transition-colors"
-            >
-              Luma →
-            </a>
-          </FadeIn>
-
-          <FadeIn delay={0.25}>
-            <p className="text-display mb-6 text-center">
-              Host an event in our space
-            </p>
-            <div className="flex flex-col gap-6 items-center mb-12 md:grid md:grid-cols-[auto_auto] md:gap-x-4 md:gap-y-4 md:items-center md:justify-center md:max-w-4xl md:mx-auto">
-              <p className="text-subtitle text-foreground/90 leading-relaxed text-center md:text-right">
-                To host a free event, add it to our:
+            <FadeIn delay={0.1}>
+              <p className="text-display mb-6 text-center">
+                See You at Fractal
               </p>
-              <Button asChild className="max-w-xs w-full text-center">
-                <a
-                  href={LUMA_EVENTS_URL}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Luma calendar
-                </a>
-              </Button>
-              <p className="text-subtitle text-foreground/90 leading-relaxed text-center md:text-right">
-                To host a paid event email:
-              </p>
-              <Button asChild className="max-w-xs w-full text-center">
-                <a href={CRYSTAL_MAILTO}>crystal@fractalnyc.com</a>
-              </Button>
-            </div>
-          </FadeIn>
+              {/*
+                Luma embed: calendar-ID URL from luma.com/nyc-tech > Manage > Embed.
+                Uses the stable `cal-` calendar ID rather than the `nyc-tech` slug.
+              */}
+              <div className="relative w-full rounded-md overflow-hidden border [border-color:var(--accent,currentColor)] bg-foreground/[0.03] h-[80vh] min-h-[600px] md:h-[850px] mb-6">
+                <CornerDecorations size="xs" />
+                <iframe
+                  src="https://luma.com/embed/calendar/cal-RHI1LJC6K8JRBLI/events"
+                  title="Fractal Tech NYC Events Calendar"
+                  className="w-full h-full"
+                  style={{ border: "none" }}
+                  allowFullScreen
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                />
+              </div>
+              <a
+                href={LUMA_EVENTS_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block mb-12 text-label text-foreground/90 text-center underline decoration-foreground/40 hover:decoration-foreground transition-colors"
+              >
+                Luma →
+              </a>
+            </FadeIn>
 
+            <FadeIn delay={0.25}>
+              <p className="text-display mb-6 text-center">
+                Host an event in our space
+              </p>
+              <div className="flex flex-col gap-6 items-center mb-12 md:grid md:grid-cols-[auto_auto] md:gap-x-4 md:gap-y-4 md:items-center md:justify-center md:mx-auto">
+                <p className="text-subtitle text-foreground/90 leading-relaxed text-center md:text-right">
+                  To host a free event, add it to our:
+                </p>
+                <Button asChild className="max-w-xs w-full text-center">
+                  <a
+                    href={LUMA_EVENTS_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Luma calendar
+                  </a>
+                </Button>
+                <p className="text-subtitle text-foreground/90 leading-relaxed text-center md:text-right">
+                  To host a paid event email:
+                </p>
+                <Button asChild className="max-w-xs w-full text-center">
+                  <a href={CRYSTAL_MAILTO}>crystal@fractalnyc.com</a>
+                </Button>
+              </div>
+            </FadeIn>
+          </div>
         </section>
       </div>
       {/* Mobile-only flanking pennants — bold moment before the footer.
