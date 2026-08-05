@@ -31,11 +31,10 @@ function renderCoLiving() {
 // ═══════════════════════════════════════════════════════════════════════════
 
 describe("Co-Living page — content", () => {
-  it("should display the SectorHeader with letter H and name 'Fractal Co-Living'", () => {
+  it("should display the SectorHeader with monogram CL and name 'Fractal Co-Living'", () => {
     renderCoLiving();
-    // "H" is the SectorHeader letter — no visible navbar link abbreviates to H
-    // (visible letters are C, C, A, E, E, L), so it is unique to the header.
-    expect(screen.getAllByText("H").length).toBeGreaterThanOrEqual(1);
+    // "CL" is the Co-Living monogram and is unique to the SectorHeader.
+    expect(screen.getByText("CL")).toBeTruthy();
     // The SectorHeader name renders the full "Fractal Co-Living" label.
     expect(screen.getByText("Fractal Co-Living")).toBeTruthy();
   });
@@ -43,6 +42,26 @@ describe("Co-Living page — content", () => {
   it("should display the main heading 'Live Near Your Friends'", () => {
     renderCoLiving();
     expect(screen.getByText(/Live Near Your Friends/i)).toBeTruthy();
+  });
+
+  it("uses the Campus-aligned hero column without capping the page gutter", () => {
+    renderCoLiving();
+
+    const heading = screen.getByText("Live Near Your Friends");
+    const heroColumn = heading.closest(".max-w-4xl");
+    expect(heroColumn).toBeTruthy();
+    expect(heroColumn).toHaveClass("mx-auto", "text-center");
+
+    const gutterShell = heroColumn!.closest(".page-gutter");
+    expect(gutterShell).toBeTruthy();
+    expect(gutterShell).toHaveClass("w-full");
+    expect(gutterShell).not.toHaveClass("max-w-2xl");
+
+    const subtitle = screen.getByText(
+      /Fractal is an extended network of friends living in shared homes/,
+    );
+    expect(heroColumn).toContainElement(subtitle);
+    expect(subtitle).toHaveClass("max-w-2xl", "mx-auto");
   });
 
   it("should have a housing-interest-form Airtable link", () => {
