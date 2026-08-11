@@ -8,7 +8,7 @@ import { FadeIn } from "@/components/ui/FadeIn";
 import { FractalPattern } from "@/components/ui/FractalPattern";
 import { HousingMap } from "@/components/sections/HousingMap";
 import { MandelbrotCorners } from "@/components/ui/MandelbrotCorners";
-import { VisitBannerSVG } from "@/components/house/VisitBannerSVG";
+import { CoLivingBannerSVG } from "@/components/house/CoLivingBannerSVG";
 import { HOUSES } from "@/data/houses";
 
 // FRAC-206/219: SVG stroke/fill needs a literal hex (var() doesn't resolve in SVG
@@ -40,10 +40,10 @@ export function CoLivingPage() {
         style={{ height: "min(72vh, 660px)" }}
       >
         <div className="pointer-events-auto h-full w-[24%] md:w-[16%] max-w-[210px]">
-          <VisitBannerSVG />
+          <CoLivingBannerSVG />
         </div>
         <div className="pointer-events-auto h-full w-[24%] md:w-[16%] max-w-[210px]">
-          <VisitBannerSVG />
+          <CoLivingBannerSVG />
         </div>
       </div>
       <div className="relative z-10 min-h-screen flex flex-col items-center justify-start pt-16 md:pt-24 pb-32 md:pb-48 w-full">
@@ -171,10 +171,10 @@ export function CoLivingPage() {
         className="flex md:hidden items-end justify-center gap-3 px-3 pt-8 pb-12"
       >
         <div className="w-[45%] aspect-[123/368]">
-          <VisitBannerSVG />
+          <CoLivingBannerSVG />
         </div>
         <div className="w-[45%] aspect-[123/368]">
-          <VisitBannerSVG />
+          <CoLivingBannerSVG />
         </div>
       </div>
       <Footer />

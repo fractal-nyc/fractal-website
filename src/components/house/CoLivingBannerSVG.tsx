@@ -1,11 +1,11 @@
-interface EducationBannerSVGProps {
+interface CoLivingBannerSVGProps {
   className?: string;
 }
 
-export function EducationBannerSVG({ className = "" }: EducationBannerSVGProps) {
+export function CoLivingBannerSVG({ className = "" }: CoLivingBannerSVGProps) {
   return (
     <img
-      src="/images/banners/education-banner.svg"
+      src="/images/banners/co-living-banner.svg"
       alt=""
       aria-hidden="true"
       draggable={false}
