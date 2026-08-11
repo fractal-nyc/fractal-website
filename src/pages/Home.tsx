@@ -10,8 +10,8 @@ import { MandelbrotCorners } from "@/components/ui/MandelbrotCorners";
 import { SECTIONS } from "@/data/houses";
 import { useEffect } from "react";
 
-// Story's single gold identity accent (matches the Navbar Story link + the
-// octahedron Story face). Used only as the SectorHeader letter/label tint.
+// Story's single gold identity accent matches the octahedron Story face. Used
+// only as the SectorHeader letter/label tint.
 const STORY_COLOR = SECTIONS.story.accent;
 
 // The People accent marks this invitation into the Fractal community. The

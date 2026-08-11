@@ -89,15 +89,11 @@ export function useTapHandlers(onTap: () => void) {
 // ---------------------------------------------------------------------------
 // Nav node definitions — 6 nodes on octahedron vertices
 // ---------------------------------------------------------------------------
-// FRAC-5 / FRAC-161 / FRAC-36 / FRAC-47: Political Club is hidden from the
-// navbar (FRAC-32) and its banner grid card stays hidden (FRAC-161). On the
-// hero octahedron, vertex 4 was previously the FRAC-36 "Coming Soon"
-// placeholder for Political Club. FRAC-47 converts that slot to a Story
-// node — fully active, navigable to /story, in the Story identity color
-// (matches Navbar.tsx Story link + StoryPage STORY_COLOR). FRAC-205 sources
-// that color from SECTIONS.story.accent instead of a literal. The
-// geometry still reads as complete (6 vertices, 6 nodes); Political Club
-// remains hidden from the navbar.
+// Political Club remains hidden from the navbar and has no outer nav node.
+// The six octahedron vertices instead map to the six current destinations in
+// heroNavNodes.ts, including separate Accelerator and FractalU links that share
+// the Education palette. Story and Political Club remain represented as face
+// textures independently of those vertex nodes.
 
 // FRAC-181: OUTER_NAV_NODES + NavNode live in heroNavNodes.ts (three-free) so
 // Hero.tsx can import them without dragging the three.js chunk onto the entry
@@ -377,7 +373,7 @@ const FACE_BANNER_IMAGES: Record<string, string> = {
 // canonical accent each in SECTIONS; those accents provide their placeholder
 // face colors until the banner textures load.
 // `forum` is intentionally desaturated (muted grey-tan) to read as
-// de-emphasized — it has no nav node and no banner texture, so the literal
+// de-emphasized. It has a face texture but no nav node, so the literal fallback
 // is kept as a deliberate stylistic exception rather than a palette identity.
 const FACE_SECTION_COLORS: Record<string, string> = {
   story:        SECTIONS.story.accent,
