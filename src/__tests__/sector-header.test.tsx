@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import { describe, it, expect, vi } from "vitest";
 import { SectorHeader } from "@/components/layout/SectorHeader";
-import { SECTIONS } from "@/data/houses";
+import { HOUSES, SECTIONS } from "@/data/houses";
 
 // ═══════════════════════════════════════════════════════════════════════════
 // Mock Framer Motion — SectorHeader uses FadeIn which wraps motion.div.
@@ -24,9 +24,7 @@ const sections = [
   // Library (letter "L").
   { letter: "CL", name: "Co-Living", color: "#4F5B0D" },
   { letter: "E", name: "Events", color: "#CA5C4E" },
-  // Education/Accelerator no longer have internal pages (they link out to
-  // fractalu.nyc / fractalaccelerator.com), so no page renders a SectorHeader
-  // for them — dropped from these fixtures.
+  { letter: "E", name: "Education", color: HOUSES.find(({ id }) => id === "school")!.palette.light },
   { letter: "PC", name: "Political Club", color: "#82AFA2" },
   { letter: "L", name: "Library", color: "#A33E6F" },
   { letter: "P", name: "People", color: SECTIONS.people.accent },

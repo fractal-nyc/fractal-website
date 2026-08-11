@@ -8,29 +8,15 @@ import { CampusPage } from "@/pages/CampusPage";
 import { PoliticalClubPage } from "@/pages/PoliticalClubPage";
 import { LibraryPage } from "@/pages/LibraryPage";
 import { PeoplePage } from "@/pages/PeoplePage";
+import { EducationPage } from "@/pages/EducationPage";
 
 import NotFound from "@/pages/not-found";
-
-const FRACTALU_URL = "https://www.fractalu.nyc/";
-const ACCELERATOR_URL = "https://www.fractalaccelerator.com/";
 
 function ScrollToTop() {
   const [location] = useLocation();
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [location]);
-  return null;
-}
-
-/**
- * Sends the browser to an external site. The Accelerator and FractalU (formerly
- * Education) pages were removed — those sectors now live on their own standalone
- * sites — but old internal paths still redirect there so bookmarks resolve.
- */
-function ExternalRedirect({ to }: { to: string }) {
-  useEffect(() => {
-    window.location.replace(to);
-  }, [to]);
   return null;
 }
 
@@ -45,13 +31,11 @@ function Router() {
       <Route path="/political-club" component={PoliticalClubPage} />
       <Route path="/library" component={LibraryPage} />
       <Route path="/people" component={PeoplePage} />
+      <Route path="/education" component={EducationPage} />
 
-      {/* Accelerator and FractalU (Education) have no internal page — the nav and
-          octahedron link straight to their standalone sites. These routes exist
-          only so old/direct URLs bounce out to the same place. */}
-      <Route path="/accelerator">{() => <ExternalRedirect to={ACCELERATOR_URL} />}</Route>
-      <Route path="/education">{() => <ExternalRedirect to={FRACTALU_URL} />}</Route>
-      <Route path="/new-liberal-arts">{() => <ExternalRedirect to={FRACTALU_URL} />}</Route>
+      {/* Legacy Education paths now lead to the first-party destination hub. */}
+      <Route path="/accelerator">{() => <Redirect to="/education" />}</Route>
+      <Route path="/new-liberal-arts">{() => <Redirect to="/education" />}</Route>
 
       {/* Internal redirects from old URLs after the content-port renames:
           Visit → Co-Living, Publications → Library, Story folded into Home. */}

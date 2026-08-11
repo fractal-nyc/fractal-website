@@ -35,6 +35,7 @@ import { PoliticalClubPage } from "@/pages/PoliticalClubPage";
 import { LibraryPage } from "@/pages/LibraryPage";
 import { PeoplePage } from "@/pages/PeoplePage";
 import { ProtocolPage } from "@/pages/ProtocolPage";
+import { EducationPage } from "@/pages/EducationPage";
 
 // ---------------------------------------------------------------------------
 // Helper: render a page component at the given route
@@ -58,6 +59,7 @@ const pages = [
   { name: "CampusPage", Component: CampusPage, path: "/campus" },
   { name: "CoLivingPage", Component: CoLivingPage, path: "/co-living" },
   { name: "EventsPage", Component: EventsPage, path: "/events" },
+  { name: "EducationPage", Component: EducationPage, path: "/education" },
   { name: "PoliticalClubPage", Component: PoliticalClubPage, path: "/political-club" },
   { name: "LibraryPage", Component: LibraryPage, path: "/library" },
   { name: "PeoplePage", Component: PeoplePage, path: "/people" },
@@ -112,6 +114,7 @@ describe("Route paths match expected URLs", () => {
     { path: "/campus", label: "Campus" },
     { path: "/co-living", label: "Co-Living" },
     { path: "/events", label: "Events" },
+    { path: "/education", label: "Education" },
     { path: "/political-club", label: "Political Club" },
     { path: "/library", label: "Library" },
     { path: "/people", label: "People" },

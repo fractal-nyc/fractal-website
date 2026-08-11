@@ -28,15 +28,13 @@ export interface NavNode {
 // The six octahedron vertices map to the six main destinations. Story folded
 // into Home so its vertex became the Accelerator; the decorative Story FACE
 // texture is unaffected (faces and vertex nodes are independent — see
-// OctahedronHero). Two nodes are EXTERNAL: FractalU and the Accelerator link
-// out to their standalone sites rather than an internal page. Hero's
-// handleNavigate opens absolute-URL routes in a new tab, so no WebGL change is
-// needed — the nodes still carry their destination in `route`.
+// OctahedronHero). FractalU and Accelerator remain distinct visible nodes but
+// share the internal Education hub route and canonical Education palette.
 export const OUTER_NAV_NODES: NavNode[] = [
   { label: "Co-Living",   route: "/co-living",                         color: housePalette("neighborhood"), vertexIndex: 3 },
   { label: "Events",      route: "/events",                            color: housePalette("events"),       vertexIndex: 2 },
   { label: "Campus",      route: "/campus",                            color: housePalette("campus"),       vertexIndex: 0 },
-  { label: "FractalU",    route: "https://www.fractalu.nyc/",          color: housePalette("school"),       vertexIndex: 1 },
+  { label: "FractalU",    route: "/education",                         color: housePalette("school"),       vertexIndex: 1 },
   { label: "Library",     route: "/library",                           color: housePalette("lab"),          vertexIndex: 5 },
-  { label: "Accelerator", route: "https://www.fractalaccelerator.com/", color: housePalette("school"),      vertexIndex: 4 },
+  { label: "Accelerator", route: "/education",                         color: housePalette("school"),       vertexIndex: 4 },
 ];

@@ -4,6 +4,7 @@ export const RENDERED_ROUTES = [
   "/co-living",
   "/campus",
   "/events",
+  "/education",
   "/political-club",
   "/library",
   "/people",
@@ -16,4 +17,6 @@ export const INTERNAL_REDIRECTS = [
   { from: "/publications", to: "/library" },
   { from: "/neighborhood", to: "/co-living" },
   { from: "/lab", to: "/library" },
+  { from: "/accelerator", to: "/education" },
+  { from: "/new-liberal-arts", to: "/education" },
 ];

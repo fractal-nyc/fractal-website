@@ -21,12 +21,6 @@ export interface SearchResult {
 // Static data: pages and concept aliases
 // ---------------------------------------------------------------------------
 
-// FractalU (formerly the Education page) and the Accelerator have no internal
-// page — they link out to their standalone sites. Search results for them carry
-// `external: true` so Hero's navigateTo opens them in a new tab.
-const FRACTALU_URL = "https://www.fractalu.nyc/";
-const ACCELERATOR_URL = "https://www.fractalaccelerator.com/";
-
 interface PageEntry {
   name: string;
   href: string;
@@ -39,8 +33,7 @@ const PAGES: PageEntry[] = [
   { name: "Campus", href: "/campus", keywords: ["111 conselyea", "williamsburg", "coworking", "space", "rooftop"] },
   { name: "Visit", href: "/visit", keywords: ["neighborhood", "coliving", "co-living", "brooklyn", "mckibbin", "housing"] },
   { name: "Events", href: "/events", keywords: ["hackathon", "ai hacks", "singularity conference", "luma", "sidequest"] },
-  { name: "FractalU", href: FRACTALU_URL, external: true, keywords: ["new liberal arts", "liberal arts", "fractal u", "fractal university", "university", "school", "education", "courses", "classes"] },
-  { name: "Accelerator", href: ACCELERATOR_URL, external: true, keywords: ["accelerator", "ai", "cohort", "startup", "founders", "program"] },
+  { name: "Education", href: "/education", keywords: ["education", "school", "fractal u", "fractalu", "fractal university", "university", "accelerator", "fractal accelerator", "ai", "programs", "courses", "classes"] },
   { name: "Political Club", href: "/political-club", keywords: ["maximum new york", "maximum nyc", "civic", "government", "forum", "manhattan institute"] },
   { name: "Publications", href: "/publications", keywords: ["lab", "research", "writing", "publishing", "fractal labs"] },
   { name: "People", href: "/people", keywords: ["team", "members", "network", "who"] },
@@ -51,11 +44,19 @@ const PAGES: PageEntry[] = [
 const CONCEPT_ALIASES: { term: string; results: SearchResult[] }[] = [
   {
     term: "fractal u",
-    results: [{ type: "page", title: "FractalU", subtitle: "Fractal University", href: FRACTALU_URL, external: true }],
+    results: [{ type: "page", title: "Education", subtitle: "Browse FractalU courses", href: "/education" }],
   },
   {
     term: "fractal university",
-    results: [{ type: "page", title: "FractalU", subtitle: "Fractal University", href: FRACTALU_URL, external: true }],
+    results: [{ type: "page", title: "Education", subtitle: "Browse FractalU courses", href: "/education" }],
+  },
+  {
+    term: "accelerator",
+    results: [{ type: "page", title: "Education", subtitle: "Visit Fractal Accelerator", href: "/education" }],
+  },
+  {
+    term: "fractal accelerator",
+    results: [{ type: "page", title: "Education", subtitle: "Visit Fractal Accelerator", href: "/education" }],
   },
   {
     term: "maximum new york",
