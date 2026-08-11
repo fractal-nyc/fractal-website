@@ -190,13 +190,13 @@ The palette reference records element-specific contrast rather than implying eve
 
 ### 3D-scene palette (out-of-token)
 
-The WebGL hero scenes carry their own material/light palette that lives **deliberately outside** the 2D token system: Three.js materials and lights set color in JS props, where CSS custom properties don't resolve, so these are raw hex literals by necessity, not drift. They're sanctioned exceptions, grandfathered in `scripts/design-conformance.baseline.json` (this section is the *intent* half of that baseline entry). They never appear in 2D CSS — reach for them only inside the `three/` scene code.
+The WebGL hero scenes combine canonical data-sourced accents with a small material/light palette that lives **deliberately outside** the 2D token system. The two visible gold roles come from `SECTIONS`: Story supplies the lighter streaming/highlight role and People supplies the darker connector/structure/fallback role. Three.js materials and lights still set their subordinate depth colors in JS props, where CSS custom properties don't resolve; those remaining raw hex literals are sanctioned exceptions, grandfathered in `scripts/design-conformance.baseline.json` (this section is the *intent* half of that baseline entry). They never appear in 2D CSS — reach for them only inside the `three/` scene code.
 
 | Source | Colors | Role |
 |---|---|---|
-| `OctahedronHero.tsx` | `#e8e0d0` `#e0c880` `#ddb866` `#cc9955` `#c4a265` `#bb8844` `#8a7a6a` | octahedron gold/sand face-material tints |
+| `OctahedronHero.tsx` | `#e8e0d0` `#bb8844` `#cc9955` `#8a7a6a` | low-opacity shell base/emissive depth tints and the deferred Political Club face placeholder |
 | `FractalCityScene.tsx` | `#ffaa66` `#ffcc88` `#f5f0ea` `#aabbcc` `#ffffff` | scene point/directional lights + ambient (`#aabbcc` is the cool fill `directionalLight`) |
-| `heroNavNodes.ts` | `#c4a265` | `PALETTE_FALLBACK` — the model gold used when a section/house color is missing |
+| `heroNavNodes.ts` | `SECTIONS.story.accent` `SECTIONS.people.accent` | canonical visible hero roles: Story for streaming/highlight; People for connector/structure and `PALETTE_FALLBACK` |
 
 ## Typography
 

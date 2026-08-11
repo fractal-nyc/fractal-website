@@ -99,7 +99,13 @@ export function useTapHandlers(onTap: () => void) {
 // Hero.tsx can import them without dragging the three.js chunk onto the entry
 // chunk. The internal rendering loop near the bottom of this file imports them
 // below.
-import { OUTER_NAV_NODES, type NavNode, housePalette, PALETTE_FALLBACK } from "./heroNavNodes";
+import {
+  HERO_GOLD_ROLES,
+  OUTER_NAV_NODES,
+  type NavNode,
+  housePalette,
+  PALETTE_FALLBACK,
+} from "./heroNavNodes";
 
 // ---------------------------------------------------------------------------
 // Octahedron vertex generation
@@ -122,72 +128,6 @@ const OCTA_EDGES: [number, number][] = [
   [1, 2], [1, 3], [1, 4], [1, 5],
   [2, 4], [2, 5], [3, 4], [3, 5],
 ];
-
-// ---------------------------------------------------------------------------
-// Connection lines between nested octahedra
-// ---------------------------------------------------------------------------
-
-function NestedOctaLines({
-  outerVerts,
-  innerVerts,
-}: {
-  outerVerts: THREE.Vector3[];
-  innerVerts: THREE.Vector3[];
-}) {
-  const geometry = useMemo(() => {
-    const positions: number[] = [];
-
-    for (const ov of outerVerts) {
-      for (const iv of innerVerts) {
-        positions.push(ov.x, ov.y, ov.z);
-        positions.push(iv.x, iv.y, iv.z);
-      }
-    }
-
-    for (let i = 0; i < outerVerts.length; i += 2) {
-      positions.push(outerVerts[i].x, outerVerts[i].y, outerVerts[i].z);
-      positions.push(outerVerts[i + 1].x, outerVerts[i + 1].y, outerVerts[i + 1].z);
-    }
-
-    const geo = new THREE.BufferGeometry();
-    geo.setAttribute("position", new THREE.Float32BufferAttribute(positions, 3));
-    return geo;
-  }, [outerVerts, innerVerts]);
-
-  return (
-    <lineSegments geometry={geometry}>
-      <lineBasicMaterial color="#c4a265" transparent opacity={0.25} />
-    </lineSegments>
-  );
-}
-
-// Edge lines for an octahedron
-function OctaEdgeLines({
-  verts,
-  color,
-  opacity,
-}: {
-  verts: THREE.Vector3[];
-  color: string;
-  opacity: number;
-}) {
-  const geometry = useMemo(() => {
-    const positions: number[] = [];
-    for (const [i, j] of OCTA_EDGES) {
-      positions.push(verts[i].x, verts[i].y, verts[i].z);
-      positions.push(verts[j].x, verts[j].y, verts[j].z);
-    }
-    const geo = new THREE.BufferGeometry();
-    geo.setAttribute("position", new THREE.Float32BufferAttribute(positions, 3));
-    return geo;
-  }, [verts]);
-
-  return (
-    <lineSegments geometry={geometry}>
-      <lineBasicMaterial color={color} transparent opacity={opacity} />
-    </lineSegments>
-  );
-}
 
 // ---------------------------------------------------------------------------
 // Animated text streaming along edges (canvas texture on tubes)
@@ -1111,16 +1051,24 @@ export function FractalObject({
       </mesh>
 
       {/* Streaming text along outer octahedron edges */}
-      <StreamingEdgeSet verts={outerVerts} color="#e0c880" opacity={0.85} />
+      <StreamingEdgeSet
+        verts={outerVerts}
+        color={HERO_GOLD_ROLES.streamingHighlight}
+        opacity={0.85}
+      />
 
       {/* Streaming text along inner octahedron edges */}
-      <StreamingEdgeSet verts={innerVerts} color="#ddb866" opacity={0.7} />
+      <StreamingEdgeSet
+        verts={innerVerts}
+        color={HERO_GOLD_ROLES.streamingHighlight}
+        opacity={0.7}
+      />
 
       {/* Streaming text along cross-connections */}
       <StreamingCrossConnections
         outerVerts={outerVerts}
         innerVerts={innerVerts}
-        color="#e0c880"
+        color={HERO_GOLD_ROLES.connectorStructural}
         opacity={0.65}
       />
 
