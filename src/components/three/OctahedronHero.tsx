@@ -373,10 +373,9 @@ const FACE_BANNER_IMAGES: Record<string, string> = {
 };
 
 // Section colors. House-backed faces derive from canonical palette pairs
-// (FRAC-24). `people` is not a House but carries a canonical pair in SECTIONS
-// (FRAC-204) — read its real hex from there. `story` is also a non-house
-// section: FRAC-205 sources its single accent from SECTIONS.story.accent (the
-// face placeholder color shown until the banner texture loads).
+// (FRAC-24). `people` and `story` are non-house cream sections with one
+// canonical accent each in SECTIONS; those accents provide their placeholder
+// face colors until the banner textures load.
 // `forum` is intentionally desaturated (muted grey-tan) to read as
 // de-emphasized — it has no nav node and no banner texture, so the literal
 // is kept as a deliberate stylistic exception rather than a palette identity.
@@ -388,7 +387,7 @@ const FACE_SECTION_COLORS: Record<string, string> = {
   school:       housePalette("school"),
   forum:        "#8a7a6a",
   lab:          housePalette("lab"),
-  people:       SECTIONS.people.light,
+  people:       SECTIONS.people.accent,
 };
 
 // Map octahedron face index → section key (8 faces, 8 unique sections)

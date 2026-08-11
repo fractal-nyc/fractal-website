@@ -9,8 +9,7 @@ import { setHeroNavHover, useHeroNavHover } from "@/hooks/useHeroNavHover";
 // FRAC-24: Per-link colors derive from the canonical House palette where a
 // House exists. The one non-house link left in the nav (People) has no House
 // entry, so it reads from the SECTIONS record instead. House links default to
-// `.light`; Political Club uses `.deep` because the link's visual identity has
-// always been the deeper burgundy.
+// `.light`; Political Club uses `.deep` because its page uses the deep surface.
 // (Story used to be a link too, but it folded into Home in the content port.)
 function houseColor(route: string, prefer: "light" | "deep" = "light"): string {
   const palette = HOUSES.find((h) => h.route === route)?.palette;
@@ -18,9 +17,8 @@ function houseColor(route: string, prefer: "light" | "deep" = "light"): string {
 }
 
 // Accelerator and FractalU (formerly Education) have no internal page — they
-// link out to their standalone sites. The color still comes from the retained
-// `accelerator` / `school` house entries (looked up by their old internal
-// route), so those nav letters keep their house tint.
+// link out to their standalone sites. Both are programs within the Education
+// house and therefore share its canonical pair until the internal hub lands.
 const FRACTALU_URL = "https://www.fractalu.nyc/";
 const ACCELERATOR_URL = "https://www.fractalaccelerator.com/";
 
@@ -38,12 +36,12 @@ interface SectionLink {
 const sectionLinks: SectionLink[] = [
   { name: "Campus",         href: "/campus",            color: houseColor("/campus"),                    colorDeep: houseColor("/campus", "deep") },
   { name: "Co-Living",      href: "/co-living",         color: houseColor("/co-living"),                 colorDeep: houseColor("/co-living", "deep") },
-  { name: "Accelerator",    href: ACCELERATOR_URL,      color: houseColor("/accelerator"),               colorDeep: houseColor("/accelerator", "deep"), external: true },
+  { name: "Accelerator",    href: ACCELERATOR_URL,      color: houseColor("/education"),                 colorDeep: houseColor("/education", "deep"), external: true },
   { name: "Events",         href: "/events",            color: houseColor("/events"),                    colorDeep: houseColor("/events", "deep") },
   { name: "FractalU",       href: FRACTALU_URL,         color: houseColor("/education"),                 colorDeep: houseColor("/education", "deep"), external: true },
   { name: "Political Club", href: "/political-club",    color: houseColor("/political-club", "deep"),    colorDeep: houseColor("/political-club", "deep") },
   { name: "Library",        href: "/library",           color: houseColor("/library"),                   colorDeep: houseColor("/library", "deep") },
-  { name: "People",         href: "/people",            color: SECTIONS.people.light,                    colorDeep: SECTIONS.people.deep },
+  { name: "People",         href: "/people",            color: SECTIONS.people.accent,                   colorDeep: SECTIONS.people.accent },
 ];
 
 // Renders an internal wouter <Link> or, for external destinations, a plain

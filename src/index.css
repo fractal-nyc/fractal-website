@@ -26,41 +26,27 @@
      (charcoal) directly — no per-house *-foreground sibling tokens. Cream and
      charcoal are page-agnostic. The FRAC-42 paired-foreground convention is
      fully retired; FRAC-50 swept the last consumer (Campus). */
-  /* Library (formerly "Publications") — renamed with the page. Same pink pair. */
-  --color-house-library-light: #E870A0;
-  --color-house-library-deep: #C44878;
+  --color-house-co-living-light: #AEB175;
+  --color-house-co-living-deep: #4F5B0D;
 
-  --color-house-campus-light: #2E6B4A;
+  --color-house-events-light: #E5A794;
+  --color-house-events-deep: #CA5C4E;
+
+  --color-house-campus-light: #51805C;
   --color-house-campus-deep: #1A3A2E;
 
-  --color-house-education-light: #C41E20;
-  --color-house-education-deep: #5C1010;
+  --color-house-education-light: #C51C15;
+  --color-house-education-deep: #4C0000;
 
-  /* Co-Living (formerly "Visit") — renamed with the page. Same olive pair. */
-  --color-house-co-living-light: #889460;
-  --color-house-co-living-deep: #4A5A30;
+  --color-house-library-light: #C889AB;
+  --color-house-library-deep: #A33E6F;
 
-  --color-house-events-light: #D4857A;
-  --color-house-events-deep: #C13B2A;
+  --color-house-political-club-light: #82AFA2;
+  --color-house-political-club-deep: #084247;
 
-  --color-house-political-club-light: #C83858;
-  --color-house-political-club-deep: #6E1830;
-
-  /* Accelerator — a new house (the Fractal AI Accelerator page). Rendered in
-     the Fractal NYC editorial language like every other house, so it takes a
-     house color pair, not the separate burgundy Accelerator brand. */
-  --color-house-accelerator-light: #8E2A1E;
-  --color-house-accelerator-deep: #641E28;
-
-  /* Non-house section palette tokens (FRAC-204). Section pages that aren't
-     Houses but still carry a light/deep pair. Mirrors SECTIONS in
-     src/data/houses.ts (kept in lockstep by the section-tokens-sync test).
-     People is deferred from launch but tokenized and launch-ready. */
-  --color-section-people-light: #C49040;
-  --color-section-people-deep: #B65D19;
-
-  /* FRAC-205: Story is a cream non-house section with a single gold identity
-     accent (no light/deep flood). Mirrors SECTIONS.story.accent in houses.ts. */
+  /* Story and People are cream non-house sections with one accent each.
+     Mirrors SECTIONS in houses.ts; section-tokens-sync keeps them aligned. */
+  --color-section-people: #C49040;
   --color-section-story: #D4BA58;
 
   --radius-sm: 0.25rem;
