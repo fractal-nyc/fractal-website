@@ -94,7 +94,9 @@ describe("canonical house banner artwork", () => {
       expect(label?.textContent).toBe(banner.label);
       expect(monogram?.getAttribute("fill")).toBe("#C49040");
       expect(monogram?.textContent).toBe(banner.monogram);
-      expect(source).toMatch(/data:font\/ttf;base64,[A-Za-z0-9+/=]+/);
+      expect(source).toMatch(
+        /src:url\(data:font\/ttf;base64,[A-Za-z0-9+/]+={0,2}\) format\('truetype'\)/,
+      );
       expect(source).not.toContain("#CE8B2D");
     });
 
