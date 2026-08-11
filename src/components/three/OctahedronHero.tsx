@@ -91,8 +91,8 @@ export function useTapHandlers(onTap: () => void) {
 // ---------------------------------------------------------------------------
 // Political Club remains hidden from the navbar and has no outer nav node.
 // The six octahedron vertices instead map to the six current destinations in
-// heroNavNodes.ts, including separate Accelerator and FractalU links that share
-// the Education palette. Story and Political Club remain represented as face
+// heroNavNodes.ts, including separate Accelerator and FractalU labels that share
+// the Education palette and route. Story and Political Club remain represented as face
 // textures independently of those vertex nodes.
 
 // FRAC-181: OUTER_NAV_NODES + NavNode live in heroNavNodes.ts (three-free) so
@@ -974,7 +974,13 @@ export function FractalObject({
   //     octant tilts on X toward the camera — sign follows the vertex's Y sign.
   const navTargets = useMemo(() => {
     const m = new Map<string, { y: number | null; x: number }>();
-    for (const node of OUTER_NAV_NODES) {
+    // Duplicate routes deliberately choose one representative pose. Education
+    // prioritizes the Accelerator vertex because Accelerator is the hub's first
+    // destination; both Education nodes still glow via their shared route.
+    const targetNodes = OUTER_NAV_NODES.filter(
+      (node) => node.route !== "/education" || node.label === "Accelerator",
+    );
+    for (const node of targetNodes) {
       const v = outerVerts[node.vertexIndex];
       const horiz = Math.hypot(v.x, v.z);
       if (horiz < 1e-3) {
@@ -1078,7 +1084,7 @@ export function FractalObject({
       {/* 6 house nav nodes on outer octahedron vertices */}
       {OUTER_NAV_NODES.map((node) => (
         <NavNodeMesh
-          key={node.route}
+          key={`${node.vertexIndex}:${node.label}`}
           position={outerVerts[node.vertexIndex]}
           node={node}
           onNavigate={onNavigate}

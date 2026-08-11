@@ -87,9 +87,13 @@ The longest page; everything below is in `Campus.tsx`:
 
 - Headline *"See You at Fractal"*, *"Host an event in our space"*; Luma calendar embed + link; hosting instructions; `crystal@fractalnyc.com` — all in the page file. (The *"Stay in the Loop"* heading and its Discord button were removed.)
 
-### FractalU / Accelerator — external, no page
+### Education hub (`/education`)
 
-The **FractalU** (formerly Education) and **Accelerator** sectors no longer have an internal page or copy in this repo. Their nav links and octahedron nodes point out to standalone sites — `https://www.fractalu.nyc/` and `https://www.fractalaccelerator.com/`. To change where they point, edit the `FRACTALU_URL` / `ACCELERATOR_URL` constants in `src/components/layout/Navbar.tsx`, `src/App.tsx`, `src/hooks/use-global-search.ts`, and the two external `route` URLs in `src/components/three/heroNavNodes.ts`. Their house tokens and nav-letter colors still live in `src/data/houses.ts`.
+- Introductory hub copy and card layout: `src/pages/EducationPage.tsx`.
+- Fractal Accelerator and FractalU labels, stable descriptions, domains, actions, and live URLs: `src/data/education.ts`.
+- Education house palette and related external-link projection: `src/data/houses.ts`.
+
+Keep cohort dates, tuition, applications, and the changing FractalU course catalog on the official external sites rather than copying them into this hub. Both destination cards are first-party text previews with direct new-tab links; neither external site is embedded.
 
 ### Publications (`/publications` — `src/pages/PublicationsPage.tsx`)
 
