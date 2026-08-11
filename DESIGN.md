@@ -105,7 +105,7 @@ Two foundations:
 1. **Mobile-first, 375px baseline.** Every page and component is designed at phone width first. Wider viewports are progressive enhancement.
 2. **A quiet base so the houses can be loud.** The base is deliberately neutral — cream surfaces, charcoal text, one scheme, no dark mode — so the accent house colors carry the brand and signal Fractal's different sectors. There are so many pops of color from the houses that the base is kept simple, letting those accents read. Hierarchy comes from typography, contrast, and whitespace; color comes from the houses.
 
-Political Club is reachable by direct route (`/political-club`) but hidden from the navbar via the `hideFromNavbar` flag in `src/data/houses.ts` (a companion `hideFromBanners` flag drives the `VISIBLE_HOUSES` filter). It is the one house with no per-page banner SVG of its own.
+Political Club is reachable by direct route (`/political-club`) but hidden from the navbar via the `hideFromNavbar` flag in `src/data/houses.ts` (a companion `hideFromBanners` flag drives the `VISIBLE_HOUSES` filter). Its complete per-page banner asset and wrapper are prepared for a future slot but intentionally remain unmounted.
 
 Political Club (and the People page) are intentionally **not surfaced at initial launch**, but they remain fully in the codebase and on the token system — Political Club carries its `house-political-club-{light,deep}` pair like every other house — so both are launch-ready the moment they're re-enabled, with no token or styling work left to do.
 
