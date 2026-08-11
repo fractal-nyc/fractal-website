@@ -43,8 +43,8 @@ export interface House {
    * Canonical light/deep color pair. FRAC-24 single source of truth.
    * The pair is the unit; which member is bg vs. accent is a per-surface
    * decision. Most houses use `light` as page bg and `deep` as accent.
-   * The Political Club (forum) and Liberal Arts (school) invert this:
-   * their page bg is `deep` and the lighter color is the accent.
+   * Political Club (forum) inverts this: its page bg is `deep` and the lighter
+   * color is the accent. Education currently routes to external destinations.
    */
   palette: HousePalette;
   tagline: string; // one-line quote/tagline
