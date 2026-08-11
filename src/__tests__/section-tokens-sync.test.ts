@@ -14,14 +14,9 @@ import { SECTIONS } from "@/data/houses";
 // tokens instead of hardcoding hex. These two sources can silently diverge.
 // This test asserts they stay in lockstep, exactly like the house-token check.
 //
-// FRAC-205: section entries are HETEROGENEOUS in shape. A "flooded" section
-// (People) carries a `{ light, deep }` pair → tokens
-// `--color-section-<slug>-{light,deep}`. A "cream" section (Story) carries a
-// single `{ accent }` → token `--color-section-<slug>` (no variant suffix).
-// This test handles both: it derives the EXPECTED token set from each SECTIONS
-// entry's actual keys, asserts every expected token exists and is hex-equal,
-// and asserts there are no orphan section tokens. Non-vacuous: a drifted hex,
-// a missing token, or an extra token all fail.
+// Story and People are both cream sections with one `{ accent }`, mirrored by
+// `--color-section-<slug>` (no variant suffix). This test derives the expected
+// token set from SECTIONS, asserts exact values, and rejects orphan variants.
 // ═══════════════════════════════════════════════════════════════════════════
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -31,13 +26,8 @@ const css = readFileSync(cssPath, "utf8");
 /**
  * Parse every section token from index.css into a `tokenName → hex` map.
  *
- * Matches BOTH shapes:
- *   - pair tokens   `--color-section-<slug>-<light|deep>: #HEX;`
- *   - single tokens `--color-section-<slug>: #HEX;`              (e.g. story)
- *
- * The slug body forbids the trailing `-light`/`-deep` so a pair token never
- * also matches as a (slug = "people-light") single token. Token names are
- * stored WITHOUT the `--color-section-` prefix.
+ * Matches both canonical single tokens and any stale `-light`/`-deep` variants
+ * so the orphan assertion below catches accidental reintroduction of a pair.
  */
 function parseSectionTokens(source: string): Map<string, string> {
   const tokens = new Map<string, string>();
@@ -54,8 +44,6 @@ function parseSectionTokens(source: string): Map<string, string> {
 
 /**
  * Flatten a SECTIONS entry into `tokenName → hex` expectations.
- *   - `{ light, deep }` → `<slug>-light`, `<slug>-deep`
- *   - `{ accent }`      → `<slug>`
  */
 function expectedTokensFor(
   slug: string,
@@ -77,12 +65,13 @@ const allExpected: Array<[string, string]> = sectionKeys.flatMap((key) =>
 );
 
 describe("section token sync (houses.ts SECTIONS ↔ index.css)", () => {
-  it("defines exactly one token per SECTIONS variant (across both shapes)", () => {
-    expect(sectionKeys.length).toBeGreaterThan(0);
-    // Sanity: SECTIONS must currently exercise BOTH shapes so the parser /
-    // mapping logic above is genuinely covered (keeps this test non-vacuous).
-    expect(allExpected.length).toBeGreaterThan(sectionKeys.length);
-    expect(tokens.size).toBe(allExpected.length);
+  it("defines exactly the Story and People single accents", () => {
+    expect(SECTIONS).toEqual({
+      people: { accent: "#C49040" },
+      story: { accent: "#D4BA58" },
+    });
+    expect(allExpected).toHaveLength(2);
+    expect(tokens.size).toBe(2);
   });
 
   for (const key of sectionKeys) {
