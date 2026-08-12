@@ -3,8 +3,6 @@ export interface EducationDestination {
   name: string;
   houseLinkLabel: string;
   url: string;
-  domain: string;
-  audience: string;
   description: string;
   action: string;
 }
@@ -19,8 +17,6 @@ export const EDUCATION_DESTINATIONS: readonly EducationDestination[] = [
     name: "Fractal Accelerator",
     houseLinkLabel: "Fractal Accelerator",
     url: "https://www.fractalaccelerator.com/",
-    domain: "fractalaccelerator.com",
-    audience: "Six-week AI program",
     description:
       "A hands-on, six-week, in-person NYC AI program for ambitious professionals.",
     action: "Visit Fractal Accelerator",
@@ -30,8 +26,6 @@ export const EDUCATION_DESTINATIONS: readonly EducationDestination[] = [
     name: "FractalU",
     houseLinkLabel: "Fractal University",
     url: "https://www.fractalu.nyc/",
-    domain: "fractalu.nyc",
-    audience: "Community-run college",
     description:
       "An improvised college in NYC with community-run courses across arts, technology, movement, and other disciplines.",
     action: "Browse FractalU",

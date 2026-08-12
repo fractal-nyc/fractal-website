@@ -16,29 +16,59 @@ function renderEducationPage() {
 }
 
 describe("EducationPage", () => {
-  it("presents the two canonical destinations in priority order", () => {
+  it("establishes the page with one display heading and explanatory subtitle", () => {
     renderEducationPage();
-    const links = within(screen.getByTestId("education-destination-grid")).getAllByRole("link");
-    expect(links).toHaveLength(2);
-    expect(links[0]).toHaveAttribute("href", EDUCATION_DESTINATIONS[0].url);
-    expect(links[1]).toHaveAttribute("href", EDUCATION_DESTINATIONS[1].url);
-    expect(links[0]).toHaveTextContent("ambitious professionals");
-    expect(links[1]).toHaveTextContent("community-run courses");
+    const heading = screen.getByRole("heading", {
+      level: 1,
+      name: "Learn with us under a new liberal arts",
+    });
+    expect(heading.className).toContain("text-display");
+    expect(screen.getAllByRole("heading", { level: 1 })).toHaveLength(1);
+    const subtitle = screen.getByText(
+      "We currently run two education programs. Explore them below.",
+    );
+    expect(subtitle.className).toContain("text-subtitle");
   });
 
-  it("uses accessible external links without nested embeds", () => {
+  it("presents the two programs as subtitle-tier sections in priority order", () => {
+    renderEducationPage();
+    const grid = screen.getByTestId("education-destination-grid");
+    const headings = within(grid).getAllByRole("heading", { level: 2 });
+    expect(headings.map((heading) => heading.textContent)).toEqual([
+      EDUCATION_DESTINATIONS[0].name,
+      EDUCATION_DESTINATIONS[1].name,
+    ]);
+    expect(
+      headings.every((heading) => heading.className.includes("text-subtitle")),
+    ).toBe(true);
+    expect(within(grid).getByText(/ambitious professionals/)).toBeTruthy();
+    expect(within(grid).getByText(/community-run courses/)).toBeTruthy();
+  });
+
+  it("uses explicit accessible CTA links without linked program containers or embeds", () => {
     const { container } = renderEducationPage();
+    const grid = screen.getByTestId("education-destination-grid");
+    const links = within(grid).getAllByRole("link");
+    expect(links).toHaveLength(2);
     for (const destination of EDUCATION_DESTINATIONS) {
       const link = screen.getByRole("link", {
         name: `${destination.action} (opens in a new tab)`,
       });
       expect(link).toHaveAttribute("target", "_blank");
       expect(link).toHaveAttribute("rel", "noopener noreferrer");
-      expect(link.className).toContain("min-h-44");
+      expect(link.className).toContain("max-w-xs");
+      expect(link.className).toContain("w-full");
+      expect(link.className).toContain("whitespace-normal");
+      expect(link.className).toContain("leading-snug");
       expect(link.className).toContain("focus-visible:ring-2");
     }
     expect(container.querySelector("iframe")).toBeNull();
     expect(container.querySelector("button a, a button")).toBeNull();
+    expect(
+      Array.from(grid.querySelectorAll("[data-education-destination]")).every(
+        (program) => program.tagName === "DIV",
+      ),
+    ).toBe(true);
   });
 
   it("uses the Education deep surface, light accent, and canonical pattern color", () => {
@@ -51,12 +81,15 @@ describe("EducationPage", () => {
     expect(container.querySelector(`svg [stroke="${education.palette.light}"]`)).toBeTruthy();
   });
 
-  it("stacks cards by default and progressively enhances to equal columns", () => {
+  it("stacks program containers by default and progressively enhances to equal columns", () => {
     renderEducationPage();
     const grid = screen.getByTestId("education-destination-grid");
     expect(grid.className).toContain("grid-cols-1");
     expect(grid.className).toContain("md:grid-cols-2");
-    expect(within(grid).getAllByRole("link").every((card) => card.className.includes("h-full"))).toBe(true);
+    const programs = grid.querySelectorAll("[data-education-destination]");
+    expect(programs).toHaveLength(2);
+    expect(Array.from(programs).every((program) => program.className.includes("h-full"))).toBe(true);
+    expect(grid.parentElement?.className).toContain("md:max-w-[58vw]");
   });
 
   it("renders site chrome and both decorative pennant shells", () => {
