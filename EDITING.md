@@ -89,11 +89,11 @@ The longest page; everything below is in `Campus.tsx`:
 
 ### Education hub (`/education`)
 
-- Introductory hub copy and card layout: `src/pages/EducationPage.tsx`.
-- Fractal Accelerator and FractalU labels, stable descriptions, domains, actions, and live URLs: `src/data/education.ts`.
+- Display statement, explanatory subtitle, and program-container layout: `src/pages/EducationPage.tsx`.
+- Fractal Accelerator and FractalU labels, stable descriptions, actions, and live URLs: `src/data/education.ts`.
 - Education house palette and related external-link projection: `src/data/houses.ts`.
 
-Keep cohort dates, tuition, applications, and the changing FractalU course catalog on the official external sites rather than copying them into this hub. Both destination cards are first-party text previews with direct new-tab links; neither external site is embedded.
+Keep cohort dates, tuition, applications, and the changing FractalU course catalog on the official external sites rather than copying them into this hub. Each non-interactive program container ends in a direct new-tab CTA to its official site; neither external site is embedded.
 
 ### Publications (`/publications` — `src/pages/PublicationsPage.tsx`)
 
