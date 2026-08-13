@@ -434,6 +434,41 @@
   --btn-fill: rgba(242, 234, 216, 0.6);
 }
 
+/* FRAC-58: approved Education destination cards. The warm resting surface
+   mixes the canonical cream with the People decorative gold, while the
+   interaction state uses Education's bright foreground token. */
+.education-program-card {
+  background-color: color-mix(
+    in srgb,
+    hsl(var(--background) / 0.94) 88%,
+    var(--color-section-people) 12%
+  );
+}
+
+.education-program-card:hover,
+.education-program-card:focus-visible {
+  background-color: var(--color-house-education-light);
+}
+
+/* The shared PaperGrain overlay is tuned for saturated button fills and
+   disappears on cream. This monochrome frost stays visible in the card's
+   light resting state and gains a little presence when the surface inverts. */
+.education-program-card-grain {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.68' numOctaves='3' seed='7' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3CfeComponentTransfer%3E%3CfeFuncR type='linear' slope='1.7' intercept='-.35'/%3E%3CfeFuncG type='linear' slope='1.7' intercept='-.35'/%3E%3CfeFuncB type='linear' slope='1.7' intercept='-.35'/%3E%3CfeFuncA type='table' tableValues='0 .5'/%3E%3C/feComponentTransfer%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 180px 180px;
+  mix-blend-mode: multiply;
+  opacity: 0.16;
+  transition: opacity 200ms ease-out;
+}
+
+.education-program-card:hover > .education-program-card-grain,
+.education-program-card:focus-visible > .education-program-card-grain {
+  opacity: 0.22;
+}
+
 /* FRAC-28: respect the user's reduced-motion preference. The blink animation
    is purely decorative (a CRT-style cursor on text), so we freeze it at the
    visible state when the OS asks for less motion. */
@@ -441,5 +476,23 @@
   .animate-blink {
     animation: none;
     opacity: 1;
+  }
+
+  .education-program-card-shell,
+  .education-program-card-shell * {
+    transition-duration: 0s !important;
+  }
+
+  .education-program-card,
+  .education-program-card:focus-visible,
+  .education-program-card:hover {
+    scale: none !important;
+    transform: none !important;
+  }
+
+  .education-program-card:focus-visible [data-education-external-icon],
+  .education-program-card:hover [data-education-external-icon] {
+    translate: none !important;
+    transform: none !important;
   }
 }

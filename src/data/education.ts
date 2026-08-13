@@ -14,12 +14,12 @@ export interface EducationDestination {
 export const EDUCATION_DESTINATIONS: readonly EducationDestination[] = [
   {
     id: "accelerator",
-    name: "Fractal Accelerator",
-    houseLinkLabel: "Fractal Accelerator",
+    name: "Fractal AI Accelerator",
+    houseLinkLabel: "Fractal AI Accelerator",
     url: "https://www.fractalaccelerator.com/",
     description:
       "A hands-on, six-week, in-person NYC AI program for ambitious professionals.",
-    action: "Visit Fractal Accelerator",
+    action: "Visit Fractal AI Accelerator",
   },
   {
     id: "fractalu",
