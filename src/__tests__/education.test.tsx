@@ -51,9 +51,12 @@ describe("EducationPage", () => {
     const links = within(grid).getAllByRole("link");
     expect(links).toHaveLength(2);
     for (const destination of EDUCATION_DESTINATIONS) {
+      const accessibleName = `Visit ${destination.houseLinkLabel} (opens in a new tab)`;
       const link = screen.getByRole("link", {
-        name: `${destination.action} (opens in a new tab)`,
+        name: accessibleName,
       });
+      expect(link).toHaveAccessibleName(accessibleName);
+      expect(accessibleName).toContain(destination.houseLinkLabel);
       expect(link).toHaveAttribute("target", "_blank");
       expect(link).toHaveAttribute("rel", "noopener noreferrer");
       expect(link.className).toContain("education-program-card");
@@ -76,6 +79,11 @@ describe("EducationPage", () => {
       ).toHaveLength(4);
       expect(link.className).not.toContain("min-h-");
     }
+    expect(
+      screen.getByRole("link", {
+        name: "Visit Fractal University (opens in a new tab)",
+      }),
+    ).toBeTruthy();
     expect(container.querySelector("iframe")).toBeNull();
     expect(within(grid).queryAllByRole("button")).toHaveLength(0);
     expect(container.querySelector("button a, a button")).toBeNull();

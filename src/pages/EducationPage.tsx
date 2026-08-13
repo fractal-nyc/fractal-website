@@ -81,7 +81,7 @@ export function EducationPage() {
                           href={destination.url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          aria-label={`${destination.action} (opens in a new tab)`}
+                          aria-label={`Visit ${destination.houseLinkLabel} (opens in a new tab)`}
                           className="education-program-card relative isolate flex flex-col overflow-hidden rounded-lg border p-9 text-foreground [border-color:var(--accent,currentColor)] [backdrop-filter:blur(6px)] [-webkit-backdrop-filter:blur(6px)] [transform:translateZ(0)] transition-all duration-200 ease-out hover:scale-[1.02] hover:bg-house-education-light hover:text-background hover:shadow-lg focus-visible:scale-[1.02] focus-visible:bg-house-education-light focus-visible:text-background focus-visible:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-background md:h-full"
                           data-education-destination={destination.id}
                         >
