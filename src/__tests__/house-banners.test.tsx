@@ -98,7 +98,7 @@ describe("canonical house banner artwork", () => {
     const document = new DOMParser().parseFromString(source, "image/svg+xml");
 
     expect(document.querySelector("#eventsArc")?.getAttribute("d")).toBe(
-      "M 17 51.5 Q 61.36 17.5 105.72 51.5",
+      "M 17 64 Q 61.36 30 105.72 64",
     );
   });
 
