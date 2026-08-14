@@ -90,6 +90,18 @@ describe("canonical house banner artwork", () => {
     ).toEqual(banners.map(({ name }) => `${name}-banner.svg`).sort());
   });
 
+  it("keeps the Events label on its approved upward arc", () => {
+    const source = fs.readFileSync(
+      path.join(BANNER_ROOT, "events-banner.svg"),
+      "utf8",
+    );
+    const document = new DOMParser().parseFromString(source, "image/svg+xml");
+
+    expect(document.querySelector("#eventsArc")?.getAttribute("d")).toBe(
+      "M 17 51.5 Q 61.36 17.5 105.72 51.5",
+    );
+  });
+
   for (const banner of banners) {
     it(`${banner.name} locks geometry, colors, text roles, and embedded font`, () => {
       const source = fs.readFileSync(
