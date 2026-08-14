@@ -18,6 +18,9 @@ const banners = [
     monogram: "CL",
     foundation: "#4F5B0D",
     motif: "#AEB175",
+    textFill: "#AEB175",
+    labelSize: "17",
+    monogramSize: "48",
     Component: CoLivingBannerSVG,
   },
   {
@@ -26,6 +29,9 @@ const banners = [
     monogram: "E",
     foundation: "#CA5C4E",
     motif: "#E5A794",
+    textFill: "#E5A794",
+    labelSize: "20",
+    monogramSize: "61",
     Component: EventsBannerSVG,
   },
   {
@@ -34,6 +40,9 @@ const banners = [
     monogram: "C",
     foundation: "#1A3A2E",
     motif: "#51805C",
+    textFill: "#51805C",
+    labelSize: "20",
+    monogramSize: "61",
     Component: CampusBannerSVG,
   },
   {
@@ -42,6 +51,9 @@ const banners = [
     monogram: "E",
     foundation: "#C51C15",
     motif: "#4C0000",
+    textFill: "#4C0000",
+    labelSize: "17",
+    monogramSize: "61",
     Component: EducationBannerSVG,
   },
   {
@@ -50,6 +62,9 @@ const banners = [
     monogram: "L",
     foundation: "#A33E6F",
     motif: "#C889AB",
+    textFill: "#C889AB",
+    labelSize: "20",
+    monogramSize: "55",
     Component: LibraryBannerSVG,
   },
   {
@@ -58,6 +73,9 @@ const banners = [
     monogram: "PC",
     foundation: "#82AFA2",
     motif: "#084247",
+    textFill: "#084247",
+    labelSize: "14",
+    monogramSize: "48",
     Component: PoliticalClubBannerSVG,
   },
 ] as const;
@@ -90,10 +108,16 @@ describe("canonical house banner artwork", () => {
       expect(source).toContain(banner.motif);
       expect(inset?.getAttribute("stroke")).toBe("#D4BA58");
       expect(inset?.getAttribute("d")).toContain("L61.36 323.70");
-      expect(label?.getAttribute("fill")).toBe("#C49040");
+      expect(label?.getAttribute("fill")).toBe(banner.textFill);
+      expect(label?.getAttribute("fill")).not.toBe("#D4BA58");
+      expect(label?.getAttribute("font-size")).toBe(banner.labelSize);
       expect(label?.textContent).toBe(banner.label);
-      expect(monogram?.getAttribute("fill")).toBe("#C49040");
+      expect(monogram?.getAttribute("fill")).toBe(banner.textFill);
+      expect(monogram?.getAttribute("fill")).not.toBe("#D4BA58");
+      expect(monogram?.getAttribute("font-size")).toBe(banner.monogramSize);
       expect(monogram?.textContent).toBe(banner.monogram);
+      expect(source.match(/#D4BA58/gi)).toHaveLength(1);
+      expect(source).not.toContain("#C49040");
       expect(source).toMatch(
         /src:url\(data:font\/ttf;base64,[A-Za-z0-9+/]+={0,2}\) format\('truetype'\)/,
       );
