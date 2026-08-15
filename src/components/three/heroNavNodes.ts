@@ -38,5 +38,5 @@ export const OUTER_NAV_NODES: NavNode[] = [
   { label: "Campus",      route: "/campus",                            color: housePalette("campus"),       vertexIndex: 0 },
   { label: "FractalU",    route: "https://www.fractalu.nyc/",          color: housePalette("school"),       vertexIndex: 1 },
   { label: "Library",     route: "/library",                           color: housePalette("lab"),          vertexIndex: 5 },
-  { label: "Accelerator", route: "https://www.fractalaccelerator.com/", color: housePalette("accelerator"), vertexIndex: 4 },
+  { label: "Accelerator", route: "https://go.fractalaccelerator.com/fractalnycwebsite", color: housePalette("accelerator"), vertexIndex: 4 },
 ];

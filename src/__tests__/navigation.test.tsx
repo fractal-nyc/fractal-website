@@ -194,7 +194,7 @@ describe("External section links (Accelerator + FractalU)", () => {
   it("renders Accelerator as an external new-tab anchor to fractalaccelerator.com", () => {
     const links = Array.from(
       document.querySelectorAll<HTMLAnchorElement>(
-        'a[href="https://www.fractalaccelerator.com/"]',
+        'a[href="https://go.fractalaccelerator.com/fractalnycwebsite"]',
       ),
     );
     expect(links.length).toBeGreaterThanOrEqual(1);

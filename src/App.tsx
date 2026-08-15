@@ -12,7 +12,7 @@ import { PeoplePage } from "@/pages/PeoplePage";
 import NotFound from "@/pages/not-found";
 
 const FRACTALU_URL = "https://www.fractalu.nyc/";
-const ACCELERATOR_URL = "https://www.fractalaccelerator.com/";
+const ACCELERATOR_URL = "https://go.fractalaccelerator.com/fractalnycwebsite";
 
 function ScrollToTop() {
   const [location] = useLocation();

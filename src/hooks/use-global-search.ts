@@ -25,7 +25,7 @@ export interface SearchResult {
 // page — they link out to their standalone sites. Search results for them carry
 // `external: true` so Hero's navigateTo opens them in a new tab.
 const FRACTALU_URL = "https://www.fractalu.nyc/";
-const ACCELERATOR_URL = "https://www.fractalaccelerator.com/";
+const ACCELERATOR_URL = "https://go.fractalaccelerator.com/fractalnycwebsite";
 
 interface PageEntry {
   name: string;
