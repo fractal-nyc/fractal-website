@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils";
 
 const LUMA_EVENTS_URL = "https://lu.ma/nyc-tech";
 const FRACTAL_U_URL = "https://fractaluniversity.substack.com/";
-const FRACTAL_ACCELERATOR_URL = "https://www.fractalaccelerator.com/";
+const FRACTAL_ACCELERATOR_URL = "https://go.fractalaccelerator.com/fractalnycwebsite";
 const STRIPE_FULLTIME_URL = "https://buy.stripe.com/4gM5kDckk5r008p3B608g0L";
 const STRIPE_PARTTIME_URL = "https://buy.stripe.com/eVq4gzckk06G3kB1sY08g0G";
 const GOOGLE_MAPS_URL =

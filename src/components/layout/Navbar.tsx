@@ -22,7 +22,7 @@ function houseColor(route: string, prefer: "light" | "deep" = "light"): string {
 // `accelerator` / `school` house entries (looked up by their old internal
 // route), so those nav letters keep their house tint.
 const FRACTALU_URL = "https://www.fractalu.nyc/";
-const ACCELERATOR_URL = "https://www.fractalaccelerator.com/";
+const ACCELERATOR_URL = "https://go.fractalaccelerator.com/fractalnycwebsite";
 
 interface SectionLink {
   name: string;
