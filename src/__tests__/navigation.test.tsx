@@ -198,7 +198,11 @@ describe("Internal Education section link", () => {
     for (const a of links) {
       expect(a.getAttribute("target")).not.toBe("_blank");
     }
-    expect(document.querySelector('a[href="https://www.fractalaccelerator.com/"]')).toBeNull();
+    expect(
+      document.querySelector(
+        'a[href="https://go.fractalaccelerator.com/fractalnycwebsite"]',
+      ),
+    ).toBeNull();
     expect(document.querySelector('a[href="https://www.fractalu.nyc/"]')).toBeNull();
   });
 

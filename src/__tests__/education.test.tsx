@@ -16,6 +16,12 @@ function renderEducationPage() {
 }
 
 describe("EducationPage", () => {
+  it("uses the canonical tracked Accelerator destination", () => {
+    expect(EDUCATION_DESTINATIONS[0].url).toBe(
+      "https://go.fractalaccelerator.com/fractalnycwebsite",
+    );
+  });
+
   it("establishes the page with one display heading and explanatory subtitle", () => {
     renderEducationPage();
     const heading = screen.getByRole("heading", {
