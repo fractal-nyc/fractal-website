@@ -24,7 +24,7 @@ type House = {
 // McKibbin to "bottom" when narrow; at phone width every marker is dot-only
 // (side is irrelevant), so the wide-layout "right" is kept as the base value.
 const HOUSE_LOCATIONS: House[] = [
-  { name: "Homebrew", area: "Chinatown", lat: 40.7158, lng: -73.997, side: "top", url: "https://homebrew.nyc/" },
+  { name: "Commonwell", area: "Chinatown", lat: 40.7158, lng: -73.997, side: "top", url: "https://www.commonwell.nyc/" },
   { name: "Canopy", area: "FiDi", lat: 40.7075, lng: -74.0113, side: "bottom" },
   { name: "Baby Haus", area: "Williamsburg", lat: 40.7118, lng: -73.944, side: "top" },
   { name: "The McKibbin Lofts", area: "East Williamsburg", lat: 40.706, lng: -73.9337, side: "right" },
