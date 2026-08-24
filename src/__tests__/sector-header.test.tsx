@@ -25,9 +25,8 @@ const sections = [
   // (neighborhood / lab), only the user-facing mark + name moved.
   { letter: "CL", name: "Co-Living", color: "#4A5A30" },
   { letter: "E", name: "Events", color: "#C13B2A" },
-  // Education/Accelerator no longer have internal pages (they link out to
-  // fractalu.nyc / fractalaccelerator.com), so no page renders a SectorHeader
-  // for them — dropped from these fixtures.
+  { letter: "U", name: "FractalU", color: "#C41E20" },
+  // Accelerator remains external, so no page renders its SectorHeader.
   { letter: "PC", name: "Political Club", color: "#C83858" },
   { letter: "L", name: "Library", color: "#C44878" },
   { letter: "P", name: "People", color: SECTIONS.people.deep },

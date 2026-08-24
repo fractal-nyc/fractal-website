@@ -8,10 +8,10 @@ import { CampusPage } from "@/pages/CampusPage";
 import { PoliticalClubPage } from "@/pages/PoliticalClubPage";
 import { LibraryPage } from "@/pages/LibraryPage";
 import { PeoplePage } from "@/pages/PeoplePage";
+import { FractalUPage } from "@/pages/FractalUPage";
 
 import NotFound from "@/pages/not-found";
 
-const FRACTALU_URL = "https://www.fractalu.nyc/";
 const ACCELERATOR_URL = "https://go.fractalaccelerator.com/fractalnycwebsite";
 
 function ScrollToTop() {
@@ -23,9 +23,8 @@ function ScrollToTop() {
 }
 
 /**
- * Sends the browser to an external site. The Accelerator and FractalU (formerly
- * Education) pages were removed — those sectors now live on their own standalone
- * sites — but old internal paths still redirect there so bookmarks resolve.
+ * Sends the browser to an external site. Accelerator lives on its standalone
+ * site, while FractalU is now internal at /fractalu.
  */
 function ExternalRedirect({ to }: { to: string }) {
   useEffect(() => {
@@ -45,13 +44,13 @@ function Router() {
       <Route path="/political-club" component={PoliticalClubPage} />
       <Route path="/library" component={LibraryPage} />
       <Route path="/people" component={PeoplePage} />
+      <Route path="/fractalu" component={FractalUPage} />
 
-      {/* Accelerator and FractalU (Education) have no internal page — the nav and
-          octahedron link straight to their standalone sites. These routes exist
-          only so old/direct URLs bounce out to the same place. */}
+      {/* Accelerator remains external. FractalU's legacy routes resolve to the
+          internal /fractalu page. */}
       <Route path="/accelerator">{() => <ExternalRedirect to={ACCELERATOR_URL} />}</Route>
-      <Route path="/education">{() => <ExternalRedirect to={FRACTALU_URL} />}</Route>
-      <Route path="/new-liberal-arts">{() => <ExternalRedirect to={FRACTALU_URL} />}</Route>
+      <Route path="/education">{() => <Redirect to="/fractalu" />}</Route>
+      <Route path="/new-liberal-arts">{() => <Redirect to="/fractalu" />}</Route>
 
       {/* Internal redirects from old URLs after the content-port renames:
           Visit → Co-Living, Publications → Library, Story folded into Home. */}

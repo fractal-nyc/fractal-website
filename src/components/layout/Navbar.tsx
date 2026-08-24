@@ -17,11 +17,10 @@ function houseColor(route: string, prefer: "light" | "deep" = "light"): string {
   return palette ? palette[prefer] : "#000";
 }
 
-// Accelerator and FractalU (formerly Education) have no internal page — they
-// link out to their standalone sites. The color still comes from the retained
+// Accelerator links to its standalone site; FractalU is an internal page.
+// Their color comes from the retained
 // `accelerator` / `school` house entries (looked up by their old internal
 // route), so those nav letters keep their house tint.
-const FRACTALU_URL = "https://www.fractalu.nyc/";
 const ACCELERATOR_URL = "https://go.fractalaccelerator.com/fractalnycwebsite";
 
 interface SectionLink {
@@ -40,7 +39,7 @@ const sectionLinks: SectionLink[] = [
   { name: "Co-Living",      href: "/co-living",         color: houseColor("/co-living"),                 colorDeep: houseColor("/co-living", "deep") },
   { name: "Accelerator",    href: ACCELERATOR_URL,      color: houseColor("/accelerator"),               colorDeep: houseColor("/accelerator", "deep"), external: true },
   { name: "Events",         href: "/events",            color: houseColor("/events"),                    colorDeep: houseColor("/events", "deep") },
-  { name: "FractalU",       href: FRACTALU_URL,         color: houseColor("/education"),                 colorDeep: houseColor("/education", "deep"), external: true },
+  { name: "FractalU",       href: "/fractalu",          color: houseColor("/education"),                 colorDeep: houseColor("/education", "deep") },
   { name: "Political Club", href: "/political-club",    color: houseColor("/political-club", "deep"),    colorDeep: houseColor("/political-club", "deep") },
   { name: "Library",        href: "/library",           color: houseColor("/library"),                   colorDeep: houseColor("/library", "deep") },
   { name: "People",         href: "/people",            color: SECTIONS.people.light,                    colorDeep: SECTIONS.people.deep },
@@ -185,7 +184,7 @@ function NavLink(link: SectionLink) {
         </Fragment>
       ))}
       {/* FRAC-13: superscript ↗ external-link mark — only on links that open a
-          standalone site in a new tab (Accelerator, FractalU), keeping the arrow
+          standalone site in a new tab (Accelerator), keeping the arrow
           semantically honest. Inherits the anchor's currentColor, so it takes the
           house color at rest and deepens to `.deep` alongside the text on
           hover/focus. Decorative → aria-hidden. */}

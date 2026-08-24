@@ -39,7 +39,7 @@ describe("Inner page navbar", () => {
   it("should render all 6 visible section links by name (FRAC-161: Political Club + People hidden)", () => {
     // Content port: Story folded into Home (no longer a nav link); Visit →
     // Co-Living, Publications → Library, and Accelerator was added. Education
-    // was renamed FractalU; it and Accelerator now link out externally.
+    // was renamed FractalU; Accelerator links out while FractalU is internal.
     const expectedSections = [
       "Campus",
       "Co-Living",
@@ -182,11 +182,11 @@ describe("Home page navbar (full state)", () => {
 });
 
 // ═══════════════════════════════════════════════════════════════════════════
-// External vs internal section links — Accelerator and FractalU link out to
-// their standalone sites (new tab); the rest stay internal wouter routes.
+// External vs internal section links — Accelerator links out while FractalU
+// and the other section pages stay internal.
 // ═══════════════════════════════════════════════════════════════════════════
 
-describe("External section links (Accelerator + FractalU)", () => {
+describe("External and internal section links", () => {
   beforeEach(() => {
     renderNavbar("/");
   });
@@ -204,16 +204,15 @@ describe("External section links (Accelerator + FractalU)", () => {
     }
   });
 
-  it("renders FractalU as an external new-tab anchor to fractalu.nyc", () => {
+  it("renders FractalU as an internal link", () => {
     const links = Array.from(
       document.querySelectorAll<HTMLAnchorElement>(
-        'a[href="https://www.fractalu.nyc/"]',
+        'a[href="/fractalu"]',
       ),
     );
     expect(links.length).toBeGreaterThanOrEqual(1);
     for (const a of links) {
-      expect(a.getAttribute("target")).toBe("_blank");
-      expect(a.getAttribute("rel")).toContain("noopener");
+      expect(a.getAttribute("target")).toBeNull();
     }
   });
 

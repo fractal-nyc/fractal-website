@@ -35,8 +35,7 @@ const TYPE_ICONS: Record<string, typeof Search> = {
 export function Hero() {
   const [, setLocation] = useLocation();
 
-  // Some octahedron / skip-nav destinations are now external (Accelerator →
-  // fractalaccelerator.com, FractalU → fractalu.nyc). Branch on an absolute URL
+  // Accelerator's octahedron / skip-nav destination is external. Branch on an absolute URL
   // so both the 3D nodes and the keyboard skip-nav open those in a new tab,
   // while internal routes stay SPA navigations. This keeps the branch out of the
   // WebGL code — every node still calls handleNavigate with its `route`.

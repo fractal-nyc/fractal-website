@@ -87,9 +87,9 @@ The longest page; everything below is in `Campus.tsx`:
 
 - Headline *"See You at Fractal"*, *"Host an event in our space"*; Luma calendar embed + link; hosting instructions; `crystal@fractalnyc.com` — all in the page file. (The *"Stay in the Loop"* heading and its Discord button were removed.)
 
-### FractalU / Accelerator — external, no page
+### FractalU / Accelerator
 
-The **FractalU** (formerly Education) and **Accelerator** sectors no longer have an internal page or copy in this repo. Their nav links and octahedron nodes point out to standalone sites — `https://www.fractalu.nyc/` and `https://www.fractalaccelerator.com/`. To change where they point, edit the `FRACTALU_URL` / `ACCELERATOR_URL` constants in `src/components/layout/Navbar.tsx`, `src/App.tsx`, `src/hooks/use-global-search.ts`, and the two external `route` URLs in `src/components/three/heroNavNodes.ts`. Their house tokens and nav-letter colors still live in `src/data/houses.ts`.
+**FractalU** is an internal page at `/fractalu`. Its current catalog data lives in `src/data/fractalu-catalog.json`; its page and information copy live in `src/pages/FractalUPage.tsx`, and its banner images live in `public/images/fractalu.png` and `public/images/fractalu-mobile.png`. The **Accelerator** remains an external sector. Its house tokens and nav-letter color live in `src/data/houses.ts`.
 
 ### Publications (`/publications` — `src/pages/PublicationsPage.tsx`)
 

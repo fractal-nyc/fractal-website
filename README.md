@@ -2,7 +2,7 @@
 
 Community site for Fractal NYC — a network of coliving houses, a campus, events, education, an accelerator, and a library in Brooklyn. React + TypeScript + Vite, Tailwind CSS 4, Three.js for the homepage hero. Deployed on Vercel.
 
-**Pages:** `/` (homepage, includes the Story section), `/campus`, `/co-living`, `/events`, `/library`, `/political-club`, `/people`, `/the-protocol`. The **Accelerator** and **FractalU** (formerly Education) sectors have no internal page — the nav and octahedron link out to `https://www.fractalaccelerator.com/` and `https://www.fractalu.nyc/` (new tab). (Old paths redirect: `/story`→`/`, `/visit`→`/co-living`, `/publications`→`/library`, plus the legacy `/neighborhood`; `/accelerator`, `/education`, and `/new-liberal-arts` external-redirect to the sites above; `/lab`→`/library`.)
+**Pages:** `/` (homepage, includes the Story section), `/campus`, `/co-living`, `/events`, `/fractalu`, `/library`, `/political-club`, `/people`, `/the-protocol`. **FractalU** is an internal catalog and information page; `/education` and `/new-liberal-arts` redirect to it. The **Accelerator** remains external. (Other old paths redirect: `/story`→`/`, `/visit`→`/co-living`, `/publications`→`/library`, `/neighborhood`→`/co-living`, and `/lab`→`/library`.)
 
 ## Where to start
 
