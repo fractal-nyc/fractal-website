@@ -77,6 +77,16 @@ describe("Co-Living page — content", () => {
     expect(screen.getByText("Visiting NYC?")).toBeTruthy();
   });
 
+  it("links the Chinatown map marker to Commonwell", () => {
+    renderCoLiving();
+
+    const commonwellLink = screen.getByText("Commonwell").closest("a");
+    expect(commonwellLink).toHaveAttribute("href", "https://www.commonwell.nyc/");
+    expect(commonwellLink).toHaveAttribute("target", "_blank");
+    expect(commonwellLink).toHaveAttribute("rel", "noopener noreferrer");
+    expect(screen.queryByText("Homebrew")).not.toBeInTheDocument();
+  });
+
   it("should use a full-viewport-height top-aligned layout (mobile-first)", () => {
     const { container } = renderCoLiving();
     // Content wrapper is a full-viewport flex column, top-aligned (justify-start).
