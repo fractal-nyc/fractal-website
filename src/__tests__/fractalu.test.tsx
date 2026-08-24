@@ -20,6 +20,8 @@ describe("FractalU page", () => {
     expect(document.querySelectorAll('[data-testid="course-list"] [data-course-category]')).toHaveLength(20);
     expect(screen.getByRole("heading", { name: "Clubs & open groups" })).toBeInTheDocument();
     expect(screen.getAllByText(/Controversial Politics Salon/).length).toBeGreaterThan(0);
+    expect(screen.queryByText(/Organized by/)).not.toBeInTheDocument();
+    expect(screen.queryByText("Mason")).not.toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "What is FractalU?" })).toBeInTheDocument();
     expect(screen.getByText("Take yourself and others seriously.")).toBeInTheDocument();
     expect(screen.getByRole("link", { name: /Read the canon/ })).toHaveAttribute("href", "https://ajr.fyi/files/fractal-canon.pdf");
