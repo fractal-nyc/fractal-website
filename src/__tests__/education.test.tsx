@@ -2,7 +2,7 @@ import { render, screen, within } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 import { Router as WouterRouter } from "wouter";
 import { memoryLocation } from "wouter/memory-location";
-import { EDUCATION_DESTINATIONS } from "@/data/education";
+import { EDUCATION_ACCELERATOR } from "@/data/education";
 import { HOUSES } from "@/data/houses";
 import { EducationPage } from "@/pages/EducationPage";
 
@@ -16,59 +16,46 @@ function renderEducationPage() {
 }
 
 describe("EducationPage", () => {
-  it("establishes the page with one display heading and explanatory subtitle", () => {
+  it("keeps the approved display hierarchy and explanatory subtitle", () => {
     renderEducationPage();
     const heading = screen.getByRole("heading", {
       level: 1,
-      name: "Learn with us under a new liberal arts",
+      name: "A new liberal arts",
     });
     expect(heading.className).toContain("text-display");
     expect(screen.getAllByRole("heading", { level: 1 })).toHaveLength(1);
-    const subtitle = screen.getByText(
-      "We currently run two education programs. Explore them below.",
-    );
-    expect(subtitle.className).toContain("text-subtitle");
-  });
-
-  it("presents the two programs as subtitle-tier sections in priority order", () => {
-    renderEducationPage();
-    const grid = screen.getByTestId("education-destination-grid");
-    const headings = within(grid).getAllByRole("heading", { level: 2 });
-    expect(headings.map((heading) => heading.textContent)).toEqual([
-      EDUCATION_DESTINATIONS[0].name,
-      EDUCATION_DESTINATIONS[1].name,
-    ]);
     expect(
-      headings.every((heading) => heading.className.includes("text-subtitle")),
-    ).toBe(true);
-    expect(within(grid).getByText(/ambitious professionals/)).toBeTruthy();
-    expect(within(grid).getByText(/community-run courses/)).toBeTruthy();
+      screen.getByText("We currently run two education programs. Explore them below."),
+    ).toHaveClass("text-subtitle");
   });
 
-  it("uses explicit accessible CTA links without linked program containers or embeds", () => {
+  it("puts the sole program-level external Accelerator card before the native portal", () => {
     const { container } = renderEducationPage();
-    const grid = screen.getByTestId("education-destination-grid");
-    const links = within(grid).getAllByRole("link");
-    expect(links).toHaveLength(2);
-    for (const destination of EDUCATION_DESTINATIONS) {
-      const link = screen.getByRole("link", {
-        name: `${destination.action} (opens in a new tab)`,
-      });
-      expect(link).toHaveAttribute("target", "_blank");
-      expect(link).toHaveAttribute("rel", "noopener noreferrer");
-      expect(link.className).toContain("max-w-xs");
-      expect(link.className).toContain("w-full");
-      expect(link.className).toContain("whitespace-normal");
-      expect(link.className).toContain("leading-snug");
-      expect(link.className).toContain("focus-visible:ring-2");
-    }
+    const accelerator = screen.getByRole("link", {
+      name: "Visit Fractal AI Accelerator (opens in a new tab)",
+    });
+    const portal = container.querySelector<HTMLElement>("[data-fractalu-portal]")!;
+
+    expect(accelerator).toHaveAttribute("href", EDUCATION_ACCELERATOR.url);
+    expect(accelerator).toHaveAttribute("target", "_blank");
+    expect(accelerator).toHaveAttribute("rel", "noopener noreferrer");
+    expect(accelerator).toHaveAttribute("data-education-destination", "accelerator");
+    expect(accelerator.className).toContain("education-program-card");
+    expect(accelerator.className).toContain("p-9");
+    expect(accelerator.querySelector(".education-program-card-grain")).toBeTruthy();
+    expect(accelerator.parentElement?.querySelectorAll('svg[width="30"][height="30"]')).toHaveLength(4);
+    expect(accelerator.compareDocumentPosition(portal) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    expect(screen.getByRole("heading", { name: "Fractal University" })).toBeTruthy();
+  });
+
+  it("does not embed or expose a FractalU outbound program card or nested controls", () => {
+    const { container } = renderEducationPage();
+    const programs = screen.getByTestId("education-programs");
+    expect(within(programs).getAllByRole("link")).toHaveLength(1);
+    expect(within(programs).queryByRole("link", { name: /FractalU|University/ })).toBeNull();
     expect(container.querySelector("iframe")).toBeNull();
     expect(container.querySelector("button a, a button")).toBeNull();
-    expect(
-      Array.from(grid.querySelectorAll("[data-education-destination]")).every(
-        (program) => program.tagName === "DIV",
-      ),
-    ).toBe(true);
+    expect(container.querySelector('[data-education-destination="fractalu"]')).toBeNull();
   });
 
   it("uses the Education deep surface, light accent, and canonical pattern color", () => {
@@ -79,17 +66,7 @@ describe("EducationPage", () => {
     expect(main.className).toContain("text-background");
     expect(main.style.getPropertyValue("--accent")).toBe("var(--color-house-education-light)");
     expect(container.querySelector(`svg [stroke="${education.palette.light}"]`)).toBeTruthy();
-  });
-
-  it("stacks program containers by default and progressively enhances to equal columns", () => {
-    renderEducationPage();
-    const grid = screen.getByTestId("education-destination-grid");
-    expect(grid.className).toContain("grid-cols-1");
-    expect(grid.className).toContain("md:grid-cols-2");
-    const programs = grid.querySelectorAll("[data-education-destination]");
-    expect(programs).toHaveLength(2);
-    expect(Array.from(programs).every((program) => program.className.includes("h-full"))).toBe(true);
-    expect(grid.parentElement?.className).toContain("md:max-w-[58vw]");
+    expect(container.querySelector("[data-fractalu-portal]")).toHaveClass("bg-background", "text-foreground");
   });
 
   it("renders site chrome and both decorative pennant shells", () => {

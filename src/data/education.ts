@@ -1,5 +1,5 @@
-export interface EducationDestination {
-  id: "accelerator" | "fractalu";
+export interface EducationProgramLink {
+  id: "accelerator";
   name: string;
   houseLinkLabel: string;
   url: string;
@@ -8,26 +8,15 @@ export interface EducationDestination {
 }
 
 /**
- * Stable, date-agnostic descriptions of Education's two live destinations.
- * Cohort dates, applications, and course catalogs belong on the external sites.
+ * Education has one program-level external destination. Fractal University is
+ * rendered natively on /education from the reviewed catalog snapshot.
  */
-export const EDUCATION_DESTINATIONS: readonly EducationDestination[] = [
-  {
-    id: "accelerator",
-    name: "Fractal Accelerator",
-    houseLinkLabel: "Fractal Accelerator",
-    url: "https://www.fractalaccelerator.com/",
-    description:
-      "A hands-on, six-week, in-person NYC AI program for ambitious professionals.",
-    action: "Visit Fractal Accelerator",
-  },
-  {
-    id: "fractalu",
-    name: "FractalU",
-    houseLinkLabel: "Fractal University",
-    url: "https://www.fractalu.nyc/",
-    description:
-      "An improvised college in NYC with community-run courses across arts, technology, movement, and other disciplines.",
-    action: "Browse FractalU",
-  },
-] as const;
+export const EDUCATION_ACCELERATOR: EducationProgramLink = {
+  id: "accelerator",
+  name: "Fractal AI Accelerator",
+  houseLinkLabel: "Fractal AI Accelerator",
+  url: "https://go.fractalaccelerator.com/fractalnycwebsite",
+  description:
+    "A hands-on, six-week, in-person NYC AI program for ambitious professionals.",
+  action: "Visit Fractal AI Accelerator",
+};
