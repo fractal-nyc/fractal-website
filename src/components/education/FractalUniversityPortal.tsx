@@ -80,16 +80,20 @@ interface InstructorBioPreviewProps {
   course: FractalUCourse;
   isFinePointer: boolean;
   pinned: boolean;
+  suppressed: boolean;
   onToggle: () => void;
   onEscape: () => void;
+  onSuppressionReset: () => void;
 }
 
 function InstructorBioPreview({
   course,
   isFinePointer,
   pinned,
+  suppressed,
   onToggle,
   onEscape,
+  onSuppressionReset,
 }: InstructorBioPreviewProps) {
   const buttonRef = useRef<HTMLButtonElement>(null);
   const bioId = `${course.id}-instructor-bio`;
@@ -97,6 +101,7 @@ function InstructorBioPreview({
   const handleKeyDown = (event: KeyboardEvent<HTMLButtonElement>) => {
     if (event.key !== "Escape" || !pinned) return;
     event.preventDefault();
+    event.stopPropagation();
     onEscape();
     buttonRef.current?.focus();
   };
@@ -109,6 +114,16 @@ function InstructorBioPreview({
     <div
       className="fractalu-instructor-preview relative min-w-0"
       data-pinned={pinned ? "true" : "false"}
+      data-suppressed={suppressed ? "true" : "false"}
+      onBlurCapture={(event) => {
+        const nextTarget = event.relatedTarget;
+        if (
+          suppressed &&
+          (!nextTarget || !event.currentTarget.contains(nextTarget as Node))
+        ) {
+          onSuppressionReset();
+        }
+      }}
     >
       {isFinePointer ? (
         <button
@@ -129,6 +144,7 @@ function InstructorBioPreview({
         id={bioId}
         className="fractalu-course-preview fractalu-instructor-bio text-body mt-3 leading-relaxed text-foreground-muted"
         data-instructor-bio
+        style={suppressed ? { opacity: 0, visibility: "hidden" } : undefined}
       >
         {course.instructorBio}
       </p>
@@ -159,14 +175,18 @@ interface CourseCardProps {
   course: FractalUCourse;
   isFinePointer: boolean;
   pinnedInstructorId: string | null;
+  suppressedInstructorId: string | null;
   setPinnedInstructorId: (id: string | null) => void;
+  setSuppressedInstructorId: (id: string | null) => void;
 }
 
 function CourseCard({
   course,
   isFinePointer,
   pinnedInstructorId,
+  suppressedInstructorId,
   setPinnedInstructorId,
+  setSuppressedInstructorId,
 }: CourseCardProps) {
   const descriptionId = `${course.id}-description`;
   const instructorPinned = pinnedInstructorId === course.id;
@@ -223,8 +243,16 @@ function CourseCard({
         course={course}
         isFinePointer={isFinePointer}
         pinned={instructorPinned}
-        onToggle={() => setPinnedInstructorId(instructorPinned ? null : course.id)}
-        onEscape={() => setPinnedInstructorId(null)}
+        suppressed={suppressedInstructorId === course.id}
+        onToggle={() => {
+          setSuppressedInstructorId(null);
+          setPinnedInstructorId(instructorPinned ? null : course.id);
+        }}
+        onEscape={() => {
+          setPinnedInstructorId(null);
+          setSuppressedInstructorId(course.id);
+        }}
+        onSuppressionReset={() => setSuppressedInstructorId(null)}
       />
 
       <dl className="mt-5 grid min-w-0 gap-3 text-sm text-foreground-muted sm:grid-cols-2">
@@ -257,6 +285,7 @@ function CourseCatalog({
   isFinePointer: boolean;
 }) {
   const [pinnedInstructorId, setPinnedInstructorId] = useState<string | null>(null);
+  const [suppressedInstructorId, setSuppressedInstructorId] = useState<string | null>(null);
 
   useEffect(() => {
     if (!pinnedInstructorId) return;
@@ -267,6 +296,7 @@ function CourseCatalog({
         `[aria-controls="${pinnedInstructorId}-instructor-bio"]`,
       );
       setPinnedInstructorId(null);
+      setSuppressedInstructorId(pinnedInstructorId);
       trigger?.focus();
     };
     window.addEventListener("keydown", closePinnedBio);
@@ -286,7 +316,9 @@ function CourseCatalog({
           course={course}
           isFinePointer={isFinePointer}
           pinnedInstructorId={pinnedInstructorId}
+          suppressedInstructorId={suppressedInstructorId}
           setPinnedInstructorId={setPinnedInstructorId}
+          setSuppressedInstructorId={setSuppressedInstructorId}
         />
       ))}
     </div>

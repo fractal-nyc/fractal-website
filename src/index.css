@@ -548,6 +548,17 @@
     visibility: visible;
     transform: translateY(0);
   }
+
+  /* Escape restores focus to the instructor trigger. Suppression therefore
+     overrides :focus-within until focus genuinely leaves the relationship. */
+  .fractalu-course-grid[data-preview-mode="enhanced"]
+    .fractalu-instructor-preview[data-suppressed="true"]
+    > .fractalu-course-preview {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transform: translateY(-0.25rem);
+  }
 }
 
 /* FRAC-28: respect the user's reduced-motion preference. The blink animation

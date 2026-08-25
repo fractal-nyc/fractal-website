@@ -68,13 +68,25 @@ test("Education portal keeps one wide accessible catalog across input modes", as
     await expect(description).toHaveCSS("visibility", "visible");
 
     const instructor = firstCourse.getByRole("button", { name: "Elena Navarrete" });
+    const instructorPreview = instructor.locator("..");
+    const instructorBio = firstCourse.locator("[data-instructor-bio]");
     await instructor.focus();
-    await expect(firstCourse.locator("[data-instructor-bio]")).toHaveCSS("visibility", "visible");
+    await expect(instructorBio).toHaveCSS("visibility", "visible");
     await instructor.click();
     await expect(instructor).toHaveAttribute("aria-expanded", "true");
     await page.keyboard.press("Escape");
     await expect(instructor).toHaveAttribute("aria-expanded", "false");
     await expect(instructor).toBeFocused();
+    await expect(instructorPreview).toHaveAttribute("data-pinned", "false");
+    await expect(instructorPreview).toHaveAttribute("data-suppressed", "true");
+    await expect(instructorBio).toHaveCSS("visibility", "hidden");
+    await expect(instructorBio).toHaveCSS("opacity", "0");
+
+    await page.mouse.move(0, 0);
+    await firstCourse.getByRole("link", { name: /Apply for The Lost Generation/ }).focus();
+    await expect(instructorPreview).toHaveAttribute("data-suppressed", "false");
+    await instructor.focus();
+    await expect(instructorBio).toHaveCSS("visibility", "visible");
   } else {
     await expect(description).toHaveCSS("position", "static");
     await expect(description).toBeVisible();
