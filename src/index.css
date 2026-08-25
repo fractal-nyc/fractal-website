@@ -81,6 +81,13 @@
     @apply font-sans antialiased text-foreground;
   }
 
+  /* Keep browser overscroll behind the native Education portal on the same
+     deep house surface as the page itself. */
+  html:has(main[data-education-page]),
+  body:has(main[data-education-page]) {
+    background-color: var(--color-house-education-deep);
+  }
+
   /* The fixed navbar owns the top display cutout after viewport-fit=cover.
      Keeping this on the header (rather than every navbar variant) makes the
      ownership identical for Home, inner pages, and the scrolled compact bar. */

@@ -3,7 +3,7 @@ import { fileURLToPath } from "node:url";
 import { dirname, resolve } from "node:path";
 import { describe, it, expect } from "vitest";
 import { HOUSES } from "@/data/houses";
-import { EDUCATION_DESTINATIONS } from "@/data/education";
+import { EDUCATION_ACCELERATOR } from "@/data/education";
 
 // ═══════════════════════════════════════════════════════════════════════════
 // House-token drift check (FRAC-203)
@@ -73,14 +73,14 @@ describe("house token sync (houses.ts ↔ index.css)", () => {
     expect(tokens.size).toBe(12);
   });
 
-  it("keeps both Education destinations and defers Political Club visibility", () => {
+  it("keeps only Accelerator external and defers Political Club visibility", () => {
     const education = HOUSES.find(({ id }) => id === "school")!;
-    expect(education.externalLinks).toEqual(
-      EDUCATION_DESTINATIONS.map(({ houseLinkLabel, url }) => ({
-        label: houseLinkLabel,
-        url,
-      })),
-    );
+    expect(education.externalLinks).toEqual([
+      {
+        label: EDUCATION_ACCELERATOR.houseLinkLabel,
+        url: EDUCATION_ACCELERATOR.url,
+      },
+    ]);
 
     const politicalClub = HOUSES.at(5)!;
     expect(politicalClub.id).toBe("forum");
