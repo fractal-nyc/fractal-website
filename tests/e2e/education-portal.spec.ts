@@ -2,6 +2,15 @@ import { expect, test } from "@playwright/test";
 import type { ResponsiveProfile } from "./support/profiles";
 import { preparePage } from "./support/layout-assertions";
 
+const MEL_BRAND_BIO =
+  "Mel Brand is a Brooklyn-based industrial designer creating environmentally conscious furniture that balances sustainability with playful conceptual thinking. With 10 years of experience in architecture, architectural lighting design, and industrial design her work considers the relationship between furniture, space, and human interaction in the home. She brings levity to complex topics, using humor as a design tool to make serious issues more approachable. Her recent projects span furniture, lighting, and home goods, often working with materials such as wood, 3D printing, ceramics, and fabric. By combining thoughtful design with a systems-oriented mindset, Mel aims to create work that sparks both joy and reflection.";
+const JULIANNE_LEFELHOCZ_BIO =
+  "Julianne Lefelhocz is a multidisciplinary creative technologist and designer merging fashion, design, math, and technology. With over 10 years of experience 3D modeling, two degrees in Computer Science and Footwear and Accessories Design, she is a teacher at the Brooklyn Shoe Space for 3D modeling footwear and a software engineer building CAD tools for jewelry design. She leverages tools such as 3D printing, laser cutting, electronics, kinetics and parametric code to create unique designs for accessories, home goods and fashion. Inspired by the natural world and the mathematical formulas that underpin it, her work often reflects themes of recursion, geometry, and dichotomy.";
+const ANDREW_ROSE_BIO =
+  "Andrew Rose, Founder of Fractal, Fractal University, and Fractal Bootcamp — Andrew has trained 100 engineers in the last 2 years, following his career as a software engineer and educator.";
+const LIAM_DUFFY_BIO =
+  "Liam Duffy, senior software engineer at Seso Inc. — Liam has been a senior software engineer for over 5 years and has been engineering for over a decade. At Seso, he is leading the adoption of AI engineering practices, and now he's bringing that real-world expertise to Fractal Accelerator students.";
+
 test("Education portal keeps one wide accessible catalog across input modes", async ({
   page,
 }, testInfo) => {
@@ -36,6 +45,26 @@ test("Education portal keeps one wide accessible catalog across input modes", as
   await expect(catalog).toBeVisible();
   await expect(catalog.locator("article")).toHaveCount(20);
   await expect(page.locator("[data-course-collection]")).toHaveCount(1);
+  await expect(catalog.locator("[data-instructor-bio]")).toHaveCount(20);
+  await expect(catalog.locator("[data-instructor-record]")).toHaveCount(23);
+
+  const lampCourse = catalog.locator('article[data-course-id="making-a-lamp"]');
+  const lampBio = lampCourse.locator("[data-instructor-bio]");
+  await expect(lampBio.locator("[data-instructor-record]")).toHaveCount(2);
+  await expect(lampBio.locator("[data-instructor-record]").nth(0)).toHaveText(MEL_BRAND_BIO);
+  await expect(lampBio.locator("[data-instructor-record]").nth(1)).toHaveText(
+    JULIANNE_LEFELHOCZ_BIO,
+  );
+
+  const acceleratorCourse = catalog.locator('article[data-course-id="fractal-accelerator"]');
+  const acceleratorBio = acceleratorCourse.locator("[data-instructor-bio]");
+  await expect(acceleratorBio.locator("[data-instructor-record]")).toHaveCount(2);
+  await expect(acceleratorBio.locator("[data-instructor-record]").nth(0)).toHaveText(
+    ANDREW_ROSE_BIO,
+  );
+  await expect(acceleratorBio.locator("[data-instructor-record]").nth(1)).toHaveText(
+    LIAM_DUFFY_BIO,
+  );
 
   const technology = page.getByRole("button", { name: "Technology" });
   expect(
@@ -61,6 +90,18 @@ test("Education portal keeps one wide accessible catalog across input modes", as
   await expect(titleLink).toHaveAttribute("aria-describedby", "lost-generation-close-reading-description");
 
   if (!hasTouch && width >= 1024 && !profile?.rootFontScale) {
+    const lampInstructor = lampCourse.getByRole("button", {
+      name: "Mel Brand & Julianne Lefelhocz",
+    });
+    await lampInstructor.focus();
+    await expect(lampBio).toHaveCSS("visibility", "visible");
+    await lampInstructor.click();
+    await expect(lampInstructor).toHaveAttribute("aria-expanded", "true");
+    await page.keyboard.press("Escape");
+    await expect(lampInstructor).toHaveAttribute("aria-expanded", "false");
+    await expect(lampInstructor).toBeFocused();
+    await expect(lampBio).toHaveCSS("visibility", "hidden");
+
     await expect(description).toHaveCSS("visibility", "hidden");
     await titleLink.hover();
     await expect(description).toHaveCSS("visibility", "visible");
@@ -127,6 +168,8 @@ test("Education portal keeps one wide accessible catalog across input modes", as
     await expect(description).toHaveCSS("position", "static");
     await expect(description).toBeVisible();
     await expect(firstCourse.locator("[data-instructor-bio]")).toBeVisible();
+    await expect(lampBio).toBeVisible();
+    await expect(acceleratorBio).toBeVisible();
   }
 
   const jumpLink = page.getByRole("link", { name: "What's FractalU?" });

@@ -1,12 +1,24 @@
 {
   "semester": "Summer 2026",
+  "sourceProvenance": {
+    "url": "https://www.fractalu.nyc/",
+    "verifiedAt": "2026-08-25T21:24:12Z",
+    "lastModified": "Sat, 22 Aug 2026 14:48:29 GMT",
+    "etag": "\"2cc1fc19d0554d960a08ada91c6063a8\"",
+    "byteLength": 103678,
+    "sha256": "99194ce63e46c93f17763dbcddac0015b29a8fe70a2df812d55696b9f0c7b1d7"
+  },
   "courses": [
     {
       "id": "lost-generation-close-reading",
       "title": "The Lost Generation Close Reading",
       "category": "Literature",
-      "instructor": "Elena Navarrete",
-      "instructorBio": "Elena studied Comparative Literature and Information Science at Columbia University. For the past two years, she has been leading literary discussion groups. This will be her ninth group, following deep dives into works like East of Eden, Anna Karenina, One Hundred Years of Solitude, The House of Mirth, The Great Gatsby, and The Brothers Karamazov.",
+      "instructors": [
+        {
+          "name": "Elena Navarrete",
+          "bio": "Elena studied Comparative Literature and Information Science at Columbia University. For the past two years, she has been leading literary discussion groups. This will be her ninth group, following deep dives into works like East of Eden, Anna Karenina, One Hundred Years of Solitude, The House of Mirth, The Great Gatsby, and The Brothers Karamazov."
+        }
+      ],
       "schedule": "Wednesdays, 7–8:30pm",
       "dates": "Jun 17 – Jul 8",
       "location": "NoHo, Manhattan",
@@ -21,8 +33,12 @@
       "id": "the-odyssey-close-reading",
       "title": "The Odyssey Close Reading",
       "category": "Literature",
-      "instructor": "Elena Navarrete",
-      "instructorBio": "Elena is the founder of Close Reading NYC, a literary community offering in-person reading groups and workshops in Manhattan. She holds a double major in Comparative Literature and Computer Science from Columbia University and has led close readings with Fractal for two years. She has guided readers through classics such as Moby-Dick, Middlemarch, The Brothers Karamazov, and Anna Karenina, among others.",
+      "instructors": [
+        {
+          "name": "Elena Navarrete",
+          "bio": "Elena is the founder of Close Reading NYC, a literary community offering in-person reading groups and workshops in Manhattan. She holds a double major in Comparative Literature and Computer Science from Columbia University and has led close readings with Fractal for two years. She has guided readers through classics such as Moby-Dick, Middlemarch, The Brothers Karamazov, and Anna Karenina, among others."
+        }
+      ],
       "schedule": "Mon 7–8:30pm + Wed 11am–12:30pm",
       "dates": "Jul 6 – Aug 12",
       "location": "NoHo, Manhattan",
@@ -37,8 +53,12 @@
       "id": "writing-as-a-quick-bite",
       "title": "Writing as a Quick Bite: Intro to Flash Fiction",
       "category": "Writing",
-      "instructor": "Sara Cunningham",
-      "instructorBio": "Sara earned her MFA in poetry from the University of Houston. Her writing appears or is forthcoming in several literary journals including Indiana Review, Washington Square Review, Dialogist, trampset, and others (read more at sarakaplancunningham.com). Full time, she is a high school teacher in Bed Stuy, and has taught first year writing at the University of Houston, as well as creative writing.",
+      "instructors": [
+        {
+          "name": "Sara Cunningham",
+          "bio": "Sara earned her MFA in poetry from the University of Houston. Her writing appears or is forthcoming in several literary journals including Indiana Review, Washington Square Review, Dialogist, trampset, and others (read more at sarakaplancunningham.com). Full time, she is a high school teacher in Bed Stuy, and has taught first year writing at the University of Houston, as well as creative writing."
+        }
+      ],
       "schedule": "Thursdays, 6–8pm",
       "dates": "Jul 9 – Jul 30",
       "location": "Brooklyn (address sent to accepted students)",
@@ -53,8 +73,12 @@
       "id": "improv-writing-lab",
       "title": "Improv Writing Lab",
       "category": "Writing",
-      "instructor": "Crystal Duan",
-      "instructorBio": "Crystal Duan combines her background in fast-paced journalism (where she had to write 1,200+ words daily on deadline) with expertise in Jungian psychology to create a unique approach to writing unblocking. With bylines in the Washington Post, Minneapolis Star Tribune, and more, she understands both the craft and the psychology of effective writing. What sets Crystal's approach apart is her focus on the emotional and somatic aspects of writing - not just what you write, but how it feels to write it. Her coaching identifies specific patterns of self-criticism and helps you develop a more productive relationship with your creative self.",
+      "instructors": [
+        {
+          "name": "Crystal Duan",
+          "bio": "Crystal Duan combines her background in fast-paced journalism (where she had to write 1,200+ words daily on deadline) with expertise in Jungian psychology to create a unique approach to writing unblocking. With bylines in the Washington Post, Minneapolis Star Tribune, and more, she understands both the craft and the psychology of effective writing. What sets Crystal's approach apart is her focus on the emotional and somatic aspects of writing - not just what you write, but how it feels to write it. Her coaching identifies specific patterns of self-criticism and helps you develop a more productive relationship with your creative self."
+        }
+      ],
       "schedule": "Wednesdays, 6:30–8pm",
       "dates": "Jul 29 – Sep 2",
       "location": "Fractal Campus, 111 Conselyea St",
@@ -69,8 +93,12 @@
       "id": "worldbuilding-for-storytellers",
       "title": "Worldbuilding for Storytellers and Narrative Designers",
       "category": "Writing",
-      "instructor": "Sarah Guan",
-      "instructorBio": "Sarah is an editor and publisher of award-winning speculative fiction. She studied history and literature at Stanford, and she thinks about worldbuilding through an interdisciplinary lens.",
+      "instructors": [
+        {
+          "name": "Sarah Guan",
+          "bio": "Sarah is an editor and publisher of award-winning speculative fiction. She studied history and literature at Stanford, and she thinks about worldbuilding through an interdisciplinary lens."
+        }
+      ],
       "schedule": "Wednesdays, 6:30–8:30pm",
       "dates": "Jul 15 – Aug 26",
       "location": "Fractal Campus, 111 Conselyea St",
@@ -85,8 +113,12 @@
       "id": "intuitive-movement",
       "title": "Intuitive Movement",
       "category": "Movement",
-      "instructor": "Clara Wiest",
-      "instructorBio": "Clara Wiest is a swiss artist, based in NY for almost 10 years. They are a stage, movement and intimacy director as well as a performance artist. Their whole life has been movement focused; They grew up going to circus school for 12 years, ballet, capoeira, contemporary and modern dance, they have extensive training in Feldenkrais, Alexander Technique, Clown and Mime, Lucid body, Qi Gong, somatic practices, Hypnotherapy and Energy Healing, as well as trauma-informed body work.",
+      "instructors": [
+        {
+          "name": "Clara Wiest",
+          "bio": "Clara Wiest is a swiss artist, based in NY for almost 10 years. They are a stage, movement and intimacy director as well as a performance artist. Their whole life has been movement focused; They grew up going to circus school for 12 years, ballet, capoeira, contemporary and modern dance, they have extensive training in Feldenkrais, Alexander Technique, Clown and Mime, Lucid body, Qi Gong, somatic practices, Hypnotherapy and Energy Healing, as well as trauma-informed body work."
+        }
+      ],
       "schedule": "Wednesdays, 6–7:15pm",
       "dates": "Jun 17 – Aug 19",
       "location": "Lower East Side",
@@ -102,8 +134,12 @@
       "id": "parkour-for-everyone",
       "title": "Parkour for Everyone",
       "category": "Movement",
-      "instructor": "Jianing Zhao",
-      "instructorBio": "Jianing Zhao is an interdisciplinary movement and theater artist with backgrounds in contact improv, contemporary dance, dabke, ballroom, Kpop, pole and aerial dance, hair hanging, martial arts, parkour, and freestyle skiing. Her movement practice explores the multiplicity and dynamism of connective points and dimensions between one's own body and other physical and sociocultural bodies and spaces. She has been practicing parkour since 2022 and sees it as a form of movement research that bridges physical exercise, creative exploration, and embodied engagement with public space.",
+      "instructors": [
+        {
+          "name": "Jianing Zhao",
+          "bio": "Jianing Zhao is an interdisciplinary movement and theater artist with backgrounds in contact improv, contemporary dance, dabke, ballroom, Kpop, pole and aerial dance, hair hanging, martial arts, parkour, and freestyle skiing. Her movement practice explores the multiplicity and dynamism of connective points and dimensions between one's own body and other physical and sociocultural bodies and spaces. She has been practicing parkour since 2022 and sees it as a form of movement research that bridges physical exercise, creative exploration, and embodied engagement with public space."
+        }
+      ],
       "schedule": "Mondays, 6:30–8:30pm",
       "dates": "Jul 6 – Aug 17",
       "location": "Outdoor parks, Manhattan",
@@ -119,8 +155,12 @@
       "id": "butoh-into-the-depth",
       "title": "Butoh: Into the Depth",
       "category": "Movement",
-      "instructor": "Vangeline",
-      "instructorBio": "I am the director of the New York Butoh Institute with 25 years of experience teaching and performing butoh. www.vangeline.com",
+      "instructors": [
+        {
+          "name": "Vangeline",
+          "bio": "I am the director of the New York Butoh Institute with 25 years of experience teaching and performing butoh. www.vangeline.com"
+        }
+      ],
       "schedule": "Wednesdays, 6–9pm",
       "dates": "Jul 8 – Jul 31",
       "location": "Gowanus, Brooklyn",
@@ -133,8 +173,12 @@
       "id": "applied-taijiquan",
       "title": "Applied Taijiquan",
       "category": "Movement",
-      "instructor": "Michael Weston",
-      "instructorBio": "I've been teaching self-defense community workshops with a wide range of students over the past 7 years, refining my ability to convey movement concepts to people of all skill levels. In my 20 years practicing martial arts, including Taijiquan, Baguazhang and Xingyiquan, my focus has been on developing all of the benefits Internal Martial Arts (IMAs) have to offer, from the meditative and therapeutic to the more active body skills.",
+      "instructors": [
+        {
+          "name": "Michael Weston",
+          "bio": "I've been teaching self-defense community workshops with a wide range of students over the past 7 years, refining my ability to convey movement concepts to people of all skill levels. In my 20 years practicing martial arts, including Taijiquan, Baguazhang and Xingyiquan, my focus has been on developing all of the benefits Internal Martial Arts (IMAs) have to offer, from the meditative and therapeutic to the more active body skills."
+        }
+      ],
       "schedule": "Sundays, 6–8pm",
       "dates": "Jul 5 – Aug 30",
       "location": "Fractal Campus, 111 Conselyea St",
@@ -149,8 +193,12 @@
       "id": "dhamma-dance-club",
       "title": "Dhamma Dance Club",
       "category": "Movement",
-      "instructor": "Michael Tong",
-      "instructorBio": "Michael is an avid facilitator of authentic relating, acucircles, and authentic movement containers, and is curious how they integrate into the moment-to-moment. Most nights in the week, you may see him at the club.",
+      "instructors": [
+        {
+          "name": "Michael Tong",
+          "bio": "Michael is an avid facilitator of authentic relating, acucircles, and authentic movement containers, and is curious how they integrate into the moment-to-moment. Most nights in the week, you may see him at the club."
+        }
+      ],
       "schedule": "Tuesdays 7–9pm + Thursdays 10pm",
       "dates": "6 weeks open RSVP, then 6 weeks closed cohort",
       "location": "Bushwick",
@@ -166,8 +214,12 @@
       "id": "hidden-power-of-groove",
       "title": "The Hidden Power of Groove: Intro to Street Dance",
       "category": "Movement",
-      "instructor": "Jessica Wang",
-      "instructorBio": "I'm a dancer, dance teacher and former software engineer with training in street & club dance styles including hip hop, house, vogue femme, waacking, kpop, choreography, and freestyle. Having started dance as an adult who often felt confused and overwhelmed in traditional beginner classes, I've become passionate about making movement more accessible, intuitive, and enjoyable for non-dancers. I currently teach beginner-focused dance classes and design learning experiences that help people grow confidence, expression, rhythm, and freedom through movement.",
+      "instructors": [
+        {
+          "name": "Jessica Wang",
+          "bio": "I'm a dancer, dance teacher and former software engineer with training in street & club dance styles including hip hop, house, vogue femme, waacking, kpop, choreography, and freestyle. Having started dance as an adult who often felt confused and overwhelmed in traditional beginner classes, I've become passionate about making movement more accessible, intuitive, and enjoyable for non-dancers. I currently teach beginner-focused dance classes and design learning experiences that help people grow confidence, expression, rhythm, and freedom through movement."
+        }
+      ],
       "schedule": "Tuesdays, 7–8:30pm",
       "dates": "Jul 14 – Aug 25",
       "location": "Merlin's Place, Bushwick",
@@ -182,8 +234,12 @@
       "id": "drum-circle-101",
       "title": "Drum Circle 101",
       "category": "Music",
-      "instructor": "Christian Mortensen",
-      "instructorBio": "Hi, my name is Christian and I have loved drumming for as long as I can remember! I have studied and performed in many different styles over the years, including symphonic percussion, marching band, drum set, West African, Afro Latin, Brazilian, and Celtic. Most recently I have had the opportunity to perform with Mambembe Brazilian drum group and The Empire Marching Elite marching band at parades, events, Brooklyn Cyclones games, and even at Radio City Music Hall! I believe that rhythm is something universally human, as natural as our heartbeat. Something that each of us has within us, ready to unlock and tap into. I enjoy teaching others the art of drumming, and I am looking forward to sharing my knowledge and experience with you.",
+      "instructors": [
+        {
+          "name": "Christian Mortensen",
+          "bio": "Hi, my name is Christian and I have loved drumming for as long as I can remember! I have studied and performed in many different styles over the years, including symphonic percussion, marching band, drum set, West African, Afro Latin, Brazilian, and Celtic. Most recently I have had the opportunity to perform with Mambembe Brazilian drum group and The Empire Marching Elite marching band at parades, events, Brooklyn Cyclones games, and even at Radio City Music Hall! I believe that rhythm is something universally human, as natural as our heartbeat. Something that each of us has within us, ready to unlock and tap into. I enjoy teaching others the art of drumming, and I am looking forward to sharing my knowledge and experience with you."
+        }
+      ],
       "schedule": "Mondays, 6–7:30pm",
       "dates": "Jul 13 – Aug 24",
       "location": "Merlin's Place, Bushwick",
@@ -198,8 +254,12 @@
       "id": "structure-of-sound",
       "title": "The Structure of Sound: Mathematics of Music",
       "category": "Music",
-      "instructor": "Surya Raghavendran",
-      "instructorBio": "Surya Raghavendran is a researcher in mathematical physics and a Gibbs Assistant Professor in the math department at Yale, with broad interests in how mathematics shapes the world around us. The mathematics of music is a favorite instance, and this course is his attempt to share it.",
+      "instructors": [
+        {
+          "name": "Surya Raghavendran",
+          "bio": "Surya Raghavendran is a researcher in mathematical physics and a Gibbs Assistant Professor in the math department at Yale, with broad interests in how mathematics shapes the world around us. The mathematics of music is a favorite instance, and this course is his attempt to share it."
+        }
+      ],
       "schedule": "Wednesdays, 6:30–8:30pm",
       "dates": "Jul 8 – Aug 12",
       "location": "Homebrew",
@@ -214,8 +274,12 @@
       "id": "build-a-poker-ai-bot",
       "title": "Build a Poker AI Bot",
       "category": "Technology",
-      "instructor": "Arnav Sood",
-      "instructorBio": "I'm finishing up my Economics PhD at Carnegie Mellon, and a Data Science/Modeling Intern at Revelio Labs. This class is based on the Poker AI Challenge at CMU, in which I participated.",
+      "instructors": [
+        {
+          "name": "Arnav Sood",
+          "bio": "I'm finishing up my Economics PhD at Carnegie Mellon, and a Data Science/Modeling Intern at Revelio Labs. This class is based on the Poker AI Challenge at CMU, in which I participated."
+        }
+      ],
       "schedule": "Sundays, 2–4pm",
       "dates": "Jul 5 – Aug 9",
       "location": "Jersey City (remote for Aug sessions)",
@@ -230,8 +294,16 @@
       "id": "fractal-accelerator",
       "title": "Fractal Accelerator",
       "category": "Technology",
-      "instructor": "Andrew Rose & Liam Duffy",
-      "instructorBio": "Andrew Rose, Founder of Fractal, Fractal University, and Fractal Bootcamp, has trained 100 engineers in the last two years following his career as a software engineer and educator. Liam Duffy is a senior software engineer at Seso Inc. with over a decade of engineering experience; he leads the adoption of AI engineering practices at Seso and brings that real-world expertise to Fractal Accelerator students.",
+      "instructors": [
+        {
+          "name": "Andrew Rose",
+          "bio": "Andrew Rose, Founder of Fractal, Fractal University, and Fractal Bootcamp — Andrew has trained 100 engineers in the last 2 years, following his career as a software engineer and educator."
+        },
+        {
+          "name": "Liam Duffy",
+          "bio": "Liam Duffy, senior software engineer at Seso Inc. — Liam has been a senior software engineer for over 5 years and has been engineering for over a decade. At Seso, he is leading the adoption of AI engineering practices, and now he's bringing that real-world expertise to Fractal Accelerator students."
+        }
+      ],
       "schedule": "Saturdays, 10am–1pm",
       "dates": "Jul 11 – Aug 15",
       "location": "Fractal Campus, 111 Conselyea St",
@@ -246,8 +318,12 @@
       "id": "basics-of-computational-biology",
       "title": "Basics of Computational Biology",
       "category": "Technology",
-      "instructor": "Mike Saint-Antoine",
-      "instructorBio": "I've been working in the bioinformatics field for about 9 years. I currently work at a biotech startup, and before that I worked in academia and completed a PhD in this field. I've also taught the class 6 times already and I think people have mostly enjoyed it.",
+      "instructors": [
+        {
+          "name": "Mike Saint-Antoine",
+          "bio": "I've been working in the bioinformatics field for about 9 years. I currently work at a biotech startup, and before that I worked in academia and completed a PhD in this field. I've also taught the class 6 times already and I think people have mostly enjoyed it."
+        }
+      ],
       "schedule": "Sat + Sun, 10am–5pm",
       "dates": "Jul 25 – 26 (weekend seminar)",
       "location": "TBD (address emailed to enrolled students)",
@@ -262,7 +338,16 @@
       "id": "making-a-lamp",
       "title": "Making a Lamp: 3D Modeling, 3D Printing & Design",
       "category": "Craft",
-      "instructor": "Mel Brand & Julianne Lefelhocz",
+      "instructors": [
+        {
+          "name": "Mel Brand",
+          "bio": "Mel Brand is a Brooklyn-based industrial designer creating environmentally conscious furniture that balances sustainability with playful conceptual thinking. With 10 years of experience in architecture, architectural lighting design, and industrial design her work considers the relationship between furniture, space, and human interaction in the home. She brings levity to complex topics, using humor as a design tool to make serious issues more approachable. Her recent projects span furniture, lighting, and home goods, often working with materials such as wood, 3D printing, ceramics, and fabric. By combining thoughtful design with a systems-oriented mindset, Mel aims to create work that sparks both joy and reflection."
+        },
+        {
+          "name": "Julianne Lefelhocz",
+          "bio": "Julianne Lefelhocz is a multidisciplinary creative technologist and designer merging fashion, design, math, and technology. With over 10 years of experience 3D modeling, two degrees in Computer Science and Footwear and Accessories Design, she is a teacher at the Brooklyn Shoe Space for 3D modeling footwear and a software engineer building CAD tools for jewelry design. She leverages tools such as 3D printing, laser cutting, electronics, kinetics and parametric code to create unique designs for accessories, home goods and fashion. Inspired by the natural world and the mathematical formulas that underpin it, her work often reflects themes of recursion, geometry, and dichotomy."
+        }
+      ],
       "schedule": "Tuesdays, 6:30–8:30pm",
       "dates": "Jun 30 – Aug 18",
       "location": "Bushwick",
@@ -277,7 +362,16 @@
       "id": "how-to-make-a-planter",
       "title": "How to Make a Planter: 3D Modeling for 3D Printing",
       "category": "Craft",
-      "instructor": "Mel Brand & Julianne Lefelhocz",
+      "instructors": [
+        {
+          "name": "Mel Brand",
+          "bio": "Mel Brand is a Brooklyn-based industrial designer creating environmentally conscious furniture that balances sustainability with playful conceptual thinking. With 10 years of experience in architecture, architectural lighting design, and industrial design her work considers the relationship between furniture, space, and human interaction in the home. She brings levity to complex topics, using humor as a design tool to make serious issues more approachable. Her recent projects span furniture, lighting, and home goods, often working with materials such as wood, 3D printing, ceramics, and fabric. By combining thoughtful design with a systems-oriented mindset, Mel aims to create work that sparks both joy and reflection."
+        },
+        {
+          "name": "Julianne Lefelhocz",
+          "bio": "Julianne Lefelhocz is a multidisciplinary creative technologist and designer merging fashion, design, math, and technology. With over 10 years of experience 3D modeling, two degrees in Computer Science and Footwear and Accessories Design, she is a teacher at the Brooklyn Shoe Space for 3D modeling footwear and a software engineer building CAD tools for jewelry design. She leverages tools such as 3D printing, laser cutting, electronics, kinetics and parametric code to create unique designs for accessories, home goods and fashion. Inspired by the natural world and the mathematical formulas that underpin it, her work often reflects themes of recursion, geometry, and dichotomy."
+        }
+      ],
       "schedule": "Sunday, 10:30am–5:30pm",
       "dates": "Jul 12 (one day)",
       "location": "Bushwick",
@@ -292,8 +386,12 @@
       "id": "urban-gardening-practicum",
       "title": "Urban Gardening Practicum",
       "category": "Nature",
-      "instructor": "James Hunt",
-      "instructorBio": "James Hunt has worked to develop and sell agtech software, helped create companies that store carbon in grasslands and forests, and moonlights as a guerrilla gardener around New York City.",
+      "instructors": [
+        {
+          "name": "James Hunt",
+          "bio": "James Hunt has worked to develop and sell agtech software, helped create companies that store carbon in grasslands and forests, and moonlights as a guerrilla gardener around New York City."
+        }
+      ],
       "schedule": "Sundays, 4–6:30pm",
       "dates": "Jul 19 – Aug 30",
       "location": "Fractal Campus rooftop, 111 Conselyea St",
@@ -308,8 +406,12 @@
       "id": "unconscious-mind-journey-group",
       "title": "Unconscious Mind Journey Group",
       "category": "Mind & Body",
-      "instructor": "Christian Mortensen",
-      "instructorBio": "Christian's mission is to make the world a better place by helping people reach their true potential – people who feel good in their mind and body, make healthy decisions, form strong secure relationships, create positive change in their communities, and make their dreams reality. He specializes in breakthrough coaching with individuals and groups using cutting-edge symbolic and metaphorical landscape methods. Christian is credentialed with the International Coaching Federation, the Hypnosis Training Academy, Lumia Coaching, and the Wim Hof Method Academy.",
+      "instructors": [
+        {
+          "name": "Christian Mortensen",
+          "bio": "Christian's mission is to make the world a better place by helping people reach their true potential – people who feel good in their mind and body, make healthy decisions, form strong secure relationships, create positive change in their communities, and make their dreams reality. He specializes in breakthrough coaching with individuals and groups using cutting-edge symbolic and metaphorical landscape methods. Christian is credentialed with the International Coaching Federation, the Hypnosis Training Academy, Lumia Coaching, and the Wim Hof Method Academy."
+        }
+      ],
       "schedule": "Thursdays, 7–9pm",
       "dates": "Jul 9 – Aug 20",
       "location": "Merlin's Place, Bushwick",

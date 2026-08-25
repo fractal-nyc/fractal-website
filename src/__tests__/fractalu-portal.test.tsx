@@ -1,7 +1,22 @@
 import { act, fireEvent, render, screen, within } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { FractalUniversityPortal } from "@/components/education/FractalUniversityPortal";
-import { FRACTALU_CATALOG, FRACTALU_CATEGORIES } from "@/data/fractalu";
+import {
+  FRACTALU_CATALOG,
+  FRACTALU_CATEGORIES,
+  FRACTALU_SOURCE_PROVENANCE,
+} from "@/data/fractalu";
+
+const MEL_BRAND_BIO =
+  "Mel Brand is a Brooklyn-based industrial designer creating environmentally conscious furniture that balances sustainability with playful conceptual thinking. With 10 years of experience in architecture, architectural lighting design, and industrial design her work considers the relationship between furniture, space, and human interaction in the home. She brings levity to complex topics, using humor as a design tool to make serious issues more approachable. Her recent projects span furniture, lighting, and home goods, often working with materials such as wood, 3D printing, ceramics, and fabric. By combining thoughtful design with a systems-oriented mindset, Mel aims to create work that sparks both joy and reflection.";
+const JULIANNE_LEFELHOCZ_BIO =
+  "Julianne Lefelhocz is a multidisciplinary creative technologist and designer merging fashion, design, math, and technology. With over 10 years of experience 3D modeling, two degrees in Computer Science and Footwear and Accessories Design, she is a teacher at the Brooklyn Shoe Space for 3D modeling footwear and a software engineer building CAD tools for jewelry design. She leverages tools such as 3D printing, laser cutting, electronics, kinetics and parametric code to create unique designs for accessories, home goods and fashion. Inspired by the natural world and the mathematical formulas that underpin it, her work often reflects themes of recursion, geometry, and dichotomy.";
+const ANDREW_ROSE_BIO =
+  "Andrew Rose, Founder of Fractal, Fractal University, and Fractal Bootcamp — Andrew has trained 100 engineers in the last 2 years, following his career as a software engineer and educator.";
+const LIAM_DUFFY_BIO =
+  "Liam Duffy, senior software engineer at Seso Inc. — Liam has been a senior software engineer for over 5 years and has been engineering for over a decade. At Seso, he is leading the adoption of AI engineering practices, and now he's bringing that real-world expertise to Fractal Accelerator students.";
+const OLD_ACCELERATOR_PARAPHRASE =
+  "Andrew Rose, Founder of Fractal, Fractal University, and Fractal Bootcamp, has trained 100 engineers in the last two years following his career as a software engineer and educator. Liam Duffy is a senior software engineer at Seso Inc. with over a decade of engineering experience; he leads the adoption of AI engineering practices at Seso and brings that real-world expertise to Fractal Accelerator students.";
 
 const originalMatchMedia = window.matchMedia;
 
@@ -129,21 +144,66 @@ describe("FractalUniversityPortal", () => {
     );
   });
 
-  it("keeps descriptions and available bios in normal flow without matchMedia", () => {
+  it("keeps descriptions and all source biographies in normal flow without matchMedia", () => {
     mockFinePointer(false);
     render(<FractalUniversityPortal />);
     const catalog = screen.getByTestId("fractalu-course-catalog");
     expect(catalog.querySelectorAll("[data-course-description]")).toHaveLength(20);
-    expect(catalog.querySelectorAll("[data-instructor-bio]")).toHaveLength(18);
+    expect(catalog.querySelectorAll("[data-instructor-bio]")).toHaveLength(20);
+    expect(catalog.querySelectorAll("[data-instructor-record]")).toHaveLength(23);
     expect(within(catalog).queryByRole("button", { name: "Elena Navarrete" })).toBeNull();
     for (const panel of catalog.querySelectorAll("[data-course-description], [data-instructor-bio]")) {
       expect(panel.className).not.toMatch(/hidden|sr-only/);
     }
-    for (const id of ["making-a-lamp", "how-to-make-a-planter"]) {
-      const card = catalog.querySelector<HTMLElement>(`[data-course-id="${id}"]`)!;
-      expect(card.querySelector("[data-instructor-bio]")).toBeNull();
-      expect(within(card).queryByRole("button")).toBeNull();
+  });
+
+  it("preserves exact ordered multi-instructor source records and provenance", () => {
+    mockFinePointer(true);
+    render(<FractalUniversityPortal />);
+
+    expect(FRACTALU_CATALOG.courses).toHaveLength(20);
+    for (const course of FRACTALU_CATALOG.courses) {
+      expect(course.instructors.length).toBeGreaterThan(0);
+      expect(course.instructors.every(({ name, bio }) => name.length > 0 && bio.length > 0)).toBe(true);
+      expect(course.instructor).toBe(course.instructors.map(({ name }) => name).join(" & "));
     }
+
+    for (const id of ["making-a-lamp", "how-to-make-a-planter"]) {
+      const course = FRACTALU_CATALOG.courses.find((candidate) => candidate.id === id)!;
+      expect(course.instructors).toEqual([
+        { name: "Mel Brand", bio: MEL_BRAND_BIO },
+        { name: "Julianne Lefelhocz", bio: JULIANNE_LEFELHOCZ_BIO },
+      ]);
+      const card = document.querySelector<HTMLElement>(`[data-course-id="${id}"]`)!;
+      const trigger = within(card).getByRole("button", {
+        name: "Mel Brand & Julianne Lefelhocz",
+      });
+      const panel = document.getElementById(trigger.getAttribute("aria-controls")!)!;
+      expect(within(panel).getByText(MEL_BRAND_BIO)).toBeTruthy();
+      expect(within(panel).getByText(JULIANNE_LEFELHOCZ_BIO)).toBeTruthy();
+      expect(panel.querySelectorAll("[data-instructor-record]")).toHaveLength(2);
+      expect(panel.querySelector("a, button")).toBeNull();
+    }
+
+    const accelerator = FRACTALU_CATALOG.courses.find(
+      (course) => course.id === "fractal-accelerator",
+    )!;
+    expect(accelerator.instructors).toEqual([
+      { name: "Andrew Rose", bio: ANDREW_ROSE_BIO },
+      { name: "Liam Duffy", bio: LIAM_DUFFY_BIO },
+    ]);
+    expect(screen.getByText(ANDREW_ROSE_BIO)).toBeTruthy();
+    expect(screen.getByText(LIAM_DUFFY_BIO)).toBeTruthy();
+    expect(screen.queryByText(OLD_ACCELERATOR_PARAPHRASE)).toBeNull();
+
+    expect(FRACTALU_SOURCE_PROVENANCE).toEqual({
+      url: "https://www.fractalu.nyc/",
+      verifiedAt: "2026-08-25T21:24:12Z",
+      lastModified: "Sat, 22 Aug 2026 14:48:29 GMT",
+      etag: '"2cc1fc19d0554d960a08ada91c6063a8"',
+      byteLength: 103678,
+      sha256: "99194ce63e46c93f17763dbcddac0015b29a8fe70a2df812d55696b9f0c7b1d7",
+    });
   });
 
   it("progressively enhances instructor bios with focus, pinning, and Escape", () => {
