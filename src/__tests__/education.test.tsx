@@ -50,6 +50,12 @@ describe("EducationPage", () => {
       accelerator.compareDocumentPosition(portal) & Node.DOCUMENT_POSITION_FOLLOWING,
     ).toBeTruthy();
     expect(screen.getByRole("heading", { name: "Fractal University" })).toBeTruthy();
+    expect(portal.closest(".md\\:max-w-\\[58vw\\]")).toBeNull();
+    expect(portal.querySelector("[data-fractalu-wide-shell]")).toHaveClass(
+      "max-w-[1600px]",
+      "page-gutter",
+      "z-20",
+    );
   });
 
   it("does not embed or expose a FractalU outbound program card or nested controls", () => {
@@ -74,7 +80,7 @@ describe("EducationPage", () => {
       "var(--color-house-education-light)",
     );
     expect(container.querySelector(`svg [stroke="${education.palette.light}"]`)).toBeTruthy();
-    expect(container.querySelector("[data-fractalu-portal]")).toHaveClass(
+    expect(container.querySelector("[data-fractalu-wide-shell] > div")).toHaveClass(
       "bg-background",
       "text-foreground",
     );

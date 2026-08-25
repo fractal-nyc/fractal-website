@@ -1,11 +1,46 @@
-import { useMemo, useState, type ReactNode } from "react";
-import { ArrowUpRight, Play } from "lucide-react";
+import {
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type KeyboardEvent,
+  type MouseEvent,
+  type ReactNode,
+} from "react";
+import { ArrowDown, ArrowUpRight, Play } from "lucide-react";
+import { MandelbrotCorners } from "@/components/ui/MandelbrotCorners";
 import {
   FRACTALU_CATALOG,
   FRACTALU_CATEGORIES,
   type FractalUClub,
   type FractalUCourse,
 } from "@/data/fractalu";
+import { useMediaQuery } from "@/hooks/useMediaQuery";
+
+const FINE_POINTER_PREVIEW_QUERY =
+  "(min-width: 64rem) and (hover: hover) and (pointer: fine)";
+
+function useLargeTextScale() {
+  const measure = () =>
+    typeof window !== "undefined" &&
+    Number.parseFloat(window.getComputedStyle(document.documentElement).fontSize) >= 24;
+  const [usesLargeText, setUsesLargeText] = useState(measure);
+
+  useEffect(() => {
+    const update = () => setUsesLargeText(measure());
+    update();
+    const observer =
+      typeof ResizeObserver === "undefined" ? null : new ResizeObserver(update);
+    observer?.observe(document.documentElement);
+    window.addEventListener("resize", update);
+    return () => {
+      observer?.disconnect();
+      window.removeEventListener("resize", update);
+    };
+  }, []);
+
+  return usesLargeText;
+}
 
 interface ExternalLinkProps {
   href: string;
@@ -14,12 +49,7 @@ interface ExternalLinkProps {
   className?: string;
 }
 
-function ExternalLink({
-  href,
-  children,
-  accessibleName,
-  className = "",
-}: ExternalLinkProps) {
+function ExternalLink({ href, children, accessibleName, className = "" }: ExternalLinkProps) {
   return (
     <a
       href={href}
@@ -34,43 +64,81 @@ function ExternalLink({
   );
 }
 
-function CourseDisclosures({ course }: { course: FractalUCourse }) {
+function CourseDescriptionPreview({ course }: { course: FractalUCourse }) {
   return (
-    <div className="mt-4 space-y-2">
-      <details className="group min-w-0 rounded-md border border-foreground-faint bg-background p-3 text-foreground">
-        <summary className="min-h-11 cursor-pointer [overflow-wrap:anywhere] rounded-md font-mono text-xs uppercase tracking-wide focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-house-education-light">
-          Course description
-        </summary>
-        <p className="text-body mt-2 leading-relaxed text-foreground-muted">
-          {course.description}
-        </p>
-        {course.detailsUrl && (
-          <ExternalLink
-            href={course.detailsUrl}
-            accessibleName={`${course.detailsLabel ?? "Course details"} for ${course.title}`}
-            className="mt-2 font-mono text-xs"
-          >
-            {course.detailsLabel ?? "Course details"}
-          </ExternalLink>
-        )}
-      </details>
-      {course.instructorBio && (
-        <details className="group min-w-0 rounded-md border border-foreground-faint bg-background p-3 text-foreground">
-          <summary className="min-h-11 cursor-pointer [overflow-wrap:anywhere] rounded-md font-mono text-xs uppercase tracking-wide focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-house-education-light">
-            About {course.instructor}
-          </summary>
-          <p className="text-body mt-2 leading-relaxed text-foreground-muted">
-            {course.instructorBio}
-          </p>
-        </details>
+    <p
+      id={`${course.id}-description`}
+      className="fractalu-course-preview fractalu-course-description text-body mt-4 leading-relaxed text-foreground-muted"
+      data-course-description
+    >
+      {course.description}
+    </p>
+  );
+}
+
+interface InstructorBioPreviewProps {
+  course: FractalUCourse;
+  isFinePointer: boolean;
+  pinned: boolean;
+  onToggle: () => void;
+  onEscape: () => void;
+}
+
+function InstructorBioPreview({
+  course,
+  isFinePointer,
+  pinned,
+  onToggle,
+  onEscape,
+}: InstructorBioPreviewProps) {
+  const buttonRef = useRef<HTMLButtonElement>(null);
+  const bioId = `${course.id}-instructor-bio`;
+
+  const handleKeyDown = (event: KeyboardEvent<HTMLButtonElement>) => {
+    if (event.key !== "Escape" || !pinned) return;
+    event.preventDefault();
+    onEscape();
+    buttonRef.current?.focus();
+  };
+
+  if (!course.instructorBio) {
+    return <p className="text-body mt-2 text-foreground-muted">{course.instructor}</p>;
+  }
+
+  return (
+    <div
+      className="fractalu-instructor-preview relative min-w-0"
+      data-pinned={pinned ? "true" : "false"}
+    >
+      {isFinePointer ? (
+        <button
+          ref={buttonRef}
+          type="button"
+          aria-controls={bioId}
+          aria-expanded={pinned}
+          onClick={onToggle}
+          onKeyDown={handleKeyDown}
+          className="text-body mt-2 min-h-11 max-w-full rounded-md text-left text-foreground-muted underline decoration-foreground-faint underline-offset-4 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-house-education-light"
+        >
+          {course.instructor}
+        </button>
+      ) : (
+        <p className="text-body mt-2 text-foreground-muted">{course.instructor}</p>
       )}
+      <p
+        id={bioId}
+        className="fractalu-course-preview fractalu-instructor-bio text-body mt-3 leading-relaxed text-foreground-muted"
+        data-instructor-bio
+      >
+        {course.instructorBio}
+      </p>
     </div>
   );
 }
 
 function CourseActions({ course }: { course: FractalUCourse }) {
   return (
-    <div className="mt-4 flex flex-wrap gap-x-4 gap-y-1 font-mono text-xs">
+    <div className="mt-5 flex flex-wrap gap-x-4 gap-y-1 font-mono text-xs">
       <ExternalLink
         href={course.applicationUrl}
         accessibleName={`${course.applicationLabel} for ${course.title}`}
@@ -78,10 +146,7 @@ function CourseActions({ course }: { course: FractalUCourse }) {
         {course.applicationLabel}
       </ExternalLink>
       {course.videoUrl && (
-        <ExternalLink
-          href={course.videoUrl}
-          accessibleName={`Watch video for ${course.title}`}
-        >
+        <ExternalLink href={course.videoUrl} accessibleName={`Watch video for ${course.title}`}>
           <Play size={13} aria-hidden="true" />
           Watch video
         </ExternalLink>
@@ -90,115 +155,153 @@ function CourseActions({ course }: { course: FractalUCourse }) {
   );
 }
 
-function CourseCard({ course }: { course: FractalUCourse }) {
+interface CourseCardProps {
+  course: FractalUCourse;
+  isFinePointer: boolean;
+  pinnedInstructorId: string | null;
+  setPinnedInstructorId: (id: string | null) => void;
+}
+
+function CourseCard({
+  course,
+  isFinePointer,
+  pinnedInstructorId,
+  setPinnedInstructorId,
+}: CourseCardProps) {
+  const descriptionId = `${course.id}-description`;
+  const instructorPinned = pinnedInstructorId === course.id;
+
   return (
     <article
-      className="min-w-0 max-w-full overflow-hidden rounded-lg border border-foreground-faint bg-background p-5 text-foreground"
+      className="fractalu-course-card group min-w-0 max-w-full rounded-lg border border-foreground-faint bg-background p-6 text-foreground"
       data-course-category={course.category}
+      data-course-id={course.id}
     >
-      <p className="font-mono text-xs uppercase tracking-wide [overflow-wrap:anywhere] text-house-education-deep">
-        {course.category}
-      </p>
-      <h3 className="text-subtitle mt-2 normal-case text-foreground">
-        {course.title}
-      </h3>
-      <p className="text-body mt-2 text-foreground-muted">{course.instructor}</p>
-      <dl className="mt-4 grid gap-2 text-sm text-foreground-muted sm:grid-cols-2">
-        <div>
-          <dt className="font-mono text-xs uppercase text-foreground">Schedule</dt>
-          <dd>{course.schedule}</dd>
-        </div>
-        <div>
-          <dt className="font-mono text-xs uppercase text-foreground">Dates</dt>
-          <dd>{course.dates}</dd>
-        </div>
-        <div>
-          <dt className="font-mono text-xs uppercase text-foreground">Location</dt>
-          <dd>{course.location}</dd>
-        </div>
-        <div>
-          <dt className="font-mono text-xs uppercase text-foreground">Price</dt>
-          <dd>{course.price}</dd>
-        </div>
+      <div className="mb-3 flex min-w-0 items-start justify-between gap-3">
+        <p className="text-label min-w-0 [overflow-wrap:anywhere] text-house-education-deep">
+          {course.category}
+        </p>
+        {course.detailsUrl && (
+          <ArrowUpRight
+            size={16}
+            strokeWidth={1.5}
+            className="mt-0.5 shrink-0 text-house-education-deep opacity-60"
+            aria-hidden="true"
+            data-course-external-icon
+          />
+        )}
+      </div>
+
+      <div className="fractalu-title-preview relative min-w-0">
+        <h3 className="text-subtitle min-w-0 leading-snug normal-case text-foreground [overflow-wrap:anywhere]">
+          {course.detailsUrl ? (
+            <a
+              href={course.detailsUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={`${course.title} course description (opens in a new tab)`}
+              aria-describedby={descriptionId}
+              className="min-w-0 rounded-sm underline decoration-house-education-light/50 underline-offset-4 hover:decoration-house-education-light focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-house-education-light"
+            >
+              {course.title}
+            </a>
+          ) : (
+            <span
+              tabIndex={0}
+              aria-describedby={descriptionId}
+              className="block min-w-0 rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-house-education-light"
+              data-course-title-fallback
+            >
+              {course.title}
+            </span>
+          )}
+        </h3>
+        <CourseDescriptionPreview course={course} />
+      </div>
+
+      <InstructorBioPreview
+        course={course}
+        isFinePointer={isFinePointer}
+        pinned={instructorPinned}
+        onToggle={() => setPinnedInstructorId(instructorPinned ? null : course.id)}
+        onEscape={() => setPinnedInstructorId(null)}
+      />
+
+      <dl className="mt-5 grid min-w-0 gap-3 text-sm text-foreground-muted sm:grid-cols-2">
+        {[
+          ["Schedule", course.schedule],
+          ["Dates", course.dates],
+          ["Location", course.location],
+          ["Price", course.price],
+        ].map(([label, value]) => (
+          <div key={label} className="min-w-0 [overflow-wrap:anywhere]">
+            <dt className="text-body text-foreground">{label}</dt>
+            <dd className="mt-0.5">{value}</dd>
+          </div>
+        ))}
       </dl>
       <CourseActions course={course} />
-      <CourseDisclosures course={course} />
+      <div
+        className="mt-6 h-0.5 w-8 rounded-full bg-house-education-light opacity-40 transition-all duration-300 group-hover:w-12 group-hover:opacity-70"
+        aria-hidden="true"
+      />
     </article>
   );
 }
 
-function CourseTable({ courses }: { courses: FractalUCourse[] }) {
+function CourseCatalog({
+  courses,
+  isFinePointer,
+}: {
+  courses: FractalUCourse[];
+  isFinePointer: boolean;
+}) {
+  const [pinnedInstructorId, setPinnedInstructorId] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!pinnedInstructorId) return;
+    const closePinnedBio = (event: globalThis.KeyboardEvent) => {
+      if (event.key !== "Escape") return;
+      event.preventDefault();
+      const trigger = document.querySelector<HTMLButtonElement>(
+        `[aria-controls="${pinnedInstructorId}-instructor-bio"]`,
+      );
+      setPinnedInstructorId(null);
+      trigger?.focus();
+    };
+    window.addEventListener("keydown", closePinnedBio);
+    return () => window.removeEventListener("keydown", closePinnedBio);
+  }, [pinnedInstructorId]);
+
   return (
     <div
-      className="hidden max-w-full overflow-x-auto rounded-lg border border-foreground-faint lg:block"
-      data-testid="fractalu-course-table"
+      className="fractalu-course-grid mt-8 min-w-0"
+      data-testid="fractalu-course-catalog"
+      data-course-collection
+      data-preview-mode={isFinePointer ? "enhanced" : "inline"}
     >
-      <table className="w-full min-w-5xl border-collapse bg-background text-left text-foreground">
-        <thead className="bg-house-education-light text-background">
-          <tr className="font-mono text-xs uppercase tracking-wide">
-            {[
-              "Class",
-              "Instructor",
-              "Day & time",
-              "Dates",
-              "Location",
-              "Price",
-              "Apply",
-            ].map((label) => (
-              <th key={label} scope="col" className="p-3 font-medium">
-                {label}
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {courses.map((course) => (
-            <tr
-              key={course.id}
-              className="align-top odd:bg-background even:bg-foreground-faint/30"
-              data-course-category={course.category}
-            >
-              <td className="w-60 border-t border-foreground-faint p-3">
-                <p className="font-serif text-base leading-snug">{course.title}</p>
-                <p className="mt-1 font-mono text-xs uppercase text-house-education-deep">
-                  {course.category}
-                </p>
-                <CourseDisclosures course={course} />
-              </td>
-              <td className="border-t border-foreground-faint p-3 text-sm">
-                {course.instructor}
-              </td>
-              <td className="border-t border-foreground-faint p-3 text-sm">
-                {course.schedule}
-              </td>
-              <td className="border-t border-foreground-faint p-3 text-sm">
-                {course.dates}
-              </td>
-              <td className="border-t border-foreground-faint p-3 text-sm">
-                {course.location}
-              </td>
-              <td className="border-t border-foreground-faint p-3 text-sm">
-                {course.price}
-              </td>
-              <td className="border-t border-foreground-faint p-3">
-                <CourseActions course={course} />
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      {courses.map((course) => (
+        <CourseCard
+          key={course.id}
+          course={course}
+          isFinePointer={isFinePointer}
+          pinnedInstructorId={pinnedInstructorId}
+          setPinnedInstructorId={setPinnedInstructorId}
+        />
+      ))}
     </div>
   );
 }
 
 function ClubCard({ club }: { club: FractalUClub }) {
   return (
-    <article className="min-w-0 max-w-full overflow-hidden rounded-lg border border-foreground-faint bg-background p-5 text-foreground">
-      <h3 className="text-subtitle normal-case text-foreground">{club.name}</h3>
-      <p className="text-body mt-4 leading-relaxed text-foreground-muted">
-        {club.description}
-      </p>
-      <p className="mt-4 font-mono text-xs [overflow-wrap:anywhere] text-foreground-muted">
+    <article className="min-w-0 max-w-full rounded-lg border border-foreground-faint bg-background p-6 text-foreground">
+      <p className="text-label mb-3 text-house-education-deep">Open group</p>
+      <h3 className="text-subtitle normal-case text-foreground [overflow-wrap:anywhere]">
+        {club.name}
+      </h3>
+      <p className="text-body mt-4 leading-relaxed text-foreground-muted">{club.description}</p>
+      <p className="text-body mt-4 [overflow-wrap:anywhere] text-foreground-muted">
         {club.schedule} · {club.location}
       </p>
       <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1 font-mono text-xs">
@@ -210,10 +313,7 @@ function ClubCard({ club }: { club: FractalUClub }) {
             {club.detailsLabel ?? "Group details"}
           </ExternalLink>
         )}
-        <ExternalLink
-          href={club.actionUrl}
-          accessibleName={`${club.actionLabel} for ${club.name}`}
-        >
+        <ExternalLink href={club.actionUrl} accessibleName={`${club.actionLabel} for ${club.name}`}>
           {club.actionLabel}
         </ExternalLink>
       </div>
@@ -221,122 +321,20 @@ function ClubCard({ club }: { club: FractalUClub }) {
   );
 }
 
-export function FractalUniversityPortal() {
-  const [activeCategory, setActiveCategory] = useState("All");
-  const courses = useMemo(
-    () =>
-      activeCategory === "All"
-        ? FRACTALU_CATALOG.courses
-        : FRACTALU_CATALOG.courses.filter(
-            ({ category }) => category === activeCategory,
-          ),
-    [activeCategory],
-  );
-
+function FractalUInformation() {
   return (
-    <section
-      className="mt-16 rounded-lg bg-background text-foreground shadow-lg md:mt-24"
-      aria-labelledby="fractalu-title"
-      data-fractalu-portal
-    >
-      <div className="min-w-0 p-5 sm:p-7 md:p-10">
-        <p className="font-mono text-xs uppercase tracking-wide text-house-education-deep">
-          Fractal University · {FRACTALU_CATALOG.semester}
-        </p>
-        <h2 id="fractalu-title" className="text-title mt-3 text-foreground">
-          Fractal University
-        </h2>
-        <p className="text-subtitle mt-3 max-w-2xl normal-case text-foreground">
-          An improvised college in New York City.
-        </p>
-        <ExternalLink
-          href="https://fractaluniversity.substack.com"
-          accessibleName="Stay tuned for future semesters"
-          className="mt-4 font-mono text-sm text-house-education-deep"
-        >
-          Stay tuned for future semesters
-        </ExternalLink>
-
-        <picture className="mt-8 block overflow-hidden rounded-md" data-testid="fractalu-collage">
-          <source
-            media="(max-width: 639px)"
-            srcSet="/images/fractalu-mobile.png"
-            width="639"
-            height="318"
-          />
-          <img
-            src="/images/fractalu.png"
-            width="800"
-            height="133"
-            alt=""
-            className="h-auto w-full"
-          />
-        </picture>
-
-        <div className="mt-10">
-          <p
-            id="fractalu-filter-label"
-            className="font-mono text-xs uppercase tracking-wide text-foreground"
-          >
-            Filter classes by subject
-          </p>
-          <div
-            role="group"
-            aria-labelledby="fractalu-filter-label"
-            className="mt-3 flex flex-wrap gap-2"
-          >
-            {FRACTALU_CATEGORIES.map((category) => {
-              const selected = category === activeCategory;
-              return (
-                <button
-                  key={category}
-                  type="button"
-                  aria-pressed={selected}
-                  onClick={() => setActiveCategory(category)}
-                  className={`min-h-11 rounded-md border px-4 py-2 font-mono text-xs transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-house-education-light ${
-                    selected
-                      ? "border-house-education-deep bg-house-education-deep text-background"
-                      : "border-foreground-faint bg-background text-foreground hover:border-house-education-light"
-                  }`}
-                >
-                  {category}
-                </button>
-              );
-            })}
-          </div>
-          <p className="sr-only" aria-live="polite" aria-atomic="true">
-            {courses.length} {courses.length === 1 ? "course" : "courses"} shown.
-          </p>
-        </div>
-
-        <div
-          className="mt-8 min-w-0 grid gap-4 lg:hidden"
-          data-testid="fractalu-course-cards"
-        >
-          {courses.map((course) => (
-            <CourseCard key={course.id} course={course} />
-          ))}
-        </div>
-        <div className="mt-8">
-          <CourseTable courses={courses} />
-        </div>
-
-        <section className="mt-16" aria-labelledby="fractalu-clubs-title">
-          <h2 id="fractalu-clubs-title" className="text-title text-foreground">
-            Clubs &amp; open groups
-          </h2>
-          <div className="mt-6 min-w-0 grid gap-4 md:grid-cols-2" data-testid="fractalu-clubs">
-            {FRACTALU_CATALOG.clubs.map((club) => (
-              <ClubCard key={club.id} club={club} />
-            ))}
-          </div>
-        </section>
-
-        <section className="mt-16 max-w-3xl" aria-labelledby="fractalu-about-title">
-          <h2 id="fractalu-about-title" className="text-title text-foreground">
+    <div className="relative z-10 pt-24 text-background md:pt-32" data-fractalu-information>
+      <section
+        id="what-is-fractalu"
+        tabIndex={-1}
+        className="mx-auto max-w-7xl scroll-mt-24 page-gutter focus-visible:outline-none"
+        aria-labelledby="fractalu-about-title"
+      >
+        <div className="mx-auto max-w-3xl">
+          <h2 id="fractalu-about-title" className="text-title mb-8 normal-case">
             What is FractalU?
           </h2>
-          <div className="text-body-lead mt-6 space-y-5 text-foreground-muted">
+          <div className="text-body-lead space-y-6 text-background/90">
             <p>
               FractalU is an improvised college in New York City. We offer in-person
               classes at low cost, to anyone in the city. We&apos;re a community of
@@ -357,33 +355,60 @@ export function FractalUniversityPortal() {
               pluralism of the people who show up.
             </p>
           </div>
+        </div>
+      </section>
 
-          <aside className="mt-10 rounded-lg border border-foreground-faint bg-background p-6 text-foreground">
-            <p className="font-mono text-xs uppercase text-house-education-deep">
-              Want to teach?
-            </p>
-            <p className="text-body mt-3 text-foreground-muted">
-              We&apos;re always looking for instructors with something to share — a
-              craft, a body of work, an obsession. Email{" "}
-              <a
-                href="mailto:fractalu@fractalnyc.com"
-                className="break-all rounded-sm underline underline-offset-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-house-education-light"
-              >
-                fractalu@fractalnyc.com
-              </a>{" "}
-              with a sentence or two about what you&apos;d teach.
-            </p>
-          </aside>
+      <section
+        className="mx-auto mt-16 max-w-2xl page-gutter md:mt-24"
+        aria-labelledby="fractalu-teach-title"
+      >
+        <MandelbrotCorners
+          size="sm"
+          opacity={0.15}
+          className="rounded-md border bg-background p-9 text-left text-foreground [border-color:var(--accent,currentColor)]"
+        >
+          <p id="fractalu-teach-title" className="text-label mb-3 text-house-education-deep">
+            Want to teach?
+          </p>
+          <p className="text-body leading-relaxed text-foreground-muted">
+            We&apos;re always looking for instructors with something to share — a
+            craft, a body of work, an obsession. Email{" "}
+            <a
+              href="mailto:fractalu@fractalnyc.com"
+              className="break-all rounded-sm text-foreground underline decoration-foreground-muted/40 underline-offset-2 hover:decoration-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-house-education-light"
+            >
+              fractalu@fractalnyc.com
+            </a>{" "}
+            with a sentence or two about what you&apos;d teach.
+          </p>
+        </MandelbrotCorners>
+      </section>
 
-          <h2 className="text-title mt-14 text-foreground">The etiquette</h2>
-          <ol className="text-body-lead mt-6 list-decimal space-y-2 pl-6 text-foreground-muted">
+      <section
+        className="mx-auto mt-24 max-w-7xl page-gutter md:mt-32"
+        aria-labelledby="fractalu-etiquette-title"
+      >
+        <div className="mx-auto max-w-3xl">
+          <h2 id="fractalu-etiquette-title" className="text-title mb-6 normal-case">
+            The etiquette
+          </h2>
+          <ol className="text-body-lead list-decimal space-y-3 pl-6 text-background/90">
             <li>Take yourself and others seriously.</li>
             <li>Be concrete; no bullshitting.</li>
             <li>Collaborate joyfully and publicly.</li>
           </ol>
+        </div>
+      </section>
 
-          <h2 className="text-title mt-14 text-foreground">The canon</h2>
-          <div className="text-body-lead mt-6 space-y-5 text-foreground-muted">
+      <section
+        className="mx-auto mt-24 max-w-7xl page-gutter md:mt-32"
+        aria-labelledby="fractalu-canon-title"
+      >
+        <div className="mx-auto max-w-3xl">
+          <h2 id="fractalu-canon-title" className="text-title mb-6 normal-case">
+            The canon
+          </h2>
+          <div className="text-body-lead space-y-6 text-background/90">
             <p>
               FractalU has a shared intellectual foundation — six essays on what it
               means to do significant work, find knowledge frontiers, and learn in
@@ -400,7 +425,7 @@ export function FractalUniversityPortal() {
             <ExternalLink
               href="https://ajr.fyi/files/fractal-canon.pdf"
               accessibleName="Read the FractalU canon PDF"
-              className="font-mono text-sm text-house-education-deep"
+              className="font-mono text-sm text-background"
             >
               Read the canon (PDF)
             </ExternalLink>
@@ -409,19 +434,135 @@ export function FractalUniversityPortal() {
             <ExternalLink
               href="https://fractaluniversity.substack.com"
               accessibleName="FractalU Substack"
-              className="text-house-education-deep"
+              className="text-background"
             >
               FractalU Substack
             </ExternalLink>
             <a
               href="mailto:fractalu@fractalnyc.com"
-              className="inline-flex min-h-11 min-w-0 max-w-full flex-wrap items-center break-all rounded-md underline underline-offset-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-house-education-light"
+              className="inline-flex min-h-11 min-w-0 max-w-full flex-wrap items-center break-all rounded-md text-background underline underline-offset-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-background"
             >
               fractalu@fractalnyc.com
             </a>
           </div>
-        </section>
+        </div>
+      </section>
+    </div>
+  );
+}
+
+export function FractalUniversityPortal() {
+  const [activeCategory, setActiveCategory] = useState("All");
+  const usesLargeText = useLargeTextScale();
+  const isFinePointer =
+    useMediaQuery(FINE_POINTER_PREVIEW_QUERY) && !usesLargeText;
+  const courses = useMemo(
+    () =>
+      activeCategory === "All"
+        ? FRACTALU_CATALOG.courses
+        : FRACTALU_CATALOG.courses.filter(({ category }) => category === activeCategory),
+    [activeCategory],
+  );
+
+  const jumpToInformation = (event: MouseEvent<HTMLAnchorElement>) => {
+    const target = document.getElementById("what-is-fractalu");
+    if (!target) return;
+    event.preventDefault();
+    window.history.pushState(null, "", "#what-is-fractalu");
+    target.focus({ preventScroll: true });
+    target.scrollIntoView({ behavior: "auto", block: "start" });
+  };
+
+  return (
+    <section className="mt-16 md:mt-24" aria-labelledby="fractalu-title" data-fractalu-portal>
+      <div className="relative z-20 mx-auto max-w-[1600px] page-gutter" data-fractalu-wide-shell>
+        <div className="min-w-0 rounded-lg bg-background p-6 text-foreground shadow-lg sm:p-8 md:p-10 lg:p-12">
+          <p className="text-label text-house-education-deep">
+            Fractal University · {FRACTALU_CATALOG.semester}
+          </p>
+          <h2 id="fractalu-title" className="text-title mt-3 text-foreground">
+            Fractal University
+          </h2>
+          <p className="text-subtitle mt-3 max-w-2xl normal-case text-foreground">
+            An improvised college in New York City.
+          </p>
+          <div className="mt-4 flex flex-wrap items-center gap-x-6 gap-y-2 font-mono text-sm">
+            <ExternalLink
+              href="https://fractaluniversity.substack.com"
+              accessibleName="Stay tuned for future semesters"
+              className="text-house-education-deep"
+            >
+              Stay tuned for future semesters
+            </ExternalLink>
+            <a
+              href="#what-is-fractalu"
+              onClick={jumpToInformation}
+              className="inline-flex min-h-11 items-center gap-1.5 rounded-md text-house-education-deep underline underline-offset-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-house-education-light"
+            >
+              What&apos;s FractalU?
+              <ArrowDown size={15} strokeWidth={1.5} aria-hidden="true" />
+            </a>
+          </div>
+
+          <picture className="mt-8 block overflow-hidden rounded-md" data-testid="fractalu-collage">
+            <source
+              media="(max-width: 639px)"
+              srcSet="/images/fractalu-mobile.png"
+              width="639"
+              height="318"
+            />
+            <img src="/images/fractalu.png" width="800" height="133" alt="" className="h-auto w-full" />
+          </picture>
+
+          <div className="mt-10">
+            <p id="fractalu-filter-label" className="text-label text-foreground">
+              Filter classes by subject
+            </p>
+            <div
+              role="group"
+              aria-labelledby="fractalu-filter-label"
+              className="mt-3 flex flex-wrap gap-2"
+            >
+              {FRACTALU_CATEGORIES.map((category) => {
+                const selected = category === activeCategory;
+                return (
+                  <button
+                    key={category}
+                    type="button"
+                    aria-pressed={selected}
+                    onClick={() => setActiveCategory(category)}
+                    className={`min-h-11 rounded-md border px-4 py-2 font-mono text-xs transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-house-education-light ${
+                      selected
+                        ? "border-house-education-deep bg-house-education-deep text-background"
+                        : "border-foreground-faint bg-background text-foreground hover:border-house-education-light"
+                    }`}
+                  >
+                    {category}
+                  </button>
+                );
+              })}
+            </div>
+            <p className="sr-only" aria-live="polite" aria-atomic="true">
+              {courses.length} {courses.length === 1 ? "course" : "courses"} shown.
+            </p>
+          </div>
+
+          <CourseCatalog courses={courses} isFinePointer={isFinePointer} />
+
+          <section className="mt-20" aria-labelledby="fractalu-clubs-title">
+            <h2 id="fractalu-clubs-title" className="text-title text-foreground">
+              Clubs &amp; open groups
+            </h2>
+            <div className="mt-6 grid min-w-0 gap-4 md:grid-cols-2" data-testid="fractalu-clubs">
+              {FRACTALU_CATALOG.clubs.map((club) => (
+                <ClubCard key={club.id} club={club} />
+              ))}
+            </div>
+          </section>
+        </div>
       </div>
+
+      <FractalUInformation />
     </section>
   );
 }
