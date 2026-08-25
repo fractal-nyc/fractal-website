@@ -106,10 +106,6 @@ function InstructorBioPreview({
     buttonRef.current?.focus();
   };
 
-  if (!course.instructorBio) {
-    return <p className="text-body mt-2 text-foreground-muted">{course.instructor}</p>;
-  }
-
   return (
     <div
       className="fractalu-instructor-preview relative min-w-0"
@@ -140,9 +136,9 @@ function InstructorBioPreview({
       ) : (
         <p className="text-body mt-2 text-foreground-muted">{course.instructor}</p>
       )}
-      <p
+      <div
         id={bioId}
-        className="fractalu-course-preview fractalu-instructor-bio text-body mt-3 leading-relaxed text-foreground-muted"
+        className="fractalu-course-preview fractalu-instructor-bio text-body mt-3 space-y-3 leading-relaxed text-foreground-muted"
         data-instructor-bio
         style={
           isFinePointer && suppressed
@@ -150,8 +146,12 @@ function InstructorBioPreview({
             : undefined
         }
       >
-        {course.instructorBio}
-      </p>
+        {course.instructors.map((instructor) => (
+          <p key={instructor.name} data-instructor-record>
+            {instructor.bio}
+          </p>
+        ))}
+      </div>
     </div>
   );
 }

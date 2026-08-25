@@ -5,12 +5,27 @@ export const FRACTALU_SOURCE_URL = "https://www.fractalu.nyc/";
 export const FRACTALU_INFO_URL = "https://www.fractalu.nyc/info";
 export const FRACTALU_SNAPSHOT_DATE = "2026-08-25";
 
+export interface FractalUInstructor {
+  name: string;
+  bio: string;
+}
+
+export interface FractalUSourceProvenance {
+  url: string;
+  verifiedAt: string;
+  lastModified: string;
+  etag: string;
+  byteLength: number;
+  sha256: string;
+}
+
 export interface FractalUCourse {
   id: string;
   title: string;
   category: string;
+  instructors: FractalUInstructor[];
+  /** Ordered source names joined for the course card's single instructor label. */
   instructor: string;
-  instructorBio?: string;
   schedule: string;
   dates: string;
   location: string;
@@ -37,13 +52,26 @@ export interface FractalUClub {
 
 export interface FractalUCatalog {
   semester: string;
+  sourceProvenance: FractalUSourceProvenance;
   courses: FractalUCourse[];
   clubs: FractalUClub[];
 }
 
 // This is deliberately a static, reviewed snapshot. Refresh it explicitly by
 // following EDITING.md; never turn this into a runtime dependency on FractalU.
-export const FRACTALU_CATALOG = catalogSnapshot as FractalUCatalog;
+const sourceCatalog = catalogSnapshot as Omit<FractalUCatalog, "courses"> & {
+  courses: Omit<FractalUCourse, "instructor">[];
+};
+
+export const FRACTALU_CATALOG: FractalUCatalog = {
+  ...sourceCatalog,
+  courses: sourceCatalog.courses.map((course) => ({
+    ...course,
+    instructor: course.instructors.map(({ name }) => name).join(" & "),
+  })),
+};
+
+export const FRACTALU_SOURCE_PROVENANCE = FRACTALU_CATALOG.sourceProvenance;
 
 export const FRACTALU_CATEGORIES = [
   "All",
