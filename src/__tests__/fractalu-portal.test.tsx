@@ -21,6 +21,40 @@ function mockFinePointer(matches: boolean) {
   });
 }
 
+function mockFinePointerController(initialMatches: boolean) {
+  let matches = initialMatches;
+  const listeners = new Set<(event: MediaQueryListEvent) => void>();
+  const mediaQueryList = {
+    get matches() {
+      return matches;
+    },
+    media: "(min-width: 64rem) and (hover: hover) and (pointer: fine)",
+    onchange: null,
+    addEventListener: (_type: string, listener: (event: MediaQueryListEvent) => void) => {
+      listeners.add(listener);
+    },
+    removeEventListener: (_type: string, listener: (event: MediaQueryListEvent) => void) => {
+      listeners.delete(listener);
+    },
+    addListener: vi.fn(),
+    removeListener: vi.fn(),
+    dispatchEvent: vi.fn(),
+  };
+
+  Object.defineProperty(window, "matchMedia", {
+    configurable: true,
+    value: vi.fn(() => mediaQueryList),
+  });
+
+  return {
+    setMatches(nextMatches: boolean) {
+      matches = nextMatches;
+      const event = { matches, media: mediaQueryList.media } as MediaQueryListEvent;
+      listeners.forEach((listener) => listener(event));
+    },
+  };
+}
+
 afterEach(() => {
   Object.defineProperty(window, "matchMedia", {
     configurable: true,
@@ -142,6 +176,38 @@ describe("FractalUniversityPortal", () => {
     act(() => button.focus());
     expect(button).toHaveFocus();
     expect(getComputedStyle(bio).visibility).not.toBe("hidden");
+  });
+
+  it("clears Escape suppression when the bio switches between enhanced and inline modes", () => {
+    const media = mockFinePointerController(true);
+    render(<FractalUniversityPortal />);
+    const catalog = screen.getByTestId("fractalu-course-catalog");
+    const enhancedButton = screen.getAllByRole("button", { name: "Elena Navarrete" })[0];
+    const bioId = enhancedButton.getAttribute("aria-controls")!;
+    const bio = document.getElementById(bioId)!;
+    const preview = bio.closest("[data-suppressed]")!;
+
+    fireEvent.click(enhancedButton);
+    fireEvent.keyDown(enhancedButton, { key: "Escape" });
+    expect(preview).toHaveAttribute("data-suppressed", "true");
+    expect(getComputedStyle(bio).visibility).toBe("hidden");
+
+    act(() => media.setMatches(false));
+    expect(catalog).toHaveAttribute("data-preview-mode", "inline");
+    expect(within(catalog).queryByRole("button", { name: "Elena Navarrete" })).toBeNull();
+    expect(preview).toHaveAttribute("data-suppressed", "false");
+    expect(getComputedStyle(bio).position).toBe("static");
+    expect(getComputedStyle(bio).visibility).toBe("visible");
+    expect(getComputedStyle(bio).opacity).toBe("1");
+
+    act(() => media.setMatches(true));
+    expect(catalog).toHaveAttribute("data-preview-mode", "enhanced");
+    expect(preview).toHaveAttribute("data-suppressed", "false");
+    const restoredButton = within(catalog).getAllByRole("button", {
+      name: "Elena Navarrete",
+    })[0];
+    act(() => restoredButton.focus());
+    expect(getComputedStyle(bio).visibility).toBe("visible");
   });
 
   it("jumps to and focuses the Campus-style What is FractalU section", () => {

@@ -68,7 +68,7 @@ test("Education portal keeps one wide accessible catalog across input modes", as
     await expect(description).toHaveCSS("visibility", "visible");
 
     const instructor = firstCourse.getByRole("button", { name: "Elena Navarrete" });
-    const instructorPreview = instructor.locator("..");
+    const instructorPreview = firstCourse.locator(".fractalu-instructor-preview");
     const instructorBio = firstCourse.locator("[data-instructor-bio]");
     await instructor.focus();
     await expect(instructorBio).toHaveCSS("visibility", "visible");
@@ -81,6 +81,42 @@ test("Education portal keeps one wide accessible catalog across input modes", as
     await expect(instructorPreview).toHaveAttribute("data-suppressed", "true");
     await expect(instructorBio).toHaveCSS("visibility", "hidden");
     await expect(instructorBio).toHaveCSS("opacity", "0");
+
+    await page.setViewportSize({ width: 900, height: 900 });
+    await expect(catalog).toHaveAttribute("data-preview-mode", "inline");
+    await expect(firstCourse.getByRole("button", { name: "Elena Navarrete" })).toHaveCount(0);
+    await expect(instructorPreview).toHaveAttribute("data-suppressed", "false");
+    await expect(instructorBio).toHaveCSS("position", "static");
+    await expect(instructorBio).toHaveCSS("visibility", "visible");
+    await expect(instructorBio).toHaveCSS("opacity", "1");
+
+    await page.setViewportSize({ width, height: profile?.viewport.height ?? 900 });
+    await expect(catalog).toHaveAttribute("data-preview-mode", "enhanced");
+    const restoredInstructor = firstCourse.getByRole("button", { name: "Elena Navarrete" });
+    await expect(instructorPreview).toHaveAttribute("data-suppressed", "false");
+    await restoredInstructor.focus();
+    await expect(instructorBio).toHaveCSS("visibility", "visible");
+
+    await restoredInstructor.click();
+    await page.keyboard.press("Escape");
+    await expect(instructorPreview).toHaveAttribute("data-suppressed", "true");
+    await expect(instructorBio).toHaveCSS("visibility", "hidden");
+    await page.evaluate(() => {
+      document.documentElement.style.fontSize = "200%";
+    });
+    await expect(catalog).toHaveAttribute("data-preview-mode", "inline");
+    await expect(firstCourse.getByRole("button", { name: "Elena Navarrete" })).toHaveCount(0);
+    await expect(instructorPreview).toHaveAttribute("data-suppressed", "false");
+    await expect(instructorBio).toHaveCSS("position", "static");
+    await expect(instructorBio).toHaveCSS("visibility", "visible");
+    await expect(instructorBio).toHaveCSS("opacity", "1");
+    await page.evaluate(() => {
+      document.documentElement.style.fontSize = "";
+    });
+    await expect(catalog).toHaveAttribute("data-preview-mode", "enhanced");
+    await expect(instructorPreview).toHaveAttribute("data-suppressed", "false");
+    await firstCourse.getByRole("button", { name: "Elena Navarrete" }).focus();
+    await expect(instructorBio).toHaveCSS("visibility", "visible");
 
     await page.mouse.move(0, 0);
     await firstCourse.getByRole("link", { name: /Apply for The Lost Generation/ }).focus();

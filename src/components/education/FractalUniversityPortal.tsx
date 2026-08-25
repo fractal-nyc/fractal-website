@@ -144,7 +144,11 @@ function InstructorBioPreview({
         id={bioId}
         className="fractalu-course-preview fractalu-instructor-bio text-body mt-3 leading-relaxed text-foreground-muted"
         data-instructor-bio
-        style={suppressed ? { opacity: 0, visibility: "hidden" } : undefined}
+        style={
+          isFinePointer && suppressed
+            ? { opacity: 0, visibility: "hidden" }
+            : undefined
+        }
       >
         {course.instructorBio}
       </p>
@@ -243,7 +247,7 @@ function CourseCard({
         course={course}
         isFinePointer={isFinePointer}
         pinned={instructorPinned}
-        suppressed={suppressedInstructorId === course.id}
+        suppressed={isFinePointer && suppressedInstructorId === course.id}
         onToggle={() => {
           setSuppressedInstructorId(null);
           setPinnedInstructorId(instructorPinned ? null : course.id);
@@ -286,6 +290,11 @@ function CourseCatalog({
 }) {
   const [pinnedInstructorId, setPinnedInstructorId] = useState<string | null>(null);
   const [suppressedInstructorId, setSuppressedInstructorId] = useState<string | null>(null);
+
+  useEffect(() => {
+    setPinnedInstructorId(null);
+    setSuppressedInstructorId(null);
+  }, [isFinePointer]);
 
   useEffect(() => {
     if (!pinnedInstructorId) return;
