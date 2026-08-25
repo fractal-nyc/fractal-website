@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, within } from "@testing-library/react";
+import { act, fireEvent, render, screen, within } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { FractalUniversityPortal } from "@/components/education/FractalUniversityPortal";
 import { FRACTALU_CATALOG, FRACTALU_CATEGORIES } from "@/data/fractalu";
@@ -117,15 +117,31 @@ describe("FractalUniversityPortal", () => {
     render(<FractalUniversityPortal />);
     const button = screen.getAllByRole("button", { name: "Elena Navarrete" })[0];
     const bioId = button.getAttribute("aria-controls")!;
+    const bio = document.getElementById(bioId)!;
+    const preview = button.closest("[data-pinned]")!;
     expect(button).toHaveAttribute("aria-expanded", "false");
-    expect(document.getElementById(bioId)).toHaveAttribute("data-instructor-bio");
+    expect(bio).toHaveAttribute("data-instructor-bio");
 
     fireEvent.click(button);
     expect(button).toHaveAttribute("aria-expanded", "true");
-    expect(button.closest("[data-pinned]")).toHaveAttribute("data-pinned", "true");
+    expect(preview).toHaveAttribute("data-pinned", "true");
     fireEvent.keyDown(button, { key: "Escape" });
     expect(button).toHaveAttribute("aria-expanded", "false");
     expect(button).toHaveFocus();
+    expect(preview).toHaveAttribute("data-pinned", "false");
+    expect(preview).toHaveAttribute("data-suppressed", "true");
+    expect(getComputedStyle(bio).visibility).toBe("hidden");
+    expect(getComputedStyle(bio).opacity).toBe("0");
+
+    const courseCard = button.closest("article")!;
+    const applicationLink = within(courseCard).getByRole("link", {
+      name: /Apply for The Lost Generation Close Reading/,
+    });
+    act(() => applicationLink.focus());
+    expect(preview).toHaveAttribute("data-suppressed", "false");
+    act(() => button.focus());
+    expect(button).toHaveFocus();
+    expect(getComputedStyle(bio).visibility).not.toBe("hidden");
   });
 
   it("jumps to and focuses the Campus-style What is FractalU section", () => {
