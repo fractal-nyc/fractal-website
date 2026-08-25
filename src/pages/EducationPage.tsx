@@ -47,8 +47,8 @@ export function EducationPage() {
         </div>
 
         <div className="relative z-10 min-h-screen pt-16 pb-20 md:pt-24 md:pb-32">
-          <section className="w-full max-w-7xl mx-auto page-gutter">
-            <div className="max-w-3xl mx-auto md:max-w-[58vw]">
+          <section className="mx-auto w-full max-w-7xl page-gutter" data-education-intro>
+            <div className="mx-auto max-w-3xl md:max-w-[58vw]">
               <SectorHeader
                 letter="E"
                 name="Education"
@@ -108,9 +108,10 @@ export function EducationPage() {
                 </FadeIn>
               </section>
 
-              <FractalUniversityPortal />
             </div>
           </section>
+
+          <FractalUniversityPortal />
         </div>
 
         <div

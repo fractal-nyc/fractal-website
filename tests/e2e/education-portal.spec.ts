@@ -1,15 +1,18 @@
 import { expect, test } from "@playwright/test";
 import type { ResponsiveProfile } from "./support/profiles";
+import { preparePage } from "./support/layout-assertions";
 
-test("Education portal filters, discloses, and preserves the responsive catalog", async ({
+test("Education portal keeps one wide accessible catalog across input modes", async ({
   page,
 }, testInfo) => {
   const profile = testInfo.project.metadata.profile as ResponsiveProfile | undefined;
   const width = profile?.viewport.width ?? 1440;
+  const hasTouch = profile?.hasTouch ?? false;
   const pageErrors: string[] = [];
   page.on("pageerror", (error) => pageErrors.push(error.message));
 
   await page.goto("/education", { waitUntil: "domcontentloaded" });
+  await preparePage(page, profile?.rootFontScale);
 
   await expect(page.getByRole("heading", { level: 1, name: "A new liberal arts" })).toHaveCount(1);
   const accelerator = page.getByRole("link", {
@@ -27,39 +30,75 @@ test("Education portal filters, discloses, and preserves the responsive catalog"
       await portal.elementHandle(),
     ),
   ).toBe(true);
-  await expect(page.locator("iframe")).toHaveCount(0);
+  await expect(page.locator("iframe, table, details, summary")).toHaveCount(0);
 
-  const cards = page.getByTestId("fractalu-course-cards");
-  const table = page.getByTestId("fractalu-course-table");
-  if (width < 1024) {
-    await expect(cards).toBeVisible();
-    await expect(table).toBeHidden();
-  } else {
-    await expect(cards).toBeHidden();
-    await expect(table).toBeVisible();
-  }
+  const catalog = page.getByTestId("fractalu-course-catalog");
+  await expect(catalog).toBeVisible();
+  await expect(catalog.locator("article")).toHaveCount(20);
+  await expect(page.locator("[data-course-collection]")).toHaveCount(1);
 
   const technology = page.getByRole("button", { name: "Technology" });
-  await expect(technology).toHaveCSS("min-height", "44px");
+  expect(
+    await technology.evaluate((button) => Number.parseFloat(getComputedStyle(button).minHeight)),
+  ).toBeGreaterThanOrEqual(44);
   await technology.click();
   await expect(technology).toHaveAttribute("aria-pressed", "true");
   await expect(page.getByText("3 courses shown.")).toHaveText("3 courses shown.");
-  if (width < 1024) {
-    await expect(cards.locator("article")).toHaveCount(3);
-    const firstDisclosure = cards.locator("details").first();
-    await firstDisclosure.locator("summary").focus();
-    await page.keyboard.press("Enter");
-    await expect(firstDisclosure).toHaveAttribute("open", "");
-  } else {
-    await expect(table.locator("tbody tr")).toHaveCount(3);
-    const firstDisclosure = table.locator("details").first();
-    await firstDisclosure.locator("summary").focus();
-    await page.keyboard.press("Enter");
-    await expect(firstDisclosure).toHaveAttribute("open", "");
-  }
-
+  await expect(catalog.locator("article")).toHaveCount(3);
   await page.getByRole("button", { name: "All" }).click();
   await expect(page.getByText("20 courses shown.")).toHaveText("20 courses shown.");
+  await expect(catalog.locator("article")).toHaveCount(20);
+
+  const firstCourse = catalog.locator('article[data-course-id="lost-generation-close-reading"]');
+  const description = firstCourse.locator("[data-course-description]");
+  const titleLink = firstCourse.getByRole("link", {
+    name: /The Lost Generation Close Reading course description/,
+  });
+  await expect(titleLink).toHaveAttribute(
+    "href",
+    "https://closereadingnyc.notion.site/The-Lost-Generation-Close-Reading-359c580377d680b0b8fefba14aaef8a0",
+  );
+  await expect(titleLink).toHaveAttribute("aria-describedby", "lost-generation-close-reading-description");
+
+  if (!hasTouch && width >= 1024 && !profile?.rootFontScale) {
+    await expect(description).toHaveCSS("visibility", "hidden");
+    await titleLink.hover();
+    await expect(description).toHaveCSS("visibility", "visible");
+    await titleLink.focus();
+    await expect(description).toHaveCSS("visibility", "visible");
+
+    const instructor = firstCourse.getByRole("button", { name: "Elena Navarrete" });
+    await instructor.focus();
+    await expect(firstCourse.locator("[data-instructor-bio]")).toHaveCSS("visibility", "visible");
+    await instructor.click();
+    await expect(instructor).toHaveAttribute("aria-expanded", "true");
+    await page.keyboard.press("Escape");
+    await expect(instructor).toHaveAttribute("aria-expanded", "false");
+    await expect(instructor).toBeFocused();
+  } else {
+    await expect(description).toHaveCSS("position", "static");
+    await expect(description).toBeVisible();
+    await expect(firstCourse.locator("[data-instructor-bio]")).toBeVisible();
+  }
+
+  const jumpLink = page.getByRole("link", { name: "What's FractalU?" });
+  await jumpLink.click();
+  await expect(page).toHaveURL(/#what-is-fractalu$/);
+  await expect(page.locator("#what-is-fractalu")).toBeFocused();
+
+  const longTitle = catalog.getByText("Worldbuilding for Storytellers and Narrative Designers");
+  await expect(longTitle).toBeVisible();
+  expect((await longTitle.boundingBox())?.width).toBeLessThanOrEqual((await longTitle.locator("xpath=ancestor::article").boundingBox())!.width);
+
+  if (!hasTouch && width >= 1024) {
+    const wideShell = page.locator("[data-fractalu-wide-shell]");
+    const leftPennant = page.getByTestId("education-desktop-pennants").locator(":scope > div").first();
+    const shellBox = await wideShell.boundingBox();
+    const pennantBox = await leftPennant.boundingBox();
+    expect(shellBox && pennantBox && shellBox.x < pennantBox.x + pennantBox.width).toBeTruthy();
+    await expect(wideShell).toHaveCSS("z-index", "20");
+  }
+
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(
     await page.evaluate(() => document.documentElement.clientWidth + 1),
   );
