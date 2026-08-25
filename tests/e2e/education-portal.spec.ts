@@ -48,6 +48,62 @@ test("Education portal keeps one wide accessible catalog across input modes", as
   await expect(catalog.locator("[data-instructor-bio]")).toHaveCount(20);
   await expect(catalog.locator("[data-instructor-record]")).toHaveCount(23);
 
+  const clubs = page.getByTestId("fractalu-clubs");
+  const clubCards = clubs.locator("article[data-club-id]");
+  await expect(clubCards).toHaveCount(4);
+  await expect(clubs.getByText("Open group", { exact: true })).toHaveCount(0);
+  await expect(page.getByRole("heading", { name: "Clubs & open groups" })).toBeVisible();
+
+  for (const clubId of [
+    "controversial-politics-salon",
+    "last-summer-lecture-series",
+    "founding-debate-reading-group",
+    "claude-squad",
+  ]) {
+    const card = clubs.locator(`article[data-club-id="${clubId}"]`);
+    const title = card.locator("h3");
+    const metadata = card.locator("[data-club-metadata]");
+    const description = card.locator("p").first();
+    await expect(metadata.locator("dt")).toHaveText(["Schedule", "Location"]);
+    expect(
+      await title.evaluate(
+        (heading, target) => heading.nextElementSibling === target,
+        await metadata.elementHandle(),
+      ),
+    ).toBe(true);
+    expect(
+      await metadata.evaluate(
+        (details, target) =>
+          Boolean(details.compareDocumentPosition(target) & Node.DOCUMENT_POSITION_FOLLOWING),
+        await description.elementHandle(),
+      ),
+    ).toBe(true);
+    expect(await metadata.evaluate((element) => element.scrollWidth <= element.clientWidth + 1)).toBe(
+      true,
+    );
+    const cardBox = await card.boundingBox();
+    const metadataBox = await metadata.boundingBox();
+    expect(
+      cardBox &&
+        metadataBox &&
+        metadataBox.x >= cardBox.x &&
+        metadataBox.x + metadataBox.width <= cardBox.x + cardBox.width + 1,
+    ).toBeTruthy();
+  }
+
+  const lastSummer = clubs.locator('article[data-club-id="last-summer-lecture-series"]');
+  await expect(lastSummer.locator("dd").nth(0)).toHaveText(
+    "Saturdays, time varies — join the WhatsApp for details",
+  );
+  await expect(lastSummer.locator("dd").nth(1)).toHaveText(
+    "Fractal Campus, 111 Conselyea St",
+  );
+  const claudeSquad = clubs.locator('article[data-club-id="claude-squad"]');
+  await expect(claudeSquad.locator("dd").nth(0)).toHaveText(
+    "6:30 pm, usually every other Thursday. Join the WhatsApp group for dates.",
+  );
+  await expect(claudeSquad.locator("dd").nth(1)).toHaveText("Vital Williamsburg");
+
   const lampCourse = catalog.locator('article[data-course-id="making-a-lamp"]');
   const lampBio = lampCourse.locator("[data-instructor-bio]");
   await expect(lampBio.locator("[data-instructor-record]")).toHaveCount(2);

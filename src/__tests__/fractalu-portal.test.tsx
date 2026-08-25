@@ -82,12 +82,54 @@ describe("FractalUniversityPortal", () => {
   it("renders one 20-course collection and the four-group snapshot", () => {
     render(<FractalUniversityPortal />);
     const catalog = screen.getByTestId("fractalu-course-catalog");
+    const clubs = screen.getByTestId("fractalu-clubs");
     expect(within(catalog).getAllByRole("article")).toHaveLength(20);
     expect(document.querySelectorAll("[data-course-collection]")).toHaveLength(1);
     expect(document.querySelector("table")).toBeNull();
     expect(document.querySelector("details, summary")).toBeNull();
-    expect(within(screen.getByTestId("fractalu-clubs")).getAllByRole("article")).toHaveLength(4);
+    expect(within(clubs).getAllByRole("article")).toHaveLength(4);
+    expect(within(clubs).queryByText(/^Open group$/)).toBeNull();
+    expect(screen.getByRole("heading", { name: "Clubs & open groups" })).toBeTruthy();
     expect(screen.getByText(`Fractal University · ${FRACTALU_CATALOG.semester}`)).toBeTruthy();
+  });
+
+  it("promotes labelled club schedules and locations directly below each title", () => {
+    render(<FractalUniversityPortal />);
+    const clubs = screen.getByTestId("fractalu-clubs");
+
+    for (const club of FRACTALU_CATALOG.clubs) {
+      const card = clubs.querySelector<HTMLElement>(`[data-club-id="${club.id}"]`)!;
+      expect(card).toBeTruthy();
+
+      const title = within(card).getByRole("heading", { name: club.name });
+      const metadata = card.querySelector<HTMLElement>("[data-club-metadata]")!;
+      expect(metadata).toBeTruthy();
+      expect(title.nextElementSibling).toBe(metadata);
+      expect(Array.from(metadata.querySelectorAll("dt"), (term) => term.textContent)).toEqual([
+        "Schedule",
+        "Location",
+      ]);
+      expect(within(metadata).getAllByText(club.schedule, { selector: "dd" })).toHaveLength(1);
+      expect(within(metadata).getAllByText(club.location, { selector: "dd" })).toHaveLength(1);
+      expect(within(card).queryByText(`${club.schedule} · ${club.location}`)).toBeNull();
+      expect(within(card).getByText(club.description)).toBeTruthy();
+
+      const action = within(card).getByRole("link", {
+        name: `${club.actionLabel} for ${club.name} (opens in a new tab)`,
+      });
+      expect(action).toHaveAttribute("href", club.actionUrl);
+      expect(action).toHaveAttribute("target", "_blank");
+      expect(action).toHaveAttribute("rel", "noopener noreferrer");
+
+      if (club.detailsUrl) {
+        const details = within(card).getByRole("link", {
+          name: `${club.detailsLabel ?? "Group details"} for ${club.name} (opens in a new tab)`,
+        });
+        expect(details).toHaveAttribute("href", club.detailsUrl);
+        expect(details).toHaveAttribute("target", "_blank");
+        expect(details).toHaveAttribute("rel", "noopener noreferrer");
+      }
+    }
   });
 
   it("exposes all categories as 44px-minimum pressed-state filters", () => {

@@ -336,15 +336,28 @@ function CourseCatalog({
 
 function ClubCard({ club }: { club: FractalUClub }) {
   return (
-    <article className="min-w-0 max-w-full rounded-lg border border-foreground-faint bg-background p-6 text-foreground">
-      <p className="text-label mb-3 text-house-education-deep">Open group</p>
+    <article
+      className="min-w-0 max-w-full rounded-lg border border-foreground-faint bg-background p-6 text-foreground"
+      data-club-id={club.id}
+    >
       <h3 className="text-subtitle normal-case text-foreground [overflow-wrap:anywhere]">
         {club.name}
       </h3>
+      <dl
+        className="mt-4 grid min-w-0 gap-3 text-sm text-foreground-muted sm:grid-cols-2"
+        data-club-metadata
+      >
+        {[
+          ["Schedule", club.schedule],
+          ["Location", club.location],
+        ].map(([label, value]) => (
+          <div key={label} className="min-w-0 [overflow-wrap:anywhere]">
+            <dt className="text-body text-foreground">{label}</dt>
+            <dd className="mt-0.5">{value}</dd>
+          </div>
+        ))}
+      </dl>
       <p className="text-body mt-4 leading-relaxed text-foreground-muted">{club.description}</p>
-      <p className="text-body mt-4 [overflow-wrap:anywhere] text-foreground-muted">
-        {club.schedule} · {club.location}
-      </p>
       <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1 font-mono text-xs">
         {club.detailsUrl && (
           <ExternalLink
