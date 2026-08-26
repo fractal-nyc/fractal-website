@@ -535,7 +535,7 @@ export function FractalUniversityPortal() {
           </p>
         </header>
 
-        <div className="border-b border-background/45 pb-8 md:pb-10" data-fractalu-filter-block>
+        <div className="pb-8 md:pb-10" data-fractalu-filter-block>
           <p id="fractalu-filter-label" className="sr-only">
             Filter classes by subject
           </p>
@@ -555,7 +555,7 @@ export function FractalUniversityPortal() {
                   className={`min-h-11 shrink-0 rounded-md border px-4 py-2 font-mono text-xs transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-background ${
                     selected
                       ? "border-background bg-house-education-light text-background shadow-sm"
-                      : "border-background/55 bg-house-education-deep/70 text-background hover:border-background hover:bg-background/10"
+                      : "border-background/55 bg-house-education-deep/70 text-background hover:border-background hover:bg-house-education-light hover:text-background focus-visible:border-background focus-visible:bg-house-education-light focus-visible:text-background"
                   }`}
                 >
                   {category}
@@ -583,22 +583,6 @@ export function FractalUniversityPortal() {
       </div>
 
       <FractalUInformation />
-
-      <section
-        className="relative z-10 mx-auto mt-24 max-w-7xl page-gutter md:mt-32"
-        aria-label="Fractal University in community"
-        data-fractalu-final-collage
-      >
-        <picture className="block overflow-hidden rounded-md" data-testid="fractalu-collage">
-          <source
-            media="(max-width: 639px)"
-            srcSet="/images/fractalu-mobile.png"
-            width="639"
-            height="318"
-          />
-          <img src="/images/fractalu.png" width="800" height="133" alt="" className="h-auto w-full" />
-        </picture>
-      </section>
     </section>
   );
 }

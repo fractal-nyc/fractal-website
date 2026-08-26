@@ -13,6 +13,7 @@ const LIAM_DUFFY_BIO =
 
 test("Education portal keeps one wide accessible catalog across input modes", async ({
   page,
+  browserName,
 }, testInfo) => {
   const profile = testInfo.project.metadata.profile as ResponsiveProfile | undefined;
   const width = profile?.viewport.width ?? 1440;
@@ -25,6 +26,10 @@ test("Education portal keeps one wide accessible catalog across input modes", as
 
   await expect(page.getByRole("heading", { level: 1, name: "Fractal University" })).toHaveCount(1);
   await expect(page.getByText("An improvised college in New York City.", { exact: true })).toBeVisible();
+  const sectorLetter = page.locator("[data-sector-letter]");
+  const sectorName = page.locator("[data-sector-name]");
+  await expect(sectorLetter).toHaveCSS("color", "rgb(203, 43, 35)");
+  await expect(sectorName).toHaveCSS("color", await page.locator("h1").evaluate((element) => getComputedStyle(element).color));
   const intro = page.locator("[data-education-intro]");
   const portal = page.locator("[data-fractalu-portal]");
   await expect(page.getByRole("link", { name: /Stay tuned for future semesters/ })).toHaveAttribute(
@@ -42,6 +47,14 @@ test("Education portal keeps one wide accessible catalog across input modes", as
   await expect(page.getByRole("heading", { name: "Summer 2026 semester" })).toBeVisible();
   await expect(page.getByText("Filter classes by subject.")).toBeVisible();
   await expect(page.locator("iframe, table, details, summary")).toHaveCount(0);
+  await expect(page.locator("[data-fractalu-portal] > [data-fractalu-wide-shell] > header")).toHaveCSS(
+    "border-bottom-width",
+    "1px",
+  );
+  await expect(page.locator("[data-fractalu-filter-block]")).toHaveCSS(
+    "border-bottom-width",
+    "0px",
+  );
 
   const catalog = page.getByTestId("fractalu-course-catalog");
   await expect(catalog).toBeVisible();
@@ -125,9 +138,23 @@ test("Education portal keeps one wide accessible catalog across input modes", as
   );
 
   const technology = page.getByRole("button", { name: "Technology" });
+  const allFilter = page.getByRole("button", { name: "All" });
+  const selectedFilterColors = await allFilter.evaluate((button) => ({
+    background: getComputedStyle(button).backgroundColor,
+    color: getComputedStyle(button).color,
+  }));
   expect(
     await technology.evaluate((button) => Number.parseFloat(getComputedStyle(button).minHeight)),
   ).toBeGreaterThanOrEqual(44);
+  if (!hasTouch) {
+    await technology.hover();
+    await expect(technology).toHaveCSS("background-color", selectedFilterColors.background);
+    await expect(technology).toHaveCSS("color", selectedFilterColors.color);
+    await page.mouse.move(0, 0);
+    await technology.focus();
+    await expect(technology).toHaveCSS("background-color", selectedFilterColors.background);
+    await expect(technology).toHaveCSS("color", selectedFilterColors.color);
+  }
   await technology.click();
   await expect(technology).toHaveAttribute("aria-pressed", "true");
   await expect(page.getByText("3 courses shown.")).toHaveText("3 courses shown.");
@@ -152,8 +179,8 @@ test("Education portal keeps one wide accessible catalog across input modes", as
 
   if (!hasTouch && width >= 1024 && !profile?.rootFontScale) {
     await expect(titleArrow).toHaveCSS("opacity", "0");
-    await firstCourse.hover();
-    await expect(titleArrow).toHaveCSS("opacity", "1");
+    await firstCourse.locator("dl").hover();
+    await expect(titleArrow).toHaveCSS("opacity", "0");
     await expect(firstCourse).toHaveCSS("transform", /matrix\(1\.02/);
     const lampInstructor = lampCourse.getByRole("button", {
       name: "Mel Brand & Julianne Lefelhocz",
@@ -292,13 +319,32 @@ test("Education portal keeps one wide accessible catalog across input modes", as
   }
 
   const canon = page.locator('section[aria-labelledby="fractalu-canon-title"]');
-  const collage = page.locator("[data-fractalu-final-collage]");
-  expect(
-    await canon.evaluate(
-      (section, target) => Boolean(section.compareDocumentPosition(target) & Node.DOCUMENT_POSITION_FOLLOWING),
-      await collage.elementHandle(),
-    ),
-  ).toBe(true);
+  await expect(canon).toBeVisible();
+  await expect(page.locator("[data-fractalu-final-collage], [data-testid='fractalu-collage']")).toHaveCount(0);
+  await expect(page.getByRole("region", { name: "Fractal University in community" })).toHaveCount(0);
+
+  if (browserName === "chromium" && profile?.name === "desktop-1440x900") {
+    await page.evaluate(() => window.scrollTo(0, 0));
+    await page.evaluate(() => new Promise<void>((resolve) => requestAnimationFrame(() => resolve())));
+    const educationShell = page.getByTestId("education-desktop-pennants");
+    const educationSlot = educationShell.locator(":scope > div").first();
+    const educationClasses = await educationShell.getAttribute("class");
+    const educationShellBox = await educationShell.boundingBox();
+    const educationSlotBox = await educationSlot.boundingBox();
+
+    await page.goto("/library", { waitUntil: "domcontentloaded" });
+    await preparePage(page);
+    const libraryShell = page.getByTestId("library-desktop-pennants");
+    const librarySlot = libraryShell.locator(":scope > div").first();
+    expect(await libraryShell.getAttribute("class")).toBe(educationClasses);
+    const libraryShellBox = await libraryShell.boundingBox();
+    const librarySlotBox = await librarySlot.boundingBox();
+    expect(libraryShellBox).toEqual(educationShellBox);
+    expect(librarySlotBox).toEqual(educationSlotBox);
+    expect(educationShellBox).toMatchObject({ x: 64, y: 144, height: 648 });
+    expect(educationSlotBox).toMatchObject({ x: 64, y: 144, height: 648 });
+    expect(educationSlotBox?.width).toBeCloseTo(210, 0);
+  }
 
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(
     await page.evaluate(() => document.documentElement.clientWidth + 1),

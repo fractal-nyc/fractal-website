@@ -56,21 +56,15 @@ describe("SectorHeader", () => {
       });
 
       it("should apply the section color to both letter and name", () => {
-        const { container } = render(
+        render(
           <SectorHeader
             letter={section.letter}
             name={section.name}
             color={section.color}
           />,
         );
-        // jsdom normalizes hex colors to rgb() — check that both spans
-        // have a non-empty color style set (the actual value is the section color)
-        const spans = container.querySelectorAll("span");
-        const coloredSpans = Array.from(spans).filter(
-          (el) => el.style.color !== "",
-        );
-        // Letter span and name span should both have color set
-        expect(coloredSpans.length).toBeGreaterThanOrEqual(2);
+        expect(screen.getByText(section.letter)).toHaveStyle({ color: section.color });
+        expect(screen.getByText(section.name)).toHaveStyle({ color: section.color });
       });
     });
   }
@@ -119,6 +113,23 @@ describe("SectorHeader", () => {
       expect(wrapper).toBeTruthy();
       // The wrapper should contain the text-center div
       expect(wrapper!.querySelector(".text-center")).toBeTruthy();
+    });
+  });
+
+  it("can split decorative letter paint from the essential name label", () => {
+    render(
+      <SectorHeader
+        letter="E"
+        name="Education"
+        color="var(--color-house-education-light)"
+        nameColor="hsl(var(--background))"
+      />,
+    );
+    expect(document.querySelector("[data-sector-letter]")).toHaveStyle({
+      color: "var(--color-house-education-light)",
+    });
+    expect(document.querySelector("[data-sector-name]")).toHaveStyle({
+      color: "hsl(var(--background))",
     });
   });
 });

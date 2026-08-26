@@ -60,7 +60,8 @@ export function EducationPage() {
               <SectorHeader
                 letter="E"
                 name="Education"
-                color="hsl(var(--background))"
+                color="var(--color-house-education-light)"
+                nameColor="hsl(var(--background))"
               />
 
               <FadeIn delay={0.1}>

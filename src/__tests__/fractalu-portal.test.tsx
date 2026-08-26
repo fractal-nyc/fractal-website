@@ -135,14 +135,23 @@ describe("FractalUniversityPortal", () => {
 
   it("exposes all categories as 44px-minimum pressed-state filters", () => {
     render(<FractalUniversityPortal />);
+    const filterBlock = document.querySelector("[data-fractalu-filter-block]")!;
+    expect(filterBlock).not.toHaveClass("border-b");
     const group = screen.getByRole("group", { name: "Filter classes by subject" });
     const filters = within(group).getAllByRole("button");
     expect(filters.map((button) => button.textContent)).toEqual(FRACTALU_CATEGORIES);
     expect(filters.every((button) => button.className.includes("min-h-11"))).toBe(true);
     expect(screen.getByRole("button", { name: "All" })).toHaveAttribute("aria-pressed", "true");
+    const technology = screen.getByRole("button", { name: "Technology" });
+    expect(technology).toHaveClass(
+      "hover:bg-house-education-light",
+      "hover:text-background",
+      "focus-visible:bg-house-education-light",
+      "focus-visible:text-background",
+    );
 
-    fireEvent.click(screen.getByRole("button", { name: "Technology" }));
-    expect(screen.getByRole("button", { name: "Technology" })).toHaveAttribute("aria-pressed", "true");
+    fireEvent.click(technology);
+    expect(technology).toHaveAttribute("aria-pressed", "true");
     expect(screen.getByRole("button", { name: "All" })).toHaveAttribute("aria-pressed", "false");
     expect(within(screen.getByTestId("fractalu-course-catalog")).getAllByRole("article")).toHaveLength(3);
     expect(screen.getByText("3 courses shown.")).toHaveAttribute("aria-live", "polite");
@@ -179,6 +188,7 @@ describe("FractalUniversityPortal", () => {
       expect(link).toHaveAttribute("target", "_blank");
       expect(link).toHaveAttribute("rel", "noopener noreferrer");
       expect(link).toHaveAttribute("aria-describedby", `${course.id}-description`);
+      expect(link.querySelector("[data-course-external-icon]")).toBeTruthy();
     }
     const butohCard = catalog.querySelector<HTMLElement>('[data-course-id="butoh-into-the-depth"]')!;
     expect(within(butohCard).queryByRole("link", { name: /Butoh: Into the Depth course description/ })).toBeNull();
@@ -337,23 +347,14 @@ describe("FractalUniversityPortal", () => {
     expect(container.querySelector('a[href^="mailto:"]')).not.toHaveAttribute("target");
   });
 
-  it("uses the source-owned responsive collage without cropping", () => {
+  it("ends with the information content and does not render the dormant collage assets", () => {
     render(<FractalUniversityPortal />);
-    const picture = screen.getByTestId("fractalu-collage");
-    const source = picture.querySelector("source")!;
-    const image = picture.querySelector("img")!;
-    expect(source).toHaveAttribute("srcset", "/images/fractalu-mobile.png");
-    expect(source).toHaveAttribute("width", "639");
-    expect(source).toHaveAttribute("height", "318");
-    expect(image).toHaveAttribute("src", "/images/fractalu.png");
-    expect(image).toHaveAttribute("width", "800");
-    expect(image).toHaveAttribute("height", "133");
-    expect(image).toHaveAttribute("alt", "");
-    expect(image).toHaveClass("h-auto", "w-full");
-    const canon = screen.getByRole("heading", { name: "The canon" }).closest("section")!;
-    const finalCollage = picture.closest("[data-fractalu-final-collage]")!;
-    expect(canon.compareDocumentPosition(finalCollage) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
-    expect(screen.getAllByTestId("fractalu-collage")).toHaveLength(1);
+    expect(screen.queryByRole("region", { name: "Fractal University in community" })).toBeNull();
+    expect(screen.queryByTestId("fractalu-collage")).toBeNull();
+    expect(document.querySelector("[data-fractalu-final-collage]")).toBeNull();
+    expect(document.querySelector('img[src="/images/fractalu.png"]')).toBeNull();
+    expect(document.querySelector('source[srcset="/images/fractalu-mobile.png"]')).toBeNull();
+    expect(screen.getByRole("heading", { name: "The canon" })).toBeTruthy();
   });
 
   it("uses the approved information and Mandelbrot teaching-callout hierarchy", () => {

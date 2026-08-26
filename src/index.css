@@ -485,12 +485,6 @@
   }
 
   .fractalu-course-grid[data-preview-mode="enhanced"]
-    .fractalu-course-card:hover
-    .fractalu-course-link-arrow,
-  .fractalu-course-grid[data-preview-mode="enhanced"]
-    .fractalu-course-card:focus-within
-    .fractalu-course-link-arrow,
-  .fractalu-course-grid[data-preview-mode="enhanced"]
     .fractalu-course-title-link:hover
     .fractalu-course-link-arrow,
   .fractalu-course-grid[data-preview-mode="enhanced"]

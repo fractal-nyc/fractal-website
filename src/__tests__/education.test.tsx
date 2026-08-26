@@ -71,6 +71,12 @@ describe("EducationPage", () => {
     expect(container.querySelector(`svg [stroke="${education.palette.light}"]`)).toBeTruthy();
     expect(education.palette.light).toBe("#CB2B23");
     expect(container.querySelector("[data-fractalu-wide-shell]")).toHaveClass("text-background");
+    expect(container.querySelector("[data-sector-letter]")).toHaveStyle({
+      color: "var(--color-house-education-light)",
+    });
+    expect(container.querySelector("[data-sector-name]")).toHaveStyle({
+      color: "hsl(var(--background))",
+    });
   });
 
   it("renders site chrome and both decorative pennant shells", () => {
@@ -85,6 +91,18 @@ describe("EducationPage", () => {
       "aria-hidden",
       "true",
     );
+    const desktopPennants = screen.getByTestId("education-desktop-pennants");
+    expect(desktopPennants).toHaveClass(
+      "inset-x-4",
+      "sm:inset-x-8",
+      "md:inset-x-12",
+      "lg:inset-x-16",
+      "top-28",
+      "md:top-36",
+    );
+    for (const slot of Array.from(desktopPennants.children)) {
+      expect(slot).toHaveClass("h-full", "w-[24%]", "md:w-[16%]", "max-w-[210px]");
+    }
   });
 
   it("scrolls and focuses the What is FractalU section from the intro action", () => {
