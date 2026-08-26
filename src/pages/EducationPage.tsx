@@ -46,10 +46,10 @@ export function EducationPage() {
           className="pointer-events-none fixed inset-x-4 sm:inset-x-8 md:inset-x-12 lg:inset-x-16 top-28 md:top-36 z-0 hidden md:flex md:justify-between"
           style={{ height: "min(72vh, 660px)" }}
         >
-          <div className="pointer-events-auto h-full w-[24%] md:w-[16%] max-w-[210px]">
+          <div className="pointer-events-auto h-[90%] w-[21.6%] md:w-[14.4%] max-w-[189px]">
             <EducationBannerSVG />
           </div>
-          <div className="pointer-events-auto h-full w-[24%] md:w-[16%] max-w-[210px]">
+          <div className="pointer-events-auto h-[90%] w-[21.6%] md:w-[14.4%] max-w-[189px]">
             <EducationBannerSVG />
           </div>
         </div>
@@ -106,10 +106,10 @@ export function EducationPage() {
           data-testid="education-mobile-pennants"
           className="flex md:hidden items-end justify-center gap-3 px-3 pt-8 pb-12"
         >
-          <div className="w-[45%] aspect-[123/368]">
+          <div className="w-[40.5%] aspect-[123/368]">
             <EducationBannerSVG />
           </div>
-          <div className="w-[45%] aspect-[123/368]">
+          <div className="w-[40.5%] aspect-[123/368]">
             <EducationBannerSVG />
           </div>
         </div>

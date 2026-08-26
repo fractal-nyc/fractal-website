@@ -103,7 +103,12 @@ describe("EducationPage", () => {
       "md:top-36",
     );
     for (const slot of Array.from(desktopPennants.children)) {
-      expect(slot).toHaveClass("h-full", "w-[24%]", "md:w-[16%]", "max-w-[210px]");
+      expect(slot).toHaveClass(
+        "h-[90%]",
+        "w-[21.6%]",
+        "md:w-[14.4%]",
+        "max-w-[189px]",
+      );
     }
 
     const mobilePennants = screen.getByTestId("education-mobile-pennants");
@@ -118,7 +123,7 @@ describe("EducationPage", () => {
       "pb-12",
     );
     for (const slot of Array.from(mobilePennants.children)) {
-      expect(slot).toHaveClass("w-[45%]", "aspect-[123/368]");
+      expect(slot).toHaveClass("w-[40.5%]", "aspect-[123/368]");
     }
   });
 

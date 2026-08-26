@@ -355,10 +355,13 @@ test("Education portal keeps one wide accessible catalog across input modes", as
     const educationShell = page.getByTestId(
       usesDesktopPennants ? "education-desktop-pennants" : "education-mobile-pennants",
     );
-    const educationSlot = educationShell.locator(":scope > div").first();
+    const educationSlots = educationShell.locator(":scope > div");
+    const educationLeftSlot = educationSlots.first();
+    const educationRightSlot = educationSlots.last();
     const educationClasses = await educationShell.getAttribute("class");
     const educationShellBox = await educationShell.boundingBox();
-    const educationSlotBox = await educationSlot.boundingBox();
+    const educationLeftBox = await educationLeftSlot.boundingBox();
+    const educationRightBox = await educationRightSlot.boundingBox();
 
     await page.goto("/library", { waitUntil: "domcontentloaded" });
     await preparePage(page, profile?.rootFontScale);
@@ -370,16 +373,43 @@ test("Education portal keeps one wide accessible catalog across input modes", as
     const libraryShellBox = await libraryShell.boundingBox();
     const librarySlotBox = await librarySlot.boundingBox();
     expect(libraryShellBox?.width).toBeCloseTo(educationShellBox?.width ?? 0, 4);
-    expect(libraryShellBox?.height).toBeCloseTo(educationShellBox?.height ?? 0, 4);
-    expect(librarySlotBox?.width).toBeCloseTo(educationSlotBox?.width ?? 0, 4);
-    expect(librarySlotBox?.height).toBeCloseTo(educationSlotBox?.height ?? 0, 4);
+    if (usesDesktopPennants) {
+      expect(libraryShellBox?.height).toBeCloseTo(educationShellBox?.height ?? 0, 4);
+    }
+
+    expect(educationLeftBox).not.toBeNull();
+    expect(educationRightBox).not.toBeNull();
+    expect(librarySlotBox).not.toBeNull();
+    const widthRatio = educationLeftBox!.width / librarySlotBox!.width;
+    const heightRatio = educationLeftBox!.height / librarySlotBox!.height;
+    expect(widthRatio).toBeGreaterThanOrEqual(0.89);
+    expect(widthRatio).toBeLessThanOrEqual(0.91);
+    expect(heightRatio).toBeGreaterThanOrEqual(0.89);
+    expect(heightRatio).toBeLessThanOrEqual(0.91);
+
+    expect(educationRightBox!.width).toBeCloseTo(educationLeftBox!.width, 4);
+    expect(educationRightBox!.height).toBeCloseTo(educationLeftBox!.height, 4);
+    expect(educationRightBox!.y).toBeCloseTo(educationLeftBox!.y, 4);
+
+    if (usesDesktopPennants) {
+      expect(educationLeftBox!.x).toBeCloseTo(educationShellBox!.x, 4);
+      expect(educationRightBox!.x + educationRightBox!.width).toBeCloseTo(
+        educationShellBox!.x + educationShellBox!.width,
+        4,
+      );
+    } else {
+      const educationPairMidpoint =
+        (educationLeftBox!.x + educationRightBox!.x + educationRightBox!.width) / 2;
+      const educationShellMidpoint = educationShellBox!.x + educationShellBox!.width / 2;
+      expect(educationPairMidpoint).toBeCloseTo(educationShellMidpoint, 4);
+    }
 
     if (profile?.name === "desktop-1440x900") {
       expect(libraryShellBox).toEqual(educationShellBox);
-      expect(librarySlotBox).toEqual(educationSlotBox);
       expect(educationShellBox).toMatchObject({ x: 64, y: 144, height: 648 });
-      expect(educationSlotBox).toMatchObject({ x: 64, y: 144, height: 648 });
-      expect(educationSlotBox?.width).toBeCloseTo(210, 0);
+      expect(educationLeftBox).toMatchObject({ x: 64, y: 144 });
+      expect(educationLeftBox?.width).toBeCloseTo(189, 0);
+      expect(educationLeftBox?.height).toBeCloseTo(583.2, 1);
     }
   }
 
