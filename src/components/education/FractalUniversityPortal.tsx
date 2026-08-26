@@ -46,19 +46,70 @@ interface ExternalLinkProps {
   children: ReactNode;
   accessibleName: string;
   className?: string;
+  focusRingClassName?: string;
+  dataResourceLink?: boolean;
 }
 
-function ExternalLink({ href, children, accessibleName, className = "" }: ExternalLinkProps) {
+function ExternalLink({
+  href,
+  children,
+  accessibleName,
+  className = "",
+  focusRingClassName = "focus-visible:ring-house-education-light",
+  dataResourceLink = false,
+}: ExternalLinkProps) {
   return (
     <a
       href={href}
       target="_blank"
       rel="noopener noreferrer"
       aria-label={`${accessibleName} (opens in a new tab)`}
-      className={`inline-flex min-h-11 min-w-0 max-w-full flex-wrap items-center gap-1.5 [overflow-wrap:anywhere] rounded-md underline decoration-1 underline-offset-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-house-education-light ${className}`}
+      data-fractalu-resource-link={dataResourceLink ? "" : undefined}
+      className={`inline-flex min-h-11 min-w-0 max-w-full flex-wrap items-center gap-1.5 [overflow-wrap:anywhere] rounded-md underline decoration-1 underline-offset-4 focus-visible:outline-none focus-visible:ring-2 ${focusRingClassName} ${className}`}
     >
       {children}
       <ArrowUpRight size={15} strokeWidth={1.5} aria-hidden="true" />
+    </a>
+  );
+}
+
+const RESOURCE_LINK_CLASS =
+  "text-subtitle text-background decoration-background/55 hover:decoration-background";
+
+interface ResourceLinkProps {
+  href: string;
+  children: ReactNode;
+  accessibleName?: string;
+  external?: boolean;
+}
+
+function ResourceLink({
+  href,
+  children,
+  accessibleName,
+  external = false,
+}: ResourceLinkProps) {
+  if (external) {
+    return (
+      <ExternalLink
+        href={href}
+        accessibleName={accessibleName ?? String(children)}
+        className={RESOURCE_LINK_CLASS}
+        focusRingClassName="focus-visible:ring-background"
+        dataResourceLink
+      >
+        {children}
+      </ExternalLink>
+    );
+  }
+
+  return (
+    <a
+      href={href}
+      data-fractalu-resource-link=""
+      className={`inline-flex min-h-11 min-w-0 max-w-full flex-wrap items-center rounded-md underline decoration-1 underline-offset-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-background [overflow-wrap:anywhere] ${RESOURCE_LINK_CLASS}`}
+    >
+      {children}
     </a>
   );
 }
@@ -157,15 +208,20 @@ function InstructorBioPreview({
 
 function CourseActions({ course }: { course: FractalUCourse }) {
   return (
-    <div className="mt-5 flex flex-wrap gap-x-4 gap-y-1 font-mono text-xs">
+    <div className="mt-5 flex flex-wrap gap-x-4 gap-y-1">
       <ExternalLink
         href={course.applicationUrl}
         accessibleName={`${course.applicationLabel} for ${course.title}`}
+        className="text-body"
       >
         {course.applicationLabel}
       </ExternalLink>
       {course.videoUrl && (
-        <ExternalLink href={course.videoUrl} accessibleName={`Watch video for ${course.title}`}>
+        <ExternalLink
+          href={course.videoUrl}
+          accessibleName={`Watch video for ${course.title}`}
+          className="text-body"
+        >
           <Play size={13} aria-hidden="true" />
           Watch video
         </ExternalLink>
@@ -265,7 +321,7 @@ function CourseCard({
           ["Price", course.price],
         ].map(([label, value]) => (
           <div key={label} className="min-w-0 [overflow-wrap:anywhere]">
-            <dt className="text-body text-foreground">{label}</dt>
+            <dt className="text-label text-foreground">{label}</dt>
             <dd className="mt-0.5">{value}</dd>
           </div>
         ))}
@@ -352,22 +408,27 @@ function ClubCard({ club }: { club: FractalUClub }) {
           ["Location", club.location],
         ].map(([label, value]) => (
           <div key={label} className="min-w-0 [overflow-wrap:anywhere]">
-            <dt className="text-body text-foreground">{label}</dt>
+            <dt className="text-label text-foreground">{label}</dt>
             <dd className="mt-0.5">{value}</dd>
           </div>
         ))}
       </dl>
       <p className="text-body mt-4 leading-relaxed text-foreground-muted">{club.description}</p>
-      <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1 font-mono text-xs">
+      <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1">
         {club.detailsUrl && (
           <ExternalLink
             href={club.detailsUrl}
             accessibleName={`${club.detailsLabel ?? "Group details"} for ${club.name}`}
+            className="text-body"
           >
             {club.detailsLabel ?? "Group details"}
           </ExternalLink>
         )}
-        <ExternalLink href={club.actionUrl} accessibleName={`${club.actionLabel} for ${club.name}`}>
+        <ExternalLink
+          href={club.actionUrl}
+          accessibleName={`${club.actionLabel} for ${club.name}`}
+          className="text-body"
+        >
           {club.actionLabel}
         </ExternalLink>
       </div>
@@ -477,28 +538,28 @@ function FractalUInformation() {
               toward an environment where people read hundreds of books a year, take
               dozens of classes, pursue their curiosities, and do science.
             </p>
-            <ExternalLink
+          </div>
+          <div
+            className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-2"
+            data-fractalu-resource-links
+          >
+            <ResourceLink
               href="https://ajr.fyi/files/fractal-canon.pdf"
               accessibleName="Read the FractalU canon PDF"
-              className="font-mono text-sm text-background"
+              external
             >
               Read the canon (PDF)
-            </ExternalLink>
-          </div>
-          <div className="mt-10 flex flex-wrap gap-x-6 gap-y-2 font-mono text-sm">
-            <ExternalLink
+            </ResourceLink>
+            <ResourceLink
               href="https://fractaluniversity.substack.com"
               accessibleName="FractalU Substack"
-              className="text-background"
+              external
             >
               FractalU Substack
-            </ExternalLink>
-            <a
-              href="mailto:fractalu@fractalnyc.com"
-              className="inline-flex min-h-11 min-w-0 max-w-full flex-wrap items-center break-all rounded-md text-background underline underline-offset-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-background"
-            >
+            </ResourceLink>
+            <ResourceLink href="mailto:fractalu@fractalnyc.com">
               fractalu@fractalnyc.com
-            </a>
+            </ResourceLink>
           </div>
         </div>
       </section>

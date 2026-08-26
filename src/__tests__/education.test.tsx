@@ -24,14 +24,27 @@ describe("EducationPage", () => {
     expect(heading.className).toContain("text-display");
     expect(screen.getAllByRole("heading", { level: 1 })).toHaveLength(1);
     expect(screen.getByText("An improvised college in New York City.")).toHaveClass("text-subtitle");
-    expect(screen.getByRole("link", { name: /Stay tuned for future semesters/ })).toHaveAttribute(
+    const futureSemesters = screen.getByRole("link", {
+      name: /Stay tuned for future semesters/,
+    });
+    expect(futureSemesters).toHaveAttribute(
       "href",
       "https://fractaluniversity.substack.com",
     );
-    expect(screen.getByRole("link", { name: "What is FractalU?" })).toHaveAttribute(
+    expect(futureSemesters).toHaveAttribute("target", "_blank");
+    expect(futureSemesters).toHaveAttribute("rel", "noopener noreferrer");
+    const informationJump = screen.getByRole("link", { name: "What is FractalU?" });
+    expect(informationJump).toHaveAttribute(
       "href",
       "#what-is-fractalu",
     );
+    const actionLabels = screen.getAllByText(/Stay tuned for future semesters|What is FractalU\?/, {
+      selector: "[data-education-hero-action-label]",
+    });
+    expect(actionLabels).toHaveLength(2);
+    for (const label of actionLabels) {
+      expect(label).toHaveClass("text-subtitle");
+    }
   });
 
   it("places the transparent Library-scale catalog after the intro", () => {

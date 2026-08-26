@@ -36,6 +36,12 @@ test("Education portal keeps one wide accessible catalog across input modes", as
     "href",
     "https://fractaluniversity.substack.com",
   );
+  const heroActionLabels = page.locator("[data-education-hero-action-label]");
+  await expect(heroActionLabels).toHaveCount(2);
+  for (const label of await heroActionLabels.all()) {
+    await expect(label).toHaveCSS("font-family", /Fraunces/);
+    await expect(label).toHaveCSS("text-transform", "none");
+  }
   await expect(page.getByRole("link", { name: /Visit Fractal AI Accelerator/ })).toHaveCount(0);
   await expect(portal).toBeVisible();
   expect(
@@ -345,6 +351,40 @@ test("Education portal keeps one wide accessible catalog across input modes", as
 
   const canon = page.locator('section[aria-labelledby="fractalu-canon-title"]');
   await expect(canon).toBeVisible();
+  const resourceGroup = page.locator("[data-fractalu-resource-links]");
+  const resourceLinks = resourceGroup.locator("[data-fractalu-resource-link]");
+  await expect(resourceLinks).toHaveCount(3);
+  const resourceFontSizes = await resourceLinks.evaluateAll((links) =>
+    links.map((link) => getComputedStyle(link).fontSize),
+  );
+  expect(new Set(resourceFontSizes).size).toBe(1);
+  for (const link of await resourceLinks.all()) {
+    await expect(link).toHaveCSS("font-family", /Fraunces/);
+    await expect(link).toHaveCSS("text-transform", "none");
+    expect(
+      await link.evaluate((element) => Number.parseFloat(getComputedStyle(element).minHeight)),
+    ).toBeGreaterThanOrEqual(44);
+    await link.focus();
+    await expect(link).toBeFocused();
+    await expect(link).toHaveCSS("outline-style", "none");
+  }
+  const canonLink = resourceGroup.getByRole("link", {
+    name: "Read the FractalU canon PDF (opens in a new tab)",
+  });
+  await expect(canonLink).toHaveAttribute("href", "https://ajr.fyi/files/fractal-canon.pdf");
+  await expect(canonLink.locator("svg")).toHaveCount(1);
+  const substackLink = resourceGroup.getByRole("link", {
+    name: "FractalU Substack (opens in a new tab)",
+  });
+  await expect(substackLink).toHaveAttribute("href", "https://fractaluniversity.substack.com");
+  await expect(substackLink.locator("svg")).toHaveCount(1);
+  const resourceEmail = resourceGroup.getByRole("link", {
+    name: "fractalu@fractalnyc.com",
+  });
+  await expect(resourceEmail).toHaveAttribute("href", "mailto:fractalu@fractalnyc.com");
+  await expect(resourceEmail).not.toHaveAttribute("target");
+  await expect(resourceEmail).not.toHaveAttribute("aria-label");
+  await expect(resourceEmail.locator("svg")).toHaveCount(0);
   await expect(page.locator("[data-fractalu-final-collage], [data-testid='fractalu-collage']")).toHaveCount(0);
   await expect(page.getByRole("region", { name: "Fractal University in community" })).toHaveCount(0);
 

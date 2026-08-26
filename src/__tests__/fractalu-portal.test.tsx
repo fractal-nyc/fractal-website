@@ -133,6 +133,10 @@ describe("FractalUniversityPortal", () => {
         "Schedule",
         "Location",
       ]);
+      for (const term of metadata.querySelectorAll("dt")) {
+        expect(term).toHaveClass("text-label");
+        expect(term).not.toHaveClass("text-body");
+      }
       expect(within(metadata).getAllByText(club.schedule, { selector: "dd" })).toHaveLength(1);
       expect(within(metadata).getAllByText(club.location, { selector: "dd" })).toHaveLength(1);
       expect(within(card).queryByText(`${club.schedule} · ${club.location}`)).toBeNull();
@@ -144,6 +148,7 @@ describe("FractalUniversityPortal", () => {
       expect(action).toHaveAttribute("href", club.actionUrl);
       expect(action).toHaveAttribute("target", "_blank");
       expect(action).toHaveAttribute("rel", "noopener noreferrer");
+      expect(action).toHaveClass("text-body");
 
       if (club.detailsUrl) {
         const details = within(card).getByRole("link", {
@@ -152,6 +157,7 @@ describe("FractalUniversityPortal", () => {
         expect(details).toHaveAttribute("href", club.detailsUrl);
         expect(details).toHaveAttribute("target", "_blank");
         expect(details).toHaveAttribute("rel", "noopener noreferrer");
+        expect(details).toHaveClass("text-body");
       }
     }
   });
@@ -393,6 +399,62 @@ describe("FractalUniversityPortal", () => {
       "href",
       "https://ajr.fyi/files/fractal-canon.pdf",
     );
+  });
+
+  it("uses one semantic typography system for cards and standalone resources", () => {
+    const { container } = render(<FractalUniversityPortal />);
+    const representativeCourse = container.querySelector<HTMLElement>(
+      '[data-course-id="lost-generation-close-reading"]',
+    )!;
+    expect(representativeCourse.querySelector("h3")).toHaveClass("text-subtitle");
+    expect(representativeCourse.querySelector("[data-course-category] p")).toHaveClass(
+      "text-label",
+    );
+    for (const term of representativeCourse.querySelectorAll("dt")) {
+      expect(term).toHaveClass("text-label");
+    }
+    const applyLink = within(representativeCourse).getByRole("link", {
+      name: /Apply for The Lost Generation/,
+    });
+    expect(applyLink).toHaveClass("text-body");
+    expect(applyLink).not.toHaveClass("font-mono", "text-xs");
+
+    const resourceGroup = container.querySelector<HTMLElement>(
+      "[data-fractalu-resource-links]",
+    )!;
+    const resourceLinks = Array.from(
+      resourceGroup.querySelectorAll<HTMLAnchorElement>("[data-fractalu-resource-link]"),
+    );
+    expect(resourceLinks).toHaveLength(3);
+    for (const link of resourceLinks) {
+      expect(link).toHaveClass("text-subtitle", "min-h-11");
+      expect(link).not.toHaveClass("font-mono", "text-sm");
+    }
+
+    const canon = screen.getByRole("link", {
+      name: "Read the FractalU canon PDF (opens in a new tab)",
+    });
+    expect(canon).toHaveAttribute("href", "https://ajr.fyi/files/fractal-canon.pdf");
+    expect(canon).toHaveAttribute("target", "_blank");
+    expect(canon).toHaveAttribute("rel", "noopener noreferrer");
+    expect(canon.querySelector("svg")).toBeTruthy();
+
+    const substack = screen.getByRole("link", {
+      name: "FractalU Substack (opens in a new tab)",
+    });
+    expect(substack).toHaveAttribute("href", "https://fractaluniversity.substack.com");
+    expect(substack).toHaveAttribute("target", "_blank");
+    expect(substack).toHaveAttribute("rel", "noopener noreferrer");
+    expect(substack.querySelector("svg")).toBeTruthy();
+
+    const email = within(resourceGroup).getByRole("link", {
+      name: "fractalu@fractalnyc.com",
+    });
+    expect(email).toHaveAttribute("href", "mailto:fractalu@fractalnyc.com");
+    expect(email).not.toHaveAttribute("target");
+    expect(email).not.toHaveAttribute("rel");
+    expect(email).not.toHaveAttribute("aria-label");
+    expect(email.querySelector("svg")).toBeNull();
   });
 
   it("does not imply accounts, forms, routes, or embeds", () => {

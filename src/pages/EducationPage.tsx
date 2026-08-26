@@ -78,7 +78,12 @@ export function EducationPage() {
                         rel="noopener noreferrer"
                         aria-label="Stay tuned for future semesters (opens in a new tab)"
                       >
-                        Stay tuned for future semesters
+                        <span
+                          className="text-subtitle min-w-0 leading-snug [overflow-wrap:anywhere]"
+                          data-education-hero-action-label
+                        >
+                          Stay tuned for future semesters
+                        </span>
                         <ArrowUpRight aria-hidden="true" />
                       </a>
                     </Button>
@@ -88,7 +93,12 @@ export function EducationPage() {
                       className="w-full whitespace-normal border-background text-background hover:bg-background/10 focus-visible:ring-background focus-visible:ring-offset-house-education-deep sm:w-auto"
                     >
                       <a href="#what-is-fractalu" onClick={jumpToInformation}>
-                        What is FractalU?
+                        <span
+                          className="text-subtitle min-w-0 leading-snug [overflow-wrap:anywhere]"
+                          data-education-hero-action-label
+                        >
+                          What is FractalU?
+                        </span>
                         <ArrowDown aria-hidden="true" />
                       </a>
                     </Button>
