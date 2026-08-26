@@ -170,24 +170,54 @@ test("Education portal keeps one wide accessible catalog across input modes", as
 
   const technology = page.getByRole("button", { name: "Technology" });
   const allFilter = page.getByRole("button", { name: "All" });
-  const selectedFilterColors = await allFilter.evaluate((button) => ({
+  const selectedFilterStyles = await allFilter.evaluate((button) => ({
     background: getComputedStyle(button).backgroundColor,
     color: getComputedStyle(button).color,
+    borderColor: getComputedStyle(button).borderColor,
+    borderWidth: getComputedStyle(button).borderWidth,
   }));
+  const restingFilterStyles = await technology.evaluate((button) => ({
+    background: getComputedStyle(button).backgroundColor,
+    color: getComputedStyle(button).color,
+    borderColor: getComputedStyle(button).borderColor,
+    borderWidth: getComputedStyle(button).borderWidth,
+  }));
+  expect(restingFilterStyles.background).toBe(selectedFilterStyles.background);
+  expect(restingFilterStyles.color).toBe(selectedFilterStyles.color);
+  expect(restingFilterStyles.borderColor).not.toBe(selectedFilterStyles.borderColor);
+  expect(restingFilterStyles.borderWidth).toBe("2px");
+  expect(selectedFilterStyles.borderWidth).toBe("2px");
   expect(
     await technology.evaluate((button) => Number.parseFloat(getComputedStyle(button).minHeight)),
   ).toBeGreaterThanOrEqual(44);
   if (!hasTouch) {
     await technology.hover();
-    await expect(technology).toHaveCSS("background-color", selectedFilterColors.background);
-    await expect(technology).toHaveCSS("color", selectedFilterColors.color);
+    await expect(technology).toHaveCSS("background-color", restingFilterStyles.background);
+    await expect(technology).toHaveCSS("color", restingFilterStyles.color);
+    await expect(technology).toHaveCSS("border-color", selectedFilterStyles.borderColor);
     await page.mouse.move(0, 0);
-    await technology.focus();
-    await expect(technology).toHaveCSS("background-color", selectedFilterColors.background);
-    await expect(technology).toHaveCSS("color", selectedFilterColors.color);
+    const filters = filterGroup.getByRole("button");
+    const filterNames = await filters.allTextContents();
+    const technologyIndex = filterNames.indexOf("Technology");
+    expect(technologyIndex).toBeGreaterThan(0);
+    await filters.nth(technologyIndex - 1).focus();
+    await page.keyboard.press("Tab");
+    await expect(technology).toBeFocused();
+    await expect(technology).toHaveCSS("background-color", restingFilterStyles.background);
+    await expect(technology).toHaveCSS("color", restingFilterStyles.color);
+    await expect(technology).toHaveCSS("border-color", selectedFilterStyles.borderColor);
+    expect(await technology.evaluate((button) => getComputedStyle(button).boxShadow)).not.toBe(
+      "none",
+    );
   }
   await technology.click();
   await expect(technology).toHaveAttribute("aria-pressed", "true");
+  await expect(technology).toHaveCSS("background-color", restingFilterStyles.background);
+  await expect(technology).toHaveCSS("color", restingFilterStyles.color);
+  await expect(technology).toHaveCSS("border-color", selectedFilterStyles.borderColor);
+  await expect(allFilter).toHaveCSS("background-color", restingFilterStyles.background);
+  await expect(allFilter).toHaveCSS("color", restingFilterStyles.color);
+  await expect(allFilter).toHaveCSS("border-color", restingFilterStyles.borderColor);
   await expect(page.getByText("3 courses shown.")).toHaveText("3 courses shown.");
   await expect(catalog.locator("article")).toHaveCount(3);
   await page.getByRole("button", { name: "All" }).click();

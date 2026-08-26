@@ -170,18 +170,45 @@ describe("FractalUniversityPortal", () => {
     const filters = within(group).getAllByRole("button");
     expect(filters.map((button) => button.textContent)).toEqual(FRACTALU_CATEGORIES);
     expect(filters.every((button) => button.className.includes("min-h-11"))).toBe(true);
-    expect(screen.getByRole("button", { name: "All" })).toHaveAttribute("aria-pressed", "true");
+    expect(filters.every((button) => button.className.includes("border-2"))).toBe(true);
+    expect(filters.every((button) => button.className.includes("bg-background"))).toBe(true);
+    expect(filters.every((button) => button.className.includes("text-foreground-muted"))).toBe(
+      true,
+    );
+    expect(
+      filters.every(
+        (button) =>
+          !button.className.includes("bg-house-education-light") &&
+          !button.className.includes("bg-house-education-deep") &&
+          !button.className.includes("text-background"),
+      ),
+    ).toBe(true);
+    const all = screen.getByRole("button", { name: "All" });
+    expect(all).toHaveAttribute("aria-pressed", "true");
+    expect(all).toHaveClass("border-house-education-light", "shadow-sm");
     const technology = screen.getByRole("button", { name: "Technology" });
     expect(technology).toHaveClass(
-      "hover:bg-house-education-light",
-      "hover:text-background",
-      "focus-visible:bg-house-education-light",
-      "focus-visible:text-background",
+      "border-foreground-faint",
+      "hover:border-house-education-light",
+      "focus-visible:border-house-education-light",
+      "focus-visible:ring-house-education-light",
+      "focus-visible:ring-offset-2",
+      "focus-visible:ring-offset-house-education-deep",
     );
 
     fireEvent.click(technology);
     expect(technology).toHaveAttribute("aria-pressed", "true");
-    expect(screen.getByRole("button", { name: "All" })).toHaveAttribute("aria-pressed", "false");
+    expect(technology).toHaveClass(
+      "border-house-education-light",
+      "bg-background",
+      "text-foreground-muted",
+    );
+    expect(all).toHaveAttribute("aria-pressed", "false");
+    expect(all).toHaveClass(
+      "border-foreground-faint",
+      "bg-background",
+      "text-foreground-muted",
+    );
     expect(within(screen.getByTestId("fractalu-course-catalog")).getAllByRole("article")).toHaveLength(3);
     expect(screen.getByText("3 courses shown.")).toHaveAttribute("aria-live", "polite");
     expect(screen.queryByText("The Lost Generation Close Reading")).toBeNull();

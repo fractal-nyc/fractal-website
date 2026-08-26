@@ -620,10 +620,10 @@ export function FractalUniversityPortal() {
                   type="button"
                   aria-pressed={selected}
                   onClick={() => setActiveCategory(category)}
-                  className={`min-h-11 shrink-0 rounded-md border px-4 py-2 font-mono text-xs transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-background ${
+                  className={`min-h-11 shrink-0 rounded-md border-2 bg-background px-4 py-2 font-mono text-xs text-foreground-muted transition-colors focus-visible:border-house-education-light focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-house-education-light focus-visible:ring-offset-2 focus-visible:ring-offset-house-education-deep ${
                     selected
-                      ? "border-background bg-house-education-light text-background shadow-sm"
-                      : "border-background/55 bg-house-education-deep/70 text-background hover:border-background hover:bg-house-education-light hover:text-background focus-visible:border-background focus-visible:bg-house-education-light focus-visible:text-background"
+                      ? "border-house-education-light shadow-sm"
+                      : "border-foreground-faint hover:border-house-education-light"
                   }`}
                 >
                   {category}
