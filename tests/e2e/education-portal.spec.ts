@@ -122,7 +122,7 @@ test("Education portal keeps one wide accessible catalog across input modes", as
     ).toBe(true);
   }
   await expect(page.locator("iframe, table, details, summary")).toHaveCount(0);
-  await expect(page.locator("[data-fractalu-portal] > [data-fractalu-wide-shell] > header")).toHaveCSS(
+  await expect(page.locator('[data-fractalu-reveal-group="catalog-heading"]')).toHaveCSS(
     "border-bottom-width",
     "1px",
   );
@@ -134,6 +134,24 @@ test("Education portal keeps one wide accessible catalog across input modes", as
   const catalog = page.getByTestId("fractalu-course-catalog");
   await expect(catalog).toBeVisible();
   await expect(catalog.locator("article")).toHaveCount(20);
+  const initialCourseRevealSlots = catalog.locator('[data-fractalu-reveal-slot="course"]');
+  await expect(initialCourseRevealSlots).toHaveCount(20);
+  await expect(initialCourseRevealSlots.first()).toHaveAttribute(
+    "data-fractalu-reveal-delay",
+    "0.00",
+  );
+  await expect(initialCourseRevealSlots.nth(5)).toHaveAttribute(
+    "data-fractalu-reveal-delay",
+    "0.30",
+  );
+  await expect(initialCourseRevealSlots.last()).toHaveAttribute(
+    "data-fractalu-reveal-delay",
+    "0.30",
+  );
+  await expect(initialCourseRevealSlots.first()).toHaveAttribute(
+    "data-fractalu-reveal-mode",
+    "animated",
+  );
   await expect(page.locator("[data-course-collection]")).toHaveCount(1);
   await expect(catalog.locator("[data-instructor-bio]")).toHaveCount(20);
   await expect(catalog.locator("[data-instructor-record]")).toHaveCount(23);
@@ -290,9 +308,16 @@ test("Education portal keeps one wide accessible catalog across input modes", as
   await expect(allFilter).toHaveCSS("border-color", restingFilterStyles.borderColor);
   await expect(page.getByText("3 courses shown.")).toHaveText("3 courses shown.");
   await expect(catalog.locator("article")).toHaveCount(3);
+  await expect(catalog.locator('[data-fractalu-reveal-slot="course"]')).toHaveCount(3);
+  await expect(
+    catalog.locator('[data-fractalu-reveal-slot="course"][data-fractalu-reveal-mode="static"]'),
+  ).toHaveCount(3);
   await page.getByRole("button", { name: "All" }).click();
   await expect(page.getByText("20 courses shown.")).toHaveText("20 courses shown.");
   await expect(catalog.locator("article")).toHaveCount(20);
+  await expect(
+    catalog.locator('[data-fractalu-reveal-slot="course"][data-fractalu-reveal-mode="static"]'),
+  ).toHaveCount(20);
 
   const firstCourse = catalog.locator('article[data-course-id="lost-generation-close-reading"]');
   const description = firstCourse.locator("[data-course-description]");
@@ -618,4 +643,59 @@ test("Education portal keeps one wide accessible catalog across input modes", as
     await page.evaluate(() => document.documentElement.clientWidth + 1),
   );
   expect(pageErrors).toEqual([]);
+});
+
+test("Education reveal groups settle once and respect reduced motion", async ({
+  page,
+}, testInfo) => {
+  const profile = testInfo.project.metadata.profile as ResponsiveProfile | undefined;
+  test.skip(
+    !["desktop-1440x900", "phone-reduced-motion"].includes(profile?.name ?? ""),
+    "Focused motion probe runs in one no-preference and one reduced-motion profile.",
+  );
+
+  await page.emulateMedia({
+    reducedMotion: profile?.reducedMotion === "reduce" ? "reduce" : "no-preference",
+  });
+  await page.goto("/education", { waitUntil: "domcontentloaded" });
+  await preparePage(page, profile?.rootFontScale);
+  expect(
+    await page.evaluate(() => matchMedia("(prefers-reduced-motion: reduce)").matches),
+  ).toBe(profile?.reducedMotion === "reduce");
+
+  const about = page.locator('[data-fractalu-information-reveal="about"]');
+  const revealWrapper = about.locator("xpath=..");
+  const initialSize = await revealWrapper.evaluate((element) => {
+    const box = element.getBoundingClientRect();
+    return { width: box.width, height: box.height };
+  });
+
+  if (profile?.reducedMotion === "reduce") {
+    await expect(revealWrapper).toHaveCSS("opacity", "1");
+    await expect(revealWrapper).toHaveCSS("transform", "none");
+  } else {
+    await expect(revealWrapper).toHaveCSS("opacity", "0");
+    expect(await revealWrapper.evaluate((element) => getComputedStyle(element).transform)).not.toBe(
+      "none",
+    );
+    await about.scrollIntoViewIfNeeded();
+    await expect(revealWrapper).toHaveCSS("opacity", "1");
+    await expect(revealWrapper).toHaveCSS("transform", "none");
+
+    await page.evaluate(() => window.scrollTo(0, 0));
+    await page.waitForTimeout(100);
+    await about.scrollIntoViewIfNeeded();
+    await expect(revealWrapper).toHaveCSS("opacity", "1");
+    await expect(revealWrapper).toHaveCSS("transform", "none");
+  }
+
+  const settledSize = await revealWrapper.evaluate((element) => {
+    const box = element.getBoundingClientRect();
+    return { width: box.width, height: box.height };
+  });
+  expect(settledSize.width).toBeCloseTo(initialSize.width, 0);
+  expect(settledSize.height).toBeCloseTo(initialSize.height, 0);
+  expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(
+    await page.evaluate(() => document.documentElement.clientWidth + 1),
+  );
 });
