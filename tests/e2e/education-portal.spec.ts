@@ -32,16 +32,22 @@ test("Education portal keeps one wide accessible catalog across input modes", as
   await expect(sectorName).toHaveCSS("color", await page.locator("h1").evaluate((element) => getComputedStyle(element).color));
   const intro = page.locator("[data-education-intro]");
   const portal = page.locator("[data-fractalu-portal]");
-  await expect(page.getByRole("link", { name: /Stay tuned for future semesters/ })).toHaveAttribute(
+  const futureSemestersLink = page.getByRole("link", {
+    name: /Stay tuned for future semesters/,
+  });
+  await expect(futureSemestersLink).toHaveAttribute(
     "href",
     "https://fractaluniversity.substack.com",
   );
-  const heroActionLabels = page.locator("[data-education-hero-action-label]");
-  await expect(heroActionLabels).toHaveCount(2);
-  for (const label of await heroActionLabels.all()) {
-    await expect(label).toHaveCSS("font-family", /Fraunces/);
-    await expect(label).toHaveCSS("text-transform", "none");
-  }
+  await expect(futureSemestersLink).toHaveCSS("font-family", /JetBrains Mono/);
+  await expect(futureSemestersLink.locator("[data-education-outbound-arrow]")).toHaveText("→");
+  const informationJump = page.getByRole("link", { name: "What is FractalU?" });
+  await expect(informationJump.locator("[data-education-hero-action-label]")).toHaveCSS(
+    "font-family",
+    /Fraunces/,
+  );
+  await expect(informationJump).toHaveAttribute("href", "#what-is-fractalu");
+  await expect(informationJump).not.toHaveAttribute("data-education-outbound-link");
   await expect(page.getByRole("link", { name: /Visit Fractal AI Accelerator/ })).toHaveCount(0);
   await expect(portal).toBeVisible();
   expect(
@@ -93,6 +99,14 @@ test("Education portal keeps one wide accessible catalog across input modes", as
   await expect(page.locator("[data-course-collection]")).toHaveCount(1);
   await expect(catalog.locator("[data-instructor-bio]")).toHaveCount(20);
   await expect(catalog.locator("[data-instructor-record]")).toHaveCount(23);
+  const outboundLinks = page.locator("[data-education-outbound-link]");
+  await expect(outboundLinks).toHaveCount(53);
+  await expect(outboundLinks.locator("[data-education-outbound-arrow]")).toHaveCount(53);
+  expect(
+    await outboundLinks.evaluateAll((links) =>
+      links.every((link) => link.scrollWidth <= link.clientWidth + 1),
+    ),
+  ).toBe(true);
 
   const clubs = page.getByTestId("fractalu-clubs");
   const clubCards = clubs.locator("article[data-club-id]");
@@ -389,8 +403,8 @@ test("Education portal keeps one wide accessible catalog across input modes", as
   );
   expect(new Set(resourceFontSizes).size).toBe(1);
   for (const link of await resourceLinks.all()) {
-    await expect(link).toHaveCSS("font-family", /Fraunces/);
-    await expect(link).toHaveCSS("text-transform", "none");
+    await expect(link).toHaveCSS("font-family", /JetBrains Mono/);
+    await expect(link).toHaveCSS("text-transform", "uppercase");
     expect(
       await link.evaluate((element) => Number.parseFloat(getComputedStyle(element).minHeight)),
     ).toBeGreaterThanOrEqual(44);
@@ -402,12 +416,14 @@ test("Education portal keeps one wide accessible catalog across input modes", as
     name: "Read the FractalU canon PDF (opens in a new tab)",
   });
   await expect(canonLink).toHaveAttribute("href", "https://ajr.fyi/files/fractal-canon.pdf");
-  await expect(canonLink.locator("svg")).toHaveCount(1);
+  await expect(canonLink.locator("svg")).toHaveCount(0);
+  await expect(canonLink.locator("[data-education-outbound-arrow]")).toHaveText("→");
   const substackLink = resourceGroup.getByRole("link", {
     name: "FractalU Substack (opens in a new tab)",
   });
   await expect(substackLink).toHaveAttribute("href", "https://fractaluniversity.substack.com");
-  await expect(substackLink.locator("svg")).toHaveCount(1);
+  await expect(substackLink.locator("svg")).toHaveCount(0);
+  await expect(substackLink.locator("[data-education-outbound-arrow]")).toHaveText("→");
   const resourceEmail = resourceGroup.getByRole("link", {
     name: "fractalu@fractalnyc.com",
   });
@@ -415,6 +431,7 @@ test("Education portal keeps one wide accessible catalog across input modes", as
   await expect(resourceEmail).not.toHaveAttribute("target");
   await expect(resourceEmail).not.toHaveAttribute("aria-label");
   await expect(resourceEmail.locator("svg")).toHaveCount(0);
+  await expect(resourceEmail.locator("[data-education-outbound-arrow]")).toHaveText("→");
   await expect(page.locator("[data-fractalu-final-collage], [data-testid='fractalu-collage']")).toHaveCount(0);
   await expect(page.getByRole("region", { name: "Fractal University in community" })).toHaveCount(0);
 

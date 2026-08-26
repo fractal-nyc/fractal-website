@@ -3,6 +3,7 @@ import { describe, expect, it, vi } from "vitest";
 import { Router as WouterRouter } from "wouter";
 import { memoryLocation } from "wouter/memory-location";
 import { HOUSES } from "@/data/houses";
+import { FRACTALU_CATALOG } from "@/data/fractalu";
 import { EducationPage } from "@/pages/EducationPage";
 
 function renderEducationPage() {
@@ -38,13 +39,66 @@ describe("EducationPage", () => {
       "href",
       "#what-is-fractalu",
     );
-    const actionLabels = screen.getAllByText(/Stay tuned for future semesters|What is FractalU\?/, {
-      selector: "[data-education-hero-action-label]",
-    });
-    expect(actionLabels).toHaveLength(2);
-    for (const label of actionLabels) {
-      expect(label).toHaveClass("text-subtitle");
+    expect(futureSemesters).toHaveClass(
+      "text-label",
+      "decoration-background/40",
+      "hover:decoration-background",
+      "focus-visible:decoration-background",
+    );
+    expect(futureSemesters.querySelector("[data-education-outbound-arrow]")).toHaveTextContent(
+      "→",
+    );
+    expect(
+      screen.getByText("What is FractalU?", {
+        selector: "[data-education-hero-action-label]",
+      }),
+    ).toHaveClass("text-subtitle");
+  });
+
+  it("covers the complete 53-link outbound inventory without changing destinations", () => {
+    const { container } = renderEducationPage();
+    const expectedHrefs = [
+      "https://fractaluniversity.substack.com",
+      ...FRACTALU_CATALOG.courses.flatMap((course) => [
+        ...(course.detailsUrl ? [course.detailsUrl] : []),
+        course.applicationUrl,
+        ...(course.videoUrl ? [course.videoUrl] : []),
+      ]),
+      ...FRACTALU_CATALOG.clubs.flatMap((club) => [
+        ...(club.detailsUrl ? [club.detailsUrl] : []),
+        club.actionUrl,
+      ]),
+      "mailto:fractalu@fractalnyc.com",
+      "https://ajr.fyi/files/fractal-canon.pdf",
+      "https://fractaluniversity.substack.com",
+      "mailto:fractalu@fractalnyc.com",
+    ];
+    const outboundLinks = Array.from(
+      container.querySelectorAll<HTMLAnchorElement>("[data-education-outbound-link]"),
+    );
+
+    expect(expectedHrefs).toHaveLength(53);
+    expect(outboundLinks).toHaveLength(expectedHrefs.length);
+    expect(outboundLinks.map((link) => link.getAttribute("href")).sort()).toEqual(
+      [...expectedHrefs].sort(),
+    );
+    for (const link of outboundLinks) {
+      expect(link.querySelector("[data-education-outbound-arrow]")).toHaveTextContent("→");
+      if (link.getAttribute("href")?.startsWith("http")) {
+        expect(link).toHaveAttribute("target", "_blank");
+        expect(link).toHaveAttribute("rel", "noopener noreferrer");
+        expect(link.getAttribute("aria-label")).toMatch(/opens in a new tab/);
+      } else {
+        expect(link).not.toHaveAttribute("target");
+        expect(link).not.toHaveAttribute("rel");
+      }
     }
+    const informationJump = container.querySelector<HTMLAnchorElement>(
+      'a[href="#what-is-fractalu"]',
+    )!;
+    expect(informationJump).not.toHaveAttribute("data-education-outbound-link");
+    expect(informationJump).not.toHaveAttribute("target");
+    expect(informationJump).not.toHaveAttribute("aria-label");
   });
 
   it("places the transparent Library-scale catalog after the intro", () => {

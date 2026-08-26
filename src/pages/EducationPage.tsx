@@ -1,6 +1,7 @@
 import type { CSSProperties, MouseEvent } from "react";
 import { useRef } from "react";
-import { ArrowDown, ArrowUpRight } from "lucide-react";
+import { ArrowDown } from "lucide-react";
+import { EducationOutboundLink } from "@/components/education/EducationOutboundLink";
 import { FractalUniversityPortal } from "@/components/education/FractalUniversityPortal";
 import { EducationBannerSVG } from "@/components/house/EducationBannerSVG";
 import { Footer } from "@/components/layout/Footer";
@@ -72,20 +73,18 @@ export function EducationPage() {
                   </p>
                   <div className="mt-8 flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:flex-wrap sm:items-center">
                     <Button asChild className="w-full whitespace-normal text-center sm:w-auto">
-                      <a
+                      <EducationOutboundLink
                         href="https://fractaluniversity.substack.com"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        aria-label="Stay tuned for future semesters (opens in a new tab)"
+                        accessibleName="Stay tuned for future semesters"
+                        tone="dark"
                       >
                         <span
-                          className="text-subtitle min-w-0 leading-snug [overflow-wrap:anywhere]"
+                          className="min-w-0 leading-snug [overflow-wrap:anywhere]"
                           data-education-hero-action-label
                         >
                           Stay tuned for future semesters
                         </span>
-                        <ArrowUpRight aria-hidden="true" />
-                      </a>
+                      </EducationOutboundLink>
                     </Button>
                     <Button
                       asChild
