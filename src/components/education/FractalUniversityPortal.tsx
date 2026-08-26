@@ -539,7 +539,11 @@ export function FractalUniversityPortal() {
         </header>
 
         <div className="pb-8 md:pb-10" data-fractalu-filter-block>
-          <p id="fractalu-filter-label" className="sr-only">
+          <p
+            id="fractalu-filter-label"
+            className="text-label mb-3 text-background/85"
+            data-fractalu-filter-eyebrow
+          >
             Filter classes by subject
           </p>
           <div

@@ -59,8 +59,18 @@ test("Education portal keeps one wide accessible catalog across input modes", as
     page.getByText("Browse this semester's classes by subject.", { exact: true }),
   ).toBeVisible();
   await expect(page.getByRole("heading", { name: "Summer 2026 semester" })).toHaveCount(0);
-  await expect(page.getByText("Filter classes by subject.", { exact: true })).toHaveCount(0);
-  await expect(page.getByRole("group", { name: "Filter classes by subject" })).toBeVisible();
+  const filterEyebrow = page.locator("[data-fractalu-filter-eyebrow]");
+  const filterGroup = page.getByRole("group", { name: "Filter classes by subject" });
+  await expect(filterEyebrow).toHaveText("Filter classes by subject");
+  await expect(filterEyebrow).toBeVisible();
+  await expect(filterEyebrow).toHaveClass(/text-label/);
+  await expect(filterGroup).toHaveAttribute("aria-labelledby", "fractalu-filter-label");
+  expect(
+    await filterEyebrow.evaluate(
+      (eyebrow, group) => eyebrow.nextElementSibling === group,
+      await filterGroup.elementHandle(),
+    ),
+  ).toBe(true);
   await expect(page.locator("iframe, table, details, summary")).toHaveCount(0);
   await expect(page.locator("[data-fractalu-portal] > [data-fractalu-wide-shell] > header")).toHaveCSS(
     "border-bottom-width",
@@ -338,27 +348,39 @@ test("Education portal keeps one wide accessible catalog across input modes", as
   await expect(page.locator("[data-fractalu-final-collage], [data-testid='fractalu-collage']")).toHaveCount(0);
   await expect(page.getByRole("region", { name: "Fractal University in community" })).toHaveCount(0);
 
-  if (browserName === "chromium" && profile?.name === "desktop-1440x900") {
+  if (browserName === "chromium") {
     await page.evaluate(() => window.scrollTo(0, 0));
     await page.evaluate(() => new Promise<void>((resolve) => requestAnimationFrame(() => resolve())));
-    const educationShell = page.getByTestId("education-desktop-pennants");
+    const usesDesktopPennants = width >= 768;
+    const educationShell = page.getByTestId(
+      usesDesktopPennants ? "education-desktop-pennants" : "education-mobile-pennants",
+    );
     const educationSlot = educationShell.locator(":scope > div").first();
     const educationClasses = await educationShell.getAttribute("class");
     const educationShellBox = await educationShell.boundingBox();
     const educationSlotBox = await educationSlot.boundingBox();
 
     await page.goto("/library", { waitUntil: "domcontentloaded" });
-    await preparePage(page);
-    const libraryShell = page.getByTestId("library-desktop-pennants");
+    await preparePage(page, profile?.rootFontScale);
+    const libraryShell = page.getByTestId(
+      usesDesktopPennants ? "library-desktop-pennants" : "library-mobile-pennants",
+    );
     const librarySlot = libraryShell.locator(":scope > div").first();
     expect(await libraryShell.getAttribute("class")).toBe(educationClasses);
     const libraryShellBox = await libraryShell.boundingBox();
     const librarySlotBox = await librarySlot.boundingBox();
-    expect(libraryShellBox).toEqual(educationShellBox);
-    expect(librarySlotBox).toEqual(educationSlotBox);
-    expect(educationShellBox).toMatchObject({ x: 64, y: 144, height: 648 });
-    expect(educationSlotBox).toMatchObject({ x: 64, y: 144, height: 648 });
-    expect(educationSlotBox?.width).toBeCloseTo(210, 0);
+    expect(libraryShellBox?.width).toBeCloseTo(educationShellBox?.width ?? 0, 4);
+    expect(libraryShellBox?.height).toBeCloseTo(educationShellBox?.height ?? 0, 4);
+    expect(librarySlotBox?.width).toBeCloseTo(educationSlotBox?.width ?? 0, 4);
+    expect(librarySlotBox?.height).toBeCloseTo(educationSlotBox?.height ?? 0, 4);
+
+    if (profile?.name === "desktop-1440x900") {
+      expect(libraryShellBox).toEqual(educationShellBox);
+      expect(librarySlotBox).toEqual(educationSlotBox);
+      expect(educationShellBox).toMatchObject({ x: 64, y: 144, height: 648 });
+      expect(educationSlotBox).toMatchObject({ x: 64, y: 144, height: 648 });
+      expect(educationSlotBox?.width).toBeCloseTo(210, 0);
+    }
   }
 
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(

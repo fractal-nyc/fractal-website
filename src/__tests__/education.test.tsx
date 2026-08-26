@@ -93,6 +93,8 @@ describe("EducationPage", () => {
     );
     const desktopPennants = screen.getByTestId("education-desktop-pennants");
     expect(desktopPennants).toHaveClass(
+      "hidden",
+      "md:flex",
       "inset-x-4",
       "sm:inset-x-8",
       "md:inset-x-12",
@@ -102,6 +104,21 @@ describe("EducationPage", () => {
     );
     for (const slot of Array.from(desktopPennants.children)) {
       expect(slot).toHaveClass("h-full", "w-[24%]", "md:w-[16%]", "max-w-[210px]");
+    }
+
+    const mobilePennants = screen.getByTestId("education-mobile-pennants");
+    expect(mobilePennants).toHaveClass(
+      "flex",
+      "md:hidden",
+      "items-end",
+      "justify-center",
+      "gap-3",
+      "px-3",
+      "pt-8",
+      "pb-12",
+    );
+    for (const slot of Array.from(mobilePennants.children)) {
+      expect(slot).toHaveClass("w-[45%]", "aspect-[123/368]");
     }
   });
 

@@ -102,7 +102,15 @@ describe("FractalUniversityPortal", () => {
     expect(
       screen.queryByRole("heading", { name: `${FRACTALU_CATALOG.semester} semester` }),
     ).toBeNull();
-    expect(screen.queryByText("Filter classes by subject.")).toBeNull();
+    const filterEyebrow = screen.getByText("Filter classes by subject", {
+      selector: "[data-fractalu-filter-eyebrow]",
+    });
+    const filterGroup = screen.getByRole("group", { name: "Filter classes by subject" });
+    expect(filterEyebrow).toHaveClass("text-label", "text-background/85");
+    expect(filterEyebrow).not.toHaveClass("sr-only");
+    expect(filterEyebrow).toHaveAttribute("id", "fractalu-filter-label");
+    expect(filterGroup).toHaveAttribute("aria-labelledby", "fractalu-filter-label");
+    expect(filterEyebrow.nextElementSibling).toBe(filterGroup);
     expect(document.querySelector("[data-fractalu-portal]")).toHaveAttribute(
       "aria-labelledby",
       "fractalu-catalog-title",
