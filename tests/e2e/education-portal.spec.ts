@@ -44,8 +44,23 @@ test("Education portal keeps one wide accessible catalog across input modes", as
       await portal.elementHandle(),
     ),
   ).toBe(true);
-  await expect(page.getByRole("heading", { name: "Summer 2026 semester" })).toBeVisible();
-  await expect(page.getByText("Filter classes by subject.")).toBeVisible();
+  const semesterEyebrow = page.locator("[data-fractalu-semester-eyebrow]");
+  const catalogHeading = page.getByRole("heading", { level: 2, name: "Course Catalog" });
+  await expect(semesterEyebrow).toHaveText("Summer 2026");
+  await expect(catalogHeading).toBeVisible();
+  expect(
+    await semesterEyebrow.evaluate(
+      (eyebrow, heading) =>
+        Boolean(eyebrow.compareDocumentPosition(heading) & Node.DOCUMENT_POSITION_FOLLOWING),
+      await catalogHeading.elementHandle(),
+    ),
+  ).toBe(true);
+  await expect(
+    page.getByText("Browse this semester's classes by subject.", { exact: true }),
+  ).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Summer 2026 semester" })).toHaveCount(0);
+  await expect(page.getByText("Filter classes by subject.", { exact: true })).toHaveCount(0);
+  await expect(page.getByRole("group", { name: "Filter classes by subject" })).toBeVisible();
   await expect(page.locator("iframe, table, details, summary")).toHaveCount(0);
   await expect(page.locator("[data-fractalu-portal] > [data-fractalu-wide-shell] > header")).toHaveCSS(
     "border-bottom-width",

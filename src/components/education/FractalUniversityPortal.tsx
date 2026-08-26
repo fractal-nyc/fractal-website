@@ -520,18 +520,21 @@ export function FractalUniversityPortal() {
   );
 
   return (
-    <section className="mt-16 md:mt-24" aria-labelledby="fractalu-semester-title" data-fractalu-portal>
+    <section className="mt-16 md:mt-24" aria-labelledby="fractalu-catalog-title" data-fractalu-portal>
       <div
         className="relative z-20 mx-auto min-w-0 max-w-[1600px] text-background page-gutter"
         data-fractalu-wide-shell
         data-fractalu-catalog-frame
       >
         <header className="mb-8 border-b border-background/45 pb-8 md:mb-10 md:pb-10">
-          <h2 id="fractalu-semester-title" className="text-title normal-case text-background">
-            {FRACTALU_CATALOG.semester} semester
+          <p className="text-label text-background/85" data-fractalu-semester-eyebrow>
+            {FRACTALU_CATALOG.semester}
+          </p>
+          <h2 id="fractalu-catalog-title" className="text-title mt-3 normal-case text-background">
+            Course Catalog
           </h2>
           <p className="text-body-lead mt-3 max-w-xl text-background/85">
-            Filter classes by subject.
+            Browse this semester&apos;s classes by subject.
           </p>
         </header>
 

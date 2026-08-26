@@ -90,8 +90,23 @@ describe("FractalUniversityPortal", () => {
     expect(within(clubs).getAllByRole("article")).toHaveLength(4);
     expect(within(clubs).queryByText(/^Open group$/)).toBeNull();
     expect(screen.getByRole("heading", { name: "Clubs & open groups" })).toBeTruthy();
-    expect(screen.getByRole("heading", { name: `${FRACTALU_CATALOG.semester} semester` })).toBeTruthy();
-    expect(screen.getByText("Filter classes by subject.")).toBeTruthy();
+    const semester = screen.getByText(FRACTALU_CATALOG.semester, {
+      selector: "[data-fractalu-semester-eyebrow]",
+    });
+    const catalogHeading = screen.getByRole("heading", { level: 2, name: "Course Catalog" });
+    expect(semester.tagName).toBe("P");
+    expect(
+      semester.compareDocumentPosition(catalogHeading) & Node.DOCUMENT_POSITION_FOLLOWING,
+    ).toBeTruthy();
+    expect(screen.getByText("Browse this semester's classes by subject.")).toBeTruthy();
+    expect(
+      screen.queryByRole("heading", { name: `${FRACTALU_CATALOG.semester} semester` }),
+    ).toBeNull();
+    expect(screen.queryByText("Filter classes by subject.")).toBeNull();
+    expect(document.querySelector("[data-fractalu-portal]")).toHaveAttribute(
+      "aria-labelledby",
+      "fractalu-catalog-title",
+    );
   });
 
   it("promotes labelled club schedules and locations directly below each title", () => {
