@@ -45,9 +45,10 @@ describe("EducationPage", () => {
       "hover:decoration-background",
       "focus-visible:decoration-background",
     );
-    expect(futureSemesters.querySelector("[data-education-outbound-arrow]")).toHaveTextContent(
-      "→",
-    );
+    const heroArrow = futureSemesters.querySelector("[data-education-outbound-arrow]")!;
+    expect(heroArrow.tagName).toBe("svg");
+    expect(heroArrow).toHaveClass("lucide-arrow-up-right");
+    expect(heroArrow).toHaveAttribute("aria-hidden", "true");
     expect(
       screen.getByText("What is FractalU?", {
         selector: "[data-education-hero-action-label]",
@@ -83,7 +84,13 @@ describe("EducationPage", () => {
       [...expectedHrefs].sort(),
     );
     for (const link of outboundLinks) {
-      expect(link.querySelector("[data-education-outbound-arrow]")).toHaveTextContent("→");
+      const arrows = link.querySelectorAll("[data-education-outbound-arrow]");
+      expect(arrows).toHaveLength(1);
+      expect(arrows[0].tagName).toBe("svg");
+      expect(arrows[0]).toHaveClass("lucide-arrow-up-right");
+      expect(arrows[0]).toHaveAttribute("aria-hidden", "true");
+      expect(link).not.toHaveTextContent("→");
+      expect(link.getAttribute("aria-label") ?? "").not.toContain("→");
       if (link.getAttribute("href")?.startsWith("http")) {
         expect(link).toHaveAttribute("target", "_blank");
         expect(link).toHaveAttribute("rel", "noopener noreferrer");

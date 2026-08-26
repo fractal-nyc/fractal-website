@@ -1,4 +1,5 @@
 import type { AnchorHTMLAttributes, ReactNode } from "react";
+import { ArrowUpRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 type EducationOutboundTone = "light" | "dark";
@@ -21,10 +22,14 @@ const TONE_CLASSES: Record<EducationOutboundTone, string> = {
     "text-background decoration-background/40 hover:decoration-background focus-visible:decoration-background focus-visible:ring-background focus-visible:ring-offset-house-education-deep",
 };
 
+const withoutStraightNavigationArrow = (value: string) =>
+  value.replace(/\s*→\s*/gu, " ").trim();
+
 /**
- * Education's one outbound-action grammar, based on the Events page's `Luma →`
- * link. HTTP destinations open safely in a new tab; mail links keep native
- * same-context behavior.
+ * Education's one outbound-action grammar: the Events page's mono/underline
+ * treatment paired with the site's diagonal external-link marker. HTTP
+ * destinations open safely in a new tab; mail links keep native same-context
+ * behavior.
  */
 export function EducationOutboundLink({
   href,
@@ -37,6 +42,11 @@ export function EducationOutboundLink({
   ...props
 }: EducationOutboundLinkProps) {
   const opensNewTab = /^https?:\/\//.test(href);
+  const visibleLabel =
+    typeof children === "string" ? withoutStraightNavigationArrow(children) : children;
+  const normalizedAccessibleName = accessibleName
+    ? withoutStraightNavigationArrow(accessibleName)
+    : undefined;
 
   return (
     <a
@@ -45,9 +55,9 @@ export function EducationOutboundLink({
       target={opensNewTab ? "_blank" : undefined}
       rel={opensNewTab ? "noopener noreferrer" : undefined}
       aria-label={
-        opensNewTab && accessibleName
-          ? `${accessibleName} (opens in a new tab)`
-          : accessibleName
+        opensNewTab && normalizedAccessibleName
+          ? `${normalizedAccessibleName} (opens in a new tab)`
+          : normalizedAccessibleName
       }
       data-education-outbound-link=""
       className={[
@@ -61,11 +71,12 @@ export function EducationOutboundLink({
         .filter(Boolean)
         .join(" ")}
     >
-      {children}
-      {" "}
-      <span
+      {visibleLabel}
+      <ArrowUpRight
+        size={variant === "course-title" ? 18 : 15}
+        strokeWidth={1.5}
         className={cn(
-          "shrink-0 font-mono",
+          "shrink-0",
           variant === "course-title" &&
             "fractalu-course-link-arrow mt-1 text-house-education-light",
           arrowClassName,
@@ -73,9 +84,7 @@ export function EducationOutboundLink({
         aria-hidden="true"
         data-education-outbound-arrow
         data-course-external-icon={variant === "course-title" ? "" : undefined}
-      >
-        →
-      </span>
+      />
     </a>
   );
 }

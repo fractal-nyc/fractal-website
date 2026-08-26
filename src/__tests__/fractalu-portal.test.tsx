@@ -167,7 +167,7 @@ describe("FractalUniversityPortal", () => {
       expect(action).toHaveAttribute("target", "_blank");
       expect(action).toHaveAttribute("rel", "noopener noreferrer");
       expect(action).toHaveClass("text-label");
-      expect(action.querySelector("[data-education-outbound-arrow]")).toHaveTextContent("→");
+      expect(action.querySelector("[data-education-outbound-arrow]")?.tagName).toBe("svg");
 
       if (club.detailsUrl) {
         const details = within(card).getByRole("link", {
@@ -177,7 +177,7 @@ describe("FractalUniversityPortal", () => {
         expect(details).toHaveAttribute("target", "_blank");
         expect(details).toHaveAttribute("rel", "noopener noreferrer");
         expect(details).toHaveClass("text-label");
-        expect(details.querySelector("[data-education-outbound-arrow]")).toHaveTextContent("→");
+        expect(details.querySelector("[data-education-outbound-arrow]")?.tagName).toBe("svg");
       }
     }
   });
@@ -421,8 +421,13 @@ describe("FractalUniversityPortal", () => {
       [...expectedHrefs].sort(),
     );
     for (const link of outboundLinks) {
-      expect(link.querySelector("[data-education-outbound-arrow]")).toHaveTextContent("→");
-      expect(link.querySelector("svg")).toBeNull();
+      const arrows = link.querySelectorAll("[data-education-outbound-arrow]");
+      expect(arrows).toHaveLength(1);
+      expect(arrows[0].tagName).toBe("svg");
+      expect(arrows[0]).toHaveClass("lucide-arrow-up-right");
+      expect(arrows[0]).toHaveAttribute("aria-hidden", "true");
+      expect(link).not.toHaveTextContent("→");
+      expect(link.getAttribute("aria-label") ?? "").not.toContain("→");
       if (link.getAttribute("href")?.startsWith("http")) {
         expect(link).toHaveAttribute("target", "_blank");
         expect(link).toHaveAttribute("rel", "noopener noreferrer");
@@ -483,7 +488,8 @@ describe("FractalUniversityPortal", () => {
       "hover:decoration-foreground",
       "focus-visible:decoration-foreground",
     );
-    expect(applyLink).toHaveTextContent(/Apply →$/);
+    expect(applyLink).toHaveTextContent(/^Apply$/);
+    expect(applyLink.querySelector("[data-education-outbound-arrow]")?.tagName).toBe("svg");
 
     const linkedHeading = representativeCourse.querySelector("h3")!;
     const linkedTitle = within(linkedHeading).getByRole("link", {
@@ -491,7 +497,7 @@ describe("FractalUniversityPortal", () => {
     });
     expect(linkedHeading).toHaveClass("text-subtitle", "normal-case");
     expect(linkedTitle).not.toHaveClass("text-label");
-    expect(linkedTitle.querySelector("[data-course-external-icon]")).toHaveTextContent("→");
+    expect(linkedTitle.querySelector("[data-course-external-icon]")?.tagName).toBe("svg");
 
     const resourceGroup = container.querySelector<HTMLElement>(
       "[data-fractalu-resource-links]",
@@ -509,7 +515,7 @@ describe("FractalUniversityPortal", () => {
         "hover:decoration-background",
         "focus-visible:decoration-background",
       );
-      expect(link.querySelector("[data-education-outbound-arrow]")).toHaveTextContent("→");
+      expect(link.querySelector("[data-education-outbound-arrow]")?.tagName).toBe("svg");
     }
 
     const canon = screen.getByRole("link", {
@@ -518,7 +524,7 @@ describe("FractalUniversityPortal", () => {
     expect(canon).toHaveAttribute("href", "https://ajr.fyi/files/fractal-canon.pdf");
     expect(canon).toHaveAttribute("target", "_blank");
     expect(canon).toHaveAttribute("rel", "noopener noreferrer");
-    expect(canon.querySelector("svg")).toBeNull();
+    expect(canon.querySelectorAll("svg")).toHaveLength(1);
 
     const substack = screen.getByRole("link", {
       name: "FractalU Substack (opens in a new tab)",
@@ -526,7 +532,7 @@ describe("FractalUniversityPortal", () => {
     expect(substack).toHaveAttribute("href", "https://fractaluniversity.substack.com");
     expect(substack).toHaveAttribute("target", "_blank");
     expect(substack).toHaveAttribute("rel", "noopener noreferrer");
-    expect(substack.querySelector("svg")).toBeNull();
+    expect(substack.querySelectorAll("svg")).toHaveLength(1);
 
     const email = within(resourceGroup).getByRole("link", {
       name: "fractalu@fractalnyc.com",
@@ -535,8 +541,11 @@ describe("FractalUniversityPortal", () => {
     expect(email).not.toHaveAttribute("target");
     expect(email).not.toHaveAttribute("rel");
     expect(email).not.toHaveAttribute("aria-label");
-    expect(email.querySelector("svg")).toBeNull();
-    expect(email.querySelector("[data-education-outbound-arrow]")).toHaveTextContent("→");
+    expect(email.querySelectorAll("svg")).toHaveLength(1);
+    expect(email.querySelector("[data-education-outbound-arrow]")).toHaveAttribute(
+      "aria-hidden",
+      "true",
+    );
   });
 
   it("does not imply accounts, forms, routes, or embeds", () => {

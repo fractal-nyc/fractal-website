@@ -40,7 +40,9 @@ test("Education portal keeps one wide accessible catalog across input modes", as
     "https://fractaluniversity.substack.com",
   );
   await expect(futureSemestersLink).toHaveCSS("font-family", /JetBrains Mono/);
-  await expect(futureSemestersLink.locator("[data-education-outbound-arrow]")).toHaveText("→");
+  const heroArrow = futureSemestersLink.locator("svg[data-education-outbound-arrow]");
+  await expect(heroArrow).toHaveCount(1);
+  await expect(heroArrow).toHaveAttribute("aria-hidden", "true");
   const informationJump = page.getByRole("link", { name: "What is FractalU?" });
   await expect(informationJump.locator("[data-education-hero-action-label]")).toHaveCSS(
     "font-family",
@@ -101,7 +103,25 @@ test("Education portal keeps one wide accessible catalog across input modes", as
   await expect(catalog.locator("[data-instructor-record]")).toHaveCount(23);
   const outboundLinks = page.locator("[data-education-outbound-link]");
   await expect(outboundLinks).toHaveCount(53);
-  await expect(outboundLinks.locator("[data-education-outbound-arrow]")).toHaveCount(53);
+  await expect(outboundLinks.locator("svg[data-education-outbound-arrow]")).toHaveCount(53);
+  expect(
+    await outboundLinks.evaluateAll((links) =>
+      links.every(
+        (link) =>
+          !link.textContent?.includes("→") &&
+          !link.getAttribute("aria-label")?.includes("→") &&
+          (() => {
+            const arrows = link.querySelectorAll(
+              "svg[data-education-outbound-arrow][aria-hidden='true']",
+            );
+            return (
+              arrows.length === 1 &&
+              arrows[0].classList.contains("lucide-arrow-up-right")
+            );
+          })(),
+      ),
+    ),
+  ).toBe(true);
   expect(
     await outboundLinks.evaluateAll((links) =>
       links.every((link) => link.scrollWidth <= link.clientWidth + 1),
@@ -416,22 +436,19 @@ test("Education portal keeps one wide accessible catalog across input modes", as
     name: "Read the FractalU canon PDF (opens in a new tab)",
   });
   await expect(canonLink).toHaveAttribute("href", "https://ajr.fyi/files/fractal-canon.pdf");
-  await expect(canonLink.locator("svg")).toHaveCount(0);
-  await expect(canonLink.locator("[data-education-outbound-arrow]")).toHaveText("→");
+  await expect(canonLink.locator("svg[data-education-outbound-arrow]")).toHaveCount(1);
   const substackLink = resourceGroup.getByRole("link", {
     name: "FractalU Substack (opens in a new tab)",
   });
   await expect(substackLink).toHaveAttribute("href", "https://fractaluniversity.substack.com");
-  await expect(substackLink.locator("svg")).toHaveCount(0);
-  await expect(substackLink.locator("[data-education-outbound-arrow]")).toHaveText("→");
+  await expect(substackLink.locator("svg[data-education-outbound-arrow]")).toHaveCount(1);
   const resourceEmail = resourceGroup.getByRole("link", {
     name: "fractalu@fractalnyc.com",
   });
   await expect(resourceEmail).toHaveAttribute("href", "mailto:fractalu@fractalnyc.com");
   await expect(resourceEmail).not.toHaveAttribute("target");
   await expect(resourceEmail).not.toHaveAttribute("aria-label");
-  await expect(resourceEmail.locator("svg")).toHaveCount(0);
-  await expect(resourceEmail.locator("[data-education-outbound-arrow]")).toHaveText("→");
+  await expect(resourceEmail.locator("svg[data-education-outbound-arrow]")).toHaveCount(1);
   await expect(page.locator("[data-fractalu-final-collage], [data-testid='fractalu-collage']")).toHaveCount(0);
   await expect(page.getByRole("region", { name: "Fractal University in community" })).toHaveCount(0);
 
