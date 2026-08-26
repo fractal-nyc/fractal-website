@@ -1,8 +1,7 @@
-import { render, screen, within } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
+import { fireEvent, render, screen } from "@testing-library/react";
+import { describe, expect, it, vi } from "vitest";
 import { Router as WouterRouter } from "wouter";
 import { memoryLocation } from "wouter/memory-location";
-import { EDUCATION_ACCELERATOR } from "@/data/education";
 import { HOUSES } from "@/data/houses";
 import { EducationPage } from "@/pages/EducationPage";
 
@@ -16,55 +15,45 @@ function renderEducationPage() {
 }
 
 describe("EducationPage", () => {
-  it("keeps the approved display hierarchy and explanatory subtitle", () => {
+  it("leads with the approved Fractal University identity and actions", () => {
     renderEducationPage();
     const heading = screen.getByRole("heading", {
       level: 1,
-      name: "A new liberal arts",
+      name: "Fractal University",
     });
     expect(heading.className).toContain("text-display");
     expect(screen.getAllByRole("heading", { level: 1 })).toHaveLength(1);
-    expect(
-      screen.getByText("We currently run two education programs. Explore them below."),
-    ).toHaveClass("text-subtitle");
+    expect(screen.getByText("An improvised college in New York City.")).toHaveClass("text-subtitle");
+    expect(screen.getByRole("link", { name: /Stay tuned for future semesters/ })).toHaveAttribute(
+      "href",
+      "https://fractaluniversity.substack.com",
+    );
+    expect(screen.getByRole("link", { name: "What is FractalU?" })).toHaveAttribute(
+      "href",
+      "#what-is-fractalu",
+    );
   });
 
-  it("puts the sole program-level external Accelerator card before the native portal", () => {
+  it("places the transparent Library-scale catalog after the intro", () => {
     const { container } = renderEducationPage();
-    const accelerator = screen.getByRole("link", {
-      name: "Visit Fractal AI Accelerator (opens in a new tab)",
-    });
+    const intro = container.querySelector<HTMLElement>("[data-education-intro]")!;
     const portal = container.querySelector<HTMLElement>("[data-fractalu-portal]")!;
-
-    expect(accelerator).toHaveAttribute("href", EDUCATION_ACCELERATOR.url);
-    expect(accelerator).toHaveAttribute("target", "_blank");
-    expect(accelerator).toHaveAttribute("rel", "noopener noreferrer");
-    expect(accelerator).toHaveAttribute("data-education-destination", "accelerator");
-    expect(accelerator.className).toContain("education-program-card");
-    expect(accelerator.className).toContain("p-9");
-    expect(accelerator.querySelector(".education-program-card-grain")).toBeTruthy();
-    expect(
-      accelerator.parentElement?.querySelectorAll('svg[width="30"][height="30"]'),
-    ).toHaveLength(4);
-    expect(
-      accelerator.compareDocumentPosition(portal) & Node.DOCUMENT_POSITION_FOLLOWING,
-    ).toBeTruthy();
-    expect(screen.getByRole("heading", { name: "Fractal University" })).toBeTruthy();
-    expect(portal.closest(".md\\:max-w-\\[58vw\\]")).toBeNull();
+    expect(intro.compareDocumentPosition(portal) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
     expect(portal.querySelector("[data-fractalu-wide-shell]")).toHaveClass(
       "max-w-[1600px]",
       "page-gutter",
       "z-20",
     );
+    expect(portal.querySelector("[data-fractalu-catalog-frame]")).not.toHaveClass(
+      "bg-background",
+      "shadow-lg",
+    );
   });
 
-  it("does not embed or expose a FractalU outbound program card or nested controls", () => {
+  it("does not embed or expose a standalone Accelerator promotion or nested controls", () => {
     const { container } = renderEducationPage();
-    const programs = screen.getByTestId("education-programs");
-    expect(within(programs).getAllByRole("link")).toHaveLength(1);
-    expect(
-      within(programs).queryByRole("link", { name: /FractalU|University/ }),
-    ).toBeNull();
+    expect(screen.queryByRole("link", { name: /Visit Fractal AI Accelerator/ })).toBeNull();
+    expect(container.querySelector("[data-education-destination='accelerator']")).toBeNull();
     expect(container.querySelector("iframe")).toBeNull();
     expect(container.querySelector("button a, a button")).toBeNull();
     expect(container.querySelector('[data-education-destination="fractalu"]')).toBeNull();
@@ -80,10 +69,8 @@ describe("EducationPage", () => {
       "var(--color-house-education-light)",
     );
     expect(container.querySelector(`svg [stroke="${education.palette.light}"]`)).toBeTruthy();
-    expect(container.querySelector("[data-fractalu-wide-shell] > div")).toHaveClass(
-      "bg-background",
-      "text-foreground",
-    );
+    expect(education.palette.light).toBe("#CB2B23");
+    expect(container.querySelector("[data-fractalu-wide-shell]")).toHaveClass("text-background");
   });
 
   it("renders site chrome and both decorative pennant shells", () => {
@@ -98,5 +85,15 @@ describe("EducationPage", () => {
       "aria-hidden",
       "true",
     );
+  });
+
+  it("scrolls and focuses the What is FractalU section from the intro action", () => {
+    renderEducationPage();
+    const target = document.getElementById("what-is-fractalu")!;
+    target.scrollIntoView = vi.fn();
+    fireEvent.click(screen.getByRole("link", { name: "What is FractalU?" }));
+    expect(window.location.hash).toBe("#what-is-fractalu");
+    expect(target).toHaveFocus();
+    expect(target.scrollIntoView).toHaveBeenCalledWith({ behavior: "auto", block: "start" });
   });
 });

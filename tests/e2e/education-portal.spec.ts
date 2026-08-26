@@ -23,22 +23,24 @@ test("Education portal keeps one wide accessible catalog across input modes", as
   await page.goto("/education", { waitUntil: "domcontentloaded" });
   await preparePage(page, profile?.rootFontScale);
 
-  await expect(page.getByRole("heading", { level: 1, name: "A new liberal arts" })).toHaveCount(1);
-  const accelerator = page.getByRole("link", {
-    name: "Visit Fractal AI Accelerator (opens in a new tab)",
-  });
+  await expect(page.getByRole("heading", { level: 1, name: "Fractal University" })).toHaveCount(1);
+  await expect(page.getByText("An improvised college in New York City.", { exact: true })).toBeVisible();
+  const intro = page.locator("[data-education-intro]");
   const portal = page.locator("[data-fractalu-portal]");
-  await expect(accelerator).toHaveAttribute(
+  await expect(page.getByRole("link", { name: /Stay tuned for future semesters/ })).toHaveAttribute(
     "href",
-    "https://go.fractalaccelerator.com/fractalnycwebsite",
+    "https://fractaluniversity.substack.com",
   );
+  await expect(page.getByRole("link", { name: /Visit Fractal AI Accelerator/ })).toHaveCount(0);
   await expect(portal).toBeVisible();
   expect(
-    await accelerator.evaluate(
-      (link, target) => Boolean(link.compareDocumentPosition(target) & Node.DOCUMENT_POSITION_FOLLOWING),
+    await intro.evaluate(
+      (section, target) => Boolean(section.compareDocumentPosition(target) & Node.DOCUMENT_POSITION_FOLLOWING),
       await portal.elementHandle(),
     ),
   ).toBe(true);
+  await expect(page.getByRole("heading", { name: "Summer 2026 semester" })).toBeVisible();
+  await expect(page.getByText("Filter classes by subject.")).toBeVisible();
   await expect(page.locator("iframe, table, details, summary")).toHaveCount(0);
 
   const catalog = page.getByTestId("fractalu-course-catalog");
@@ -144,8 +146,15 @@ test("Education portal keeps one wide accessible catalog across input modes", as
     "https://closereadingnyc.notion.site/The-Lost-Generation-Close-Reading-359c580377d680b0b8fefba14aaef8a0",
   );
   await expect(titleLink).toHaveAttribute("aria-describedby", "lost-generation-close-reading-description");
+  const titleArrow = titleLink.locator("[data-course-external-icon]");
+  await expect(titleArrow).toHaveCount(1);
+  await expect(catalog.locator('article[data-course-id="butoh-into-the-depth"] [data-course-external-icon]')).toHaveCount(0);
 
   if (!hasTouch && width >= 1024 && !profile?.rootFontScale) {
+    await expect(titleArrow).toHaveCSS("opacity", "0");
+    await firstCourse.hover();
+    await expect(titleArrow).toHaveCSS("opacity", "1");
+    await expect(firstCourse).toHaveCSS("transform", /matrix\(1\.02/);
     const lampInstructor = lampCourse.getByRole("button", {
       name: "Mel Brand & Julianne Lefelhocz",
     });
@@ -163,6 +172,7 @@ test("Education portal keeps one wide accessible catalog across input modes", as
     await expect(description).toHaveCSS("visibility", "visible");
     await titleLink.focus();
     await expect(description).toHaveCSS("visibility", "visible");
+    await expect(titleArrow).toHaveCSS("opacity", "1");
 
     const instructor = firstCourse.getByRole("button", { name: "Elena Navarrete" });
     const instructorPreview = firstCourse.locator(".fractalu-instructor-preview");
@@ -220,7 +230,20 @@ test("Education portal keeps one wide accessible catalog across input modes", as
     await expect(instructorPreview).toHaveAttribute("data-suppressed", "false");
     await instructor.focus();
     await expect(instructorBio).toHaveCSS("visibility", "visible");
+
+    if (profile?.name === "desktop-1440x900") {
+      await page.emulateMedia({ reducedMotion: "reduce" });
+      await firstCourse.hover();
+      await expect(firstCourse).toHaveCSS("transform", "none");
+      await expect(titleArrow).toHaveCSS("transform", "none");
+      await expect(firstCourse).toHaveCSS(
+        "border-color",
+        "rgb(203, 43, 35)",
+      );
+      await page.emulateMedia({ reducedMotion: "no-preference" });
+    }
   } else {
+    await expect(titleArrow).toHaveCSS("opacity", "1");
     await expect(description).toHaveCSS("position", "static");
     await expect(description).toBeVisible();
     await expect(firstCourse.locator("[data-instructor-bio]")).toBeVisible();
@@ -228,7 +251,7 @@ test("Education portal keeps one wide accessible catalog across input modes", as
     await expect(acceleratorBio).toBeVisible();
   }
 
-  const jumpLink = page.getByRole("link", { name: "What's FractalU?" });
+  const jumpLink = page.getByRole("link", { name: "What is FractalU?" });
   await jumpLink.click();
   await expect(page).toHaveURL(/#what-is-fractalu$/);
   await expect(page.locator("#what-is-fractalu")).toBeFocused();
@@ -244,7 +267,38 @@ test("Education portal keeps one wide accessible catalog across input modes", as
     const pennantBox = await leftPennant.boundingBox();
     expect(shellBox && pennantBox && shellBox.x < pennantBox.x + pennantBox.width).toBeTruthy();
     await expect(wideShell).toHaveCSS("z-index", "20");
+    await expect(page.locator("[data-fractalu-catalog-frame]")).toHaveCSS(
+      "background-color",
+      "rgba(0, 0, 0, 0)",
+    );
   }
+
+  if (profile?.name === "boundary-1024x768") {
+    for (const boundaryWidth of [767, 768, 769, 1023, 1024, 1025]) {
+      await page.setViewportSize({ width: boundaryWidth, height: 900 });
+      await expect(catalog).toBeVisible();
+      await expect(clubs).toBeVisible();
+      expect(
+        await page.evaluate(() => document.documentElement.scrollWidth),
+      ).toBeLessThanOrEqual(
+        await page.evaluate(() => document.documentElement.clientWidth + 1),
+      );
+    }
+
+    await page.setViewportSize({
+      width,
+      height: profile?.viewport.height ?? 768,
+    });
+  }
+
+  const canon = page.locator('section[aria-labelledby="fractalu-canon-title"]');
+  const collage = page.locator("[data-fractalu-final-collage]");
+  expect(
+    await canon.evaluate(
+      (section, target) => Boolean(section.compareDocumentPosition(target) & Node.DOCUMENT_POSITION_FOLLOWING),
+      await collage.elementHandle(),
+    ),
+  ).toBe(true);
 
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(
     await page.evaluate(() => document.documentElement.clientWidth + 1),

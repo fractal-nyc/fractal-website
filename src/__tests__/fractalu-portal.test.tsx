@@ -90,7 +90,8 @@ describe("FractalUniversityPortal", () => {
     expect(within(clubs).getAllByRole("article")).toHaveLength(4);
     expect(within(clubs).queryByText(/^Open group$/)).toBeNull();
     expect(screen.getByRole("heading", { name: "Clubs & open groups" })).toBeTruthy();
-    expect(screen.getByText(`Fractal University · ${FRACTALU_CATALOG.semester}`)).toBeTruthy();
+    expect(screen.getByRole("heading", { name: `${FRACTALU_CATALOG.semester} semester` })).toBeTruthy();
+    expect(screen.getByText("Filter classes by subject.")).toBeTruthy();
   });
 
   it("promotes labelled club schedules and locations directly below each title", () => {
@@ -161,6 +162,8 @@ describe("FractalUniversityPortal", () => {
     expect(title).toHaveClass("normal-case");
     expect(title.className).not.toMatch(/uppercase/);
     expect(firstCard.querySelector("[data-course-external-icon]")).toBeTruthy();
+    expect(firstCard).toHaveClass("fractalu-course-card");
+    expect(firstCard.parentElement?.querySelectorAll('svg[width="20"][height="20"]')).toHaveLength(4);
   });
 
   it("links the 19 verified course documents and preserves the Butoh source fallback", () => {
@@ -312,14 +315,10 @@ describe("FractalUniversityPortal", () => {
     expect(getComputedStyle(bio).visibility).toBe("visible");
   });
 
-  it("jumps to and focuses the Campus-style What is FractalU section", () => {
+  it("keeps the Campus-style What is FractalU section as a focus target", () => {
     render(<FractalUniversityPortal />);
     const target = document.getElementById("what-is-fractalu")!;
-    target.scrollIntoView = vi.fn();
-    fireEvent.click(screen.getByRole("link", { name: "What's FractalU?" }));
-    expect(window.location.hash).toBe("#what-is-fractalu");
-    expect(target).toHaveFocus();
-    expect(target.scrollIntoView).toHaveBeenCalledWith({ behavior: "auto", block: "start" });
+    expect(target).toHaveAttribute("tabindex", "-1");
     expect(target).toHaveClass("max-w-7xl", "page-gutter", "scroll-mt-24");
     expect(target.firstElementChild).toHaveClass("max-w-3xl");
   });
@@ -351,6 +350,10 @@ describe("FractalUniversityPortal", () => {
     expect(image).toHaveAttribute("height", "133");
     expect(image).toHaveAttribute("alt", "");
     expect(image).toHaveClass("h-auto", "w-full");
+    const canon = screen.getByRole("heading", { name: "The canon" }).closest("section")!;
+    const finalCollage = picture.closest("[data-fractalu-final-collage]")!;
+    expect(canon.compareDocumentPosition(finalCollage) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    expect(screen.getAllByTestId("fractalu-collage")).toHaveLength(1);
   });
 
   it("uses the approved information and Mandelbrot teaching-callout hierarchy", () => {

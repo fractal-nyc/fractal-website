@@ -35,7 +35,7 @@
   --color-house-campus-light: #51805C;
   --color-house-campus-deep: #1A3A2E;
 
-  --color-house-education-light: #C51C15;
+  --color-house-education-light: #CB2B23;
   --color-house-education-deep: #4C0000;
 
   --color-house-library-light: #C889AB;
@@ -441,41 +441,6 @@
   --btn-fill: rgba(242, 234, 216, 0.6);
 }
 
-/* FRAC-58: approved Education destination cards. The warm resting surface
-   mixes the canonical cream with the People decorative gold, while the
-   interaction state uses Education's bright foreground token. */
-.education-program-card {
-  background-color: color-mix(
-    in srgb,
-    hsl(var(--background) / 0.94) 88%,
-    var(--color-section-people) 12%
-  );
-}
-
-.education-program-card:hover,
-.education-program-card:focus-visible {
-  background-color: var(--color-house-education-light);
-}
-
-/* The shared PaperGrain overlay is tuned for saturated button fills and
-   disappears on cream. This monochrome frost stays visible in the card's
-   light resting state and gains a little presence when the surface inverts. */
-.education-program-card-grain {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.68' numOctaves='3' seed='7' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3CfeComponentTransfer%3E%3CfeFuncR type='linear' slope='1.7' intercept='-.35'/%3E%3CfeFuncG type='linear' slope='1.7' intercept='-.35'/%3E%3CfeFuncB type='linear' slope='1.7' intercept='-.35'/%3E%3CfeFuncA type='table' tableValues='0 .5'/%3E%3C/feComponentTransfer%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)'/%3E%3C/svg%3E");
-  background-size: 180px 180px;
-  mix-blend-mode: multiply;
-  opacity: 0.16;
-  transition: opacity 200ms ease-out;
-}
-
-.education-program-card:hover > .education-program-card-grain,
-.education-program-card:focus-visible > .education-program-card-grain {
-  opacity: 0.22;
-}
-
 /* FractalU keeps one content-owned catalog at every width. Columns appear only
    when a card can retain its readable minimum; long content always wraps. */
 .fractalu-course-grid {
@@ -485,8 +450,10 @@
   gap: 1rem;
 }
 
-.fractalu-course-card {
+.fractalu-course-card,
+.fractalu-club-card {
   position: relative;
+  height: 100%;
   transition:
     border-color 200ms ease-out,
     box-shadow 200ms ease-out,
@@ -494,10 +461,44 @@
 }
 
 .fractalu-course-card:hover,
-.fractalu-course-card:focus-within {
+.fractalu-course-card:focus-within,
+.fractalu-club-card:hover,
+.fractalu-club-card:focus-within {
   z-index: 2;
   border-color: var(--color-house-education-light);
   box-shadow: 0 12px 30px hsl(var(--foreground) / 0.12);
+  transform: scale(1.02);
+}
+
+.fractalu-course-link-arrow {
+  opacity: 1;
+  transform: scale(1);
+  transition:
+    opacity 200ms ease-out,
+    transform 200ms ease-out;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .fractalu-course-grid[data-preview-mode="enhanced"] .fractalu-course-link-arrow {
+    opacity: 0;
+    transform: scale(0.72);
+  }
+
+  .fractalu-course-grid[data-preview-mode="enhanced"]
+    .fractalu-course-card:hover
+    .fractalu-course-link-arrow,
+  .fractalu-course-grid[data-preview-mode="enhanced"]
+    .fractalu-course-card:focus-within
+    .fractalu-course-link-arrow,
+  .fractalu-course-grid[data-preview-mode="enhanced"]
+    .fractalu-course-title-link:hover
+    .fractalu-course-link-arrow,
+  .fractalu-course-grid[data-preview-mode="enhanced"]
+    .fractalu-course-title-link:focus-visible
+    .fractalu-course-link-arrow {
+    opacity: 1;
+    transform: scale(1.12);
+  }
 }
 
 /* Descriptions and bios are normal-flow content by default. Fine-pointer,
@@ -570,26 +571,10 @@
     opacity: 1;
   }
 
-  .education-program-card-shell,
-  .education-program-card-shell * {
-    transition-duration: 0s !important;
-  }
-
-  .education-program-card,
-  .education-program-card:focus-visible,
-  .education-program-card:hover {
-    scale: none !important;
-    transform: none !important;
-  }
-
-  .education-program-card:focus-visible [data-education-external-icon],
-  .education-program-card:hover [data-education-external-icon] {
-    translate: none !important;
-    transform: none !important;
-  }
-
   .fractalu-course-card,
+  .fractalu-club-card,
   .fractalu-course-card *,
+  .fractalu-club-card *,
   .fractalu-course-preview {
     transition-duration: 0s !important;
     transform: none !important;
