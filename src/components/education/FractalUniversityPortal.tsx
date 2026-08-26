@@ -460,6 +460,7 @@ function FractalUInformation() {
               craft, a body of work, an obsession. Email{" "}
               <EducationOutboundLink
                 href="mailto:fractalu@fractalnyc.com"
+                typography="body"
                 className="align-middle"
               >
                 fractalu@fractalnyc.com

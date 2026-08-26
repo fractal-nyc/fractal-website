@@ -4,6 +4,7 @@ import { cn } from "@/lib/utils";
 
 type EducationOutboundTone = "light" | "dark";
 type EducationOutboundVariant = "standalone" | "course-title";
+type EducationOutboundTypography = "label" | "body";
 
 interface EducationOutboundLinkProps
   extends Omit<AnchorHTMLAttributes<HTMLAnchorElement>, "children" | "href"> {
@@ -12,6 +13,7 @@ interface EducationOutboundLinkProps
   accessibleName?: string;
   tone?: EducationOutboundTone;
   variant?: EducationOutboundVariant;
+  typography?: EducationOutboundTypography;
   arrowClassName?: string;
 }
 
@@ -37,6 +39,7 @@ export function EducationOutboundLink({
   accessibleName,
   tone = "light",
   variant = "standalone",
+  typography = "label",
   className,
   arrowClassName,
   ...props
@@ -63,7 +66,10 @@ export function EducationOutboundLink({
       className={[
         "min-w-0 max-w-full [overflow-wrap:anywhere] underline decoration-1 underline-offset-4 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2",
         variant === "standalone"
-          ? "text-label inline-flex min-h-11 flex-wrap items-center gap-x-1.5 rounded-md"
+          ? [
+              typography === "body" ? "text-body" : "text-label",
+              "inline-flex min-h-11 flex-wrap items-center gap-x-1.5 rounded-md",
+            ].join(" ")
           : "fractalu-course-title-link inline-flex items-start gap-2 rounded-sm",
         TONE_CLASSES[tone],
         className,

@@ -576,6 +576,19 @@ describe("FractalUniversityPortal", () => {
     const callout = teachingLabel.closest(".p-9")!;
     expect(callout).toHaveClass("bg-background", "text-foreground", "p-9");
     expect(callout.querySelectorAll('svg[width="30"][height="30"]')).toHaveLength(4);
+    const teachingEmail = within(callout as HTMLElement).getByRole("link", {
+      name: "fractalu@fractalnyc.com",
+    });
+    expect(teachingEmail).toHaveClass("text-body");
+    expect(teachingEmail).not.toHaveClass("text-label");
+    expect(teachingEmail).toHaveAttribute("href", "mailto:fractalu@fractalnyc.com");
+    expect(teachingEmail).not.toHaveAttribute("target");
+    expect(teachingEmail).not.toHaveAttribute("rel");
+    expect(teachingEmail.querySelectorAll("svg")).toHaveLength(1);
+    expect(teachingEmail.querySelector("[data-education-outbound-arrow]")).toHaveAttribute(
+      "aria-hidden",
+      "true",
+    );
     expect(screen.getByText("Take yourself and others seriously.")).toBeTruthy();
     expect(screen.getByRole("link", { name: /Read the FractalU canon PDF/ })).toHaveAttribute(
       "href",
@@ -654,6 +667,8 @@ describe("FractalUniversityPortal", () => {
     const email = within(resourceGroup).getByRole("link", {
       name: "fractalu@fractalnyc.com",
     });
+    expect(email).toHaveClass("text-label");
+    expect(email).not.toHaveClass("text-body");
     expect(email).toHaveAttribute("href", "mailto:fractalu@fractalnyc.com");
     expect(email).not.toHaveAttribute("target");
     expect(email).not.toHaveAttribute("rel");
