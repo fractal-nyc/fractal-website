@@ -44,7 +44,7 @@ function CourseDescriptionPreview({ course }: { course: FractalUCourse }) {
   return (
     <p
       id={`${course.id}-description`}
-      className="fractalu-course-preview fractalu-course-description text-body mt-4 leading-relaxed text-foreground-muted"
+      className="fractalu-course-preview fractalu-course-description text-body mt-3 leading-relaxed text-foreground-muted md:mt-4"
       data-course-description
     >
       {course.description}
@@ -105,12 +105,15 @@ function InstructorBioPreview({
           aria-expanded={pinned}
           onClick={onToggle}
           onKeyDown={handleKeyDown}
-          className="text-body mt-2 min-h-11 max-w-full rounded-md text-left text-foreground-muted underline decoration-foreground-faint underline-offset-4 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-house-education-light"
+          className="text-body mt-1 min-h-11 max-w-full rounded-md text-left text-foreground-muted underline decoration-foreground-faint underline-offset-4 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-house-education-light md:mt-2"
+          data-instructor-name
         >
           {course.instructor}
         </button>
       ) : (
-        <p className="text-body mt-2 text-foreground-muted">{course.instructor}</p>
+        <p className="text-body mt-1 text-foreground-muted md:mt-2" data-instructor-name>
+          {course.instructor}
+        </p>
       )}
       <div
         id={bioId}
@@ -134,7 +137,7 @@ function InstructorBioPreview({
 
 function CourseActions({ course }: { course: FractalUCourse }) {
   return (
-    <div className="mt-5 flex flex-wrap gap-x-4 gap-y-1">
+    <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1 md:mt-5">
       <EducationOutboundLink
         href={course.applicationUrl}
         accessibleName={`${course.applicationLabel} for ${course.title}`}
@@ -180,7 +183,7 @@ function CourseCard({
       data-course-category={course.category}
       data-course-id={course.id}
     >
-      <div className="mb-3 flex min-w-0 items-start gap-3">
+      <div className="mb-2 flex min-w-0 items-start gap-3 md:mb-3">
         <p className="text-label min-w-0 [overflow-wrap:anywhere] text-house-education-light">
           {course.category}
         </p>
@@ -208,26 +211,28 @@ function CourseCard({
             </span>
           )}
         </h3>
+        <InstructorBioPreview
+          course={course}
+          isFinePointer={isFinePointer}
+          pinned={instructorPinned}
+          suppressed={isFinePointer && suppressedInstructorId === course.id}
+          onToggle={() => {
+            setSuppressedInstructorId(null);
+            setPinnedInstructorId(instructorPinned ? null : course.id);
+          }}
+          onEscape={() => {
+            setPinnedInstructorId(null);
+            setSuppressedInstructorId(course.id);
+          }}
+          onSuppressionReset={() => setSuppressedInstructorId(null)}
+        />
         <CourseDescriptionPreview course={course} />
       </div>
 
-      <InstructorBioPreview
-        course={course}
-        isFinePointer={isFinePointer}
-        pinned={instructorPinned}
-        suppressed={isFinePointer && suppressedInstructorId === course.id}
-        onToggle={() => {
-          setSuppressedInstructorId(null);
-          setPinnedInstructorId(instructorPinned ? null : course.id);
-        }}
-        onEscape={() => {
-          setPinnedInstructorId(null);
-          setSuppressedInstructorId(course.id);
-        }}
-        onSuppressionReset={() => setSuppressedInstructorId(null)}
-      />
-
-      <dl className="mt-5 grid min-w-0 gap-3 text-sm text-foreground-muted sm:grid-cols-2">
+      <dl
+        className="mt-4 grid min-w-0 grid-cols-2 gap-x-3 gap-y-2 text-sm text-foreground-muted md:mt-5 md:gap-3"
+        data-course-facts
+      >
         {[
           ["Schedule", course.schedule],
           ["Dates", course.dates],
@@ -242,7 +247,7 @@ function CourseCard({
       </dl>
       <CourseActions course={course} />
       <div
-        className="mt-6 h-0.5 w-8 rounded-full bg-house-education-light opacity-40 transition-all duration-300 group-hover:w-12 group-hover:opacity-70 group-focus-within:w-12 group-focus-within:opacity-70"
+        className="mt-4 h-0.5 w-8 rounded-full bg-house-education-light opacity-40 transition-all duration-300 group-hover:w-12 group-hover:opacity-70 group-focus-within:w-12 group-focus-within:opacity-70 md:mt-6"
         aria-hidden="true"
       />
     </article>
@@ -283,7 +288,7 @@ function CourseCatalog({
 
   return (
     <div
-      className="fractalu-course-grid mt-8 min-w-0"
+      className="fractalu-course-grid mt-4 min-w-0 md:mt-8"
       data-testid="fractalu-course-catalog"
       data-course-collection
       data-preview-mode={isFinePointer ? "enhanced" : "inline"}
@@ -499,13 +504,13 @@ export function FractalUniversityPortal() {
   );
 
   return (
-    <section className="mt-16 md:mt-24" aria-labelledby="fractalu-catalog-title" data-fractalu-portal>
+    <section className="mt-6 md:mt-24" aria-labelledby="fractalu-catalog-title" data-fractalu-portal>
       <div
         className="relative z-20 mx-auto min-w-0 max-w-[1600px] text-background page-gutter"
         data-fractalu-wide-shell
         data-fractalu-catalog-frame
       >
-        <header className="mb-8 border-b border-background/45 pb-8 md:mb-10 md:pb-10">
+        <header className="mb-5 border-b border-background/45 pb-5 md:mb-10 md:pb-10">
           <p className="text-label text-background/85" data-fractalu-semester-eyebrow>
             {FRACTALU_CATALOG.semester}
           </p>
@@ -517,10 +522,10 @@ export function FractalUniversityPortal() {
           </p>
         </header>
 
-        <div className="pb-8 md:pb-10" data-fractalu-filter-block>
+        <div className="pb-2 md:pb-10" data-fractalu-filter-block>
           <p
             id="fractalu-filter-label"
-            className="text-label mb-3 text-background/85"
+            className="text-label mb-2 text-background/85 md:mb-3"
             data-fractalu-filter-eyebrow
           >
             Filter classes by subject
@@ -528,7 +533,7 @@ export function FractalUniversityPortal() {
           <div
             role="group"
             aria-labelledby="fractalu-filter-label"
-            className="fractalu-filter-row flex gap-2 overflow-x-auto pb-2 md:flex-wrap md:overflow-visible md:pb-0"
+            className="fractalu-filter-row flex flex-wrap gap-1 overflow-visible pb-0 md:gap-2"
           >
             {FRACTALU_CATEGORIES.map((category) => {
               const selected = category === activeCategory;
@@ -538,7 +543,7 @@ export function FractalUniversityPortal() {
                   type="button"
                   aria-pressed={selected}
                   onClick={() => setActiveCategory(category)}
-                  className={`min-h-11 shrink-0 rounded-md border-2 bg-background px-4 py-2 font-mono text-xs text-foreground-muted transition-colors focus-visible:border-house-education-light focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-house-education-light focus-visible:ring-offset-2 focus-visible:ring-offset-house-education-deep ${
+                  className={`min-h-11 min-w-11 shrink-0 rounded-md border-2 bg-background px-1 py-2 font-mono text-xs text-foreground-muted transition-colors focus-visible:border-house-education-light focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-house-education-light focus-visible:ring-offset-2 focus-visible:ring-offset-house-education-deep md:px-4 ${
                     selected
                       ? "border-house-education-light shadow-sm"
                       : "border-foreground-faint hover:border-house-education-light"

@@ -55,8 +55,11 @@ export function EducationPage() {
           </div>
         </div>
 
-        <div className="relative z-10 min-h-screen pt-16 pb-20 md:pt-24 md:pb-32">
-          <section className="mx-auto w-full max-w-7xl page-gutter" data-education-intro>
+        <div className="relative z-10 min-h-screen pt-12 pb-20 md:pt-24 md:pb-32">
+          <section
+            className="mx-auto w-full max-w-7xl page-gutter [&_[data-sector-letter]]:text-7xl md:[&_[data-sector-letter]]:text-[14rem]"
+            data-education-intro
+          >
             <div className="mx-auto max-w-3xl">
               <SectorHeader
                 letter="E"
@@ -66,12 +69,14 @@ export function EducationPage() {
               />
 
               <FadeIn delay={0.1}>
-                <div className="mx-auto mb-8 max-w-3xl text-center md:mb-12">
-                  <h1 className="text-display text-background">Fractal University</h1>
-                  <p className="text-subtitle mt-4 text-background/80 normal-case md:mt-6">
+                <div className="mx-auto mb-4 max-w-3xl text-center md:mb-12">
+                  <h1 className="text-display !text-3xl text-background md:!text-7xl">
+                    Fractal University
+                  </h1>
+                  <p className="text-subtitle mt-2 text-background/80 normal-case md:mt-6">
                     An improvised college in New York City.
                   </p>
-                  <div className="mt-8 flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:flex-wrap sm:items-center">
+                  <div className="mt-4 flex flex-col items-stretch justify-center gap-2 sm:flex-row sm:flex-wrap sm:items-center md:mt-8 md:gap-3">
                     <Button asChild className="w-full whitespace-normal text-center sm:w-auto">
                       <EducationOutboundLink
                         href="https://fractaluniversity.substack.com"

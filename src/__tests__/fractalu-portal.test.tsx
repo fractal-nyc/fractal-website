@@ -188,8 +188,13 @@ describe("FractalUniversityPortal", () => {
     expect(filterBlock).not.toHaveClass("border-b");
     const group = screen.getByRole("group", { name: "Filter classes by subject" });
     const filters = within(group).getAllByRole("button");
+    expect(group).toHaveClass("flex-wrap", "gap-1", "overflow-visible");
+    expect(group).not.toHaveClass("overflow-x-auto");
     expect(filters.map((button) => button.textContent)).toEqual(FRACTALU_CATEGORIES);
     expect(filters.every((button) => button.className.includes("min-h-11"))).toBe(true);
+    expect(filters.every((button) => button.className.includes("min-w-11"))).toBe(true);
+    expect(filters.every((button) => button.className.includes("px-1"))).toBe(true);
+    expect(filters.every((button) => button.className.includes("md:px-4"))).toBe(true);
     expect(filters.every((button) => button.className.includes("border-2"))).toBe(true);
     expect(filters.every((button) => button.className.includes("bg-background"))).toBe(true);
     expect(filters.every((button) => button.className.includes("text-foreground-muted"))).toBe(
@@ -275,17 +280,51 @@ describe("FractalUniversityPortal", () => {
     );
   });
 
-  it("keeps descriptions and all source biographies in normal flow without matchMedia", () => {
+  it("keeps summaries and instructor names in reading order while preserving responsive bios", () => {
     mockFinePointer(false);
     render(<FractalUniversityPortal />);
     const catalog = screen.getByTestId("fractalu-course-catalog");
     expect(catalog.querySelectorAll("[data-course-description]")).toHaveLength(20);
     expect(catalog.querySelectorAll("[data-instructor-bio]")).toHaveLength(20);
     expect(catalog.querySelectorAll("[data-instructor-record]")).toHaveLength(23);
+    expect(catalog.querySelectorAll("[data-instructor-name]")).toHaveLength(20);
     expect(within(catalog).queryByRole("button", { name: "Elena Navarrete" })).toBeNull();
-    for (const panel of catalog.querySelectorAll("[data-course-description], [data-instructor-bio]")) {
-      expect(panel.className).not.toMatch(/hidden|sr-only/);
-    }
+    const firstCard = catalog.querySelector<HTMLElement>(
+      '[data-course-id="lost-generation-close-reading"]',
+    )!;
+    const title = firstCard.querySelector("h3")!;
+    const instructorName = firstCard.querySelector("[data-instructor-name]")!;
+    const description = firstCard.querySelector("[data-course-description]")!;
+    const biography = firstCard.querySelector("[data-instructor-bio]")!;
+    const facts = firstCard.querySelector("[data-course-facts]")!;
+    expect(
+      title.compareDocumentPosition(instructorName) & Node.DOCUMENT_POSITION_FOLLOWING,
+    ).toBeTruthy();
+    expect(
+      instructorName.compareDocumentPosition(description) & Node.DOCUMENT_POSITION_FOLLOWING,
+    ).toBeTruthy();
+    expect(
+      description.compareDocumentPosition(facts) & Node.DOCUMENT_POSITION_FOLLOWING,
+    ).toBeTruthy();
+    expect(biography).toHaveClass("fractalu-instructor-bio");
+    expect(description).not.toHaveClass("hidden", "sr-only");
+  });
+
+  it("uses a semantic two-by-two Compact fact grid", () => {
+    render(<FractalUniversityPortal />);
+    const firstCard = document.querySelector<HTMLElement>(
+      '[data-course-id="lost-generation-close-reading"]',
+    )!;
+    const facts = firstCard.querySelector<HTMLElement>("[data-course-facts]")!;
+    expect(facts.tagName).toBe("DL");
+    expect(facts).toHaveClass("grid", "grid-cols-2", "min-w-0");
+    expect(Array.from(facts.querySelectorAll("dt"), (term) => term.textContent)).toEqual([
+      "Schedule",
+      "Dates",
+      "Location",
+      "Price",
+    ]);
+    expect(facts.querySelectorAll(":scope > div")).toHaveLength(4);
   });
 
   it("preserves exact ordered multi-instructor source records and provenance", () => {
