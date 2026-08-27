@@ -80,11 +80,11 @@ export function EducationPage() {
                       href="https://fractaluniversity.substack.com"
                       accessibleName="Stay tuned for future semesters"
                       tone="dark"
-                      typography="body"
-                      className="justify-center text-center"
+                      typography="body-lead"
+                      className="justify-center text-center text-background/70 ![text-underline-offset:auto]"
                     >
                       <span
-                        className="min-w-0 leading-snug [overflow-wrap:anywhere]"
+                        className="min-w-0 [overflow-wrap:anywhere]"
                         data-education-hero-action-label
                       >
                         Stay tuned for future semesters
@@ -93,10 +93,10 @@ export function EducationPage() {
                     <a
                       href="#what-is-fractalu"
                       onClick={jumpToInformation}
-                      className="text-body inline-flex min-h-11 min-w-0 max-w-full items-center justify-center gap-x-1.5 rounded-md text-center text-background underline decoration-1 decoration-background/40 underline-offset-4 transition-colors [overflow-wrap:anywhere] hover:decoration-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-background focus-visible:ring-offset-2 focus-visible:ring-offset-house-education-deep"
+                      className="text-body-lead inline-flex min-h-11 min-w-0 max-w-full items-center justify-center gap-x-1.5 rounded-md text-center text-background/70 underline decoration-background/40 transition-colors [overflow-wrap:anywhere] hover:decoration-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-background focus-visible:ring-offset-2 focus-visible:ring-offset-house-education-deep"
                     >
                       <span
-                        className="min-w-0 leading-snug [overflow-wrap:anywhere]"
+                        className="min-w-0 [overflow-wrap:anywhere]"
                         data-education-hero-action-label
                       >
                         What is FractalU?

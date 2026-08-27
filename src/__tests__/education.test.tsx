@@ -40,14 +40,16 @@ describe("EducationPage", () => {
       "#what-is-fractalu",
     );
     expect(futureSemesters).toHaveClass(
-      "text-body",
+      "text-body-lead",
+      "text-background/70",
       "min-h-11",
       "decoration-background/40",
       "hover:decoration-background",
       "focus-visible:decoration-background",
     );
     expect(informationJump).toHaveClass(
-      "text-body",
+      "text-body-lead",
+      "text-background/70",
       "min-h-11",
       "decoration-background/40",
       "hover:decoration-background",
@@ -67,7 +69,7 @@ describe("EducationPage", () => {
       screen.getByText("What is FractalU?", {
         selector: "[data-education-hero-action-label]",
       }),
-    ).not.toHaveClass("text-subtitle");
+    ).not.toHaveClass("text-subtitle", "text-body");
 
     for (const heroLink of [futureSemesters, informationJump]) {
       expect(heroLink.closest("button")).toBeNull();
