@@ -13,6 +13,7 @@ const LIAM_DUFFY_BIO =
 
 test("Education portal keeps one wide accessible catalog across input modes", async ({
   page,
+  browserName,
 }, testInfo) => {
   const profile = testInfo.project.metadata.profile as ResponsiveProfile | undefined;
   const width = profile?.viewport.width ?? 1440;
@@ -23,23 +24,62 @@ test("Education portal keeps one wide accessible catalog across input modes", as
   await page.goto("/education", { waitUntil: "domcontentloaded" });
   await preparePage(page, profile?.rootFontScale);
 
-  await expect(page.getByRole("heading", { level: 1, name: "A new liberal arts" })).toHaveCount(1);
-  const accelerator = page.getByRole("link", {
-    name: "Visit Fractal AI Accelerator (opens in a new tab)",
-  });
+  await expect(page.getByRole("heading", { level: 1, name: "Fractal University" })).toHaveCount(1);
+  await expect(page.getByText("An improvised college in New York City.", { exact: true })).toBeVisible();
+  const sectorLetter = page.locator("[data-sector-letter]");
+  const sectorName = page.locator("[data-sector-name]");
+  await expect(sectorLetter).toHaveCSS("color", "rgb(203, 43, 35)");
+  await expect(sectorName).toHaveCSS("color", await page.locator("h1").evaluate((element) => getComputedStyle(element).color));
+  const intro = page.locator("[data-education-intro]");
   const portal = page.locator("[data-fractalu-portal]");
-  await expect(accelerator).toHaveAttribute(
+  await expect(page.getByRole("link", { name: /Stay tuned for future semesters/ })).toHaveAttribute(
     "href",
-    "https://go.fractalaccelerator.com/fractalnycwebsite",
+    "https://fractaluniversity.substack.com",
   );
+  await expect(page.getByRole("link", { name: /Visit Fractal AI Accelerator/ })).toHaveCount(0);
   await expect(portal).toBeVisible();
   expect(
-    await accelerator.evaluate(
-      (link, target) => Boolean(link.compareDocumentPosition(target) & Node.DOCUMENT_POSITION_FOLLOWING),
+    await intro.evaluate(
+      (section, target) => Boolean(section.compareDocumentPosition(target) & Node.DOCUMENT_POSITION_FOLLOWING),
       await portal.elementHandle(),
     ),
   ).toBe(true);
+  const semesterEyebrow = page.locator("[data-fractalu-semester-eyebrow]");
+  const catalogHeading = page.getByRole("heading", { level: 2, name: "Course Catalog" });
+  await expect(semesterEyebrow).toHaveText("Summer 2026");
+  await expect(catalogHeading).toBeVisible();
+  expect(
+    await semesterEyebrow.evaluate(
+      (eyebrow, heading) =>
+        Boolean(eyebrow.compareDocumentPosition(heading) & Node.DOCUMENT_POSITION_FOLLOWING),
+      await catalogHeading.elementHandle(),
+    ),
+  ).toBe(true);
+  await expect(
+    page.getByText("Browse this semester's classes by subject.", { exact: true }),
+  ).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Summer 2026 semester" })).toHaveCount(0);
+  const filterEyebrow = page.locator("[data-fractalu-filter-eyebrow]");
+  const filterGroup = page.getByRole("group", { name: "Filter classes by subject" });
+  await expect(filterEyebrow).toHaveText("Filter classes by subject");
+  await expect(filterEyebrow).toBeVisible();
+  await expect(filterEyebrow).toHaveClass(/text-label/);
+  await expect(filterGroup).toHaveAttribute("aria-labelledby", "fractalu-filter-label");
+  expect(
+    await filterEyebrow.evaluate(
+      (eyebrow, group) => eyebrow.nextElementSibling === group,
+      await filterGroup.elementHandle(),
+    ),
+  ).toBe(true);
   await expect(page.locator("iframe, table, details, summary")).toHaveCount(0);
+  await expect(page.locator("[data-fractalu-portal] > [data-fractalu-wide-shell] > header")).toHaveCSS(
+    "border-bottom-width",
+    "1px",
+  );
+  await expect(page.locator("[data-fractalu-filter-block]")).toHaveCSS(
+    "border-bottom-width",
+    "0px",
+  );
 
   const catalog = page.getByTestId("fractalu-course-catalog");
   await expect(catalog).toBeVisible();
@@ -123,9 +163,23 @@ test("Education portal keeps one wide accessible catalog across input modes", as
   );
 
   const technology = page.getByRole("button", { name: "Technology" });
+  const allFilter = page.getByRole("button", { name: "All" });
+  const selectedFilterColors = await allFilter.evaluate((button) => ({
+    background: getComputedStyle(button).backgroundColor,
+    color: getComputedStyle(button).color,
+  }));
   expect(
     await technology.evaluate((button) => Number.parseFloat(getComputedStyle(button).minHeight)),
   ).toBeGreaterThanOrEqual(44);
+  if (!hasTouch) {
+    await technology.hover();
+    await expect(technology).toHaveCSS("background-color", selectedFilterColors.background);
+    await expect(technology).toHaveCSS("color", selectedFilterColors.color);
+    await page.mouse.move(0, 0);
+    await technology.focus();
+    await expect(technology).toHaveCSS("background-color", selectedFilterColors.background);
+    await expect(technology).toHaveCSS("color", selectedFilterColors.color);
+  }
   await technology.click();
   await expect(technology).toHaveAttribute("aria-pressed", "true");
   await expect(page.getByText("3 courses shown.")).toHaveText("3 courses shown.");
@@ -144,8 +198,15 @@ test("Education portal keeps one wide accessible catalog across input modes", as
     "https://closereadingnyc.notion.site/The-Lost-Generation-Close-Reading-359c580377d680b0b8fefba14aaef8a0",
   );
   await expect(titleLink).toHaveAttribute("aria-describedby", "lost-generation-close-reading-description");
+  const titleArrow = titleLink.locator("[data-course-external-icon]");
+  await expect(titleArrow).toHaveCount(1);
+  await expect(catalog.locator('article[data-course-id="butoh-into-the-depth"] [data-course-external-icon]')).toHaveCount(0);
 
   if (!hasTouch && width >= 1024 && !profile?.rootFontScale) {
+    await expect(titleArrow).toHaveCSS("opacity", "0");
+    await firstCourse.locator("dl").hover();
+    await expect(titleArrow).toHaveCSS("opacity", "0");
+    await expect(firstCourse).toHaveCSS("transform", /matrix\(1\.02/);
     const lampInstructor = lampCourse.getByRole("button", {
       name: "Mel Brand & Julianne Lefelhocz",
     });
@@ -163,6 +224,7 @@ test("Education portal keeps one wide accessible catalog across input modes", as
     await expect(description).toHaveCSS("visibility", "visible");
     await titleLink.focus();
     await expect(description).toHaveCSS("visibility", "visible");
+    await expect(titleArrow).toHaveCSS("opacity", "1");
 
     const instructor = firstCourse.getByRole("button", { name: "Elena Navarrete" });
     const instructorPreview = firstCourse.locator(".fractalu-instructor-preview");
@@ -220,7 +282,20 @@ test("Education portal keeps one wide accessible catalog across input modes", as
     await expect(instructorPreview).toHaveAttribute("data-suppressed", "false");
     await instructor.focus();
     await expect(instructorBio).toHaveCSS("visibility", "visible");
+
+    if (profile?.name === "desktop-1440x900") {
+      await page.emulateMedia({ reducedMotion: "reduce" });
+      await firstCourse.hover();
+      await expect(firstCourse).toHaveCSS("transform", "none");
+      await expect(titleArrow).toHaveCSS("transform", "none");
+      await expect(firstCourse).toHaveCSS(
+        "border-color",
+        "rgb(203, 43, 35)",
+      );
+      await page.emulateMedia({ reducedMotion: "no-preference" });
+    }
   } else {
+    await expect(titleArrow).toHaveCSS("opacity", "1");
     await expect(description).toHaveCSS("position", "static");
     await expect(description).toBeVisible();
     await expect(firstCourse.locator("[data-instructor-bio]")).toBeVisible();
@@ -228,7 +303,7 @@ test("Education portal keeps one wide accessible catalog across input modes", as
     await expect(acceleratorBio).toBeVisible();
   }
 
-  const jumpLink = page.getByRole("link", { name: "What's FractalU?" });
+  const jumpLink = page.getByRole("link", { name: "What is FractalU?" });
   await jumpLink.click();
   await expect(page).toHaveURL(/#what-is-fractalu$/);
   await expect(page.locator("#what-is-fractalu")).toBeFocused();
@@ -244,6 +319,98 @@ test("Education portal keeps one wide accessible catalog across input modes", as
     const pennantBox = await leftPennant.boundingBox();
     expect(shellBox && pennantBox && shellBox.x < pennantBox.x + pennantBox.width).toBeTruthy();
     await expect(wideShell).toHaveCSS("z-index", "20");
+    await expect(page.locator("[data-fractalu-catalog-frame]")).toHaveCSS(
+      "background-color",
+      "rgba(0, 0, 0, 0)",
+    );
+  }
+
+  if (profile?.name === "boundary-1024x768") {
+    for (const boundaryWidth of [767, 768, 769, 1023, 1024, 1025]) {
+      await page.setViewportSize({ width: boundaryWidth, height: 900 });
+      await expect(catalog).toBeVisible();
+      await expect(clubs).toBeVisible();
+      expect(
+        await page.evaluate(() => document.documentElement.scrollWidth),
+      ).toBeLessThanOrEqual(
+        await page.evaluate(() => document.documentElement.clientWidth + 1),
+      );
+    }
+
+    await page.setViewportSize({
+      width,
+      height: profile?.viewport.height ?? 768,
+    });
+  }
+
+  const canon = page.locator('section[aria-labelledby="fractalu-canon-title"]');
+  await expect(canon).toBeVisible();
+  await expect(page.locator("[data-fractalu-final-collage], [data-testid='fractalu-collage']")).toHaveCount(0);
+  await expect(page.getByRole("region", { name: "Fractal University in community" })).toHaveCount(0);
+
+  if (browserName === "chromium") {
+    await page.evaluate(() => window.scrollTo(0, 0));
+    await page.evaluate(() => new Promise<void>((resolve) => requestAnimationFrame(() => resolve())));
+    const usesDesktopPennants = width >= 768;
+    const educationShell = page.getByTestId(
+      usesDesktopPennants ? "education-desktop-pennants" : "education-mobile-pennants",
+    );
+    const educationSlots = educationShell.locator(":scope > div");
+    const educationLeftSlot = educationSlots.first();
+    const educationRightSlot = educationSlots.last();
+    const educationClasses = await educationShell.getAttribute("class");
+    const educationShellBox = await educationShell.boundingBox();
+    const educationLeftBox = await educationLeftSlot.boundingBox();
+    const educationRightBox = await educationRightSlot.boundingBox();
+
+    await page.goto("/library", { waitUntil: "domcontentloaded" });
+    await preparePage(page, profile?.rootFontScale);
+    const libraryShell = page.getByTestId(
+      usesDesktopPennants ? "library-desktop-pennants" : "library-mobile-pennants",
+    );
+    const librarySlot = libraryShell.locator(":scope > div").first();
+    expect(await libraryShell.getAttribute("class")).toBe(educationClasses);
+    const libraryShellBox = await libraryShell.boundingBox();
+    const librarySlotBox = await librarySlot.boundingBox();
+    expect(libraryShellBox?.width).toBeCloseTo(educationShellBox?.width ?? 0, 4);
+    if (usesDesktopPennants) {
+      expect(libraryShellBox?.height).toBeCloseTo(educationShellBox?.height ?? 0, 4);
+    }
+
+    expect(educationLeftBox).not.toBeNull();
+    expect(educationRightBox).not.toBeNull();
+    expect(librarySlotBox).not.toBeNull();
+    const widthRatio = educationLeftBox!.width / librarySlotBox!.width;
+    const heightRatio = educationLeftBox!.height / librarySlotBox!.height;
+    expect(widthRatio).toBeGreaterThanOrEqual(0.89);
+    expect(widthRatio).toBeLessThanOrEqual(0.91);
+    expect(heightRatio).toBeGreaterThanOrEqual(0.89);
+    expect(heightRatio).toBeLessThanOrEqual(0.91);
+
+    expect(educationRightBox!.width).toBeCloseTo(educationLeftBox!.width, 4);
+    expect(educationRightBox!.height).toBeCloseTo(educationLeftBox!.height, 4);
+    expect(educationRightBox!.y).toBeCloseTo(educationLeftBox!.y, 4);
+
+    if (usesDesktopPennants) {
+      expect(educationLeftBox!.x).toBeCloseTo(educationShellBox!.x, 4);
+      expect(educationRightBox!.x + educationRightBox!.width).toBeCloseTo(
+        educationShellBox!.x + educationShellBox!.width,
+        4,
+      );
+    } else {
+      const educationPairMidpoint =
+        (educationLeftBox!.x + educationRightBox!.x + educationRightBox!.width) / 2;
+      const educationShellMidpoint = educationShellBox!.x + educationShellBox!.width / 2;
+      expect(educationPairMidpoint).toBeCloseTo(educationShellMidpoint, 4);
+    }
+
+    if (profile?.name === "desktop-1440x900") {
+      expect(libraryShellBox).toEqual(educationShellBox);
+      expect(educationShellBox).toMatchObject({ x: 64, y: 144, height: 648 });
+      expect(educationLeftBox).toMatchObject({ x: 64, y: 144 });
+      expect(educationLeftBox?.width).toBeCloseTo(189, 0);
+      expect(educationLeftBox?.height).toBeCloseTo(583.2, 1);
+    }
   }
 
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(

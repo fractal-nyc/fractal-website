@@ -90,7 +90,31 @@ describe("FractalUniversityPortal", () => {
     expect(within(clubs).getAllByRole("article")).toHaveLength(4);
     expect(within(clubs).queryByText(/^Open group$/)).toBeNull();
     expect(screen.getByRole("heading", { name: "Clubs & open groups" })).toBeTruthy();
-    expect(screen.getByText(`Fractal University · ${FRACTALU_CATALOG.semester}`)).toBeTruthy();
+    const semester = screen.getByText(FRACTALU_CATALOG.semester, {
+      selector: "[data-fractalu-semester-eyebrow]",
+    });
+    const catalogHeading = screen.getByRole("heading", { level: 2, name: "Course Catalog" });
+    expect(semester.tagName).toBe("P");
+    expect(
+      semester.compareDocumentPosition(catalogHeading) & Node.DOCUMENT_POSITION_FOLLOWING,
+    ).toBeTruthy();
+    expect(screen.getByText("Browse this semester's classes by subject.")).toBeTruthy();
+    expect(
+      screen.queryByRole("heading", { name: `${FRACTALU_CATALOG.semester} semester` }),
+    ).toBeNull();
+    const filterEyebrow = screen.getByText("Filter classes by subject", {
+      selector: "[data-fractalu-filter-eyebrow]",
+    });
+    const filterGroup = screen.getByRole("group", { name: "Filter classes by subject" });
+    expect(filterEyebrow).toHaveClass("text-label", "text-background/85");
+    expect(filterEyebrow).not.toHaveClass("sr-only");
+    expect(filterEyebrow).toHaveAttribute("id", "fractalu-filter-label");
+    expect(filterGroup).toHaveAttribute("aria-labelledby", "fractalu-filter-label");
+    expect(filterEyebrow.nextElementSibling).toBe(filterGroup);
+    expect(document.querySelector("[data-fractalu-portal]")).toHaveAttribute(
+      "aria-labelledby",
+      "fractalu-catalog-title",
+    );
   });
 
   it("promotes labelled club schedules and locations directly below each title", () => {
@@ -134,14 +158,23 @@ describe("FractalUniversityPortal", () => {
 
   it("exposes all categories as 44px-minimum pressed-state filters", () => {
     render(<FractalUniversityPortal />);
+    const filterBlock = document.querySelector("[data-fractalu-filter-block]")!;
+    expect(filterBlock).not.toHaveClass("border-b");
     const group = screen.getByRole("group", { name: "Filter classes by subject" });
     const filters = within(group).getAllByRole("button");
     expect(filters.map((button) => button.textContent)).toEqual(FRACTALU_CATEGORIES);
     expect(filters.every((button) => button.className.includes("min-h-11"))).toBe(true);
     expect(screen.getByRole("button", { name: "All" })).toHaveAttribute("aria-pressed", "true");
+    const technology = screen.getByRole("button", { name: "Technology" });
+    expect(technology).toHaveClass(
+      "hover:bg-house-education-light",
+      "hover:text-background",
+      "focus-visible:bg-house-education-light",
+      "focus-visible:text-background",
+    );
 
-    fireEvent.click(screen.getByRole("button", { name: "Technology" }));
-    expect(screen.getByRole("button", { name: "Technology" })).toHaveAttribute("aria-pressed", "true");
+    fireEvent.click(technology);
+    expect(technology).toHaveAttribute("aria-pressed", "true");
     expect(screen.getByRole("button", { name: "All" })).toHaveAttribute("aria-pressed", "false");
     expect(within(screen.getByTestId("fractalu-course-catalog")).getAllByRole("article")).toHaveLength(3);
     expect(screen.getByText("3 courses shown.")).toHaveAttribute("aria-live", "polite");
@@ -161,6 +194,8 @@ describe("FractalUniversityPortal", () => {
     expect(title).toHaveClass("normal-case");
     expect(title.className).not.toMatch(/uppercase/);
     expect(firstCard.querySelector("[data-course-external-icon]")).toBeTruthy();
+    expect(firstCard).toHaveClass("fractalu-course-card");
+    expect(firstCard.parentElement?.querySelectorAll('svg[width="20"][height="20"]')).toHaveLength(4);
   });
 
   it("links the 19 verified course documents and preserves the Butoh source fallback", () => {
@@ -176,6 +211,7 @@ describe("FractalUniversityPortal", () => {
       expect(link).toHaveAttribute("target", "_blank");
       expect(link).toHaveAttribute("rel", "noopener noreferrer");
       expect(link).toHaveAttribute("aria-describedby", `${course.id}-description`);
+      expect(link.querySelector("[data-course-external-icon]")).toBeTruthy();
     }
     const butohCard = catalog.querySelector<HTMLElement>('[data-course-id="butoh-into-the-depth"]')!;
     expect(within(butohCard).queryByRole("link", { name: /Butoh: Into the Depth course description/ })).toBeNull();
@@ -312,14 +348,10 @@ describe("FractalUniversityPortal", () => {
     expect(getComputedStyle(bio).visibility).toBe("visible");
   });
 
-  it("jumps to and focuses the Campus-style What is FractalU section", () => {
+  it("keeps the Campus-style What is FractalU section as a focus target", () => {
     render(<FractalUniversityPortal />);
     const target = document.getElementById("what-is-fractalu")!;
-    target.scrollIntoView = vi.fn();
-    fireEvent.click(screen.getByRole("link", { name: "What's FractalU?" }));
-    expect(window.location.hash).toBe("#what-is-fractalu");
-    expect(target).toHaveFocus();
-    expect(target.scrollIntoView).toHaveBeenCalledWith({ behavior: "auto", block: "start" });
+    expect(target).toHaveAttribute("tabindex", "-1");
     expect(target).toHaveClass("max-w-7xl", "page-gutter", "scroll-mt-24");
     expect(target.firstElementChild).toHaveClass("max-w-3xl");
   });
@@ -338,19 +370,14 @@ describe("FractalUniversityPortal", () => {
     expect(container.querySelector('a[href^="mailto:"]')).not.toHaveAttribute("target");
   });
 
-  it("uses the source-owned responsive collage without cropping", () => {
+  it("ends with the information content and does not render the dormant collage assets", () => {
     render(<FractalUniversityPortal />);
-    const picture = screen.getByTestId("fractalu-collage");
-    const source = picture.querySelector("source")!;
-    const image = picture.querySelector("img")!;
-    expect(source).toHaveAttribute("srcset", "/images/fractalu-mobile.png");
-    expect(source).toHaveAttribute("width", "639");
-    expect(source).toHaveAttribute("height", "318");
-    expect(image).toHaveAttribute("src", "/images/fractalu.png");
-    expect(image).toHaveAttribute("width", "800");
-    expect(image).toHaveAttribute("height", "133");
-    expect(image).toHaveAttribute("alt", "");
-    expect(image).toHaveClass("h-auto", "w-full");
+    expect(screen.queryByRole("region", { name: "Fractal University in community" })).toBeNull();
+    expect(screen.queryByTestId("fractalu-collage")).toBeNull();
+    expect(document.querySelector("[data-fractalu-final-collage]")).toBeNull();
+    expect(document.querySelector('img[src="/images/fractalu.png"]')).toBeNull();
+    expect(document.querySelector('source[srcset="/images/fractalu-mobile.png"]')).toBeNull();
+    expect(screen.getByRole("heading", { name: "The canon" })).toBeTruthy();
   });
 
   it("uses the approved information and Mandelbrot teaching-callout hierarchy", () => {

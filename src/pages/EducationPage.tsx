@@ -1,15 +1,14 @@
-import type { CSSProperties } from "react";
+import type { CSSProperties, MouseEvent } from "react";
 import { useRef } from "react";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowDown, ArrowUpRight } from "lucide-react";
 import { FractalUniversityPortal } from "@/components/education/FractalUniversityPortal";
 import { EducationBannerSVG } from "@/components/house/EducationBannerSVG";
 import { Footer } from "@/components/layout/Footer";
 import { Navbar } from "@/components/layout/Navbar";
 import { SectorHeader } from "@/components/layout/SectorHeader";
+import { Button } from "@/components/ui/button";
 import { FadeIn } from "@/components/ui/FadeIn";
 import { FractalPattern } from "@/components/ui/FractalPattern";
-import { MandelbrotCorners } from "@/components/ui/MandelbrotCorners";
-import { EDUCATION_ACCELERATOR } from "@/data/education";
 import { HOUSES } from "@/data/houses";
 import { useBannerAboveFooter } from "@/hooks/useBannerAboveFooter";
 
@@ -20,6 +19,15 @@ const EDUCATION_COLOR = HOUSES.find((house) => house.id === "school")!.palette.l
 export function EducationPage() {
   const bannerRef = useRef<HTMLDivElement>(null);
   useBannerAboveFooter(bannerRef);
+
+  const jumpToInformation = (event: MouseEvent<HTMLAnchorElement>) => {
+    const target = document.getElementById("what-is-fractalu");
+    if (!target) return;
+    event.preventDefault();
+    window.history.pushState(null, "", "#what-is-fractalu");
+    target.focus({ preventScroll: true });
+    target.scrollIntoView({ behavior: "auto", block: "start" });
+  };
 
   return (
     <main
@@ -38,78 +46,55 @@ export function EducationPage() {
           className="pointer-events-none fixed inset-x-4 sm:inset-x-8 md:inset-x-12 lg:inset-x-16 top-28 md:top-36 z-0 hidden md:flex md:justify-between"
           style={{ height: "min(72vh, 660px)" }}
         >
-          <div className="pointer-events-auto h-full w-[24%] md:w-[16%] max-w-[210px]">
+          <div className="pointer-events-auto h-[90%] w-[21.6%] md:w-[14.4%] max-w-[189px]">
             <EducationBannerSVG />
           </div>
-          <div className="pointer-events-auto h-full w-[24%] md:w-[16%] max-w-[210px]">
+          <div className="pointer-events-auto h-[90%] w-[21.6%] md:w-[14.4%] max-w-[189px]">
             <EducationBannerSVG />
           </div>
         </div>
 
         <div className="relative z-10 min-h-screen pt-16 pb-20 md:pt-24 md:pb-32">
           <section className="mx-auto w-full max-w-7xl page-gutter" data-education-intro>
-            <div className="mx-auto max-w-3xl md:max-w-[58vw]">
+            <div className="mx-auto max-w-3xl">
               <SectorHeader
                 letter="E"
                 name="Education"
                 color="var(--color-house-education-light)"
+                nameColor="hsl(var(--background))"
               />
 
               <FadeIn delay={0.1}>
                 <div className="mx-auto mb-8 max-w-3xl text-center md:mb-12">
-                  <h1 className="text-display text-background">
-                    A new liberal arts
-                  </h1>
+                  <h1 className="text-display text-background">Fractal University</h1>
                   <p className="text-subtitle mt-4 text-background/80 normal-case md:mt-6">
-                    We currently run two education programs. Explore them below.
+                    An improvised college in New York City.
                   </p>
+                  <div className="mt-8 flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:flex-wrap sm:items-center">
+                    <Button asChild className="w-full whitespace-normal text-center sm:w-auto">
+                      <a
+                        href="https://fractaluniversity.substack.com"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label="Stay tuned for future semesters (opens in a new tab)"
+                      >
+                        Stay tuned for future semesters
+                        <ArrowUpRight aria-hidden="true" />
+                      </a>
+                    </Button>
+                    <Button
+                      asChild
+                      variant="outline"
+                      className="w-full whitespace-normal border-background text-background hover:bg-background/10 focus-visible:ring-background focus-visible:ring-offset-house-education-deep sm:w-auto"
+                    >
+                      <a href="#what-is-fractalu" onClick={jumpToInformation}>
+                        What is FractalU?
+                        <ArrowDown aria-hidden="true" />
+                      </a>
+                    </Button>
+                  </div>
                 </div>
               </FadeIn>
-
-              <section aria-labelledby="accelerator-program-title" data-testid="education-programs">
-                <FadeIn delay={0.15}>
-                  <MandelbrotCorners
-                    size="sm"
-                    opacity={1}
-                    className="education-program-card-shell group text-house-education-light transition-colors duration-200 hover:text-background focus-within:text-background"
-                  >
-                    <a
-                      href={EDUCATION_ACCELERATOR.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      aria-label={`Visit ${EDUCATION_ACCELERATOR.houseLinkLabel} (opens in a new tab)`}
-                      className="education-program-card relative isolate flex flex-col overflow-hidden rounded-lg border p-9 text-foreground [border-color:var(--accent,currentColor)] [backdrop-filter:blur(6px)] [-webkit-backdrop-filter:blur(6px)] [transform:translateZ(0)] transition-all duration-200 ease-out hover:scale-[1.02] hover:bg-house-education-light hover:text-background hover:shadow-lg focus-visible:scale-[1.02] focus-visible:bg-house-education-light focus-visible:text-background focus-visible:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-background"
-                      data-education-destination={EDUCATION_ACCELERATOR.id}
-                    >
-                      <span className="education-program-card-grain" aria-hidden="true" />
-                      <div className="mb-3 flex items-start justify-between gap-4">
-                        <h2
-                          id="accelerator-program-title"
-                          className="text-label relative z-10 text-house-education-light transition-colors duration-200 group-hover:text-background group-focus-within:text-background"
-                        >
-                          {EDUCATION_ACCELERATOR.houseLinkLabel}
-                        </h2>
-                        <ArrowUpRight
-                          size={16}
-                          strokeWidth={1.5}
-                          className="relative z-10 shrink-0 text-house-education-light opacity-60 transition-all duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-background group-hover:opacity-100 group-focus-within:-translate-y-0.5 group-focus-within:translate-x-0.5 group-focus-within:text-background group-focus-within:opacity-100"
-                          data-education-external-icon
-                          aria-hidden="true"
-                        />
-                      </div>
-                      <p className="text-body relative z-10 leading-relaxed text-foreground-muted transition-colors duration-200 group-hover:text-background/85 group-focus-within:text-background/85">
-                        {EDUCATION_ACCELERATOR.description}
-                      </p>
-                      <div
-                        className="relative z-10 mt-6 h-0.5 w-8 rounded-full bg-house-education-light opacity-40 transition-all duration-300 group-hover:w-12 group-hover:bg-background group-hover:opacity-70 group-focus-within:w-12 group-focus-within:bg-background group-focus-within:opacity-70"
-                        data-education-accent-rule
-                        aria-hidden="true"
-                      />
-                    </a>
-                  </MandelbrotCorners>
-                </FadeIn>
-              </section>
-
             </div>
           </section>
 
@@ -121,10 +106,10 @@ export function EducationPage() {
           data-testid="education-mobile-pennants"
           className="flex md:hidden items-end justify-center gap-3 px-3 pt-8 pb-12"
         >
-          <div className="w-[45%] aspect-[123/368]">
+          <div className="w-[40.5%] aspect-[123/368]">
             <EducationBannerSVG />
           </div>
-          <div className="w-[45%] aspect-[123/368]">
+          <div className="w-[40.5%] aspect-[123/368]">
             <EducationBannerSVG />
           </div>
         </div>

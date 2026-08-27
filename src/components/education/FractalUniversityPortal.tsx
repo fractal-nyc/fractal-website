@@ -4,10 +4,9 @@ import {
   useRef,
   useState,
   type KeyboardEvent,
-  type MouseEvent,
   type ReactNode,
 } from "react";
-import { ArrowDown, ArrowUpRight, Play } from "lucide-react";
+import { ArrowUpRight, Play } from "lucide-react";
 import { MandelbrotCorners } from "@/components/ui/MandelbrotCorners";
 import {
   FRACTALU_CATALOG,
@@ -196,24 +195,16 @@ function CourseCard({
   const instructorPinned = pinnedInstructorId === course.id;
 
   return (
+    <MandelbrotCorners size="xs" opacity={0.12} className="h-full min-w-0">
     <article
       className="fractalu-course-card group min-w-0 max-w-full rounded-lg border border-foreground-faint bg-background p-6 text-foreground"
       data-course-category={course.category}
       data-course-id={course.id}
     >
-      <div className="mb-3 flex min-w-0 items-start justify-between gap-3">
-        <p className="text-label min-w-0 [overflow-wrap:anywhere] text-house-education-deep">
+      <div className="mb-3 flex min-w-0 items-start gap-3">
+        <p className="text-label min-w-0 [overflow-wrap:anywhere] text-house-education-light">
           {course.category}
         </p>
-        {course.detailsUrl && (
-          <ArrowUpRight
-            size={16}
-            strokeWidth={1.5}
-            className="mt-0.5 shrink-0 text-house-education-deep opacity-60"
-            aria-hidden="true"
-            data-course-external-icon
-          />
-        )}
       </div>
 
       <div className="fractalu-title-preview relative min-w-0">
@@ -225,9 +216,16 @@ function CourseCard({
               rel="noopener noreferrer"
               aria-label={`${course.title} course description (opens in a new tab)`}
               aria-describedby={descriptionId}
-              className="min-w-0 rounded-sm underline decoration-house-education-light/50 underline-offset-4 hover:decoration-house-education-light focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-house-education-light"
+              className="fractalu-course-title-link inline-flex min-w-0 max-w-full items-start gap-2 rounded-sm underline decoration-house-education-light/50 underline-offset-4 hover:decoration-house-education-light focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-house-education-light"
             >
-              {course.title}
+              <span className="min-w-0 [overflow-wrap:anywhere]">{course.title}</span>
+              <ArrowUpRight
+                size={18}
+                strokeWidth={1.5}
+                className="fractalu-course-link-arrow mt-1 shrink-0 text-house-education-light"
+                aria-hidden="true"
+                data-course-external-icon
+              />
             </a>
           ) : (
             <span
@@ -274,10 +272,11 @@ function CourseCard({
       </dl>
       <CourseActions course={course} />
       <div
-        className="mt-6 h-0.5 w-8 rounded-full bg-house-education-light opacity-40 transition-all duration-300 group-hover:w-12 group-hover:opacity-70"
+        className="mt-6 h-0.5 w-8 rounded-full bg-house-education-light opacity-40 transition-all duration-300 group-hover:w-12 group-hover:opacity-70 group-focus-within:w-12 group-focus-within:opacity-70"
         aria-hidden="true"
       />
     </article>
+    </MandelbrotCorners>
   );
 }
 
@@ -336,8 +335,9 @@ function CourseCatalog({
 
 function ClubCard({ club }: { club: FractalUClub }) {
   return (
+    <MandelbrotCorners size="xs" opacity={0.12} className="h-full min-w-0">
     <article
-      className="min-w-0 max-w-full rounded-lg border border-foreground-faint bg-background p-6 text-foreground"
+      className="fractalu-club-card group min-w-0 max-w-full rounded-lg border border-foreground-faint bg-background p-6 text-foreground"
       data-club-id={club.id}
     >
       <h3 className="text-subtitle normal-case text-foreground [overflow-wrap:anywhere]">
@@ -372,6 +372,7 @@ function ClubCard({ club }: { club: FractalUClub }) {
         </ExternalLink>
       </div>
     </article>
+    </MandelbrotCorners>
   );
 }
 
@@ -518,102 +519,74 @@ export function FractalUniversityPortal() {
     [activeCategory],
   );
 
-  const jumpToInformation = (event: MouseEvent<HTMLAnchorElement>) => {
-    const target = document.getElementById("what-is-fractalu");
-    if (!target) return;
-    event.preventDefault();
-    window.history.pushState(null, "", "#what-is-fractalu");
-    target.focus({ preventScroll: true });
-    target.scrollIntoView({ behavior: "auto", block: "start" });
-  };
-
   return (
-    <section className="mt-16 md:mt-24" aria-labelledby="fractalu-title" data-fractalu-portal>
-      <div className="relative z-20 mx-auto max-w-[1600px] page-gutter" data-fractalu-wide-shell>
-        <div className="min-w-0 rounded-lg bg-background p-6 text-foreground shadow-lg sm:p-8 md:p-10 lg:p-12">
-          <p className="text-label text-house-education-deep">
-            Fractal University · {FRACTALU_CATALOG.semester}
+    <section className="mt-16 md:mt-24" aria-labelledby="fractalu-catalog-title" data-fractalu-portal>
+      <div
+        className="relative z-20 mx-auto min-w-0 max-w-[1600px] text-background page-gutter"
+        data-fractalu-wide-shell
+        data-fractalu-catalog-frame
+      >
+        <header className="mb-8 border-b border-background/45 pb-8 md:mb-10 md:pb-10">
+          <p className="text-label text-background/85" data-fractalu-semester-eyebrow>
+            {FRACTALU_CATALOG.semester}
           </p>
-          <h2 id="fractalu-title" className="text-title mt-3 text-foreground">
-            Fractal University
+          <h2 id="fractalu-catalog-title" className="text-title mt-3 normal-case text-background">
+            Course Catalog
           </h2>
-          <p className="text-subtitle mt-3 max-w-2xl normal-case text-foreground">
-            An improvised college in New York City.
+          <p className="text-body-lead mt-3 max-w-xl text-background/85">
+            Browse this semester&apos;s classes by subject.
           </p>
-          <div className="mt-4 flex flex-wrap items-center gap-x-6 gap-y-2 font-mono text-sm">
-            <ExternalLink
-              href="https://fractaluniversity.substack.com"
-              accessibleName="Stay tuned for future semesters"
-              className="text-house-education-deep"
-            >
-              Stay tuned for future semesters
-            </ExternalLink>
-            <a
-              href="#what-is-fractalu"
-              onClick={jumpToInformation}
-              className="inline-flex min-h-11 items-center gap-1.5 rounded-md text-house-education-deep underline underline-offset-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-house-education-light"
-            >
-              What&apos;s FractalU?
-              <ArrowDown size={15} strokeWidth={1.5} aria-hidden="true" />
-            </a>
+        </header>
+
+        <div className="pb-8 md:pb-10" data-fractalu-filter-block>
+          <p
+            id="fractalu-filter-label"
+            className="text-label mb-3 text-background/85"
+            data-fractalu-filter-eyebrow
+          >
+            Filter classes by subject
+          </p>
+          <div
+            role="group"
+            aria-labelledby="fractalu-filter-label"
+            className="fractalu-filter-row flex gap-2 overflow-x-auto pb-2 md:flex-wrap md:overflow-visible md:pb-0"
+          >
+            {FRACTALU_CATEGORIES.map((category) => {
+              const selected = category === activeCategory;
+              return (
+                <button
+                  key={category}
+                  type="button"
+                  aria-pressed={selected}
+                  onClick={() => setActiveCategory(category)}
+                  className={`min-h-11 shrink-0 rounded-md border px-4 py-2 font-mono text-xs transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-background ${
+                    selected
+                      ? "border-background bg-house-education-light text-background shadow-sm"
+                      : "border-background/55 bg-house-education-deep/70 text-background hover:border-background hover:bg-house-education-light hover:text-background focus-visible:border-background focus-visible:bg-house-education-light focus-visible:text-background"
+                  }`}
+                >
+                  {category}
+                </button>
+              );
+            })}
           </div>
-
-          <picture className="mt-8 block overflow-hidden rounded-md" data-testid="fractalu-collage">
-            <source
-              media="(max-width: 639px)"
-              srcSet="/images/fractalu-mobile.png"
-              width="639"
-              height="318"
-            />
-            <img src="/images/fractalu.png" width="800" height="133" alt="" className="h-auto w-full" />
-          </picture>
-
-          <div className="mt-10">
-            <p id="fractalu-filter-label" className="text-label text-foreground">
-              Filter classes by subject
-            </p>
-            <div
-              role="group"
-              aria-labelledby="fractalu-filter-label"
-              className="mt-3 flex flex-wrap gap-2"
-            >
-              {FRACTALU_CATEGORIES.map((category) => {
-                const selected = category === activeCategory;
-                return (
-                  <button
-                    key={category}
-                    type="button"
-                    aria-pressed={selected}
-                    onClick={() => setActiveCategory(category)}
-                    className={`min-h-11 rounded-md border px-4 py-2 font-mono text-xs transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-house-education-light ${
-                      selected
-                        ? "border-house-education-deep bg-house-education-deep text-background"
-                        : "border-foreground-faint bg-background text-foreground hover:border-house-education-light"
-                    }`}
-                  >
-                    {category}
-                  </button>
-                );
-              })}
-            </div>
-            <p className="sr-only" aria-live="polite" aria-atomic="true">
-              {courses.length} {courses.length === 1 ? "course" : "courses"} shown.
-            </p>
-          </div>
-
-          <CourseCatalog courses={courses} isFinePointer={isFinePointer} />
-
-          <section className="mt-20" aria-labelledby="fractalu-clubs-title">
-            <h2 id="fractalu-clubs-title" className="text-title text-foreground">
-              Clubs &amp; open groups
-            </h2>
-            <div className="mt-6 grid min-w-0 gap-4 md:grid-cols-2" data-testid="fractalu-clubs">
-              {FRACTALU_CATALOG.clubs.map((club) => (
-                <ClubCard key={club.id} club={club} />
-              ))}
-            </div>
-          </section>
+          <p className="sr-only" aria-live="polite" aria-atomic="true">
+            {courses.length} {courses.length === 1 ? "course" : "courses"} shown.
+          </p>
         </div>
+
+        <CourseCatalog courses={courses} isFinePointer={isFinePointer} />
+
+        <section className="mt-20" aria-labelledby="fractalu-clubs-title">
+          <h2 id="fractalu-clubs-title" className="text-title normal-case text-background">
+            Clubs &amp; open groups
+          </h2>
+          <div className="mt-6 grid min-w-0 gap-4 md:grid-cols-2 md:gap-6" data-testid="fractalu-clubs">
+            {FRACTALU_CATALOG.clubs.map((club) => (
+              <ClubCard key={club.id} club={club} />
+            ))}
+          </div>
+        </section>
       </div>
 
       <FractalUInformation />

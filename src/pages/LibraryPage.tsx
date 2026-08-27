@@ -101,6 +101,7 @@ export function LibraryPage() {
           <img> resolves without a fixed-height ancestor. */}
       <div
         aria-hidden="true"
+        data-testid="library-mobile-pennants"
         className="flex md:hidden items-end justify-center gap-3 px-3 pt-8 pb-12"
       >
         <div className="w-[45%] aspect-[123/368]">

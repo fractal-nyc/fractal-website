@@ -126,6 +126,18 @@ describe("canonical house banner artwork", () => {
     );
   });
 
+  it("keeps the Education label centered on its lowered arc", () => {
+    const source = fs.readFileSync(
+      path.join(BANNER_ROOT, "education-banner.svg"),
+      "utf8",
+    );
+    const document = new DOMParser().parseFromString(source, "image/svg+xml");
+
+    expect(document.querySelector("#educationArc")?.getAttribute("d")).toBe(
+      "M 9 72 Q 61.36 37 113.72 72",
+    );
+  });
+
   for (const banner of banners) {
     it(`${banner.name} locks geometry, colors, text roles, and embedded font`, () => {
       const source = fs.readFileSync(
