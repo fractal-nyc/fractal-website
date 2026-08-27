@@ -75,7 +75,7 @@ export function EducationPage() {
                   <p className="text-subtitle mt-2 text-background/80 normal-case md:mt-6">
                     An improvised college in New York City.
                   </p>
-                  <div className="mt-4 flex flex-col items-center justify-center gap-x-3 gap-y-0 sm:flex-row sm:flex-wrap md:mt-8">
+                  <div className="mt-4 flex flex-col items-center justify-center gap-x-3 gap-y-0 sm:flex-row sm:flex-wrap">
                     <EducationOutboundLink
                       href="https://fractaluniversity.substack.com"
                       accessibleName="Stay tuned for future semesters"
