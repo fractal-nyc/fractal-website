@@ -222,7 +222,7 @@ describe("External section links (Accelerator + FractalU)", () => {
   it("uses the Education palette for both outbound destinations", () => {
     const education = HOUSES.find((house) => house.id === "school")!;
     for (const href of [
-      "https://www.fractalaccelerator.com/",
+      "https://go.fractalaccelerator.com/fractalnycwebsite",
       "https://www.fractalu.nyc/",
     ]) {
       const anchors = Array.from(
