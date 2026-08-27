@@ -115,6 +115,14 @@ describe("FRAC-161 visibility filters", () => {
 
     expect(storyLink).toBeTruthy();
     expect(storyLink).toHaveTextContent("Story");
+    expect(
+      Array.from(
+        storyLink!.closest("nav")!.querySelectorAll<HTMLAnchorElement>(
+          "a.nav-link",
+        ),
+        (link) => link.textContent,
+      ),
+    ).toEqual(["Events", "Library", "Story"]);
     expect(container.querySelector("main #story")).toBeTruthy();
   });
 });

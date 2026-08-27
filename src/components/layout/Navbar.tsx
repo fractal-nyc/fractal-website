@@ -83,7 +83,7 @@ const visibleSectionLinks = sectionLinks.filter(
 );
 
 // Story is an in-page destination on Home rather than a route. Keep it in the
-// full hero navbar only, between Events and Library; the mobile menu continues
+// full hero navbar only, after Library; the mobile menu continues
 // to list section pages while its existing hero CTA links to this same target.
 const storySectionLink: SectionLink = {
   name: "Story",
@@ -91,11 +91,7 @@ const storySectionLink: SectionLink = {
   color: SECTIONS.story.accent,
   colorDeep: SECTIONS.story.accent,
 };
-const homeSectionLinks = [
-  ...visibleSectionLinks.slice(0, 4),
-  storySectionLink,
-  ...visibleSectionLinks.slice(4),
-];
+const homeSectionLinks = [...visibleSectionLinks, storySectionLink];
 
 // Inner-page navbar hides all remaining section links. The home page navbar
 // and the full-screen overlay menu still expose the visible sections.
