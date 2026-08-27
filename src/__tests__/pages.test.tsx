@@ -106,6 +106,25 @@ describe("FRAC-161 visibility filters", () => {
     );
     expect(container.textContent).not.toContain("How Do I Get Involved");
   });
+
+  it("links the visible Home hero navigation to the existing Story section", () => {
+    const { container } = renderPage(Home, "/");
+    const storyLink = container.querySelector<HTMLAnchorElement>(
+      'header a.nav-link[href="#story"]',
+    );
+
+    expect(storyLink).toBeTruthy();
+    expect(storyLink).toHaveTextContent("Story");
+    expect(
+      Array.from(
+        storyLink!.closest("nav")!.querySelectorAll<HTMLAnchorElement>(
+          "a.nav-link",
+        ),
+        (link) => link.textContent,
+      ),
+    ).toEqual(["Events", "Library", "Story"]);
+    expect(container.querySelector("main #story")).toBeTruthy();
+  });
 });
 
 describe("Route paths match expected URLs", () => {

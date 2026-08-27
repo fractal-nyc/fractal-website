@@ -7,9 +7,9 @@ import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 import { setHeroNavHover, useHeroNavHover } from "@/hooks/useHeroNavHover";
 
 // FRAC-24: Per-link colors derive from the canonical House palette where a
-// House exists. The one non-house link left in the nav (People) has no House
-// entry, so it reads from the SECTIONS record instead. House links default to
-// `.light`; Political Club uses `.deep` because its page uses the deep surface.
+// House exists. Non-house links read from the SECTIONS record instead. House
+// links default to `.light`; Political Club uses `.deep` because its page uses
+// the deep surface.
 // (Story used to be a link too, but it folded into Home in the content port.)
 function houseColor(route: string, prefer: "light" | "deep" = "light"): string {
   const palette = HOUSES.find((h) => h.route === route)?.palette;
@@ -57,6 +57,13 @@ function SectionAnchor({
   onBlur?: () => void;
 }) {
   const handlers = { onMouseEnter, onMouseLeave, onFocus, onBlur };
+  if (link.href.startsWith("#")) {
+    return (
+      <a href={link.href} className={className} style={style} {...handlers}>
+        {children}
+      </a>
+    );
+  }
   return (
     <Link href={link.href} className={className} style={style} {...handlers}>
       {children}
@@ -74,6 +81,17 @@ const visibleSectionLinks = sectionLinks.filter(
   (link) =>
     !NAVBAR_HIDDEN_ROUTES.has(link.href) && !EXTRA_HIDDEN_HREFS.has(link.href),
 );
+
+// Story is an in-page destination on Home rather than a route. Keep it in the
+// full hero navbar only, after Library; the mobile menu continues
+// to list section pages while its existing hero CTA links to this same target.
+const storySectionLink: SectionLink = {
+  name: "Story",
+  href: "#story",
+  color: SECTIONS.story.accent,
+  colorDeep: SECTIONS.story.accent,
+};
+const homeSectionLinks = [...visibleSectionLinks, storySectionLink];
 
 // Inner-page navbar hides all remaining section links. The home page navbar
 // and the full-screen overlay menu still expose the visible sections.
@@ -189,8 +207,8 @@ export function Navbar() {
 
   });
 
-  const leftLinks = visibleSectionLinks.slice(0, 3);
-  const rightLinks = visibleSectionLinks.slice(3);
+  const leftLinks = homeSectionLinks.slice(0, 3);
+  const rightLinks = homeSectionLinks.slice(3);
 
   const showFull = isHome && !hasScrolledPast;
 
