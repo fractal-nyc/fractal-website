@@ -2,7 +2,7 @@
 
 Community site for Fractal NYC — a network of coliving houses, a campus, events, education, an accelerator, and a library in Brooklyn. React + TypeScript + Vite, Tailwind CSS 4, Three.js for the homepage hero. Deployed on Vercel.
 
-**Pages:** `/` (homepage, includes the Story section), `/campus`, `/co-living`, `/education`, `/events`, `/library`, `/political-club`, `/people`, `/the-protocol`. **Education** is the internal hub for [Fractal AI Accelerator](https://go.fractalaccelerator.com/fractalnycwebsite) and [FractalU](https://www.fractalu.nyc/); its cards link to each live site in a new tab. (Old paths redirect internally: `/story`→`/`, `/visit`→`/co-living`, `/publications`→`/library`, `/neighborhood`→`/co-living`, `/lab`→`/library`, and both `/accelerator` and `/new-liberal-arts`→`/education`.)
+**Pages:** `/` (homepage, includes the Story section), `/campus`, `/co-living`, `/education`, `/events`, `/library`, `/political-club`, `/people`, `/the-protocol`. **Education** is the internal hub for Fractal AI Accelerator and Fractal University: Accelerator remains a tracked external destination, while the public Fractal University catalog and information portal live natively on `/education`. (Old paths redirect internally: `/story`→`/`, `/visit`→`/co-living`, `/publications`→`/library`, `/neighborhood`→`/co-living`, `/lab`→`/library`, and both `/accelerator` and `/new-liberal-arts`→`/education`.)
 
 ## Where to start
 
