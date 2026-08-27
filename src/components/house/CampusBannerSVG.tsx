@@ -1,3 +1,5 @@
+import { PaintedRelicBanner } from "./PaintedRelicBanner";
+
 interface CampusBannerSVGProps {
   className?: string;
 }
@@ -12,13 +14,11 @@ interface CampusBannerSVGProps {
  */
 export function CampusBannerSVG({ className = "" }: CampusBannerSVGProps) {
   return (
-    <img
+    <PaintedRelicBanner
       src="/images/banners/campus-banner.svg"
-      alt=""
-      aria-hidden="true"
-      draggable={false}
-      className={`pointer-events-none block h-full w-full select-none ${className}`}
-      style={{ filter: "drop-shadow(0 8px 20px rgba(0, 0, 0, 0.22))" }}
+      foundationColor="var(--color-house-campus-deep)"
+      house="campus"
+      className={className}
     />
   );
 }

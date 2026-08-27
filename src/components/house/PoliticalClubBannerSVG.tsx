@@ -1,3 +1,5 @@
+import { PaintedRelicBanner } from "./PaintedRelicBanner";
+
 interface PoliticalClubBannerSVGProps {
   className?: string;
 }
@@ -10,13 +12,11 @@ export function PoliticalClubBannerSVG({
   className = "",
 }: PoliticalClubBannerSVGProps) {
   return (
-    <img
+    <PaintedRelicBanner
       src="/images/banners/political-club-banner.svg"
-      alt=""
-      aria-hidden="true"
-      draggable={false}
-      className={`pointer-events-none block h-full w-full select-none ${className}`}
-      style={{ filter: "drop-shadow(0 8px 20px rgba(0, 0, 0, 0.22))" }}
+      foundationColor="var(--color-house-political-club-light)"
+      house="political-club"
+      className={className}
     />
   );
 }

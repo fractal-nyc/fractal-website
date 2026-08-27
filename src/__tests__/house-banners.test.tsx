@@ -8,8 +8,26 @@ import { EducationBannerSVG } from "@/components/house/EducationBannerSVG";
 import { EventsBannerSVG } from "@/components/house/EventsBannerSVG";
 import { LibraryBannerSVG } from "@/components/house/LibraryBannerSVG";
 import { PoliticalClubBannerSVG } from "@/components/house/PoliticalClubBannerSVG";
+import {
+  PAINTED_RELIC_PRESET,
+  PAINTED_RELIC_TEXTURES,
+  PaintedRelicBanner,
+} from "@/components/house/PaintedRelicBanner";
 
 const BANNER_ROOT = path.resolve(process.cwd(), "public/images/banners");
+const TEXTURE_ROOT = path.resolve(
+  process.cwd(),
+  "public/images/textures/rough-linen",
+);
+const PRESET_STYLE_PROPERTIES = {
+  texture: "texture-opacity",
+  bump: "bump-opacity",
+  roughness: "roughness-opacity",
+  patina: "patina-opacity",
+  dye: "dye-opacity",
+  saturation: "saturation",
+  contrast: "contrast",
+} as const;
 
 const banners = [
   {
@@ -17,6 +35,7 @@ const banners = [
     label: "co-living",
     monogram: "CL",
     foundation: "#4F5B0D",
+    foundationToken: "var(--color-house-co-living-deep)",
     motif: "#AEB175",
     textFill: "#AEB175",
     labelSize: "17",
@@ -28,6 +47,7 @@ const banners = [
     label: "events",
     monogram: "E",
     foundation: "#CA5C4E",
+    foundationToken: "var(--color-house-events-deep)",
     motif: "#E5A794",
     textFill: "#E5A794",
     labelSize: "20",
@@ -39,6 +59,7 @@ const banners = [
     label: "campus",
     monogram: "C",
     foundation: "#1A3A2E",
+    foundationToken: "var(--color-house-campus-deep)",
     motif: "#51805C",
     textFill: "#51805C",
     labelSize: "20",
@@ -50,6 +71,7 @@ const banners = [
     label: "education",
     monogram: "E",
     foundation: "#C51C15",
+    foundationToken: "var(--color-house-education-light)",
     motif: "#4C0000",
     textFill: "#4C0000",
     labelSize: "17",
@@ -61,6 +83,7 @@ const banners = [
     label: "library",
     monogram: "L",
     foundation: "#A33E6F",
+    foundationToken: "var(--color-house-library-deep)",
     motif: "#C889AB",
     textFill: "#C889AB",
     labelSize: "20",
@@ -72,6 +95,7 @@ const banners = [
     label: "political club",
     monogram: "PC",
     foundation: "#82AFA2",
+    foundationToken: "var(--color-house-political-club-light)",
     motif: "#084247",
     textFill: "#084247",
     labelSize: "14",
@@ -136,11 +160,29 @@ describe("canonical house banner artwork", () => {
       expect(source).not.toContain("#CE8B2D");
     });
 
-    it(`${banner.name} wrapper remains a decorative, non-draggable image`, () => {
+    it(`${banner.name} wrapper uses the shared decorative Painted Relic material`, () => {
       const Component = banner.Component;
       const { container } = render(<Component className="test-banner" />);
+      const wrapper = container.firstElementChild;
       const image = container.querySelector("img");
 
+      expect(wrapper?.getAttribute("data-banner-material")).toBe(
+        "painted-relic",
+      );
+      expect(wrapper?.getAttribute("data-banner-house")).toBe(banner.name);
+      expect(wrapper?.getAttribute("aria-hidden")).toBe("true");
+      expect(wrapper?.className).toContain("test-banner");
+      expect(wrapper?.className).toContain("pointer-events-none");
+      expect(wrapper?.getAttribute("style")).toContain(
+        `--painted-relic-foundation: ${banner.foundationToken}`,
+      );
+      for (const [name, value] of Object.entries(PAINTED_RELIC_PRESET)) {
+        const property =
+          PRESET_STYLE_PROPERTIES[name as keyof typeof PRESET_STYLE_PROPERTIES];
+        expect(wrapper?.getAttribute("style")).toContain(
+          `--painted-relic-${property}: ${value}`,
+        );
+      }
       expect(image).toBeTruthy();
       expect(image?.getAttribute("src")).toBe(
         `/images/banners/${banner.name}-banner.svg`,
@@ -148,8 +190,97 @@ describe("canonical house banner artwork", () => {
       expect(image?.getAttribute("alt")).toBe("");
       expect(image?.getAttribute("aria-hidden")).toBe("true");
       expect(image?.draggable).toBe(false);
-      expect(image?.className).toContain("test-banner");
-      expect(image?.className).toContain("pointer-events-none");
+      expect(container.querySelectorAll("[data-texture-layer]")).toHaveLength(5);
+      expect(
+        [...container.querySelectorAll("[data-texture-layer]")].map((layer) =>
+          layer.getAttribute("data-texture-layer"),
+        ),
+      ).toEqual([
+        "diffuse",
+        "displacement",
+        "roughness",
+        "patina-edge",
+        "dye",
+      ]);
+      expect(
+        container.querySelector('[data-texture-map$="rough_linen_diff_1k.webp"]'),
+      ).toBeTruthy();
+      expect(
+        container.querySelector('[data-texture-map$="rough_linen_disp_1k.webp"]'),
+      ).toBeTruthy();
+      expect(
+        container.querySelector('[data-texture-map$="rough_linen_rough_1k.webp"]'),
+      ).toBeTruthy();
     });
   }
+});
+
+describe("shared Painted Relic renderer", () => {
+  it("keeps the Site B comparison preset and CSS fallback synchronized", () => {
+    const css = fs.readFileSync(
+      path.resolve(
+        process.cwd(),
+        "src/components/house/PaintedRelicBanner.css",
+      ),
+      "utf8",
+    );
+
+    expect(PAINTED_RELIC_PRESET).toEqual({
+      texture: 0.14,
+      bump: 0.2,
+      roughness: 0.14,
+      patina: 0.42,
+      dye: 0.34,
+      saturation: 1.2,
+      contrast: 1.08,
+    });
+    expect(css).toContain(
+      "saturate(var(--painted-relic-saturation, 1.2))",
+    );
+  });
+
+  it("owns geometry, mask hooks, and custom class placement", () => {
+    const { container } = render(
+      <PaintedRelicBanner
+        src="/images/banners/campus-banner.svg"
+        foundationColor="var(--color-house-campus-deep)"
+        className="custom-banner"
+      />,
+    );
+    const wrapper = container.firstElementChild;
+    const css = fs.readFileSync(
+      path.resolve(
+        process.cwd(),
+        "src/components/house/PaintedRelicBanner.css",
+      ),
+      "utf8",
+    );
+
+    expect(wrapper?.className).toContain("custom-banner");
+    expect(wrapper?.getAttribute("style")).toContain(
+      "--painted-relic-mask: url(/images/banners/campus-banner.svg)",
+    );
+    expect(css).toContain("aspect-ratio: 122.72 / 368.16");
+    expect(css).toContain("-webkit-mask-image: var(--painted-relic-mask)");
+    expect(css).toContain("mask-image: var(--painted-relic-mask)");
+    expect(css).not.toMatch(/woven|velvet/i);
+  });
+
+  it("ships exactly the three referenced production maps", () => {
+    const files = fs
+      .readdirSync(TEXTURE_ROOT)
+      .filter((name) => !name.endsWith(".md"))
+      .sort();
+
+    expect(files).toEqual([
+      "rough_linen_diff_1k.webp",
+      "rough_linen_disp_1k.webp",
+      "rough_linen_rough_1k.webp",
+    ]);
+    for (const texturePath of Object.values(PAINTED_RELIC_TEXTURES)) {
+      expect(
+        fs.existsSync(path.resolve(process.cwd(), "public", texturePath.slice(1))),
+      ).toBe(true);
+    }
+  });
 });
