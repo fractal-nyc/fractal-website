@@ -3,6 +3,7 @@ import { fileURLToPath } from "node:url";
 import { dirname, resolve } from "node:path";
 import { describe, it, expect } from "vitest";
 import { HOUSES } from "@/data/houses";
+import { EDUCATION_DESTINATIONS } from "@/data/education";
 
 // ═══════════════════════════════════════════════════════════════════════════
 // House-token drift check (FRAC-203)
@@ -74,13 +75,12 @@ describe("house token sync (houses.ts ↔ index.css)", () => {
 
   it("keeps both Education destinations and defers Political Club visibility", () => {
     const education = HOUSES.find(({ id }) => id === "school")!;
-    expect(education.externalLinks).toEqual([
-      {
-        label: "Fractal Accelerator",
-        url: "https://www.fractalaccelerator.com/",
-      },
-      { label: "Fractal University", url: "https://www.fractalu.nyc/" },
-    ]);
+    expect(education.externalLinks).toEqual(
+      EDUCATION_DESTINATIONS.map(({ houseLinkLabel, url }) => ({
+        label: houseLinkLabel,
+        url,
+      })),
+    );
 
     const politicalClub = HOUSES.at(5)!;
     expect(politicalClub.id).toBe("forum");

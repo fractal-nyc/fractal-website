@@ -92,6 +92,9 @@ vi.mock("@/pages/LibraryPage", () => ({
 vi.mock("@/pages/PeoplePage", () => ({
   PeoplePage: () => <main data-testid="page-people" />,
 }));
+vi.mock("@/pages/EducationPage", () => ({
+  EducationPage: () => <main data-testid="page-education" />,
+}));
 vi.mock("@/pages/ProtocolPage", () => ({
   ProtocolPage: () => <main data-testid="page-protocol" />,
 }));
@@ -242,6 +245,17 @@ describe("Scroll-to-top on navigation (FRAC-132 regression)", () => {
       });
 
       expect(scrollToSpy).toHaveBeenCalledWith(0, 0);
+    });
+
+    it("fires scrollTo(0,0) when navigating internally to /education", () => {
+      seedLocation("/campus");
+      render(<App />);
+      scrollToSpy.mockClear();
+      act(() => {
+        pushRoute("/education");
+      });
+      expect(scrollToSpy).toHaveBeenCalledWith(0, 0);
+      expect(document.querySelector('[data-testid="page-education"]')).toBeTruthy();
     });
   });
 

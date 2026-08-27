@@ -23,7 +23,9 @@ const INTERNAL_HERO_ROUTES: Record<string, string> = {
   "CO-LIVING": "/co-living",
   EVENTS: "/events",
   CAMPUS: "/campus",
+  FRACTALU: "/education",
   LIBRARY: "/library",
+  ACCELERATOR: "/education",
 };
 
 async function visibleInternalNodeAnchor(page: import("@playwright/test").Page, preferredLabel?: string) {

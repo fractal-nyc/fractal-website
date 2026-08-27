@@ -4,6 +4,8 @@
 // Source of truth: fractal-os/notes/2026-03-28-fractal-nyc-website-synthesis.md
 // ---------------------------------------------------------------------------
 
+import { EDUCATION_DESTINATIONS } from "@/data/education";
+
 interface ExternalLink {
   label: string;
   url: string;
@@ -44,7 +46,7 @@ export interface House {
    * The pair is the unit; which member is bg vs. accent is a per-surface
    * decision. Most houses use `light` as page bg and `deep` as accent.
    * Political Club (forum) inverts this: its page bg is `deep` and the lighter
-   * color is the accent. Education currently routes to external destinations.
+   * color is the accent. Education uses the same inversion on its hub page.
    */
   palette: HousePalette;
   tagline: string; // one-line quote/tagline
@@ -278,10 +280,10 @@ export const HOUSES: House[] = [
     description:
       "The new liberal arts — cyborgism, tech, entrepreneurship, rhetoric, civics. Andrew designed a year-long program that actually makes sense for right now: Phase 1 is the Finishing School, reshaping habits, reading 12 books, memorizing the Constitution, killing phone addiction. Phase 2 is government and law plus software engineering — 'You're a wizard now, Harry.' Phase 3 is launch and accelerator. The pedagogy is Montessori-derived: environments that liberate the spirit and encourage experimentation, exercise, responsibility, and real work.\n\nThe AI Accelerator is the flagship — a 3-month, $15k, 60-hours-a-week accelerator with 100% placement rate. Fractal University runs community classes: EDM production, coding, civics, LLMs, population genetics, HCI — over 1,000 students across 8 or 9 semesters and counting. There's also the Claude Code course and the Unblocked coaching series.\n\nThe teaching innovation that ties it all together: the config IS the lesson. Instead of lecturing about a concept, you package it as a downloadable skill that students install into their harness and immediately apply to their own project. The skill teaches by doing, not by explaining.",
     leaders: ["andrew", "priya", "david"],
-    externalLinks: [
-      { label: "Fractal Accelerator", url: "https://www.fractalaccelerator.com/" },
-      { label: "Fractal University", url: "https://www.fractalu.nyc/" },
-    ],
+    externalLinks: EDUCATION_DESTINATIONS.map(({ houseLinkLabel, url }) => ({
+      label: houseLinkLabel,
+      url,
+    })),
   },
 
   // 5. Library — Research + Writing.
