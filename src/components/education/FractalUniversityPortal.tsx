@@ -584,7 +584,7 @@ export function FractalUniversityPortal() {
               Course Catalog
             </h2>
             <p className="text-body-lead mt-3 max-w-xl text-background/85">
-              Browse this semester&apos;s classes by subject.
+              Browse and apply to this semester&apos;s classes below.
             </p>
           </header>
         </FadeIn>

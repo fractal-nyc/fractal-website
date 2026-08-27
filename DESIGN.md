@@ -13,7 +13,7 @@ colors:
   house-events-deep: "#CA5C4E"
   house-campus-light: "#51805C"
   house-campus-deep: "#1A3A2E"
-  house-education-light: "#CB2B23"
+  house-education-light: "#B22B23"
   house-education-deep: "#4C0000"
   house-library-light: "#C889AB"
   house-library-deep: "#A33E6F"
@@ -145,7 +145,7 @@ Each house has an internal data-model `id` (used in routes and `src/data/houses.
 | `house-events-deep` | `#CA5C4E` |
 | `house-campus-light` | `#51805C` |
 | `house-campus-deep` | `#1A3A2E` |
-| `house-education-light` | `#CB2B23` |
+| `house-education-light` | `#B22B23` |
 | `house-education-deep` | `#4C0000` |
 | `house-library-light` | `#C889AB` |
 | `house-library-deep` | `#A33E6F` |
@@ -154,7 +154,7 @@ Each house has an internal data-model `id` (used in routes and `src/data/houses.
 
 `HOUSES[id].palette: { light, deep }` in `src/data/houses.ts` is the single source of truth for house color, and each house has exactly two colors — the pair is the unit.
 
-**Scope:** house colors live on their own house's pages. On a house's page, its pair may color display headings, the monogram letter, eyebrows, focus rings, and chrome. Most houses use `{light}` as the page background and `{deep}` as the accent; **Political Club and Education invert** (page background `{deep}`, accent `{light}`) — per-page decisions applied in `PoliticalClubPage.tsx` and `EducationPage.tsx`. Education uses cream for essential text and boundaries on the deep field because its `#CB2B23` light accent has only 2.99:1 contrast against `#4C0000`; the red remains decoration and control fill there. On cream cards, `#CB2B23` reaches 4.97:1 and may be used for labels, arrows, borders, and focus. Charcoal text is never placed on the Education-light fill. Per-page banner SVG artwork is migrated separately; until that artwork PR lands, the embedded SVG fills may temporarily retain the previous palette even though page and component tokens use this canonical table.
+**Scope:** house colors live on their own house's pages. On a house's page, its pair may color display headings, the monogram letter, eyebrows, focus rings, and chrome. Most houses use `{light}` as the page background and `{deep}` as the accent; **Political Club and Education invert** (page background `{deep}`, accent `{light}`) — per-page decisions applied in `PoliticalClubPage.tsx` and `EducationPage.tsx`. Education uses cream for essential text and boundaries on the deep field because its `#B22B23` light accent has only 2.50:1 contrast against `#4C0000`; the red remains decorative there. On cream cards, `#B22B23` reaches 5.96:1 and may be used for labels, arrows, borders, and focus. Cream on the Education-light fill also reaches 5.96:1 and is the required pairing for essential text inside any Education-light control fill. Charcoal text is never placed on the Education-light fill, and essential content directly on the deep field remains cream.
 
 ### Non-house section colors
 

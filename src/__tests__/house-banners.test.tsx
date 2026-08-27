@@ -70,7 +70,7 @@ const banners = [
     name: "education",
     label: "education",
     monogram: "E",
-    foundation: "#C51C15",
+    foundation: "#B22B23",
     foundationToken: "var(--color-house-education-light)",
     motif: "#4C0000",
     textFill: "#4C0000",

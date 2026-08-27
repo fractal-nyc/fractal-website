@@ -24,7 +24,11 @@ describe("EducationPage", () => {
     });
     expect(heading.className).toContain("text-display");
     expect(screen.getAllByRole("heading", { level: 1 })).toHaveLength(1);
-    expect(screen.getByText("An improvised college in New York City.")).toHaveClass("text-subtitle");
+    const subtitle = screen.getByText("An improvised college in New York City.");
+    expect(subtitle).toHaveClass("text-subtitle", "mt-4");
+    expect(subtitle).not.toHaveClass("mt-2", "md:mt-6");
+    expect(subtitle.nextElementSibling).toHaveClass("mt-4");
+    expect(subtitle.nextElementSibling).not.toHaveClass("md:mt-8");
     const futureSemesters = screen.getByRole("link", {
       name: /Stay tuned for future semesters/,
     });
@@ -40,20 +44,48 @@ describe("EducationPage", () => {
       "#what-is-fractalu",
     );
     expect(futureSemesters).toHaveClass(
-      "text-label",
+      "text-body-lead",
+      "text-background/70",
+      "min-h-11",
       "decoration-background/40",
       "hover:decoration-background",
       "focus-visible:decoration-background",
+    );
+    expect(informationJump).toHaveClass(
+      "text-body-lead",
+      "text-background/70",
+      "min-h-11",
+      "decoration-background/40",
+      "hover:decoration-background",
     );
     const heroArrow = futureSemesters.querySelector("[data-education-outbound-arrow]")!;
     expect(heroArrow.tagName).toBe("svg");
     expect(heroArrow).toHaveClass("lucide-arrow-up-right");
     expect(heroArrow).toHaveAttribute("aria-hidden", "true");
+    const informationArrow = informationJump.querySelector(
+      "[data-education-internal-arrow]",
+    )!;
+    expect(informationArrow.tagName).toBe("svg");
+    expect(informationArrow).toHaveClass("lucide-arrow-down");
+    expect(informationArrow).toHaveAttribute("aria-hidden", "true");
+    expect(informationJump.querySelector("[data-education-outbound-arrow]")).toBeNull();
     expect(
       screen.getByText("What is FractalU?", {
         selector: "[data-education-hero-action-label]",
       }),
-    ).toHaveClass("text-subtitle");
+    ).not.toHaveClass("text-subtitle", "text-body");
+
+    for (const heroLink of [futureSemesters, informationJump]) {
+      expect(heroLink.closest("button")).toBeNull();
+      expect(heroLink).not.toHaveClass(
+        "border",
+        "bg-[var(--accent,currentColor)]",
+        "shadow-[0_8px_24px_-12px_rgba(11,26,43,0.18)]",
+        "w-full",
+      );
+      expect(heroLink.querySelector("[data-paper-grain]")).toBeNull();
+      expect(heroLink.querySelector("[data-mandelbrot-icon]")).toBeNull();
+    }
   });
 
   it("covers the complete 53-link outbound inventory without changing destinations", () => {
@@ -143,7 +175,7 @@ describe("EducationPage", () => {
       "var(--color-house-education-light)",
     );
     expect(container.querySelector(`svg [stroke="${education.palette.light}"]`)).toBeTruthy();
-    expect(education.palette.light).toBe("#CB2B23");
+    expect(education.palette.light).toBe("#B22B23");
     expect(container.querySelector("[data-fractalu-wide-shell]")).toHaveClass("text-background");
     expect(container.querySelector("[data-sector-letter]")).toHaveStyle({
       color: "var(--color-house-education-light)",
