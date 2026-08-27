@@ -495,8 +495,20 @@
   }
 }
 
-/* Descriptions and bios are normal-flow content by default. Fine-pointer,
-   hover-capable desktops progressively enhance them into previews. */
+/* Compact cards keep the instructor name in the reading order while removing
+   the long biography from both layout and the accessibility tree. Medium
+   layouts restore the complete source biography; fine-pointer desktops then
+   progressively enhance descriptions and biographies into previews. */
+.fractalu-instructor-bio {
+  display: none;
+}
+
+@media (min-width: 48rem) {
+  .fractalu-instructor-bio {
+    display: block;
+  }
+}
+
 @media (min-width: 64rem) and (hover: hover) and (pointer: fine) {
   .fractalu-course-grid[data-preview-mode="enhanced"]
     .fractalu-title-preview
@@ -525,11 +537,17 @@
   }
 
   .fractalu-course-grid[data-preview-mode="enhanced"]
-    .fractalu-title-preview:hover
-    > .fractalu-course-preview,
+    .fractalu-title-preview:has(> h3 .fractalu-course-title-link:hover)
+    > .fractalu-course-description,
   .fractalu-course-grid[data-preview-mode="enhanced"]
-    .fractalu-title-preview:focus-within
-    > .fractalu-course-preview,
+    .fractalu-title-preview:has(> h3 .fractalu-course-title-link:focus-visible)
+    > .fractalu-course-description,
+  .fractalu-course-grid[data-preview-mode="enhanced"]
+    .fractalu-title-preview:has(> h3 [data-course-title-fallback]:hover)
+    > .fractalu-course-description,
+  .fractalu-course-grid[data-preview-mode="enhanced"]
+    .fractalu-title-preview:has(> h3 [data-course-title-fallback]:focus-visible)
+    > .fractalu-course-description,
   .fractalu-course-grid[data-preview-mode="enhanced"]
     .fractalu-instructor-preview:hover
     > .fractalu-course-preview,

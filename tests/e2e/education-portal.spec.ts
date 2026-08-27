@@ -18,6 +18,14 @@ test("Education portal keeps one wide accessible catalog across input modes", as
   const profile = testInfo.project.metadata.profile as ResponsiveProfile | undefined;
   const width = profile?.viewport.width ?? 1440;
   const hasTouch = profile?.hasTouch ?? false;
+  const compactDensityTargets = {
+    "phone-density-375x812": { maxTop: 852, maxHeight: 650 },
+    "phone-390x844": { maxTop: 845, maxHeight: 625 },
+    "phone-density-440x956": { maxTop: 956, maxHeight: 575 },
+  } as const;
+  const densityTarget = profile?.name
+    ? compactDensityTargets[profile.name as keyof typeof compactDensityTargets]
+    : undefined;
   const pageErrors: string[] = [];
   page.on("pageerror", (error) => pageErrors.push(error.message));
 
@@ -85,8 +93,36 @@ test("Education portal keeps one wide accessible catalog across input modes", as
       await filterGroup.elementHandle(),
     ),
   ).toBe(true);
+  if (densityTarget) {
+    const filterButtons = filterGroup.getByRole("button");
+    const groupBox = await filterGroup.boundingBox();
+    const buttonBoxes = await filterButtons.evaluateAll((buttons) =>
+      buttons.map((button) => {
+        const box = button.getBoundingClientRect();
+        return { x: box.x, y: box.y, width: box.width, height: box.height };
+      }),
+    );
+    expect(new Set(buttonBoxes.map(({ y }) => Math.round(y))).size).toBe(2);
+    expect(buttonBoxes.every(({ width: buttonWidth, height }) => buttonWidth >= 44 && height >= 44)).toBe(
+      true,
+    );
+    expect(
+      groupBox &&
+        buttonBoxes.every(
+          ({ x, width: buttonWidth }) =>
+            x >= groupBox.x - 1 && x + buttonWidth <= groupBox.x + groupBox.width + 1,
+        ),
+    ).toBeTruthy();
+    expect(
+      await filterGroup.evaluate(
+        (group) =>
+          getComputedStyle(group).overflowX === "visible" &&
+          group.scrollWidth <= group.clientWidth + 1,
+      ),
+    ).toBe(true);
+  }
   await expect(page.locator("iframe, table, details, summary")).toHaveCount(0);
-  await expect(page.locator("[data-fractalu-portal] > [data-fractalu-wide-shell] > header")).toHaveCSS(
+  await expect(page.locator('[data-fractalu-reveal-group="catalog-heading"]')).toHaveCSS(
     "border-bottom-width",
     "1px",
   );
@@ -98,6 +134,24 @@ test("Education portal keeps one wide accessible catalog across input modes", as
   const catalog = page.getByTestId("fractalu-course-catalog");
   await expect(catalog).toBeVisible();
   await expect(catalog.locator("article")).toHaveCount(20);
+  const initialCourseRevealSlots = catalog.locator('[data-fractalu-reveal-slot="course"]');
+  await expect(initialCourseRevealSlots).toHaveCount(20);
+  await expect(initialCourseRevealSlots.first()).toHaveAttribute(
+    "data-fractalu-reveal-delay",
+    "0.00",
+  );
+  await expect(initialCourseRevealSlots.nth(5)).toHaveAttribute(
+    "data-fractalu-reveal-delay",
+    "0.30",
+  );
+  await expect(initialCourseRevealSlots.last()).toHaveAttribute(
+    "data-fractalu-reveal-delay",
+    "0.30",
+  );
+  await expect(initialCourseRevealSlots.first()).toHaveAttribute(
+    "data-fractalu-reveal-mode",
+    "animated",
+  );
   await expect(page.locator("[data-course-collection]")).toHaveCount(1);
   await expect(catalog.locator("[data-instructor-bio]")).toHaveCount(20);
   await expect(catalog.locator("[data-instructor-record]")).toHaveCount(23);
@@ -254,9 +308,16 @@ test("Education portal keeps one wide accessible catalog across input modes", as
   await expect(allFilter).toHaveCSS("border-color", restingFilterStyles.borderColor);
   await expect(page.getByText("3 courses shown.")).toHaveText("3 courses shown.");
   await expect(catalog.locator("article")).toHaveCount(3);
+  await expect(catalog.locator('[data-fractalu-reveal-slot="course"]')).toHaveCount(3);
+  await expect(
+    catalog.locator('[data-fractalu-reveal-slot="course"][data-fractalu-reveal-mode="static"]'),
+  ).toHaveCount(3);
   await page.getByRole("button", { name: "All" }).click();
   await expect(page.getByText("20 courses shown.")).toHaveText("20 courses shown.");
   await expect(catalog.locator("article")).toHaveCount(20);
+  await expect(
+    catalog.locator('[data-fractalu-reveal-slot="course"][data-fractalu-reveal-mode="static"]'),
+  ).toHaveCount(20);
 
   const firstCourse = catalog.locator('article[data-course-id="lost-generation-close-reading"]');
   const description = firstCourse.locator("[data-course-description]");
@@ -271,6 +332,56 @@ test("Education portal keeps one wide accessible catalog across input modes", as
   const titleArrow = titleLink.locator("[data-course-external-icon]");
   await expect(titleArrow).toHaveCount(1);
   await expect(catalog.locator('article[data-course-id="butoh-into-the-depth"] [data-course-external-icon]')).toHaveCount(0);
+  const instructorName = firstCourse.locator("[data-instructor-name]");
+  const instructorBio = firstCourse.locator("[data-instructor-bio]");
+  const facts = firstCourse.locator("[data-course-facts]");
+  await expect(instructorName).toBeVisible();
+  await expect(facts.locator("dt")).toHaveText(["Schedule", "Dates", "Location", "Price"]);
+
+  if (width < 768) {
+    await expect(instructorBio).toBeHidden();
+    await expect(description).toBeVisible();
+    expect(
+      await instructorName.evaluate(
+        (name, summary) =>
+          Boolean(name.compareDocumentPosition(summary) & Node.DOCUMENT_POSITION_FOLLOWING),
+        await description.elementHandle(),
+      ),
+    ).toBe(true);
+
+    const factBoxes = await facts.locator(":scope > div").evaluateAll((items) =>
+      items.map((item) => {
+        const box = item.getBoundingClientRect();
+        return { x: Math.round(box.x), y: Math.round(box.y) };
+      }),
+    );
+    expect(new Set(factBoxes.map(({ x }) => x)).size).toBe(2);
+    expect(new Set(factBoxes.map(({ y }) => y)).size).toBe(2);
+
+    for (const courseId of [
+      "lost-generation-close-reading",
+      "worldbuilding-for-storytellers",
+      "making-a-lamp",
+      "fractal-accelerator",
+    ]) {
+      const compactCard = catalog.locator(`article[data-course-id="${courseId}"]`);
+      await expect(compactCard.locator("[data-course-description]")).toBeVisible();
+      await expect(compactCard.locator("[data-instructor-name]")).toBeVisible();
+      await expect(compactCard.locator("[data-instructor-bio]")).toBeHidden();
+      await expect(compactCard.locator("[data-course-facts] dt")).toHaveCount(4);
+      const action = compactCard.locator("[data-education-outbound-link]").last();
+      expect(
+        await action.evaluate((link) => Number.parseFloat(getComputedStyle(link).minHeight)),
+      ).toBeGreaterThanOrEqual(44);
+    }
+
+    if (densityTarget) {
+      const cardBox = await firstCourse.boundingBox();
+      expect(cardBox).not.toBeNull();
+      expect(cardBox!.y).toBeLessThanOrEqual(densityTarget.maxTop + 1);
+      expect(cardBox!.height).toBeLessThanOrEqual(densityTarget.maxHeight);
+    }
+  }
 
   if (!hasTouch && width >= 1024 && !profile?.rootFontScale) {
     await expect(titleArrow).toHaveCSS("opacity", "0");
@@ -368,9 +479,15 @@ test("Education portal keeps one wide accessible catalog across input modes", as
     await expect(titleArrow).toHaveCSS("opacity", "1");
     await expect(description).toHaveCSS("position", "static");
     await expect(description).toBeVisible();
-    await expect(firstCourse.locator("[data-instructor-bio]")).toBeVisible();
-    await expect(lampBio).toBeVisible();
-    await expect(acceleratorBio).toBeVisible();
+    if (width < 768) {
+      await expect(firstCourse.locator("[data-instructor-bio]")).toBeHidden();
+      await expect(lampBio).toBeHidden();
+      await expect(acceleratorBio).toBeHidden();
+    } else {
+      await expect(firstCourse.locator("[data-instructor-bio]")).toBeVisible();
+      await expect(lampBio).toBeVisible();
+      await expect(acceleratorBio).toBeVisible();
+    }
   }
 
   const jumpLink = page.getByRole("link", { name: "What is FractalU?" });
@@ -400,6 +517,11 @@ test("Education portal keeps one wide accessible catalog across input modes", as
       await page.setViewportSize({ width: boundaryWidth, height: 900 });
       await expect(catalog).toBeVisible();
       await expect(clubs).toBeVisible();
+      if (boundaryWidth < 768) {
+        await expect(firstCourse.locator("[data-instructor-bio]")).toBeHidden();
+      } else if (boundaryWidth < 1024) {
+        await expect(firstCourse.locator("[data-instructor-bio]")).toBeVisible();
+      }
       expect(
         await page.evaluate(() => document.documentElement.scrollWidth),
       ).toBeLessThanOrEqual(
@@ -521,4 +643,59 @@ test("Education portal keeps one wide accessible catalog across input modes", as
     await page.evaluate(() => document.documentElement.clientWidth + 1),
   );
   expect(pageErrors).toEqual([]);
+});
+
+test("Education reveal groups settle once and respect reduced motion", async ({
+  page,
+}, testInfo) => {
+  const profile = testInfo.project.metadata.profile as ResponsiveProfile | undefined;
+  test.skip(
+    !["desktop-1440x900", "phone-reduced-motion"].includes(profile?.name ?? ""),
+    "Focused motion probe runs in one no-preference and one reduced-motion profile.",
+  );
+
+  await page.emulateMedia({
+    reducedMotion: profile?.reducedMotion === "reduce" ? "reduce" : "no-preference",
+  });
+  await page.goto("/education", { waitUntil: "domcontentloaded" });
+  await preparePage(page, profile?.rootFontScale);
+  expect(
+    await page.evaluate(() => matchMedia("(prefers-reduced-motion: reduce)").matches),
+  ).toBe(profile?.reducedMotion === "reduce");
+
+  const about = page.locator('[data-fractalu-information-reveal="about"]');
+  const revealWrapper = about.locator("xpath=..");
+  const initialSize = await revealWrapper.evaluate((element) => {
+    const box = element.getBoundingClientRect();
+    return { width: box.width, height: box.height };
+  });
+
+  if (profile?.reducedMotion === "reduce") {
+    await expect(revealWrapper).toHaveCSS("opacity", "1");
+    await expect(revealWrapper).toHaveCSS("transform", "none");
+  } else {
+    await expect(revealWrapper).toHaveCSS("opacity", "0");
+    expect(await revealWrapper.evaluate((element) => getComputedStyle(element).transform)).not.toBe(
+      "none",
+    );
+    await about.scrollIntoViewIfNeeded();
+    await expect(revealWrapper).toHaveCSS("opacity", "1");
+    await expect(revealWrapper).toHaveCSS("transform", "none");
+
+    await page.evaluate(() => window.scrollTo(0, 0));
+    await page.waitForTimeout(100);
+    await about.scrollIntoViewIfNeeded();
+    await expect(revealWrapper).toHaveCSS("opacity", "1");
+    await expect(revealWrapper).toHaveCSS("transform", "none");
+  }
+
+  const settledSize = await revealWrapper.evaluate((element) => {
+    const box = element.getBoundingClientRect();
+    return { width: box.width, height: box.height };
+  });
+  expect(settledSize.width).toBeCloseTo(initialSize.width, 0);
+  expect(settledSize.height).toBeCloseTo(initialSize.height, 0);
+  expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(
+    await page.evaluate(() => document.documentElement.clientWidth + 1),
+  );
 });

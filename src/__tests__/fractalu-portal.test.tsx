@@ -17,6 +17,8 @@ const LIAM_DUFFY_BIO =
   "Liam Duffy, senior software engineer at Seso Inc. — Liam has been a senior software engineer for over 5 years and has been engineering for over a decade. At Seso, he is leading the adoption of AI engineering practices, and now he's bringing that real-world expertise to Fractal Accelerator students.";
 const OLD_ACCELERATOR_PARAPHRASE =
   "Andrew Rose, Founder of Fractal, Fractal University, and Fractal Bootcamp, has trained 100 engineers in the last two years following his career as a software engineer and educator. Liam Duffy is a senior software engineer at Seso Inc. with over a decade of engineering experience; he leads the adoption of AI engineering practices at Seso and brings that real-world expertise to Fractal Accelerator students.";
+const FINE_POINTER_QUERY =
+  "(min-width: 64rem) and (hover: hover) and (pointer: fine)";
 
 function expectedPortalOutboundHrefs() {
   return [
@@ -42,7 +44,7 @@ function mockFinePointer(matches: boolean) {
   Object.defineProperty(window, "matchMedia", {
     configurable: true,
     value: vi.fn().mockImplementation((query: string) => ({
-      matches,
+      matches: query === FINE_POINTER_QUERY ? matches : false,
       media: query,
       onchange: null,
       addEventListener: vi.fn(),
@@ -61,7 +63,7 @@ function mockFinePointerController(initialMatches: boolean) {
     get matches() {
       return matches;
     },
-    media: "(min-width: 64rem) and (hover: hover) and (pointer: fine)",
+    media: FINE_POINTER_QUERY,
     onchange: null,
     addEventListener: (_type: string, listener: (event: MediaQueryListEvent) => void) => {
       listeners.add(listener);
@@ -76,7 +78,20 @@ function mockFinePointerController(initialMatches: boolean) {
 
   Object.defineProperty(window, "matchMedia", {
     configurable: true,
-    value: vi.fn(() => mediaQueryList),
+    value: vi.fn((query: string) =>
+      query === FINE_POINTER_QUERY
+        ? mediaQueryList
+        : {
+            matches: false,
+            media: query,
+            onchange: null,
+            addEventListener: vi.fn(),
+            removeEventListener: vi.fn(),
+            addListener: vi.fn(),
+            removeListener: vi.fn(),
+            dispatchEvent: vi.fn(),
+          },
+    ),
   });
 
   return {
@@ -135,6 +150,69 @@ describe("FractalUniversityPortal", () => {
     );
   });
 
+  it("maps the Library reveal cadence and does not replay cards after filtering", () => {
+    render(<FractalUniversityPortal />);
+
+    expect(document.querySelector('[data-fractalu-reveal-group="catalog-heading"]')).toHaveAttribute(
+      "data-fractalu-reveal-delay",
+      "0.30",
+    );
+    expect(document.querySelector('[data-fractalu-reveal-group="filters"]')).toHaveAttribute(
+      "data-fractalu-reveal-delay",
+      "0.40",
+    );
+
+    const initialCourseSlots = Array.from(
+      document.querySelectorAll<HTMLElement>('[data-fractalu-reveal-slot="course"]'),
+    );
+    expect(initialCourseSlots).toHaveLength(20);
+    expect(initialCourseSlots.map((slot) => slot.dataset.fractaluRevealDelay)).toEqual([
+      "0.00",
+      "0.06",
+      "0.12",
+      "0.18",
+      "0.24",
+      "0.30",
+      ...Array(14).fill("0.30"),
+    ]);
+    expect(
+      initialCourseSlots.every(
+        (slot) => slot.dataset.fractaluRevealMode === "animated",
+      ),
+    ).toBe(true);
+
+    const clubSlots = Array.from(
+      document.querySelectorAll<HTMLElement>('[data-fractalu-reveal-slot="club"]'),
+    );
+    expect(clubSlots.map((slot) => slot.dataset.fractaluRevealDelay)).toEqual([
+      "0.00",
+      "0.06",
+      "0.12",
+      "0.18",
+    ]);
+    expect(document.querySelectorAll("[data-fractalu-information-reveal]")).toHaveLength(4);
+
+    fireEvent.click(screen.getByRole("button", { name: "Technology" }));
+    const filteredSlots = Array.from(
+      document.querySelectorAll<HTMLElement>('[data-fractalu-reveal-slot="course"]'),
+    );
+    expect(filteredSlots).toHaveLength(3);
+    expect(filteredSlots.every((slot) => slot.dataset.fractaluRevealMode === "static")).toBe(
+      true,
+    );
+    expect(screen.getByText("3 courses shown.")).toHaveAttribute("aria-live", "polite");
+
+    fireEvent.click(screen.getByRole("button", { name: "All" }));
+    const restoredSlots = Array.from(
+      document.querySelectorAll<HTMLElement>('[data-fractalu-reveal-slot="course"]'),
+    );
+    expect(restoredSlots).toHaveLength(20);
+    expect(restoredSlots.every((slot) => slot.dataset.fractaluRevealMode === "static")).toBe(
+      true,
+    );
+    expect(screen.getByText("20 courses shown.")).toHaveAttribute("aria-live", "polite");
+  });
+
   it("promotes labelled club schedules and locations directly below each title", () => {
     render(<FractalUniversityPortal />);
     const clubs = screen.getByTestId("fractalu-clubs");
@@ -188,8 +266,13 @@ describe("FractalUniversityPortal", () => {
     expect(filterBlock).not.toHaveClass("border-b");
     const group = screen.getByRole("group", { name: "Filter classes by subject" });
     const filters = within(group).getAllByRole("button");
+    expect(group).toHaveClass("flex-wrap", "gap-1", "overflow-visible");
+    expect(group).not.toHaveClass("overflow-x-auto");
     expect(filters.map((button) => button.textContent)).toEqual(FRACTALU_CATEGORIES);
     expect(filters.every((button) => button.className.includes("min-h-11"))).toBe(true);
+    expect(filters.every((button) => button.className.includes("min-w-11"))).toBe(true);
+    expect(filters.every((button) => button.className.includes("px-1"))).toBe(true);
+    expect(filters.every((button) => button.className.includes("md:px-4"))).toBe(true);
     expect(filters.every((button) => button.className.includes("border-2"))).toBe(true);
     expect(filters.every((button) => button.className.includes("bg-background"))).toBe(true);
     expect(filters.every((button) => button.className.includes("text-foreground-muted"))).toBe(
@@ -275,17 +358,51 @@ describe("FractalUniversityPortal", () => {
     );
   });
 
-  it("keeps descriptions and all source biographies in normal flow without matchMedia", () => {
+  it("keeps summaries and instructor names in reading order while preserving responsive bios", () => {
     mockFinePointer(false);
     render(<FractalUniversityPortal />);
     const catalog = screen.getByTestId("fractalu-course-catalog");
     expect(catalog.querySelectorAll("[data-course-description]")).toHaveLength(20);
     expect(catalog.querySelectorAll("[data-instructor-bio]")).toHaveLength(20);
     expect(catalog.querySelectorAll("[data-instructor-record]")).toHaveLength(23);
+    expect(catalog.querySelectorAll("[data-instructor-name]")).toHaveLength(20);
     expect(within(catalog).queryByRole("button", { name: "Elena Navarrete" })).toBeNull();
-    for (const panel of catalog.querySelectorAll("[data-course-description], [data-instructor-bio]")) {
-      expect(panel.className).not.toMatch(/hidden|sr-only/);
-    }
+    const firstCard = catalog.querySelector<HTMLElement>(
+      '[data-course-id="lost-generation-close-reading"]',
+    )!;
+    const title = firstCard.querySelector("h3")!;
+    const instructorName = firstCard.querySelector("[data-instructor-name]")!;
+    const description = firstCard.querySelector("[data-course-description]")!;
+    const biography = firstCard.querySelector("[data-instructor-bio]")!;
+    const facts = firstCard.querySelector("[data-course-facts]")!;
+    expect(
+      title.compareDocumentPosition(instructorName) & Node.DOCUMENT_POSITION_FOLLOWING,
+    ).toBeTruthy();
+    expect(
+      instructorName.compareDocumentPosition(description) & Node.DOCUMENT_POSITION_FOLLOWING,
+    ).toBeTruthy();
+    expect(
+      description.compareDocumentPosition(facts) & Node.DOCUMENT_POSITION_FOLLOWING,
+    ).toBeTruthy();
+    expect(biography).toHaveClass("fractalu-instructor-bio");
+    expect(description).not.toHaveClass("hidden", "sr-only");
+  });
+
+  it("uses a semantic two-by-two Compact fact grid", () => {
+    render(<FractalUniversityPortal />);
+    const firstCard = document.querySelector<HTMLElement>(
+      '[data-course-id="lost-generation-close-reading"]',
+    )!;
+    const facts = firstCard.querySelector<HTMLElement>("[data-course-facts]")!;
+    expect(facts.tagName).toBe("DL");
+    expect(facts).toHaveClass("grid", "grid-cols-2", "min-w-0");
+    expect(Array.from(facts.querySelectorAll("dt"), (term) => term.textContent)).toEqual([
+      "Schedule",
+      "Dates",
+      "Location",
+      "Price",
+    ]);
+    expect(facts.querySelectorAll(":scope > div")).toHaveLength(4);
   });
 
   it("preserves exact ordered multi-instructor source records and provenance", () => {
@@ -459,6 +576,19 @@ describe("FractalUniversityPortal", () => {
     const callout = teachingLabel.closest(".p-9")!;
     expect(callout).toHaveClass("bg-background", "text-foreground", "p-9");
     expect(callout.querySelectorAll('svg[width="30"][height="30"]')).toHaveLength(4);
+    const teachingEmail = within(callout as HTMLElement).getByRole("link", {
+      name: "fractalu@fractalnyc.com",
+    });
+    expect(teachingEmail).toHaveClass("text-body");
+    expect(teachingEmail).not.toHaveClass("text-label");
+    expect(teachingEmail).toHaveAttribute("href", "mailto:fractalu@fractalnyc.com");
+    expect(teachingEmail).not.toHaveAttribute("target");
+    expect(teachingEmail).not.toHaveAttribute("rel");
+    expect(teachingEmail.querySelectorAll("svg")).toHaveLength(1);
+    expect(teachingEmail.querySelector("[data-education-outbound-arrow]")).toHaveAttribute(
+      "aria-hidden",
+      "true",
+    );
     expect(screen.getByText("Take yourself and others seriously.")).toBeTruthy();
     expect(screen.getByRole("link", { name: /Read the FractalU canon PDF/ })).toHaveAttribute(
       "href",
@@ -537,6 +667,8 @@ describe("FractalUniversityPortal", () => {
     const email = within(resourceGroup).getByRole("link", {
       name: "fractalu@fractalnyc.com",
     });
+    expect(email).toHaveClass("text-label");
+    expect(email).not.toHaveClass("text-body");
     expect(email).toHaveAttribute("href", "mailto:fractalu@fractalnyc.com");
     expect(email).not.toHaveAttribute("target");
     expect(email).not.toHaveAttribute("rel");

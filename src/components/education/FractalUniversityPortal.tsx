@@ -4,9 +4,11 @@ import {
   useRef,
   useState,
   type KeyboardEvent,
+  type ReactNode,
 } from "react";
 import { EducationOutboundLink } from "@/components/education/EducationOutboundLink";
 import { MandelbrotCorners } from "@/components/ui/MandelbrotCorners";
+import { FadeIn } from "@/components/ui/FadeIn";
 import {
   FRACTALU_CATALOG,
   FRACTALU_CATEGORIES,
@@ -17,6 +19,43 @@ import { useMediaQuery } from "@/hooks/useMediaQuery";
 
 const FINE_POINTER_PREVIEW_QUERY =
   "(min-width: 64rem) and (hover: hover) and (pointer: fine)";
+
+const COURSE_REVEAL_STEP = 0.06;
+const COURSE_REVEAL_MAX = 0.3;
+
+function RevealSlot({
+  children,
+  delay,
+  animate = true,
+  kind,
+}: {
+  children: ReactNode;
+  delay: number;
+  animate?: boolean;
+  kind: "course" | "club";
+}) {
+  const dataAttributes = {
+    "data-fractalu-reveal-slot": kind,
+    "data-fractalu-reveal-mode": animate ? "animated" : "static",
+    "data-fractalu-reveal-delay": delay.toFixed(2),
+  };
+
+  if (!animate) {
+    return (
+      <div className="h-full min-w-0" {...dataAttributes}>
+        {children}
+      </div>
+    );
+  }
+
+  return (
+    <FadeIn delay={delay} className="h-full min-w-0">
+      <div className="h-full min-w-0" {...dataAttributes}>
+        {children}
+      </div>
+    </FadeIn>
+  );
+}
 
 function useLargeTextScale() {
   const measure = () =>
@@ -44,7 +83,7 @@ function CourseDescriptionPreview({ course }: { course: FractalUCourse }) {
   return (
     <p
       id={`${course.id}-description`}
-      className="fractalu-course-preview fractalu-course-description text-body mt-4 leading-relaxed text-foreground-muted"
+      className="fractalu-course-preview fractalu-course-description text-body mt-3 leading-relaxed text-foreground-muted md:mt-4"
       data-course-description
     >
       {course.description}
@@ -105,12 +144,15 @@ function InstructorBioPreview({
           aria-expanded={pinned}
           onClick={onToggle}
           onKeyDown={handleKeyDown}
-          className="text-body mt-2 min-h-11 max-w-full rounded-md text-left text-foreground-muted underline decoration-foreground-faint underline-offset-4 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-house-education-light"
+          className="text-body mt-1 min-h-11 max-w-full rounded-md text-left text-foreground-muted underline decoration-foreground-faint underline-offset-4 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-house-education-light md:mt-2"
+          data-instructor-name
         >
           {course.instructor}
         </button>
       ) : (
-        <p className="text-body mt-2 text-foreground-muted">{course.instructor}</p>
+        <p className="text-body mt-1 text-foreground-muted md:mt-2" data-instructor-name>
+          {course.instructor}
+        </p>
       )}
       <div
         id={bioId}
@@ -134,7 +176,7 @@ function InstructorBioPreview({
 
 function CourseActions({ course }: { course: FractalUCourse }) {
   return (
-    <div className="mt-5 flex flex-wrap gap-x-4 gap-y-1">
+    <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1 md:mt-5">
       <EducationOutboundLink
         href={course.applicationUrl}
         accessibleName={`${course.applicationLabel} for ${course.title}`}
@@ -180,7 +222,7 @@ function CourseCard({
       data-course-category={course.category}
       data-course-id={course.id}
     >
-      <div className="mb-3 flex min-w-0 items-start gap-3">
+      <div className="mb-2 flex min-w-0 items-start gap-3 md:mb-3">
         <p className="text-label min-w-0 [overflow-wrap:anywhere] text-house-education-light">
           {course.category}
         </p>
@@ -208,26 +250,28 @@ function CourseCard({
             </span>
           )}
         </h3>
+        <InstructorBioPreview
+          course={course}
+          isFinePointer={isFinePointer}
+          pinned={instructorPinned}
+          suppressed={isFinePointer && suppressedInstructorId === course.id}
+          onToggle={() => {
+            setSuppressedInstructorId(null);
+            setPinnedInstructorId(instructorPinned ? null : course.id);
+          }}
+          onEscape={() => {
+            setPinnedInstructorId(null);
+            setSuppressedInstructorId(course.id);
+          }}
+          onSuppressionReset={() => setSuppressedInstructorId(null)}
+        />
         <CourseDescriptionPreview course={course} />
       </div>
 
-      <InstructorBioPreview
-        course={course}
-        isFinePointer={isFinePointer}
-        pinned={instructorPinned}
-        suppressed={isFinePointer && suppressedInstructorId === course.id}
-        onToggle={() => {
-          setSuppressedInstructorId(null);
-          setPinnedInstructorId(instructorPinned ? null : course.id);
-        }}
-        onEscape={() => {
-          setPinnedInstructorId(null);
-          setSuppressedInstructorId(course.id);
-        }}
-        onSuppressionReset={() => setSuppressedInstructorId(null)}
-      />
-
-      <dl className="mt-5 grid min-w-0 gap-3 text-sm text-foreground-muted sm:grid-cols-2">
+      <dl
+        className="mt-4 grid min-w-0 grid-cols-2 gap-x-3 gap-y-2 text-sm text-foreground-muted md:mt-5 md:gap-3"
+        data-course-facts
+      >
         {[
           ["Schedule", course.schedule],
           ["Dates", course.dates],
@@ -242,7 +286,7 @@ function CourseCard({
       </dl>
       <CourseActions course={course} />
       <div
-        className="mt-6 h-0.5 w-8 rounded-full bg-house-education-light opacity-40 transition-all duration-300 group-hover:w-12 group-hover:opacity-70 group-focus-within:w-12 group-focus-within:opacity-70"
+        className="mt-4 h-0.5 w-8 rounded-full bg-house-education-light opacity-40 transition-all duration-300 group-hover:w-12 group-hover:opacity-70 group-focus-within:w-12 group-focus-within:opacity-70 md:mt-6"
         aria-hidden="true"
       />
     </article>
@@ -253,9 +297,11 @@ function CourseCard({
 function CourseCatalog({
   courses,
   isFinePointer,
+  animateInitialCards,
 }: {
   courses: FractalUCourse[];
   isFinePointer: boolean;
+  animateInitialCards: boolean;
 }) {
   const [pinnedInstructorId, setPinnedInstructorId] = useState<string | null>(null);
   const [suppressedInstructorId, setSuppressedInstructorId] = useState<string | null>(null);
@@ -283,21 +329,27 @@ function CourseCatalog({
 
   return (
     <div
-      className="fractalu-course-grid mt-8 min-w-0"
+      className="fractalu-course-grid mt-4 min-w-0 md:mt-8"
       data-testid="fractalu-course-catalog"
       data-course-collection
       data-preview-mode={isFinePointer ? "enhanced" : "inline"}
     >
-      {courses.map((course) => (
-        <CourseCard
+      {courses.map((course, index) => (
+        <RevealSlot
           key={course.id}
-          course={course}
-          isFinePointer={isFinePointer}
-          pinnedInstructorId={pinnedInstructorId}
-          suppressedInstructorId={suppressedInstructorId}
-          setPinnedInstructorId={setPinnedInstructorId}
-          setSuppressedInstructorId={setSuppressedInstructorId}
-        />
+          kind="course"
+          animate={animateInitialCards}
+          delay={Math.min(index * COURSE_REVEAL_STEP, COURSE_REVEAL_MAX)}
+        >
+          <CourseCard
+            course={course}
+            isFinePointer={isFinePointer}
+            pinnedInstructorId={pinnedInstructorId}
+            suppressedInstructorId={suppressedInstructorId}
+            setPinnedInstructorId={setPinnedInstructorId}
+            setSuppressedInstructorId={setSuppressedInstructorId}
+          />
+        </RevealSlot>
       ))}
     </div>
   );
@@ -352,141 +404,155 @@ function ClubCard({ club }: { club: FractalUClub }) {
 function FractalUInformation() {
   return (
     <div className="relative z-10 pt-24 text-background md:pt-32" data-fractalu-information>
-      <section
-        id="what-is-fractalu"
-        tabIndex={-1}
-        className="mx-auto max-w-7xl scroll-mt-24 page-gutter focus-visible:outline-none"
-        aria-labelledby="fractalu-about-title"
-      >
-        <div className="mx-auto max-w-3xl">
-          <h2 id="fractalu-about-title" className="text-title mb-8 normal-case">
-            What is FractalU?
-          </h2>
-          <div className="text-body-lead space-y-6 text-background/90">
-            <p>
-              FractalU is an improvised college in New York City. We offer in-person
-              classes at low cost, to anyone in the city. We&apos;re a community of
-              people who want to learn, conduct research, and do great work together.
-              You can join as an instructor, a student, or both.
-            </p>
-            <p>
-              Anyone can apply to teach. Anyone in NYC can apply to take a class. No
-              credentials, no grades, no gatekeeping. Classes meet weekly from living
-              rooms, community spaces, and dedicated third spaces across Brooklyn and
-              Manhattan.
-            </p>
-            <p>
-              We&apos;ve run over 100 classes to more than 1,000 students since Fall
-              2023. The catalog spans STEM, computer science, AI, mind-body practices,
-              arts, civics, close readings of great books, and experimental formats.
-              No theme, no required canon for students. The range reflects the
-              pluralism of the people who show up.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      <section
-        className="mx-auto mt-16 max-w-2xl page-gutter md:mt-24"
-        aria-labelledby="fractalu-teach-title"
-      >
-        <MandelbrotCorners
-          size="sm"
-          opacity={0.15}
-          className="rounded-md border bg-background p-9 text-left text-foreground [border-color:var(--accent,currentColor)]"
+      <FadeIn>
+        <section
+          id="what-is-fractalu"
+          tabIndex={-1}
+          className="mx-auto max-w-7xl scroll-mt-24 page-gutter focus-visible:outline-none"
+          aria-labelledby="fractalu-about-title"
+          data-fractalu-information-reveal="about"
         >
-          <p id="fractalu-teach-title" className="text-label mb-3 text-house-education-deep">
-            Want to teach?
-          </p>
-          <p className="text-body leading-relaxed text-foreground-muted">
-            We&apos;re always looking for instructors with something to share — a
-            craft, a body of work, an obsession. Email{" "}
-            <EducationOutboundLink
-              href="mailto:fractalu@fractalnyc.com"
-              className="align-middle"
-            >
-              fractalu@fractalnyc.com
-            </EducationOutboundLink>{" "}
-            with a sentence or two about what you&apos;d teach.
-          </p>
-        </MandelbrotCorners>
-      </section>
-
-      <section
-        className="mx-auto mt-24 max-w-7xl page-gutter md:mt-32"
-        aria-labelledby="fractalu-etiquette-title"
-      >
-        <div className="mx-auto max-w-3xl">
-          <h2 id="fractalu-etiquette-title" className="text-title mb-6 normal-case">
-            The etiquette
-          </h2>
-          <ol className="text-body-lead list-decimal space-y-3 pl-6 text-background/90">
-            <li>Take yourself and others seriously.</li>
-            <li>Be concrete; no bullshitting.</li>
-            <li>Collaborate joyfully and publicly.</li>
-          </ol>
-        </div>
-      </section>
-
-      <section
-        className="mx-auto mt-24 max-w-7xl page-gutter md:mt-32"
-        aria-labelledby="fractalu-canon-title"
-      >
-        <div className="mx-auto max-w-3xl">
-          <h2 id="fractalu-canon-title" className="text-title mb-6 normal-case">
-            The canon
-          </h2>
-          <div className="text-body-lead space-y-6 text-background/90">
-            <p>
-              FractalU has a shared intellectual foundation — six essays on what it
-              means to do significant work, find knowledge frontiers, and learn in
-              community. It was introduced by Andrew Rose to design the school&apos;s
-              intellectual environment, the way the Federalist Papers established
-              principles for the Constitution.
-            </p>
-            <p>
-              The six pieces are by Adam Mastroianni, Slime Mold Time Mold, Samo
-              Burja, Richard Hamming, Paul Graham, and Alan Kay. Together they point
-              toward an environment where people read hundreds of books a year, take
-              dozens of classes, pursue their curiosities, and do science.
-            </p>
+          <div className="mx-auto max-w-3xl">
+            <h2 id="fractalu-about-title" className="text-title mb-8 normal-case">
+              What is FractalU?
+            </h2>
+            <div className="text-body-lead space-y-6 text-background/90">
+              <p>
+                FractalU is an improvised college in New York City. We offer in-person
+                classes at low cost, to anyone in the city. We&apos;re a community of
+                people who want to learn, conduct research, and do great work together.
+                You can join as an instructor, a student, or both.
+              </p>
+              <p>
+                Anyone can apply to teach. Anyone in NYC can apply to take a class. No
+                credentials, no grades, no gatekeeping. Classes meet weekly from living
+                rooms, community spaces, and dedicated third spaces across Brooklyn and
+                Manhattan.
+              </p>
+              <p>
+                We&apos;ve run over 100 classes to more than 1,000 students since Fall
+                2023. The catalog spans STEM, computer science, AI, mind-body practices,
+                arts, civics, close readings of great books, and experimental formats.
+                No theme, no required canon for students. The range reflects the
+                pluralism of the people who show up.
+              </p>
+            </div>
           </div>
-          <div
-            className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-2"
-            data-fractalu-resource-links
+        </section>
+      </FadeIn>
+
+      <FadeIn delay={0.1}>
+        <section
+          className="mx-auto mt-16 max-w-2xl page-gutter md:mt-24"
+          aria-labelledby="fractalu-teach-title"
+          data-fractalu-information-reveal="teach"
+        >
+          <MandelbrotCorners
+            size="sm"
+            opacity={0.15}
+            className="rounded-md border bg-background p-9 text-left text-foreground [border-color:var(--accent,currentColor)]"
           >
-            <EducationOutboundLink
-              href="https://ajr.fyi/files/fractal-canon.pdf"
-              accessibleName="Read the FractalU canon PDF"
-              tone="dark"
-              data-fractalu-resource-link=""
-            >
-              Read the canon (PDF)
-            </EducationOutboundLink>
-            <EducationOutboundLink
-              href="https://fractaluniversity.substack.com"
-              accessibleName="FractalU Substack"
-              tone="dark"
-              data-fractalu-resource-link=""
-            >
-              FractalU Substack
-            </EducationOutboundLink>
-            <EducationOutboundLink
-              href="mailto:fractalu@fractalnyc.com"
-              tone="dark"
-              data-fractalu-resource-link=""
-            >
-              fractalu@fractalnyc.com
-            </EducationOutboundLink>
+            <p id="fractalu-teach-title" className="text-label mb-3 text-house-education-deep">
+              Want to teach?
+            </p>
+            <p className="text-body leading-relaxed text-foreground-muted">
+              We&apos;re always looking for instructors with something to share — a
+              craft, a body of work, an obsession. Email{" "}
+              <EducationOutboundLink
+                href="mailto:fractalu@fractalnyc.com"
+                typography="body"
+                className="align-middle"
+              >
+                fractalu@fractalnyc.com
+              </EducationOutboundLink>{" "}
+              with a sentence or two about what you&apos;d teach.
+            </p>
+          </MandelbrotCorners>
+        </section>
+      </FadeIn>
+
+      <FadeIn>
+        <section
+          className="mx-auto mt-24 max-w-7xl page-gutter md:mt-32"
+          aria-labelledby="fractalu-etiquette-title"
+          data-fractalu-information-reveal="etiquette"
+        >
+          <div className="mx-auto max-w-3xl">
+            <h2 id="fractalu-etiquette-title" className="text-title mb-6 normal-case">
+              The etiquette
+            </h2>
+            <ol className="text-body-lead list-decimal space-y-3 pl-6 text-background/90">
+              <li>Take yourself and others seriously.</li>
+              <li>Be concrete; no bullshitting.</li>
+              <li>Collaborate joyfully and publicly.</li>
+            </ol>
           </div>
-        </div>
-      </section>
+        </section>
+      </FadeIn>
+
+      <FadeIn delay={0.1}>
+        <section
+          className="mx-auto mt-24 max-w-7xl page-gutter md:mt-32"
+          aria-labelledby="fractalu-canon-title"
+          data-fractalu-information-reveal="canon"
+        >
+          <div className="mx-auto max-w-3xl">
+            <h2 id="fractalu-canon-title" className="text-title mb-6 normal-case">
+              The canon
+            </h2>
+            <div className="text-body-lead space-y-6 text-background/90">
+              <p>
+                FractalU has a shared intellectual foundation — six essays on what it
+                means to do significant work, find knowledge frontiers, and learn in
+                community. It was introduced by Andrew Rose to design the school&apos;s
+                intellectual environment, the way the Federalist Papers established
+                principles for the Constitution.
+              </p>
+              <p>
+                The six pieces are by Adam Mastroianni, Slime Mold Time Mold, Samo
+                Burja, Richard Hamming, Paul Graham, and Alan Kay. Together they point
+                toward an environment where people read hundreds of books a year, take
+                dozens of classes, pursue their curiosities, and do science.
+              </p>
+            </div>
+            <div
+              className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-2"
+              data-fractalu-resource-links
+            >
+              <EducationOutboundLink
+                href="https://ajr.fyi/files/fractal-canon.pdf"
+                accessibleName="Read the FractalU canon PDF"
+                tone="dark"
+                data-fractalu-resource-link=""
+              >
+                Read the canon (PDF)
+              </EducationOutboundLink>
+              <EducationOutboundLink
+                href="https://fractaluniversity.substack.com"
+                accessibleName="FractalU Substack"
+                tone="dark"
+                data-fractalu-resource-link=""
+              >
+                FractalU Substack
+              </EducationOutboundLink>
+              <EducationOutboundLink
+                href="mailto:fractalu@fractalnyc.com"
+                tone="dark"
+                data-fractalu-resource-link=""
+              >
+                fractalu@fractalnyc.com
+              </EducationOutboundLink>
+            </div>
+          </div>
+        </section>
+      </FadeIn>
     </div>
   );
 }
 
 export function FractalUniversityPortal() {
   const [activeCategory, setActiveCategory] = useState("All");
+  const [hasFiltered, setHasFiltered] = useState(false);
   const usesLargeText = useLargeTextScale();
   const isFinePointer =
     useMediaQuery(FINE_POINTER_PREVIEW_QUERY) && !usesLargeText;
@@ -499,70 +565,102 @@ export function FractalUniversityPortal() {
   );
 
   return (
-    <section className="mt-16 md:mt-24" aria-labelledby="fractalu-catalog-title" data-fractalu-portal>
+    <section className="mt-6 md:mt-24" aria-labelledby="fractalu-catalog-title" data-fractalu-portal>
       <div
         className="relative z-20 mx-auto min-w-0 max-w-[1600px] text-background page-gutter"
         data-fractalu-wide-shell
         data-fractalu-catalog-frame
       >
-        <header className="mb-8 border-b border-background/45 pb-8 md:mb-10 md:pb-10">
-          <p className="text-label text-background/85" data-fractalu-semester-eyebrow>
-            {FRACTALU_CATALOG.semester}
-          </p>
-          <h2 id="fractalu-catalog-title" className="text-title mt-3 normal-case text-background">
-            Course Catalog
-          </h2>
-          <p className="text-body-lead mt-3 max-w-xl text-background/85">
-            Browse this semester&apos;s classes by subject.
-          </p>
-        </header>
-
-        <div className="pb-8 md:pb-10" data-fractalu-filter-block>
-          <p
-            id="fractalu-filter-label"
-            className="text-label mb-3 text-background/85"
-            data-fractalu-filter-eyebrow
+        <FadeIn delay={0.3}>
+          <header
+            className="mb-5 border-b border-background/45 pb-5 md:mb-10 md:pb-10"
+            data-fractalu-reveal-group="catalog-heading"
+            data-fractalu-reveal-delay="0.30"
           >
-            Filter classes by subject
-          </p>
+            <p className="text-label text-background/85" data-fractalu-semester-eyebrow>
+              {FRACTALU_CATALOG.semester}
+            </p>
+            <h2 id="fractalu-catalog-title" className="text-title mt-3 normal-case text-background">
+              Course Catalog
+            </h2>
+            <p className="text-body-lead mt-3 max-w-xl text-background/85">
+              Browse this semester&apos;s classes by subject.
+            </p>
+          </header>
+        </FadeIn>
+
+        <FadeIn delay={0.4}>
           <div
-            role="group"
-            aria-labelledby="fractalu-filter-label"
-            className="fractalu-filter-row flex gap-2 overflow-x-auto pb-2 md:flex-wrap md:overflow-visible md:pb-0"
+            className="pb-2 md:pb-10"
+            data-fractalu-filter-block
+            data-fractalu-reveal-group="filters"
+            data-fractalu-reveal-delay="0.40"
           >
-            {FRACTALU_CATEGORIES.map((category) => {
-              const selected = category === activeCategory;
-              return (
-                <button
-                  key={category}
-                  type="button"
-                  aria-pressed={selected}
-                  onClick={() => setActiveCategory(category)}
-                  className={`min-h-11 shrink-0 rounded-md border-2 bg-background px-4 py-2 font-mono text-xs text-foreground-muted transition-colors focus-visible:border-house-education-light focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-house-education-light focus-visible:ring-offset-2 focus-visible:ring-offset-house-education-deep ${
-                    selected
-                      ? "border-house-education-light shadow-sm"
-                      : "border-foreground-faint hover:border-house-education-light"
-                  }`}
-                >
-                  {category}
-                </button>
-              );
-            })}
+            <p
+              id="fractalu-filter-label"
+              className="text-label mb-2 text-background/85 md:mb-3"
+              data-fractalu-filter-eyebrow
+            >
+              Filter classes by subject
+            </p>
+            <div
+              role="group"
+              aria-labelledby="fractalu-filter-label"
+              className="fractalu-filter-row flex flex-wrap gap-1 overflow-visible pb-0 md:gap-2"
+            >
+              {FRACTALU_CATEGORIES.map((category) => {
+                const selected = category === activeCategory;
+                return (
+                  <button
+                    key={category}
+                    type="button"
+                    aria-pressed={selected}
+                    onClick={() => {
+                      setHasFiltered(true);
+                      setActiveCategory(category);
+                    }}
+                    className={`min-h-11 min-w-11 shrink-0 rounded-md border-2 bg-background px-1 py-2 font-mono text-xs text-foreground-muted transition-colors focus-visible:border-house-education-light focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-house-education-light focus-visible:ring-offset-2 focus-visible:ring-offset-house-education-deep md:px-4 ${
+                      selected
+                        ? "border-house-education-light shadow-sm"
+                        : "border-foreground-faint hover:border-house-education-light"
+                    }`}
+                  >
+                    {category}
+                  </button>
+                );
+              })}
+            </div>
+            <p className="sr-only" aria-live="polite" aria-atomic="true">
+              {courses.length} {courses.length === 1 ? "course" : "courses"} shown.
+            </p>
           </div>
-          <p className="sr-only" aria-live="polite" aria-atomic="true">
-            {courses.length} {courses.length === 1 ? "course" : "courses"} shown.
-          </p>
-        </div>
+        </FadeIn>
 
-        <CourseCatalog courses={courses} isFinePointer={isFinePointer} />
+        <CourseCatalog
+          courses={courses}
+          isFinePointer={isFinePointer}
+          animateInitialCards={!hasFiltered}
+        />
 
         <section className="mt-20" aria-labelledby="fractalu-clubs-title">
-          <h2 id="fractalu-clubs-title" className="text-title normal-case text-background">
-            Clubs &amp; open groups
-          </h2>
+          <FadeIn>
+            <h2
+              id="fractalu-clubs-title"
+              className="text-title normal-case text-background"
+              data-fractalu-reveal-group="clubs-heading"
+            >
+              Clubs &amp; open groups
+            </h2>
+          </FadeIn>
           <div className="mt-6 grid min-w-0 gap-4 md:grid-cols-2 md:gap-6" data-testid="fractalu-clubs">
-            {FRACTALU_CATALOG.clubs.map((club) => (
-              <ClubCard key={club.id} club={club} />
+            {FRACTALU_CATALOG.clubs.map((club, index) => (
+              <RevealSlot
+                key={club.id}
+                kind="club"
+                delay={index * COURSE_REVEAL_STEP}
+              >
+                <ClubCard club={club} />
+              </RevealSlot>
             ))}
           </div>
         </section>
