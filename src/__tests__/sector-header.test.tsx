@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import { describe, it, expect, vi } from "vitest";
 import { SectorHeader } from "@/components/layout/SectorHeader";
-import { SECTIONS } from "@/data/houses";
+import { HOUSES, SECTIONS } from "@/data/houses";
 
 // ═══════════════════════════════════════════════════════════════════════════
 // Mock Framer Motion — SectorHeader uses FadeIn which wraps motion.div.
@@ -21,16 +21,13 @@ const sections = [
   { letter: "S", name: "Story", color: SECTIONS.story.accent },
   { letter: "C", name: "Campus", color: "#1A3A2E" },
   // Content port: Visit → Co-Living (monogram "CL"), Publications →
-  // Library (letter "L"). The hex pairs are unchanged from houses.ts
-  // (neighborhood / lab), only the user-facing mark + name moved.
-  { letter: "CL", name: "Co-Living", color: "#4A5A30" },
-  { letter: "E", name: "Events", color: "#C13B2A" },
-  // Education/Accelerator no longer have internal pages (they link out to
-  // fractalu.nyc / fractalaccelerator.com), so no page renders a SectorHeader
-  // for them — dropped from these fixtures.
-  { letter: "PC", name: "Political Club", color: "#C83858" },
-  { letter: "L", name: "Library", color: "#C44878" },
-  { letter: "P", name: "People", color: SECTIONS.people.deep },
+  // Library (letter "L").
+  { letter: "CL", name: "Co-Living", color: "#4F5B0D" },
+  { letter: "E", name: "Events", color: "#CA5C4E" },
+  { letter: "E", name: "Education", color: HOUSES.find(({ id }) => id === "school")!.palette.light },
+  { letter: "PC", name: "Political Club", color: "#82AFA2" },
+  { letter: "L", name: "Library", color: "#A33E6F" },
+  { letter: "P", name: "People", color: SECTIONS.people.accent },
 ] as const;
 
 describe("SectorHeader", () => {
@@ -59,21 +56,15 @@ describe("SectorHeader", () => {
       });
 
       it("should apply the section color to both letter and name", () => {
-        const { container } = render(
+        render(
           <SectorHeader
             letter={section.letter}
             name={section.name}
             color={section.color}
           />,
         );
-        // jsdom normalizes hex colors to rgb() — check that both spans
-        // have a non-empty color style set (the actual value is the section color)
-        const spans = container.querySelectorAll("span");
-        const coloredSpans = Array.from(spans).filter(
-          (el) => el.style.color !== "",
-        );
-        // Letter span and name span should both have color set
-        expect(coloredSpans.length).toBeGreaterThanOrEqual(2);
+        expect(screen.getByText(section.letter)).toHaveStyle({ color: section.color });
+        expect(screen.getByText(section.name)).toHaveStyle({ color: section.color });
       });
     });
   }
@@ -122,6 +113,23 @@ describe("SectorHeader", () => {
       expect(wrapper).toBeTruthy();
       // The wrapper should contain the text-center div
       expect(wrapper!.querySelector(".text-center")).toBeTruthy();
+    });
+  });
+
+  it("can split decorative letter paint from the essential name label", () => {
+    render(
+      <SectorHeader
+        letter="E"
+        name="Education"
+        color="var(--color-house-education-light)"
+        nameColor="hsl(var(--background))"
+      />,
+    );
+    expect(document.querySelector("[data-sector-letter]")).toHaveStyle({
+      color: "var(--color-house-education-light)",
+    });
+    expect(document.querySelector("[data-sector-name]")).toHaveStyle({
+      color: "hsl(var(--background))",
     });
   });
 });

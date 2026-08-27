@@ -1,28 +1,20 @@
 import { Fragment, useState } from "react";
 import { motion, useScroll, useMotionValueEvent } from "framer-motion";
-import { Menu, X, ArrowUpRight } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import { Link, useLocation } from "wouter";
 import { HOUSES, NAVBAR_HIDDEN_ROUTES, SECTIONS } from "@/data/houses";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 import { setHeroNavHover, useHeroNavHover } from "@/hooks/useHeroNavHover";
 
 // FRAC-24: Per-link colors derive from the canonical House palette where a
-// House exists. The one non-house link left in the nav (People) has no House
-// entry, so it reads from the SECTIONS record instead. House links default to
-// `.light`; Political Club uses `.deep` because the link's visual identity has
-// always been the deeper burgundy.
+// House exists. Non-house links read from the SECTIONS record instead. House
+// links default to `.light`; Political Club uses `.deep` because its page uses
+// the deep surface.
 // (Story used to be a link too, but it folded into Home in the content port.)
 function houseColor(route: string, prefer: "light" | "deep" = "light"): string {
   const palette = HOUSES.find((h) => h.route === route)?.palette;
   return palette ? palette[prefer] : "#000";
 }
-
-// Accelerator and FractalU (formerly Education) have no internal page — they
-// link out to their standalone sites. The color still comes from the retained
-// `accelerator` / `school` house entries (looked up by their old internal
-// route), so those nav letters keep their house tint.
-const FRACTALU_URL = "https://www.fractalu.nyc/";
-const ACCELERATOR_URL = "https://go.fractalaccelerator.com/fractalnycwebsite";
 
 interface SectionLink {
   name: string;
@@ -32,31 +24,24 @@ interface SectionLink {
   // deepen. Political Club's identity color is already `.deep`, so it has no
   // deeper shade — it reuses `color` and communicates hover via the underline.
   colorDeep: string;
-  external?: boolean;
 }
 
 const sectionLinks: SectionLink[] = [
   { name: "Campus",         href: "/campus",            color: houseColor("/campus"),                    colorDeep: houseColor("/campus", "deep") },
   { name: "Co-Living",      href: "/co-living",         color: houseColor("/co-living"),                 colorDeep: houseColor("/co-living", "deep") },
-  { name: "Accelerator",    href: ACCELERATOR_URL,      color: houseColor("/accelerator"),               colorDeep: houseColor("/accelerator", "deep"), external: true },
+  { name: "Education",      href: "/education",         color: houseColor("/education"),                 colorDeep: houseColor("/education", "deep") },
   { name: "Events",         href: "/events",            color: houseColor("/events"),                    colorDeep: houseColor("/events", "deep") },
-  { name: "FractalU",       href: FRACTALU_URL,         color: houseColor("/education"),                 colorDeep: houseColor("/education", "deep"), external: true },
   { name: "Political Club", href: "/political-club",    color: houseColor("/political-club", "deep"),    colorDeep: houseColor("/political-club", "deep") },
   { name: "Library",        href: "/library",           color: houseColor("/library"),                   colorDeep: houseColor("/library", "deep") },
-  { name: "People",         href: "/people",            color: SECTIONS.people.light,                    colorDeep: SECTIONS.people.deep },
+  { name: "People",         href: "/people",            color: SECTIONS.people.accent,                   colorDeep: SECTIONS.people.accent },
 ];
 
-// Renders an internal wouter <Link> or, for external destinations, a plain
-// new-tab <a> — wouter's <Link> would otherwise try to client-route an absolute
-// URL. Used by every nav variant so external links behave everywhere.
 function SectionAnchor({
   link,
   className,
   style,
   children,
-  // FRAC-14: hover/focus handlers forwarded so NavLink can bridge to the hero
-  // octahedron. Both the external <a> and the internal wouter <Link> render a
-  // plain anchor, so the DOM events attach the same way on either branch.
+  // FRAC-14: hover/focus handlers forwarded so NavLink can bridge to the hero.
   onMouseEnter,
   onMouseLeave,
   onFocus,
@@ -72,9 +57,9 @@ function SectionAnchor({
   onBlur?: () => void;
 }) {
   const handlers = { onMouseEnter, onMouseLeave, onFocus, onBlur };
-  if (link.external) {
+  if (link.href.startsWith("#")) {
     return (
-      <a href={link.href} target="_blank" rel="noopener noreferrer" className={className} style={style} {...handlers}>
+      <a href={link.href} className={className} style={style} {...handlers}>
         {children}
       </a>
     );
@@ -97,14 +82,24 @@ const visibleSectionLinks = sectionLinks.filter(
     !NAVBAR_HIDDEN_ROUTES.has(link.href) && !EXTRA_HIDDEN_HREFS.has(link.href),
 );
 
+// Story is an in-page destination on Home rather than a route. Keep it in the
+// full hero navbar only, after Library; the mobile menu continues
+// to list section pages while its existing hero CTA links to this same target.
+const storySectionLink: SectionLink = {
+  name: "Story",
+  href: "#story",
+  color: SECTIONS.story.accent,
+  colorDeep: SECTIONS.story.accent,
+};
+const homeSectionLinks = [...visibleSectionLinks, storySectionLink];
+
 // Inner-page navbar hides all remaining section links. The home page navbar
 // and the full-screen overlay menu still expose the visible sections.
 const innerPageHiddenLinks = new Set([
   "Campus",
   "Co-Living",
-  "Accelerator",
+  "Education",
   "Events",
-  "FractalU",
   "Political Club",
   "Library",
   "People",
@@ -184,25 +179,6 @@ function NavLink(link: SectionLink) {
           </span>
         </Fragment>
       ))}
-      {/* FRAC-13: superscript ↗ external-link mark — only on links that open a
-          standalone site in a new tab (Accelerator, FractalU), keeping the arrow
-          semantically honest. Inherits the anchor's currentColor, so it takes the
-          house color at rest and deepens to `.deep` alongside the text on
-          hover/focus. Decorative → aria-hidden. */}
-      {link.external && (
-        <ArrowUpRight
-          aria-hidden
-          strokeWidth={2.25}
-          style={{
-            display: "inline-block",
-            width: "15px",
-            height: "15px",
-            verticalAlign: "baseline",
-            transform: "translateY(-9px)",
-            marginLeft: "1px",
-          }}
-        />
-      )}
     </SectionAnchor>
   );
 }
@@ -231,8 +207,8 @@ export function Navbar() {
 
   });
 
-  const leftLinks = visibleSectionLinks.slice(0, 3);
-  const rightLinks = visibleSectionLinks.slice(3);
+  const leftLinks = homeSectionLinks.slice(0, 3);
+  const rightLinks = homeSectionLinks.slice(3);
 
   const showFull = isHome && !hasScrolledPast;
 
@@ -482,11 +458,7 @@ export function Navbar() {
                 type="button"
                 onClick={() => {
                   setMobileMenuOpen(false);
-                  if (link.external) {
-                    window.open(link.href, "_blank", "noopener,noreferrer");
-                  } else {
-                    setLocation(link.href);
-                  }
+                  setLocation(link.href);
                 }}
                 className="flex items-center gap-5 min-h-[56px] py-3 border-b border-foreground-faint cursor-pointer hover:bg-foreground/5 active:bg-foreground/10 transition-colors text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-foreground"
                 style={{ borderLeft: `3px solid ${link.color}`, paddingLeft: "16px" }}

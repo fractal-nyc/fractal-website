@@ -35,11 +35,8 @@ const TYPE_ICONS: Record<string, typeof Search> = {
 export function Hero() {
   const [, setLocation] = useLocation();
 
-  // Some octahedron / skip-nav destinations are now external (Accelerator →
-  // fractalaccelerator.com, FractalU → fractalu.nyc). Branch on an absolute URL
-  // so both the 3D nodes and the keyboard skip-nav open those in a new tab,
-  // while internal routes stay SPA navigations. This keeps the branch out of the
-  // WebGL code — every node still calls handleNavigate with its `route`.
+  // Keep the absolute-URL branch for external search/document results. All hero
+  // navigation nodes themselves now use internal routes.
   const handleNavigate = useCallback(
     (route: string) => {
       if (/^https?:\/\//.test(route)) {
@@ -181,7 +178,7 @@ export function Hero() {
       >
         <ul className="flex flex-col gap-1 bg-background text-foreground border border-foreground/20 p-3 text-label">
           {OUTER_NAV_NODES.map((node) => (
-            <li key={node.route}>
+            <li key={`${node.vertexIndex}:${node.label}`}>
               <a
                 href={node.route}
                 onClick={(e) => {

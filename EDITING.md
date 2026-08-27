@@ -87,9 +87,17 @@ The longest page; everything below is in `Campus.tsx`:
 
 - Headline *"See You at Fractal"*, *"Host an event in our space"*; Luma calendar embed + link; hosting instructions; `crystal@fractalnyc.com` — all in the page file. (The *"Stay in the Loop"* heading and its Discord button were removed.)
 
-### FractalU / Accelerator — external, no page
+### Education hub (`/education`)
 
-The **FractalU** (formerly Education) and **Accelerator** sectors no longer have an internal page or copy in this repo. Their nav links and octahedron nodes point out to standalone sites — `https://www.fractalu.nyc/` and `https://www.fractalaccelerator.com/`. To change where they point, edit the `FRACTALU_URL` / `ACCELERATOR_URL` constants in `src/components/layout/Navbar.tsx`, `src/App.tsx`, `src/hooks/use-global-search.ts`, and the two external `route` URLs in `src/components/three/heroNavNodes.ts`. Their house tokens and nav-letter colors still live in `src/data/houses.ts`.
+- Fractal University display identity, future-semester/information actions, and page composition: `src/pages/EducationPage.tsx`.
+- Fractal AI Accelerator label, stable description, tracked action, and live URL: `src/data/education.ts`.
+- Native Fractal University portal markup and behavior: `src/components/education/FractalUniversityPortal.tsx`.
+- Reviewed Summer 2026 public catalog snapshot: `src/data/fractalu-catalog.json`; types, categories, source URL, and snapshot date: `src/data/fractalu.ts`.
+- Education house palette and related external-link projection: `src/data/houses.ts`.
+
+Fractal University is a deliberately static native snapshot of the public portal, not an iframe or runtime dependency. Canonical sources: `https://www.fractalu.nyc/` and `https://www.fractalu.nyc/info`; current snapshot verified **2026-08-25**. The snapshot records the verification timestamp, source `Last-Modified`, ETag, byte length, and SHA-256 in `sourceProvenance` so future refreshes can be compared against the exact reviewed HTML.
+
+To refresh a semester: compare both canonical pages; update only publicly rendered course/group fields and links in `fractalu-catalog.json`; update semester, `FRACTALU_SNAPSHOT_DATE`, and every `sourceProvenance` field; check every outbound label/href; run the portal, Education, navigation, and house-token tests; then visually verify filters, the one responsive floating-card collection, banner visibility through catalog gaps, Library-style lift/title-owned linked-arrow behavior, pointer previews, touch-visible descriptions/bios, and no horizontal overflow. Every course requires an ordered `instructors` array of exact `{ name, bio }` source records. When the source exposes multiple instructor tooltips, preserve each biography as a separate string in source order—never summarize, concatenate, or rewrite them. Each course title reads its external course-document destination from that record's independently editable optional `detailsUrl`; never substitute an application/calendar URL for a missing document link. Descriptions and instructor biographies are inline content on touch/narrow/large-text layouts and become hover/focus previews only on wide fine-pointer layouts. Missing links remain explicit source-accurate fallbacks—do not invent them. Do not add private fields, organizer/session metadata that is not visible, authentication, a `/fractalu` route, or a second FractalU program card. Accelerator source data remains deliberately separate from this FractalU-first page composition.
 
 ### Publications (`/publications` — `src/pages/PublicationsPage.tsx`)
 

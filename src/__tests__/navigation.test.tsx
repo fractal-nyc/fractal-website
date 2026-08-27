@@ -13,6 +13,8 @@ vi.mock("@/components/three/FractalCityScene", () => ({
 }));
 
 import { Navbar } from "@/components/layout/Navbar";
+import { HOUSES } from "@/data/houses";
+import { OUTER_NAV_NODES } from "@/components/three/heroNavNodes";
 
 // ---------------------------------------------------------------------------
 // Helper: render the Navbar at a given route
@@ -36,16 +38,15 @@ describe("Inner page navbar", () => {
     renderNavbar("/co-living");
   });
 
-  it("should render all 6 visible section links by name (FRAC-161: Political Club + People hidden)", () => {
+  it("should render all 5 visible section links by name (FRAC-161: Political Club + People hidden)", () => {
     // Content port: Story folded into Home (no longer a nav link); Visit →
-    // Co-Living, Publications → Library, and Accelerator was added. Education
-    // was renamed FractalU; it and Accelerator now link out externally.
+    // Co-Living, Publications → Library, and Education is the internal hub for
+    // Accelerator and FractalU.
     const expectedSections = [
       "Campus",
       "Co-Living",
-      "Accelerator",
+      "Education",
       "Events",
-      "FractalU",
       "Library",
     ];
 
@@ -89,9 +90,8 @@ describe("Inner page navbar", () => {
     const expectedNames = [
       "Campus",
       "Co-Living",
-      "Accelerator",
+      "Education",
       "Events",
-      "FractalU",
       "Library",
     ];
     const overlay = document.querySelector(".fixed.inset-0.z-40");
@@ -120,22 +120,22 @@ describe("Inner page navbar", () => {
     // addition to the navbar header's toggle button. Because the navbar header
     // sits above the overlay at z-50 and already switches its icon to X when
     // the menu is open, the overlay's extra close button produced two X's
-    // visible simultaneously. The overlay must contain only the 8 section
-    // nav buttons — no additional close button. FRAC-161 reduces 8 → 6.
+    // visible simultaneously. The overlay contains only the five visible
+    // section nav buttons and no additional close control.
     const overlay = document.querySelector(".fixed.inset-0.z-40");
     expect(overlay).toBeTruthy();
     const buttons = overlay!.querySelectorAll("button");
-    expect(buttons.length).toBe(6);
+    expect(buttons.length).toBe(5);
   });
 
-  it("should expose all 6 visible sections via the overlay menu (FRAC-161)", () => {
+  it("should expose all 5 visible sections via the overlay menu (FRAC-161)", () => {
     // Inner-page mobile/desktop headers delegate section navigation to the
-    // hamburger-triggered overlay. FRAC-161: overlay contains 6 buttons
+    // hamburger-triggered overlay. FRAC-161: overlay contains 5 buttons
     // (Political Club + People hidden).
     const overlay = document.querySelector(".fixed.inset-0.z-40");
     expect(overlay).toBeTruthy();
     const buttons = overlay!.querySelectorAll("button");
-    expect(buttons.length).toBe(6);
+    expect(buttons.length).toBe(5);
   });
 });
 
@@ -182,39 +182,50 @@ describe("Home page navbar (full state)", () => {
 });
 
 // ═══════════════════════════════════════════════════════════════════════════
-// External vs internal section links — Accelerator and FractalU link out to
-// their standalone sites (new tab); the rest stay internal wouter routes.
+// Education navigation is internal; the hub owns outbound program links.
 // ═══════════════════════════════════════════════════════════════════════════
 
-describe("External section links (Accelerator + FractalU)", () => {
+describe("Internal Education section link", () => {
   beforeEach(() => {
     renderNavbar("/");
   });
 
-  it("renders Accelerator as an external new-tab anchor to fractalaccelerator.com", () => {
+  it("renders an internal Education route and no external program nav anchors", () => {
     const links = Array.from(
-      document.querySelectorAll<HTMLAnchorElement>(
+      document.querySelectorAll<HTMLAnchorElement>('a[href="/education"]'),
+    );
+    expect(links.length).toBeGreaterThanOrEqual(1);
+    for (const a of links) {
+      expect(a.getAttribute("target")).not.toBe("_blank");
+    }
+    expect(
+      document.querySelector(
         'a[href="https://go.fractalaccelerator.com/fractalnycwebsite"]',
       ),
-    );
-    expect(links.length).toBeGreaterThanOrEqual(1);
-    for (const a of links) {
-      expect(a.getAttribute("target")).toBe("_blank");
-      expect(a.getAttribute("rel")).toContain("noopener");
-    }
+    ).toBeNull();
+    expect(document.querySelector('a[href="https://www.fractalu.nyc/"]')).toBeNull();
   });
 
-  it("renders FractalU as an external new-tab anchor to fractalu.nyc", () => {
-    const links = Array.from(
-      document.querySelectorAll<HTMLAnchorElement>(
-        'a[href="https://www.fractalu.nyc/"]',
-      ),
+  it("uses the Education palette and route across navbar and both hero nodes", () => {
+    const education = HOUSES.find((house) => house.id === "school")!;
+    const anchors = Array.from(
+      document.querySelectorAll<HTMLAnchorElement>('a[href="/education"]'),
     );
-    expect(links.length).toBeGreaterThanOrEqual(1);
-    for (const a of links) {
-      expect(a.getAttribute("target")).toBe("_blank");
-      expect(a.getAttribute("rel")).toContain("noopener");
+    for (const anchor of anchors) {
+      expect(anchor.style.getPropertyValue("--nav-c")).toBe(education.palette.light);
+      expect(anchor.style.getPropertyValue("--nav-c-deep")).toBe(education.palette.deep);
     }
+
+    const educationNodes = OUTER_NAV_NODES.filter(({ label }) =>
+      ["Accelerator", "FractalU"].includes(label),
+    );
+    expect(educationNodes).toHaveLength(2);
+    expect(educationNodes.map(({ color }) => color)).toEqual([
+      education.palette.light,
+      education.palette.light,
+    ]);
+    expect(educationNodes.map(({ route }) => route)).toEqual(["/education", "/education"]);
+    expect(new Set(educationNodes.map(({ vertexIndex }) => vertexIndex)).size).toBe(2);
   });
 
   it("keeps internal section links (Campus, Co-Living, Events, Library) as same-tab wouter routes", () => {

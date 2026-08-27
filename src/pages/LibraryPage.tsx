@@ -10,7 +10,7 @@ import { DocumentGrid } from "@/components/publications/DocumentGrid";
 import { ArchiveToolbar } from "@/components/publications/ArchiveToolbar";
 import { useArchiveFilter } from "@/hooks/use-archive-filter";
 import { FractalPattern } from "@/components/ui/FractalPattern";
-import { PublicationsBannerSVG } from "@/components/house/PublicationsBannerSVG";
+import { LibraryBannerSVG } from "@/components/house/LibraryBannerSVG";
 import { HOUSES } from "@/data/houses";
 
 // FRAC-206/219: SVG stroke/fill needs a literal hex (var() doesn't resolve in SVG
@@ -23,7 +23,7 @@ export function LibraryPage() {
   const filter = useArchiveFilter();
   return (
     <main
-      className="relative min-h-screen bg-house-library-light text-background selection:bg-foreground selection:text-background"
+      className="relative min-h-screen bg-house-library-light text-foreground selection:bg-foreground selection:text-background"
       style={{ "--accent": "var(--color-house-library-deep)" } as CSSProperties}
     >
       <FractalPattern color={PUBLICATIONS_COLOR} />
@@ -37,10 +37,10 @@ export function LibraryPage() {
         style={{ height: "min(72vh, 660px)" }}
       >
         <div className="pointer-events-auto h-full w-[24%] md:w-[16%] max-w-[210px]">
-          <PublicationsBannerSVG />
+          <LibraryBannerSVG />
         </div>
         <div className="pointer-events-auto h-full w-[24%] md:w-[16%] max-w-[210px]">
-          <PublicationsBannerSVG />
+          <LibraryBannerSVG />
         </div>
       </div>
       <div className="relative z-10">
@@ -101,13 +101,14 @@ export function LibraryPage() {
           <img> resolves without a fixed-height ancestor. */}
       <div
         aria-hidden="true"
+        data-testid="library-mobile-pennants"
         className="flex md:hidden items-end justify-center gap-3 px-3 pt-8 pb-12"
       >
         <div className="w-[45%] aspect-[123/368]">
-          <PublicationsBannerSVG />
+          <LibraryBannerSVG />
         </div>
         <div className="w-[45%] aspect-[123/368]">
-          <PublicationsBannerSVG />
+          <LibraryBannerSVG />
         </div>
       </div>
       <Footer />
