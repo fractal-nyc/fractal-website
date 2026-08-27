@@ -36,7 +36,7 @@ test("Education portal keeps one wide accessible catalog across input modes", as
   await expect(page.getByText("An improvised college in New York City.", { exact: true })).toBeVisible();
   const sectorLetter = page.locator("[data-sector-letter]");
   const sectorName = page.locator("[data-sector-name]");
-  await expect(sectorLetter).toHaveCSS("color", "rgb(203, 43, 35)");
+  await expect(sectorLetter).toHaveCSS("color", "rgb(178, 43, 35)");
   await expect(sectorName).toHaveCSS("color", await page.locator("h1").evaluate((element) => getComputedStyle(element).color));
   const intro = page.locator("[data-education-intro]");
   const portal = page.locator("[data-fractalu-portal]");
@@ -501,7 +501,7 @@ test("Education portal keeps one wide accessible catalog across input modes", as
       await expect(titleArrow).toHaveCSS("transform", "none");
       await expect(firstCourse).toHaveCSS(
         "border-color",
-        "rgb(203, 43, 35)",
+        "rgb(178, 43, 35)",
       );
       await page.emulateMedia({ reducedMotion: "no-preference" });
     }
