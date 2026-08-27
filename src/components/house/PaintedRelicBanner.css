@@ -6,7 +6,7 @@
   isolation: isolate;
   filter:
     drop-shadow(0 8px 20px rgba(0, 0, 0, 0.22))
-    saturate(var(--painted-relic-saturation, 1.51))
+    saturate(var(--painted-relic-saturation, 1.2))
     contrast(var(--painted-relic-contrast, 1.08));
 }
 

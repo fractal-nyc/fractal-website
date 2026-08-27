@@ -216,6 +216,29 @@ describe("canonical house banner artwork", () => {
 });
 
 describe("shared Painted Relic renderer", () => {
+  it("keeps the Site B comparison preset and CSS fallback synchronized", () => {
+    const css = fs.readFileSync(
+      path.resolve(
+        process.cwd(),
+        "src/components/house/PaintedRelicBanner.css",
+      ),
+      "utf8",
+    );
+
+    expect(PAINTED_RELIC_PRESET).toEqual({
+      texture: 0.14,
+      bump: 0.2,
+      roughness: 0.14,
+      patina: 0.42,
+      dye: 0.34,
+      saturation: 1.2,
+      contrast: 1.08,
+    });
+    expect(css).toContain(
+      "saturate(var(--painted-relic-saturation, 1.2))",
+    );
+  });
+
   it("owns geometry, mask hooks, and custom class placement", () => {
     const { container } = render(
       <PaintedRelicBanner

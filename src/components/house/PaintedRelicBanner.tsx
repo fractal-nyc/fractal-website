@@ -7,7 +7,7 @@ export const PAINTED_RELIC_PRESET = Object.freeze({
   roughness: 0.14,
   patina: 0.42,
   dye: 0.34,
-  saturation: 1.51,
+  saturation: 1.2,
   contrast: 1.08,
 });
 
