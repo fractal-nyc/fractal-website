@@ -22,6 +22,8 @@ colors:
   section-story: "#D4BA58"
   section-people: "#C49040"
 typography:
+  font-display:
+    fontFamily: "Jacquard 24, serif"
   font-sans:
     fontFamily: "Inter, system-ui, sans-serif"
   font-mono:
@@ -79,9 +81,9 @@ components:
     textColor: "{colors.foreground}"
     typography: "{typography.font-mono}"
   house-banner-svg:
-    backgroundColor: "{colors.house-co-living-light}"
-    textColor: "{colors.house-co-living-deep}"
-    typography: "{typography.font-mono}"
+    backgroundColor: "{colors.house-co-living-deep}"
+    textColor: "{colors.house-co-living-light}"
+    typography: "{typography.font-display}"
 ---
 
 # Fractal NYC — Design System
@@ -103,7 +105,7 @@ Two foundations:
 1. **Mobile-first, 375px baseline.** Every page and component is designed at phone width first. Wider viewports are progressive enhancement.
 2. **A quiet base so the houses can be loud.** The base is deliberately neutral — cream surfaces, charcoal text, one scheme, no dark mode — so the accent house colors carry the brand and signal Fractal's different sectors. There are so many pops of color from the houses that the base is kept simple, letting those accents read. Hierarchy comes from typography, contrast, and whitespace; color comes from the houses.
 
-Political Club is reachable by direct route (`/political-club`) but hidden from the navbar via the `hideFromNavbar` flag in `src/data/houses.ts` (a companion `hideFromBanners` flag drives the `VISIBLE_HOUSES` filter). It is the one house with no per-page banner SVG of its own.
+Political Club is reachable by direct route (`/political-club`) but hidden from the navbar via the `hideFromNavbar` flag in `src/data/houses.ts` (a companion `hideFromBanners` flag drives the `VISIBLE_HOUSES` filter). Its complete per-page banner asset and wrapper are prepared for a future slot but intentionally remain unmounted.
 
 Political Club (and the People page) are intentionally **not surfaced at initial launch**, but they remain fully in the codebase and on the token system — Political Club carries its `house-political-club-{light,deep}` pair like every other house — so both are launch-ready the moment they're re-enabled, with no token or styling work left to do.
 
@@ -377,7 +379,7 @@ The reusable `MandelbrotCorners` wrapper (`src/components/ui/MandelbrotCorners.t
 
 ### Pennant banner
 
-The pennant motif lives in the per-page banner SVGs (see [Components](#components)). Each is a tall, downward-pointing pennant with a V-notch at the bottom, an elliptical Mandelbrot pocket cut from the house fill, an arc tagline, and a centered Jacquard 24 monogram — the whole shape is **baked into a single SVG file** (`/images/banners/*-banner.svg`, viewBox ≈ `123 × 368`) rather than applied as a runtime CSS `clip-path`. They render as plain `<img>` so the embedded base64 Jacquard font draws without page-CSS dependencies.
+The pennant motif lives in six canonical per-house SVGs (see [Components](#components)). Each is a tall, downward-pointing pennant with a V-notch at the bottom, house-specific line art, a Story-gold inset outline, a lowercase Jacquard 24 name on an arc, and a centered monogram. Story gold is reserved for the inset outline; both text roles use the contrasting member of the asset's house pair. Lowercase labels use per-name sizes from 14–20px for legibility without clipping their arcs. The whole shape is **baked into a single SVG file** (`/images/banners/*-banner.svg`, exact `viewBox="0 0 122.72 368.16"`) rather than applied as a runtime CSS `clip-path`. They render as plain decorative `<img>` elements so each asset's embedded, name-specific Jacquard subset draws without page-CSS dependencies.
 
 ## Components
 
@@ -393,7 +395,7 @@ Five components are modeled in the `components:` YAML block; the rest are descri
 
 **`button-link`** — inline text action for sitting inside prose. Zero padding, `underline underline-offset-4`, hover `text-foreground/80`.
 
-**`house-banner-svg`** — the per-page pennant banner. Surfaced houses ship a baked-art SVG component (`VisitBannerSVG`, `EventsBannerSVG`, `CampusBannerSVG`, `EducationBannerSVG`, `PublicationsBannerSVG`), rendered as a plain `<img>` of `/images/banners/*-banner.svg`. The pennant shape, the house-colored fill, the Mandelbrot pocket, the arc tagline, and the Jacquard 24 monogram are all baked into the SVG — there is no runtime theming. A house page flanks its content with a pair of its banner (an absolute `hidden md:flex` layer on desktop, a `flex md:hidden` in-flow pair on mobile; see `CoLivingPage.tsx`). **Naming note (v0.3.0):** after the content-port renames, `CoLivingPage` still imports `VisitBannerSVG` and `LibraryPage` still imports `PublicationsBannerSVG` — the banner *art* (which reads "VISIT" / "PUBLICATIONS") was intentionally left stale, to be redrawn later. **Political Club and Accelerator have no banner SVG.**
+**`house-banner-svg`** — the per-page pennant banner. The six canonical baked-art components are `CoLivingBannerSVG`, `EventsBannerSVG`, `CampusBannerSVG`, `EducationBannerSVG`, `LibraryBannerSVG`, and `PoliticalClubBannerSVG`, each loading the equivalently named file under `/images/banners/`. Every asset uses the common `122.72 × 368.16` shell and its approved house pair: one member for the foundation, the contrasting member for the motif, lowercase Jacquard label, and uppercase monogram. Story `#D4BA58` is reserved for the inset outline. Label sizes vary by name from 14–20px to preserve legibility without arc clipping; each asset retains its embedded, name-specific Jacquard subset. There is no runtime theming. A surfaced house page flanks its content with a pair of its decorative banner (an absolute `hidden md:flex` layer on desktop, a `flex md:hidden` in-flow pair on mobile; see `CoLivingPage.tsx`). Political Club's complete wrapper and asset are prepared for the future sixth-house slot but remain intentionally unmounted while that house is hidden. Accelerator is part of Education and does not receive a seventh banner.
 
 ### Prose-only
 
