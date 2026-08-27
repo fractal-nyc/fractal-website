@@ -106,7 +106,9 @@ test("Education portal keeps one wide accessible catalog across input modes", as
     ),
   ).toBe(true);
   await expect(
-    page.getByText("Browse this semester's classes by subject.", { exact: true }),
+    page.getByText("Browse and apply to this semester's classes below.", {
+      exact: true,
+    }),
   ).toBeVisible();
   await expect(page.getByRole("heading", { name: "Summer 2026 semester" })).toHaveCount(0);
   const filterEyebrow = page.locator("[data-fractalu-filter-eyebrow]");

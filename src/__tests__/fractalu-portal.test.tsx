@@ -131,7 +131,9 @@ describe("FractalUniversityPortal", () => {
     expect(
       semester.compareDocumentPosition(catalogHeading) & Node.DOCUMENT_POSITION_FOLLOWING,
     ).toBeTruthy();
-    expect(screen.getByText("Browse this semester's classes by subject.")).toBeTruthy();
+    expect(
+      screen.getByText("Browse and apply to this semester's classes below."),
+    ).toBeTruthy();
     expect(
       screen.queryByRole("heading", { name: `${FRACTALU_CATALOG.semester} semester` }),
     ).toBeNull();
