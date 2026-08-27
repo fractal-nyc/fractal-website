@@ -1,26 +1,26 @@
 ---
 version: "0.3.0"
 name: "Fractal NYC"
-description: "Asimov-Collective editorial aesthetic for fractal-nyc — cream and charcoal, italic Fraunces headings over a JetBrains Mono body, seven themed houses each owning a {light, deep} palette pair. Mobile-first 375px baseline; no dark mode."
+description: "Asimov-Collective editorial aesthetic for fractal-nyc — cream and charcoal, italic Fraunces headings over a JetBrains Mono body, six themed houses each owning a {light, deep} palette pair. Mobile-first 375px baseline; no dark mode."
 colors:
   background: "#f8f6f0"
   foreground: "#171717"
   foreground-muted: "#525252"
   foreground-faint: "#dddad5"
-  house-co-living-light: "#889460"
-  house-co-living-deep: "#4A5A30"
-  house-events-light: "#D4857A"
-  house-events-deep: "#C13B2A"
-  house-campus-light: "#2E6B4A"
+  house-co-living-light: "#AEB175"
+  house-co-living-deep: "#4F5B0D"
+  house-events-light: "#E5A794"
+  house-events-deep: "#CA5C4E"
+  house-campus-light: "#51805C"
   house-campus-deep: "#1A3A2E"
-  house-education-light: "#C41E20"
-  house-education-deep: "#5C1010"
-  house-political-club-light: "#C83858"
-  house-political-club-deep: "#6E1830"
-  house-library-light: "#E870A0"
-  house-library-deep: "#C44878"
-  house-accelerator-light: "#8E2A1E"
-  house-accelerator-deep: "#641E28"
+  house-education-light: "#C51C15"
+  house-education-deep: "#4C0000"
+  house-library-light: "#C889AB"
+  house-library-deep: "#A33E6F"
+  house-political-club-light: "#82AFA2"
+  house-political-club-deep: "#084247"
+  section-story: "#D4BA58"
+  section-people: "#C49040"
 typography:
   font-sans:
     fontFamily: "Inter, system-ui, sans-serif"
@@ -90,11 +90,11 @@ components:
 
 Fractal NYC is an editorial site in a warm-print key: cream surfaces, charcoal type, oversized italic Fraunces headings, a JetBrains Mono body, and Jacquard 24 display accents.
 
-Fractal is organized into themed **houses** — Co-Living, Events, Campus, Education, Political Club, Library, Accelerator — one per sector of the organization. Each house owns an accent color pair (`{light, deep}`) that brands its sector and themes its own pages. The houses are where the site's color lives.
+Fractal is organized into six themed **houses** — Co-Living, Events, Campus, Education + Accelerator, Library, and Political Club — one per sector of the organization. Each house owns an accent color pair (`{light, deep}`) that brands its sector and themes its own pages. The houses are where the site's color lives.
 
-(**v0.3.0 content port:** the *Visit* house was renamed *Co-Living* and *Publications* → *Library* — the same pairs, new user-facing names, slugs, routes, and matching `house-co-living-*` / `house-library-*` tokens. *Accelerator* was added as a 7th house. The *Story* page folded into Home, so Story is now a Home section rather than a route, but keeps its `section-story` accent.)
+(**v0.3.0 content port:** the *Visit* house was renamed *Co-Living* and *Publications* → *Library*, with user-facing names, slugs, routes, and matching `house-co-living-*` / `house-library-*` tokens. The *Story* page folded into Home, so Story is now a Home section rather than a route, but keeps its `section-story` accent.)
 
-(**External sectors — no internal page:** the *Accelerator* and *Education* (`school`, shown in the nav as *FractalU*) houses **remain fully in the model** — both keep their `house-accelerator-*` / `house-education-*` token pairs, their nav-letter color, and their octahedron vertex node — but they **no longer have an internal page**. Their nav link and octahedron node point out to standalone sites: Accelerator → `https://www.fractalaccelerator.com/`, FractalU → `https://www.fractalu.nyc/` (opened in a new tab). The old `/accelerator`, `/education`, and `/new-liberal-arts` routes external-redirect there. Still **7 houses / 14 tokens** — nothing was removed from the palette.)
+(**Education destinations — transitional navigation:** Accelerator is a program within the Education house, not a seventh house. Accelerator and FractalU therefore share `house-education-{light,deep}` while retaining separate nav links and octahedron vertices to their standalone sites: Accelerator → `https://www.fractalaccelerator.com/`, FractalU → `https://www.fractalu.nyc/` (opened in a new tab). The old `/accelerator`, `/education`, and `/new-liberal-arts` routes continue to external-redirect until the Education hub lands.)
 
 (**Footer removed:** the visible site footer — the black CTA band and the "Fractal Collective" wordmark band — was removed. `Footer.tsx` now renders only an empty, zero-height `<footer data-site-footer aria-hidden="true" />` marker, retained **solely** as the anchor `useBannerAboveFooter` measures against to keep the flanking pennant banners from overrunning the page end. Do not add visible chrome there.)
 
@@ -109,7 +109,7 @@ Political Club (and the People page) are intentionally **not surfaced at initial
 
 ## Colors
 
-The system declares **21 color tokens**: 4 surface tokens that drive the page chrome, 14 house tokens (7 houses × `{light, deep}`) that theme each house's pages, banner, and avatar, and 3 non-house section tokens — the `section-people-{light, deep}` pair plus the single `section-story` accent — for section pages that aren't houses (see [Non-house section colors](#non-house-section-colors)).
+The system declares **18 color tokens**: 4 surface tokens that drive the page chrome, 12 house tokens (6 houses × `{light, deep}`) that theme each house's pages, banner, and avatar, and 2 single-accent non-house section tokens — `section-story` and `section-people` (see [Non-house section colors](#non-house-section-colors)).
 
 The surface palette is deliberately lean: cream (`background`) is the page, and the rest is charcoal in three weights — `foreground` → `foreground-muted` → `foreground-faint`, darkest to faintest. Neutral fills are `foreground` at low opacity (e.g. `bg-foreground/5` for the gallery image placeholder) rather than a dedicated fill token; focus rings and text selection use `foreground` directly. The site's color *accents* come from the house palette, not a neutral accent token.
 
@@ -132,48 +132,44 @@ Each house has an internal data-model `id` (used in routes and `src/data/houses.
 | `events` | Events | `house-events-{light,deep}` |
 | `campus` | Campus | `house-campus-{light,deep}` |
 | `school` | Education | `house-education-{light,deep}` |
-| `forum` | Political Club | `house-political-club-{light,deep}` |
 | `lab` | Library | `house-library-{light,deep}` |
-| `accelerator` | Accelerator | `house-accelerator-{light,deep}` |
+| `forum` | Political Club | `house-political-club-{light,deep}` |
 
 | Token | Hex |
 |---|---|
-| `house-co-living-light` | `#889460` |
-| `house-co-living-deep` | `#4A5A30` |
-| `house-events-light` | `#D4857A` |
-| `house-events-deep` | `#C13B2A` |
-| `house-campus-light` | `#2E6B4A` |
+| `house-co-living-light` | `#AEB175` |
+| `house-co-living-deep` | `#4F5B0D` |
+| `house-events-light` | `#E5A794` |
+| `house-events-deep` | `#CA5C4E` |
+| `house-campus-light` | `#51805C` |
 | `house-campus-deep` | `#1A3A2E` |
-| `house-education-light` | `#C41E20` |
-| `house-education-deep` | `#5C1010` |
-| `house-political-club-light` | `#C83858` |
-| `house-political-club-deep` | `#6E1830` |
-| `house-accelerator-light` | `#8E2A1E` |
-| `house-accelerator-deep` | `#641E28` |
-| `house-library-light` | `#E870A0` |
-| `house-library-deep` | `#C44878` |
+| `house-education-light` | `#C51C15` |
+| `house-education-deep` | `#4C0000` |
+| `house-library-light` | `#C889AB` |
+| `house-library-deep` | `#A33E6F` |
+| `house-political-club-light` | `#82AFA2` |
+| `house-political-club-deep` | `#084247` |
 
 `HOUSES[id].palette: { light, deep }` in `src/data/houses.ts` is the single source of truth for house color, and each house has exactly two colors — the pair is the unit.
 
-**Scope:** house colors live on their own house's pages. On a house's page, its pair may color display headings, the monogram letter, eyebrows, focus rings, and chrome. Most houses use `{light}` as the page background and `{deep}` as the accent; **Political Club inverts** (page background `{deep}`, accent `{light}`) — a per-page decision applied in `PoliticalClubPage.tsx`. (Education used to invert the same way, but it no longer has an internal page — see the external-sectors note above.) Each house's per-page banner SVG (see [Components](#components)) likewise draws from the house pair.
+**Scope:** house colors live on their own house's pages. On a house's page, its pair may color display headings, the monogram letter, eyebrows, focus rings, and chrome. Most houses use `{light}` as the page background and `{deep}` as the accent; **Political Club inverts** (page background `{deep}`, accent `{light}`) — a per-page decision applied in `PoliticalClubPage.tsx`. Education's pair supplies both current outbound destinations. Per-page banner SVG artwork is migrated separately; until that artwork PR lands, the embedded SVG fills may temporarily retain the previous palette even though page and component tokens use this canonical table.
 
 ### Non-house section colors
 
 A small category distinct from the six houses: section pages that aren't houses but still carry canonical brand color. They are sourced from the exported `SECTIONS` record in `src/data/houses.ts` (the canonical real-hex home), mirrored by `--color-section-*` tokens in `src/index.css`. A test (`src/__tests__/section-tokens-sync.test.ts`) keeps the two in lockstep, exactly like the house-token check.
 
-**Houses flood; non-house sections read as cream.** A house page is *color-flooded* — its `{light, deep}` pair fills the page background and accents (the saturated brand surface). Non-house sections need not follow that rule, and Story deliberately doesn't: **houses get color-flooded pages; non-house sections may read as cream / editorial.** Because of that, section entries are intentionally **heterogeneous in shape** — a flooded section carries a `{light, deep}` pair, while a cream section carries a single `{accent}`. The token names follow the shape: a pair → `section-{slug}-{light,deep}`; a single accent → `section-{slug}` (no variant suffix).
+**Houses flood; non-house sections read as cream.** A house page is *color-flooded* — its `{light, deep}` pair fills the page background and accents. Story and People are intentionally different: both use the shared cream background, charcoal text, and one `{accent}` for identity and decoration. Their token names therefore have no variant suffix.
 
 | Token | Hex | Shape |
 |---|---|---|
-| `section-people-light` | `#C49040` | flooded pair |
-| `section-people-deep` | `#B65D19` | flooded pair |
-| `section-story` | `#D4BA58` | cream — single accent |
+| `section-story` | `#D4BA58` | Story identity and decorative light gold |
+| `section-people` | `#C49040` | People identity and decorative darker gold |
 
-**People** is a *flooded* section (`{light, deep}`), like a house. The People page is intentionally **deferred from launch** (hidden from the navbar via `EXTRA_HIDDEN_HREFS` in `Navbar.tsx`) but kept fully tokenized and launch-ready — its `/people` route, octahedron face, and nav swatch all read from the same `SECTIONS.people` source.
+**People** is a cream section with one identity accent. The People page is intentionally **deferred from launch** (hidden from the navbar via `EXTRA_HIDDEN_HREFS` in `Navbar.tsx`) but kept fully tokenized and launch-ready — its `/people` route, octahedron face, page decoration, and nav swatch all read from `SECTIONS.people.accent`.
 
-**Story** is a *cream* section. Since it isn't a house, it reads as a **cream background with charcoal text** and a **single gold identity accent** (`section-story` `#D4BA58`) rather than a color flood. The accent appears only as decoration — the SectorHeader letter/name and the fractal-diagram frame/center — while all body text stays charcoal (`text-foreground`), since gold-on-cream fails WCAG for small text. Story's color is sourced from `SECTIONS.story.accent`. **v0.3.0 content port:** the Story *page* folded into Home, so the story content (SectorHeader, origin narrative, `FractalDiagram`, photo gallery, "Curious about Fractal?" callout) now renders as a Home section rather than at `/story`; the `SECTIONS.story` source, octahedron face, hero nav node, and navbar swatch are unchanged.
+**Story** is a *cream* section. Since it isn't a house, it reads as a **cream background with charcoal text** and a **single gold identity accent** (`section-story` `#D4BA58`) rather than a color flood. The accent appears only as decoration — the SectorHeader letter/name and the fractal-diagram frame/center — while all body text stays charcoal (`text-foreground`), since gold-on-cream fails WCAG for small text. Story's color is sourced from `SECTIONS.story.accent`. **v0.3.0 content port:** the Story *page* folded into Home, so the story content (SectorHeader, origin narrative, `FractalDiagram`, photo gallery, "Curious about Fractal?" callout) now renders as a Home section rather than at `/story`; the `SECTIONS.story` source and octahedron face remain.
 
-**Story deep-gold (`#a08a2e`)** — a *blessed literal* (in `scripts/design-conformance.baseline.json`), used as the "Curious about Fractal?" callout label on Home. It is intentionally a touch deeper/greener than `section-story` `#D4BA58` so it clears contrast on cream at label size (the light gold doesn't). No token — it lives only at that one Story site.
+The Home “Curious about Fractal?” label uses the People accent directly, connecting that invitation to the People section. Charcoal on `#C49040` is 6.33:1, but `#C49040` as foreground text on cream is only 2.62:1, so this small gold label is an **operator-approved decorative text exception**. It must not be used for body copy, controls, or essential instructions; those remain charcoal on cream.
 
 ### Surface + text pairings
 
@@ -182,25 +178,25 @@ Two text colors carry the entire site: charcoal (`text-foreground`) and cream (`
 | Surface luminance | Text | Examples |
 |---|---|---|
 | Light (cream + light house fills) | `text-foreground` (charcoal) | `bg-background`, `bg-house-co-living-light`, `bg-house-events-light` |
-| Dark / saturated (charcoal + dark/saturated house fills) | `text-background` (cream) | `bg-foreground`, `bg-house-campus-light`, `bg-house-education-deep`, `bg-house-library-light`, `bg-house-political-club-deep`, `bg-house-accelerator-light` |
+| Dark / saturated (charcoal + dark/saturated house fills) | `text-background` (cream) | `bg-foreground`, `bg-house-campus-light`, `bg-house-education-deep`, `bg-house-library-deep`, `bg-house-political-club-deep` |
 
-The token suffix does **not** decide the text color. Campus (`house-campus-light` `#2E6B4A`) and Library (`house-library-light` `#E870A0`) both use a `-light` background token yet still take cream `text-background`, because those fills are dark/saturated enough that charcoal would fail contrast. The luminance of the actual surface decides, not the `-light`/`-deep` label.
+The token suffix does **not** decide the text color. Library's new light surface (`#C889AB`) takes charcoal because it yields 6.51:1. Campus's light surface (`#51805C`) remains paired with cream because cream (4.23:1) is stronger than charcoal (3.92:1), although it falls just below AA for normal text; treat that as a known inherited surface exception pending a dedicated accessibility pass. The luminance of the actual surface decides, not the `-light`/`-deep` label.
 
 Secondary / supporting text uses `text-foreground-muted` (`#525252`).
 
 Set the text color explicitly on the same node as the surface. A nested cream surface inside a house page re-asserts `text-foreground` on the inner surface, so text always pairs with its actual background rather than inheriting from the page cascade.
 
-**Known concern:** the Library page (`LibraryPage`) floods `bg-house-library-light` (`#E870A0`, a bright pink) under cream `text-background`. Cream-on-pink is a borderline-contrast pairing worth a revisit.
+The palette reference records element-specific contrast rather than implying every pair is interchangeable. In particular, the `{light,deep}` contrast is below 3:1 for Events, Campus, Education, and Library; those pairs may be used as adjacent fields or decoration, but not as a claim that small text in one house color is readable over the other. Body text uses the explicit charcoal/cream surface pairings above.
 
 ### 3D-scene palette (out-of-token)
 
-The WebGL hero scenes carry their own material/light palette that lives **deliberately outside** the 2D token system: Three.js materials and lights set color in JS props, where CSS custom properties don't resolve, so these are raw hex literals by necessity, not drift. They're sanctioned exceptions, grandfathered in `scripts/design-conformance.baseline.json` (this section is the *intent* half of that baseline entry). They never appear in 2D CSS — reach for them only inside the `three/` scene code.
+The WebGL hero scenes combine canonical data-sourced accents with a small material/light palette that lives **deliberately outside** the 2D token system. The two visible gold roles come from `SECTIONS`: Story supplies the lighter streaming/highlight role and People supplies the darker connector/structure/fallback role. Three.js materials and lights still set their subordinate depth colors in JS props, where CSS custom properties don't resolve; those remaining raw hex literals are sanctioned exceptions, grandfathered in `scripts/design-conformance.baseline.json` (this section is the *intent* half of that baseline entry). They never appear in 2D CSS — reach for them only inside the `three/` scene code.
 
 | Source | Colors | Role |
 |---|---|---|
-| `OctahedronHero.tsx` | `#e8e0d0` `#e0c880` `#ddb866` `#cc9955` `#c4a265` `#bb8844` `#8a7a6a` | octahedron gold/sand face-material tints |
+| `OctahedronHero.tsx` | `#e8e0d0` `#bb8844` `#cc9955` `#8a7a6a` | low-opacity shell base/emissive depth tints and the deferred Political Club face placeholder |
 | `FractalCityScene.tsx` | `#ffaa66` `#ffcc88` `#f5f0ea` `#aabbcc` `#ffffff` | scene point/directional lights + ambient (`#aabbcc` is the cool fill `directionalLight`) |
-| `heroNavNodes.ts` | `#c4a265` | `PALETTE_FALLBACK` — the model gold used when a section/house color is missing |
+| `heroNavNodes.ts` | `SECTIONS.story.accent` `SECTIONS.people.accent` | canonical visible hero roles: Story for streaming/highlight; People for connector/structure and `PALETTE_FALLBACK` |
 
 ## Typography
 

@@ -13,6 +13,8 @@ vi.mock("@/components/three/FractalCityScene", () => ({
 }));
 
 import { Navbar } from "@/components/layout/Navbar";
+import { HOUSES } from "@/data/houses";
+import { OUTER_NAV_NODES } from "@/components/three/heroNavNodes";
 
 // ---------------------------------------------------------------------------
 // Helper: render the Navbar at a given route
@@ -215,6 +217,36 @@ describe("External section links (Accelerator + FractalU)", () => {
       expect(a.getAttribute("target")).toBe("_blank");
       expect(a.getAttribute("rel")).toContain("noopener");
     }
+  });
+
+  it("uses the Education palette for both outbound destinations", () => {
+    const education = HOUSES.find((house) => house.id === "school")!;
+    for (const href of [
+      "https://go.fractalaccelerator.com/fractalnycwebsite",
+      "https://www.fractalu.nyc/",
+    ]) {
+      const anchors = Array.from(
+        document.querySelectorAll<HTMLAnchorElement>(`a[href="${href}"]`),
+      );
+      expect(anchors.length).toBeGreaterThanOrEqual(1);
+      for (const anchor of anchors) {
+        expect(anchor.style.getPropertyValue("--nav-c")).toBe(
+          education.palette.light,
+        );
+        expect(anchor.style.getPropertyValue("--nav-c-deep")).toBe(
+          education.palette.deep,
+        );
+      }
+    }
+
+    const educationNodes = OUTER_NAV_NODES.filter(({ label }) =>
+      ["Accelerator", "FractalU"].includes(label),
+    );
+    expect(educationNodes).toHaveLength(2);
+    expect(educationNodes.map(({ color }) => color)).toEqual([
+      education.palette.light,
+      education.palette.light,
+    ]);
   });
 
   it("keeps internal section links (Campus, Co-Living, Events, Library) as same-tab wouter routes", () => {

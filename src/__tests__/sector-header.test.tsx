@@ -21,16 +21,15 @@ const sections = [
   { letter: "S", name: "Story", color: SECTIONS.story.accent },
   { letter: "C", name: "Campus", color: "#1A3A2E" },
   // Content port: Visit → Co-Living (monogram "CL"), Publications →
-  // Library (letter "L"). The hex pairs are unchanged from houses.ts
-  // (neighborhood / lab), only the user-facing mark + name moved.
-  { letter: "CL", name: "Co-Living", color: "#4A5A30" },
-  { letter: "E", name: "Events", color: "#C13B2A" },
+  // Library (letter "L").
+  { letter: "CL", name: "Co-Living", color: "#4F5B0D" },
+  { letter: "E", name: "Events", color: "#CA5C4E" },
   // Education/Accelerator no longer have internal pages (they link out to
   // fractalu.nyc / fractalaccelerator.com), so no page renders a SectorHeader
   // for them — dropped from these fixtures.
-  { letter: "PC", name: "Political Club", color: "#C83858" },
-  { letter: "L", name: "Library", color: "#C44878" },
-  { letter: "P", name: "People", color: SECTIONS.people.deep },
+  { letter: "PC", name: "Political Club", color: "#82AFA2" },
+  { letter: "L", name: "Library", color: "#A33E6F" },
+  { letter: "P", name: "People", color: SECTIONS.people.accent },
 ] as const;
 
 describe("SectorHeader", () => {

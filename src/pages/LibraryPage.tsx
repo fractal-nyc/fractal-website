@@ -23,7 +23,7 @@ export function LibraryPage() {
   const filter = useArchiveFilter();
   return (
     <main
-      className="relative min-h-screen bg-house-library-light text-background selection:bg-foreground selection:text-background"
+      className="relative min-h-screen bg-house-library-light text-foreground selection:bg-foreground selection:text-background"
       style={{ "--accent": "var(--color-house-library-deep)" } as CSSProperties}
     >
       <FractalPattern color={PUBLICATIONS_COLOR} />

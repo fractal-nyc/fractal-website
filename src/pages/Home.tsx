@@ -10,14 +10,14 @@ import { MandelbrotCorners } from "@/components/ui/MandelbrotCorners";
 import { SECTIONS } from "@/data/houses";
 import { useEffect } from "react";
 
-// Story's single gold identity accent (matches the Navbar Story link + the
-// octahedron Story face). Used only as the SectorHeader letter/label tint.
+// Story's single gold identity accent matches the octahedron Story face. Used
+// only as the SectorHeader letter/label tint.
 const STORY_COLOR = SECTIONS.story.accent;
 
-// Story deep-gold — the "Curious about Fractal?" callout label. A blessed
-// literal (see DESIGN.md § Colors); deeper than section-story so it reads on
-// cream at label size.
-const STORY_GOLD_DEEP = "#a08a2e";
+// The People accent marks this invitation into the Fractal community. The
+// operator approved this small gold-on-cream label as a deliberate decorative
+// contrast exception; body copy and controls retain accessible charcoal.
+const PEOPLE_COLOR = SECTIONS.people.accent;
 
 const DISCORD_URL = "https://discord.gg/Er974gPTXe";
 const IAN_CHAT_URL =
@@ -80,7 +80,7 @@ export function Home() {
               opacity={0.15}
               className="border [border-color:var(--color-section-story)] rounded-md p-7 md:px-10 md:py-8 bg-[color-mix(in_srgb,var(--color-section-story)_8%,transparent)] text-foreground text-left"
             >
-              <p className="text-label mb-3" style={{ color: STORY_GOLD_DEEP }}>
+              <p className="text-label mb-3" style={{ color: PEOPLE_COLOR }}>
                 Curious about Fractal?
               </p>
               <p className="text-body text-foreground/85 leading-relaxed">

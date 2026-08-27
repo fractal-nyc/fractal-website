@@ -6,7 +6,7 @@
  * color at very low opacity so it decorates without competing with content.
  *
  * Usage:
- *   <FractalPattern color="#C13B2A" />
+ *   <FractalPattern color={house.palette.deep} />
  *
  * Place it as the first child inside <main> so it sits behind all content.
  */

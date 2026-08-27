@@ -3,12 +3,19 @@
 // dragging the entire three.js dependency chain (three + @react-three/fiber +
 // drei + three-stdlib) onto the entry chunk. Importing from this module is
 // three-free — reach in here directly for OUTER_NAV_NODES / NavNode.
-import { HOUSES } from "@/data/houses";
+import { HOUSES, SECTIONS } from "@/data/houses";
 
-// Octahedron model gold — the graceful fallback when a section/house color is
-// missing. Shared by housePalette() below and the face materials in
-// OctahedronHero (FRAC-207: replaced a magenta #ff00ff debug sentinel).
-export const PALETTE_FALLBACK = "#c4a265";
+// The two visible gold roles in the hero are canonical Story and People
+// accents rather than a separate 3D-only palette. Keep this map three-free so
+// non-WebGL consumers and tests can import the contract without pulling in the
+// React Three Fiber dependency chain.
+export const HERO_GOLD_ROLES = {
+  streamingHighlight: SECTIONS.story.accent,
+  connectorStructural: SECTIONS.people.accent,
+} as const;
+
+// A missing house/face palette falls back to the shared People connector role.
+export const PALETTE_FALLBACK = HERO_GOLD_ROLES.connectorStructural;
 
 export const housePalette = (
   id: string,
@@ -38,5 +45,5 @@ export const OUTER_NAV_NODES: NavNode[] = [
   { label: "Campus",      route: "/campus",                            color: housePalette("campus"),       vertexIndex: 0 },
   { label: "FractalU",    route: "https://www.fractalu.nyc/",          color: housePalette("school"),       vertexIndex: 1 },
   { label: "Library",     route: "/library",                           color: housePalette("lab"),          vertexIndex: 5 },
-  { label: "Accelerator", route: "https://go.fractalaccelerator.com/fractalnycwebsite", color: housePalette("accelerator"), vertexIndex: 4 },
+  { label: "Accelerator", route: "https://go.fractalaccelerator.com/fractalnycwebsite", color: housePalette("school"),      vertexIndex: 4 },
 ];
