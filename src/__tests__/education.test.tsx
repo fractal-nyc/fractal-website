@@ -25,7 +25,8 @@ describe("EducationPage", () => {
     expect(heading.className).toContain("text-display");
     expect(screen.getAllByRole("heading", { level: 1 })).toHaveLength(1);
     const subtitle = screen.getByText("An improvised college in New York City.");
-    expect(subtitle).toHaveClass("text-subtitle");
+    expect(subtitle).toHaveClass("text-subtitle", "mt-4");
+    expect(subtitle).not.toHaveClass("mt-2", "md:mt-6");
     expect(subtitle.nextElementSibling).toHaveClass("mt-4");
     expect(subtitle.nextElementSibling).not.toHaveClass("md:mt-8");
     const futureSemesters = screen.getByRole("link", {

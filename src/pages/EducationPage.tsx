@@ -72,7 +72,7 @@ export function EducationPage() {
                   <h1 className="text-display !text-3xl text-background md:!text-7xl">
                     Fractal University
                   </h1>
-                  <p className="text-subtitle mt-2 text-background/80 normal-case md:mt-6">
+                  <p className="text-subtitle mt-4 text-background/80 normal-case">
                     An improvised college in New York City.
                   </p>
                   <div className="mt-4 flex flex-col items-center justify-center gap-x-3 gap-y-0 sm:flex-row sm:flex-wrap">
