@@ -7,7 +7,6 @@ import { EducationBannerSVG } from "@/components/house/EducationBannerSVG";
 import { Footer } from "@/components/layout/Footer";
 import { Navbar } from "@/components/layout/Navbar";
 import { SectorHeader } from "@/components/layout/SectorHeader";
-import { Button } from "@/components/ui/button";
 import { FadeIn } from "@/components/ui/FadeIn";
 import { FractalPattern } from "@/components/ui/FractalPattern";
 import { HOUSES } from "@/data/houses";
@@ -76,36 +75,40 @@ export function EducationPage() {
                   <p className="text-subtitle mt-2 text-background/80 normal-case md:mt-6">
                     An improvised college in New York City.
                   </p>
-                  <div className="mt-4 flex flex-col items-stretch justify-center gap-2 sm:flex-row sm:flex-wrap sm:items-center md:mt-8 md:gap-3">
-                    <Button asChild className="w-full whitespace-normal text-center sm:w-auto">
-                      <EducationOutboundLink
-                        href="https://fractaluniversity.substack.com"
-                        accessibleName="Stay tuned for future semesters"
-                        tone="dark"
-                      >
-                        <span
-                          className="min-w-0 leading-snug [overflow-wrap:anywhere]"
-                          data-education-hero-action-label
-                        >
-                          Stay tuned for future semesters
-                        </span>
-                      </EducationOutboundLink>
-                    </Button>
-                    <Button
-                      asChild
-                      variant="outline"
-                      className="w-full whitespace-normal border-background text-background hover:bg-background/10 focus-visible:ring-background focus-visible:ring-offset-house-education-deep sm:w-auto"
+                  <div className="mt-4 flex flex-col items-center justify-center gap-x-6 gap-y-1 sm:flex-row sm:flex-wrap md:mt-8">
+                    <EducationOutboundLink
+                      href="https://fractaluniversity.substack.com"
+                      accessibleName="Stay tuned for future semesters"
+                      tone="dark"
+                      typography="body"
+                      className="justify-center text-center"
                     >
-                      <a href="#what-is-fractalu" onClick={jumpToInformation}>
-                        <span
-                          className="text-subtitle min-w-0 leading-snug [overflow-wrap:anywhere]"
-                          data-education-hero-action-label
-                        >
-                          What is FractalU?
-                        </span>
-                        <ArrowDown aria-hidden="true" />
-                      </a>
-                    </Button>
+                      <span
+                        className="min-w-0 leading-snug [overflow-wrap:anywhere]"
+                        data-education-hero-action-label
+                      >
+                        Stay tuned for future semesters
+                      </span>
+                    </EducationOutboundLink>
+                    <a
+                      href="#what-is-fractalu"
+                      onClick={jumpToInformation}
+                      className="text-body inline-flex min-h-11 min-w-0 max-w-full items-center justify-center gap-x-1.5 rounded-md text-center text-background underline decoration-1 decoration-background/40 underline-offset-4 transition-colors [overflow-wrap:anywhere] hover:decoration-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-background focus-visible:ring-offset-2 focus-visible:ring-offset-house-education-deep"
+                    >
+                      <span
+                        className="min-w-0 leading-snug [overflow-wrap:anywhere]"
+                        data-education-hero-action-label
+                      >
+                        What is FractalU?
+                      </span>
+                      <ArrowDown
+                        size={15}
+                        strokeWidth={1.5}
+                        className="shrink-0"
+                        aria-hidden="true"
+                        data-education-internal-arrow
+                      />
+                    </a>
                   </div>
                 </div>
               </FadeIn>

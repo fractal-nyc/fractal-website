@@ -47,17 +47,45 @@ test("Education portal keeps one wide accessible catalog across input modes", as
     "href",
     "https://fractaluniversity.substack.com",
   );
-  await expect(futureSemestersLink).toHaveCSS("font-family", /JetBrains Mono/);
+  await expect(futureSemestersLink).toHaveAttribute("target", "_blank");
+  await expect(futureSemestersLink).toHaveAttribute("rel", "noopener noreferrer");
+  await expect(futureSemestersLink).toHaveCSS("font-family", /Inter/);
   const heroArrow = futureSemestersLink.locator("svg[data-education-outbound-arrow]");
   await expect(heroArrow).toHaveCount(1);
   await expect(heroArrow).toHaveAttribute("aria-hidden", "true");
+  await expect(heroArrow).toHaveClass(/lucide-arrow-up-right/);
   const informationJump = page.getByRole("link", { name: "What is FractalU?" });
   await expect(informationJump.locator("[data-education-hero-action-label]")).toHaveCSS(
     "font-family",
-    /Fraunces/,
+    /Inter/,
   );
   await expect(informationJump).toHaveAttribute("href", "#what-is-fractalu");
   await expect(informationJump).not.toHaveAttribute("data-education-outbound-link");
+  const informationArrow = informationJump.locator("svg[data-education-internal-arrow]");
+  await expect(informationArrow).toHaveCount(1);
+  await expect(informationArrow).toHaveClass(/lucide-arrow-down/);
+  await expect(informationJump.locator("svg[data-education-outbound-arrow]")).toHaveCount(0);
+  for (const heroLink of [futureSemestersLink, informationJump]) {
+    await expect(heroLink).toHaveCSS("background-color", "rgba(0, 0, 0, 0)");
+    await expect(heroLink).toHaveCSS("border-top-width", "0px");
+    await expect(heroLink).toHaveCSS("box-shadow", "none");
+    expect(
+      await heroLink.evaluate((link) => Number.parseFloat(getComputedStyle(link).minHeight)),
+    ).toBeGreaterThanOrEqual(44);
+  }
+  expect(
+    await page.locator("[data-education-intro]").evaluate((introElement) => {
+      const links = Array.from(
+        introElement.querySelectorAll<HTMLAnchorElement>("a"),
+      );
+      return links.every(
+        (link) =>
+          link.scrollWidth <= link.clientWidth + 1 &&
+          link.getBoundingClientRect().left >= -1 &&
+          link.getBoundingClientRect().right <= document.documentElement.clientWidth + 1,
+      );
+    }),
+  ).toBe(true);
   await expect(page.getByRole("link", { name: /Visit Fractal AI Accelerator/ })).toHaveCount(0);
   await expect(portal).toBeVisible();
   expect(
