@@ -2,7 +2,7 @@ import { FadeIn } from "@/components/ui/FadeIn";
 
 export function OriginStory() {
   return (
-    <section className="py-10 md:py-16 overflow-hidden" id="story">
+    <section className="py-10 md:py-16 overflow-hidden">
       <div className="max-w-5xl mx-auto page-gutter">
         <FadeIn>
           <div className="space-y-4">
