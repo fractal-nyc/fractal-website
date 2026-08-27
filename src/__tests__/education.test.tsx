@@ -171,7 +171,7 @@ describe("EducationPage", () => {
       "var(--color-house-education-light)",
     );
     expect(container.querySelector(`svg [stroke="${education.palette.light}"]`)).toBeTruthy();
-    expect(education.palette.light).toBe("#CB2B23");
+    expect(education.palette.light).toBe("#B22B23");
     expect(container.querySelector("[data-fractalu-wide-shell]")).toHaveClass("text-background");
     expect(container.querySelector("[data-sector-letter]")).toHaveStyle({
       color: "var(--color-house-education-light)",

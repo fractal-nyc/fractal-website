@@ -56,7 +56,7 @@ const canonicalHouses = [
   ["neighborhood", "#AEB175", "#4F5B0D"],
   ["events", "#E5A794", "#CA5C4E"],
   ["campus", "#51805C", "#1A3A2E"],
-  ["school", "#CB2B23", "#4C0000"],
+  ["school", "#B22B23", "#4C0000"],
   ["lab", "#C889AB", "#A33E6F"],
   ["forum", "#82AFA2", "#084247"],
 ] as const;
