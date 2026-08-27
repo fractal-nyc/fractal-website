@@ -35,6 +35,7 @@ import { PoliticalClubPage } from "@/pages/PoliticalClubPage";
 import { LibraryPage } from "@/pages/LibraryPage";
 import { PeoplePage } from "@/pages/PeoplePage";
 import { ProtocolPage } from "@/pages/ProtocolPage";
+import { EducationPage } from "@/pages/EducationPage";
 
 // ---------------------------------------------------------------------------
 // Helper: render a page component at the given route
@@ -58,6 +59,7 @@ const pages = [
   { name: "CampusPage", Component: CampusPage, path: "/campus" },
   { name: "CoLivingPage", Component: CoLivingPage, path: "/co-living" },
   { name: "EventsPage", Component: EventsPage, path: "/events" },
+  { name: "EducationPage", Component: EducationPage, path: "/education" },
   { name: "PoliticalClubPage", Component: PoliticalClubPage, path: "/political-club" },
   { name: "LibraryPage", Component: LibraryPage, path: "/library" },
   { name: "PeoplePage", Component: PeoplePage, path: "/people" },
@@ -104,6 +106,25 @@ describe("FRAC-161 visibility filters", () => {
     );
     expect(container.textContent).not.toContain("How Do I Get Involved");
   });
+
+  it("links the visible Home hero navigation to the existing Story section", () => {
+    const { container } = renderPage(Home, "/");
+    const storyLink = container.querySelector<HTMLAnchorElement>(
+      'header a.nav-link[href="#story"]',
+    );
+
+    expect(storyLink).toBeTruthy();
+    expect(storyLink).toHaveTextContent("Story");
+    expect(
+      Array.from(
+        storyLink!.closest("nav")!.querySelectorAll<HTMLAnchorElement>(
+          "a.nav-link",
+        ),
+        (link) => link.textContent,
+      ),
+    ).toEqual(["Events", "Library", "Story"]);
+    expect(container.querySelector("main #story")).toBeTruthy();
+  });
 });
 
 describe("Route paths match expected URLs", () => {
@@ -112,6 +133,7 @@ describe("Route paths match expected URLs", () => {
     { path: "/campus", label: "Campus" },
     { path: "/co-living", label: "Co-Living" },
     { path: "/events", label: "Events" },
+    { path: "/education", label: "Education" },
     { path: "/political-club", label: "Political Club" },
     { path: "/library", label: "Library" },
     { path: "/people", label: "People" },

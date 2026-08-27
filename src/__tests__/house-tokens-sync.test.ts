@@ -3,6 +3,7 @@ import { fileURLToPath } from "node:url";
 import { dirname, resolve } from "node:path";
 import { describe, it, expect } from "vitest";
 import { HOUSES } from "@/data/houses";
+import { EDUCATION_ACCELERATOR } from "@/data/education";
 
 // ═══════════════════════════════════════════════════════════════════════════
 // House-token drift check (FRAC-203)
@@ -51,10 +52,40 @@ function houseTokenSlug(house: (typeof HOUSES)[number]): string {
 
 const tokens = parseHouseTokens(css);
 
+const canonicalHouses = [
+  ["neighborhood", "#AEB175", "#4F5B0D"],
+  ["events", "#E5A794", "#CA5C4E"],
+  ["campus", "#51805C", "#1A3A2E"],
+  ["school", "#B22B23", "#4C0000"],
+  ["lab", "#C889AB", "#A33E6F"],
+  ["forum", "#82AFA2", "#084247"],
+] as const;
+
 describe("house token sync (houses.ts ↔ index.css)", () => {
-  it("defines exactly 14 house tokens (7 houses × light/deep)", () => {
-    expect(HOUSES).toHaveLength(7);
-    expect(tokens.size).toBe(14);
+  it("defines the six canonical houses in display order", () => {
+    expect(
+      HOUSES.map(({ id, palette }) => [id, palette.light, palette.deep]),
+    ).toEqual(canonicalHouses);
+  });
+
+  it("defines exactly 12 house tokens (6 houses × light/deep)", () => {
+    expect(HOUSES).toHaveLength(6);
+    expect(tokens.size).toBe(12);
+  });
+
+  it("keeps only Accelerator external and defers Political Club visibility", () => {
+    const education = HOUSES.find(({ id }) => id === "school")!;
+    expect(education.externalLinks).toEqual([
+      {
+        label: EDUCATION_ACCELERATOR.houseLinkLabel,
+        url: EDUCATION_ACCELERATOR.url,
+      },
+    ]);
+
+    const politicalClub = HOUSES.at(5)!;
+    expect(politicalClub.id).toBe("forum");
+    expect(politicalClub.hideFromNavbar).toBe(true);
+    expect(politicalClub.hideFromBanners).toBe(true);
   });
 
   for (const house of HOUSES) {

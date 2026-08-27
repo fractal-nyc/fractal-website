@@ -89,21 +89,23 @@ export function useTapHandlers(onTap: () => void) {
 // ---------------------------------------------------------------------------
 // Nav node definitions — 6 nodes on octahedron vertices
 // ---------------------------------------------------------------------------
-// FRAC-5 / FRAC-161 / FRAC-36 / FRAC-47: Political Club is hidden from the
-// navbar (FRAC-32) and its banner grid card stays hidden (FRAC-161). On the
-// hero octahedron, vertex 4 was previously the FRAC-36 "Coming Soon"
-// placeholder for Political Club. FRAC-47 converts that slot to a Story
-// node — fully active, navigable to /story, in the Story identity color
-// (matches Navbar.tsx Story link + StoryPage STORY_COLOR). FRAC-205 sources
-// that color from SECTIONS.story.accent instead of a literal. The
-// geometry still reads as complete (6 vertices, 6 nodes); Political Club
-// remains hidden from the navbar.
+// Political Club remains hidden from the navbar and has no outer nav node.
+// The six octahedron vertices instead map to the six current destinations in
+// heroNavNodes.ts, including separate Accelerator and FractalU labels that share
+// the Education palette and route. Story and Political Club remain represented as face
+// textures independently of those vertex nodes.
 
 // FRAC-181: OUTER_NAV_NODES + NavNode live in heroNavNodes.ts (three-free) so
 // Hero.tsx can import them without dragging the three.js chunk onto the entry
 // chunk. The internal rendering loop near the bottom of this file imports them
 // below.
-import { OUTER_NAV_NODES, type NavNode, housePalette, PALETTE_FALLBACK } from "./heroNavNodes";
+import {
+  HERO_GOLD_ROLES,
+  OUTER_NAV_NODES,
+  type NavNode,
+  housePalette,
+  PALETTE_FALLBACK,
+} from "./heroNavNodes";
 
 // ---------------------------------------------------------------------------
 // Octahedron vertex generation
@@ -126,72 +128,6 @@ const OCTA_EDGES: [number, number][] = [
   [1, 2], [1, 3], [1, 4], [1, 5],
   [2, 4], [2, 5], [3, 4], [3, 5],
 ];
-
-// ---------------------------------------------------------------------------
-// Connection lines between nested octahedra
-// ---------------------------------------------------------------------------
-
-function NestedOctaLines({
-  outerVerts,
-  innerVerts,
-}: {
-  outerVerts: THREE.Vector3[];
-  innerVerts: THREE.Vector3[];
-}) {
-  const geometry = useMemo(() => {
-    const positions: number[] = [];
-
-    for (const ov of outerVerts) {
-      for (const iv of innerVerts) {
-        positions.push(ov.x, ov.y, ov.z);
-        positions.push(iv.x, iv.y, iv.z);
-      }
-    }
-
-    for (let i = 0; i < outerVerts.length; i += 2) {
-      positions.push(outerVerts[i].x, outerVerts[i].y, outerVerts[i].z);
-      positions.push(outerVerts[i + 1].x, outerVerts[i + 1].y, outerVerts[i + 1].z);
-    }
-
-    const geo = new THREE.BufferGeometry();
-    geo.setAttribute("position", new THREE.Float32BufferAttribute(positions, 3));
-    return geo;
-  }, [outerVerts, innerVerts]);
-
-  return (
-    <lineSegments geometry={geometry}>
-      <lineBasicMaterial color="#c4a265" transparent opacity={0.25} />
-    </lineSegments>
-  );
-}
-
-// Edge lines for an octahedron
-function OctaEdgeLines({
-  verts,
-  color,
-  opacity,
-}: {
-  verts: THREE.Vector3[];
-  color: string;
-  opacity: number;
-}) {
-  const geometry = useMemo(() => {
-    const positions: number[] = [];
-    for (const [i, j] of OCTA_EDGES) {
-      positions.push(verts[i].x, verts[i].y, verts[i].z);
-      positions.push(verts[j].x, verts[j].y, verts[j].z);
-    }
-    const geo = new THREE.BufferGeometry();
-    geo.setAttribute("position", new THREE.Float32BufferAttribute(positions, 3));
-    return geo;
-  }, [verts]);
-
-  return (
-    <lineSegments geometry={geometry}>
-      <lineBasicMaterial color={color} transparent opacity={opacity} />
-    </lineSegments>
-  );
-}
 
 // ---------------------------------------------------------------------------
 // Animated text streaming along edges (canvas texture on tubes)
@@ -373,12 +309,11 @@ const FACE_BANNER_IMAGES: Record<string, string> = {
 };
 
 // Section colors. House-backed faces derive from canonical palette pairs
-// (FRAC-24). `people` is not a House but carries a canonical pair in SECTIONS
-// (FRAC-204) — read its real hex from there. `story` is also a non-house
-// section: FRAC-205 sources its single accent from SECTIONS.story.accent (the
-// face placeholder color shown until the banner texture loads).
+// (FRAC-24). `people` and `story` are non-house cream sections with one
+// canonical accent each in SECTIONS; those accents provide their placeholder
+// face colors until the banner textures load.
 // `forum` is intentionally desaturated (muted grey-tan) to read as
-// de-emphasized — it has no nav node and no banner texture, so the literal
+// de-emphasized. It has a face texture but no nav node, so the literal fallback
 // is kept as a deliberate stylistic exception rather than a palette identity.
 const FACE_SECTION_COLORS: Record<string, string> = {
   story:        SECTIONS.story.accent,
@@ -388,7 +323,7 @@ const FACE_SECTION_COLORS: Record<string, string> = {
   school:       housePalette("school"),
   forum:        "#8a7a6a",
   lab:          housePalette("lab"),
-  people:       SECTIONS.people.light,
+  people:       SECTIONS.people.accent,
 };
 
 // Map octahedron face index → section key (8 faces, 8 unique sections)
@@ -1039,7 +974,13 @@ export function FractalObject({
   //     octant tilts on X toward the camera — sign follows the vertex's Y sign.
   const navTargets = useMemo(() => {
     const m = new Map<string, { y: number | null; x: number }>();
-    for (const node of OUTER_NAV_NODES) {
+    // Duplicate routes deliberately choose one representative pose. Education
+    // prioritizes the Accelerator vertex because Accelerator is the hub's first
+    // destination; both Education nodes still glow via their shared route.
+    const targetNodes = OUTER_NAV_NODES.filter(
+      (node) => node.route !== "/education" || node.label === "Accelerator",
+    );
+    for (const node of targetNodes) {
       const v = outerVerts[node.vertexIndex];
       const horiz = Math.hypot(v.x, v.z);
       if (horiz < 1e-3) {
@@ -1116,16 +1057,24 @@ export function FractalObject({
       </mesh>
 
       {/* Streaming text along outer octahedron edges */}
-      <StreamingEdgeSet verts={outerVerts} color="#e0c880" opacity={0.85} />
+      <StreamingEdgeSet
+        verts={outerVerts}
+        color={HERO_GOLD_ROLES.streamingHighlight}
+        opacity={0.85}
+      />
 
       {/* Streaming text along inner octahedron edges */}
-      <StreamingEdgeSet verts={innerVerts} color="#ddb866" opacity={0.7} />
+      <StreamingEdgeSet
+        verts={innerVerts}
+        color={HERO_GOLD_ROLES.streamingHighlight}
+        opacity={0.7}
+      />
 
       {/* Streaming text along cross-connections */}
       <StreamingCrossConnections
         outerVerts={outerVerts}
         innerVerts={innerVerts}
-        color="#e0c880"
+        color={HERO_GOLD_ROLES.connectorStructural}
         opacity={0.65}
       />
 
@@ -1135,7 +1084,7 @@ export function FractalObject({
       {/* 6 house nav nodes on outer octahedron vertices */}
       {OUTER_NAV_NODES.map((node) => (
         <NavNodeMesh
-          key={node.route}
+          key={`${node.vertexIndex}:${node.label}`}
           position={outerVerts[node.vertexIndex]}
           node={node}
           onNavigate={onNavigate}
