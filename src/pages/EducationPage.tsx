@@ -1,6 +1,7 @@
 import type { CSSProperties, MouseEvent } from "react";
 import { useRef } from "react";
-import { ArrowDown, ArrowUpRight } from "lucide-react";
+import { ArrowDown } from "lucide-react";
+import { EducationOutboundLink } from "@/components/education/EducationOutboundLink";
 import { FractalUniversityPortal } from "@/components/education/FractalUniversityPortal";
 import { EducationBannerSVG } from "@/components/house/EducationBannerSVG";
 import { Footer } from "@/components/layout/Footer";
@@ -72,15 +73,18 @@ export function EducationPage() {
                   </p>
                   <div className="mt-8 flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:flex-wrap sm:items-center">
                     <Button asChild className="w-full whitespace-normal text-center sm:w-auto">
-                      <a
+                      <EducationOutboundLink
                         href="https://fractaluniversity.substack.com"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        aria-label="Stay tuned for future semesters (opens in a new tab)"
+                        accessibleName="Stay tuned for future semesters"
+                        tone="dark"
                       >
-                        Stay tuned for future semesters
-                        <ArrowUpRight aria-hidden="true" />
-                      </a>
+                        <span
+                          className="min-w-0 leading-snug [overflow-wrap:anywhere]"
+                          data-education-hero-action-label
+                        >
+                          Stay tuned for future semesters
+                        </span>
+                      </EducationOutboundLink>
                     </Button>
                     <Button
                       asChild
@@ -88,7 +92,12 @@ export function EducationPage() {
                       className="w-full whitespace-normal border-background text-background hover:bg-background/10 focus-visible:ring-background focus-visible:ring-offset-house-education-deep sm:w-auto"
                     >
                       <a href="#what-is-fractalu" onClick={jumpToInformation}>
-                        What is FractalU?
+                        <span
+                          className="text-subtitle min-w-0 leading-snug [overflow-wrap:anywhere]"
+                          data-education-hero-action-label
+                        >
+                          What is FractalU?
+                        </span>
                         <ArrowDown aria-hidden="true" />
                       </a>
                     </Button>

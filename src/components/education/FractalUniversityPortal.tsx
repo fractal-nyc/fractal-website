@@ -4,9 +4,8 @@ import {
   useRef,
   useState,
   type KeyboardEvent,
-  type ReactNode,
 } from "react";
-import { ArrowUpRight, Play } from "lucide-react";
+import { EducationOutboundLink } from "@/components/education/EducationOutboundLink";
 import { MandelbrotCorners } from "@/components/ui/MandelbrotCorners";
 import {
   FRACTALU_CATALOG,
@@ -39,28 +38,6 @@ function useLargeTextScale() {
   }, []);
 
   return usesLargeText;
-}
-
-interface ExternalLinkProps {
-  href: string;
-  children: ReactNode;
-  accessibleName: string;
-  className?: string;
-}
-
-function ExternalLink({ href, children, accessibleName, className = "" }: ExternalLinkProps) {
-  return (
-    <a
-      href={href}
-      target="_blank"
-      rel="noopener noreferrer"
-      aria-label={`${accessibleName} (opens in a new tab)`}
-      className={`inline-flex min-h-11 min-w-0 max-w-full flex-wrap items-center gap-1.5 [overflow-wrap:anywhere] rounded-md underline decoration-1 underline-offset-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-house-education-light ${className}`}
-    >
-      {children}
-      <ArrowUpRight size={15} strokeWidth={1.5} aria-hidden="true" />
-    </a>
-  );
 }
 
 function CourseDescriptionPreview({ course }: { course: FractalUCourse }) {
@@ -157,18 +134,20 @@ function InstructorBioPreview({
 
 function CourseActions({ course }: { course: FractalUCourse }) {
   return (
-    <div className="mt-5 flex flex-wrap gap-x-4 gap-y-1 font-mono text-xs">
-      <ExternalLink
+    <div className="mt-5 flex flex-wrap gap-x-4 gap-y-1">
+      <EducationOutboundLink
         href={course.applicationUrl}
         accessibleName={`${course.applicationLabel} for ${course.title}`}
       >
         {course.applicationLabel}
-      </ExternalLink>
+      </EducationOutboundLink>
       {course.videoUrl && (
-        <ExternalLink href={course.videoUrl} accessibleName={`Watch video for ${course.title}`}>
-          <Play size={13} aria-hidden="true" />
+        <EducationOutboundLink
+          href={course.videoUrl}
+          accessibleName={`Watch video for ${course.title}`}
+        >
           Watch video
-        </ExternalLink>
+        </EducationOutboundLink>
       )}
     </div>
   );
@@ -210,23 +189,14 @@ function CourseCard({
       <div className="fractalu-title-preview relative min-w-0">
         <h3 className="text-subtitle min-w-0 leading-snug normal-case text-foreground [overflow-wrap:anywhere]">
           {course.detailsUrl ? (
-            <a
+            <EducationOutboundLink
               href={course.detailsUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label={`${course.title} course description (opens in a new tab)`}
+              accessibleName={`${course.title} course description`}
               aria-describedby={descriptionId}
-              className="fractalu-course-title-link inline-flex min-w-0 max-w-full items-start gap-2 rounded-sm underline decoration-house-education-light/50 underline-offset-4 hover:decoration-house-education-light focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-house-education-light"
+              variant="course-title"
             >
               <span className="min-w-0 [overflow-wrap:anywhere]">{course.title}</span>
-              <ArrowUpRight
-                size={18}
-                strokeWidth={1.5}
-                className="fractalu-course-link-arrow mt-1 shrink-0 text-house-education-light"
-                aria-hidden="true"
-                data-course-external-icon
-              />
-            </a>
+            </EducationOutboundLink>
           ) : (
             <span
               tabIndex={0}
@@ -265,7 +235,7 @@ function CourseCard({
           ["Price", course.price],
         ].map(([label, value]) => (
           <div key={label} className="min-w-0 [overflow-wrap:anywhere]">
-            <dt className="text-body text-foreground">{label}</dt>
+            <dt className="text-label text-foreground">{label}</dt>
             <dd className="mt-0.5">{value}</dd>
           </div>
         ))}
@@ -352,24 +322,27 @@ function ClubCard({ club }: { club: FractalUClub }) {
           ["Location", club.location],
         ].map(([label, value]) => (
           <div key={label} className="min-w-0 [overflow-wrap:anywhere]">
-            <dt className="text-body text-foreground">{label}</dt>
+            <dt className="text-label text-foreground">{label}</dt>
             <dd className="mt-0.5">{value}</dd>
           </div>
         ))}
       </dl>
       <p className="text-body mt-4 leading-relaxed text-foreground-muted">{club.description}</p>
-      <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1 font-mono text-xs">
+      <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1">
         {club.detailsUrl && (
-          <ExternalLink
+          <EducationOutboundLink
             href={club.detailsUrl}
             accessibleName={`${club.detailsLabel ?? "Group details"} for ${club.name}`}
           >
             {club.detailsLabel ?? "Group details"}
-          </ExternalLink>
+          </EducationOutboundLink>
         )}
-        <ExternalLink href={club.actionUrl} accessibleName={`${club.actionLabel} for ${club.name}`}>
+        <EducationOutboundLink
+          href={club.actionUrl}
+          accessibleName={`${club.actionLabel} for ${club.name}`}
+        >
           {club.actionLabel}
-        </ExternalLink>
+        </EducationOutboundLink>
       </div>
     </article>
     </MandelbrotCorners>
@@ -428,12 +401,12 @@ function FractalUInformation() {
           <p className="text-body leading-relaxed text-foreground-muted">
             We&apos;re always looking for instructors with something to share — a
             craft, a body of work, an obsession. Email{" "}
-            <a
+            <EducationOutboundLink
               href="mailto:fractalu@fractalnyc.com"
-              className="break-all rounded-sm text-foreground underline decoration-foreground-muted/40 underline-offset-2 hover:decoration-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-house-education-light"
+              className="align-middle"
             >
               fractalu@fractalnyc.com
-            </a>{" "}
+            </EducationOutboundLink>{" "}
             with a sentence or two about what you&apos;d teach.
           </p>
         </MandelbrotCorners>
@@ -477,28 +450,34 @@ function FractalUInformation() {
               toward an environment where people read hundreds of books a year, take
               dozens of classes, pursue their curiosities, and do science.
             </p>
-            <ExternalLink
+          </div>
+          <div
+            className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-2"
+            data-fractalu-resource-links
+          >
+            <EducationOutboundLink
               href="https://ajr.fyi/files/fractal-canon.pdf"
               accessibleName="Read the FractalU canon PDF"
-              className="font-mono text-sm text-background"
+              tone="dark"
+              data-fractalu-resource-link=""
             >
               Read the canon (PDF)
-            </ExternalLink>
-          </div>
-          <div className="mt-10 flex flex-wrap gap-x-6 gap-y-2 font-mono text-sm">
-            <ExternalLink
+            </EducationOutboundLink>
+            <EducationOutboundLink
               href="https://fractaluniversity.substack.com"
               accessibleName="FractalU Substack"
-              className="text-background"
+              tone="dark"
+              data-fractalu-resource-link=""
             >
               FractalU Substack
-            </ExternalLink>
-            <a
+            </EducationOutboundLink>
+            <EducationOutboundLink
               href="mailto:fractalu@fractalnyc.com"
-              className="inline-flex min-h-11 min-w-0 max-w-full flex-wrap items-center break-all rounded-md text-background underline underline-offset-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-background"
+              tone="dark"
+              data-fractalu-resource-link=""
             >
               fractalu@fractalnyc.com
-            </a>
+            </EducationOutboundLink>
           </div>
         </div>
       </section>
@@ -559,10 +538,10 @@ export function FractalUniversityPortal() {
                   type="button"
                   aria-pressed={selected}
                   onClick={() => setActiveCategory(category)}
-                  className={`min-h-11 shrink-0 rounded-md border px-4 py-2 font-mono text-xs transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-background ${
+                  className={`min-h-11 shrink-0 rounded-md border-2 bg-background px-4 py-2 font-mono text-xs text-foreground-muted transition-colors focus-visible:border-house-education-light focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-house-education-light focus-visible:ring-offset-2 focus-visible:ring-offset-house-education-deep ${
                     selected
-                      ? "border-background bg-house-education-light text-background shadow-sm"
-                      : "border-background/55 bg-house-education-deep/70 text-background hover:border-background hover:bg-house-education-light hover:text-background focus-visible:border-background focus-visible:bg-house-education-light focus-visible:text-background"
+                      ? "border-house-education-light shadow-sm"
+                      : "border-foreground-faint hover:border-house-education-light"
                   }`}
                 >
                   {category}

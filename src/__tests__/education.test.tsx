@@ -3,6 +3,7 @@ import { describe, expect, it, vi } from "vitest";
 import { Router as WouterRouter } from "wouter";
 import { memoryLocation } from "wouter/memory-location";
 import { HOUSES } from "@/data/houses";
+import { FRACTALU_CATALOG } from "@/data/fractalu";
 import { EducationPage } from "@/pages/EducationPage";
 
 function renderEducationPage() {
@@ -24,14 +25,87 @@ describe("EducationPage", () => {
     expect(heading.className).toContain("text-display");
     expect(screen.getAllByRole("heading", { level: 1 })).toHaveLength(1);
     expect(screen.getByText("An improvised college in New York City.")).toHaveClass("text-subtitle");
-    expect(screen.getByRole("link", { name: /Stay tuned for future semesters/ })).toHaveAttribute(
+    const futureSemesters = screen.getByRole("link", {
+      name: /Stay tuned for future semesters/,
+    });
+    expect(futureSemesters).toHaveAttribute(
       "href",
       "https://fractaluniversity.substack.com",
     );
-    expect(screen.getByRole("link", { name: "What is FractalU?" })).toHaveAttribute(
+    expect(futureSemesters).toHaveAttribute("target", "_blank");
+    expect(futureSemesters).toHaveAttribute("rel", "noopener noreferrer");
+    const informationJump = screen.getByRole("link", { name: "What is FractalU?" });
+    expect(informationJump).toHaveAttribute(
       "href",
       "#what-is-fractalu",
     );
+    expect(futureSemesters).toHaveClass(
+      "text-label",
+      "decoration-background/40",
+      "hover:decoration-background",
+      "focus-visible:decoration-background",
+    );
+    const heroArrow = futureSemesters.querySelector("[data-education-outbound-arrow]")!;
+    expect(heroArrow.tagName).toBe("svg");
+    expect(heroArrow).toHaveClass("lucide-arrow-up-right");
+    expect(heroArrow).toHaveAttribute("aria-hidden", "true");
+    expect(
+      screen.getByText("What is FractalU?", {
+        selector: "[data-education-hero-action-label]",
+      }),
+    ).toHaveClass("text-subtitle");
+  });
+
+  it("covers the complete 53-link outbound inventory without changing destinations", () => {
+    const { container } = renderEducationPage();
+    const expectedHrefs = [
+      "https://fractaluniversity.substack.com",
+      ...FRACTALU_CATALOG.courses.flatMap((course) => [
+        ...(course.detailsUrl ? [course.detailsUrl] : []),
+        course.applicationUrl,
+        ...(course.videoUrl ? [course.videoUrl] : []),
+      ]),
+      ...FRACTALU_CATALOG.clubs.flatMap((club) => [
+        ...(club.detailsUrl ? [club.detailsUrl] : []),
+        club.actionUrl,
+      ]),
+      "mailto:fractalu@fractalnyc.com",
+      "https://ajr.fyi/files/fractal-canon.pdf",
+      "https://fractaluniversity.substack.com",
+      "mailto:fractalu@fractalnyc.com",
+    ];
+    const outboundLinks = Array.from(
+      container.querySelectorAll<HTMLAnchorElement>("[data-education-outbound-link]"),
+    );
+
+    expect(expectedHrefs).toHaveLength(53);
+    expect(outboundLinks).toHaveLength(expectedHrefs.length);
+    expect(outboundLinks.map((link) => link.getAttribute("href")).sort()).toEqual(
+      [...expectedHrefs].sort(),
+    );
+    for (const link of outboundLinks) {
+      const arrows = link.querySelectorAll("[data-education-outbound-arrow]");
+      expect(arrows).toHaveLength(1);
+      expect(arrows[0].tagName).toBe("svg");
+      expect(arrows[0]).toHaveClass("lucide-arrow-up-right");
+      expect(arrows[0]).toHaveAttribute("aria-hidden", "true");
+      expect(link).not.toHaveTextContent("→");
+      expect(link.getAttribute("aria-label") ?? "").not.toContain("→");
+      if (link.getAttribute("href")?.startsWith("http")) {
+        expect(link).toHaveAttribute("target", "_blank");
+        expect(link).toHaveAttribute("rel", "noopener noreferrer");
+        expect(link.getAttribute("aria-label")).toMatch(/opens in a new tab/);
+      } else {
+        expect(link).not.toHaveAttribute("target");
+        expect(link).not.toHaveAttribute("rel");
+      }
+    }
+    const informationJump = container.querySelector<HTMLAnchorElement>(
+      'a[href="#what-is-fractalu"]',
+    )!;
+    expect(informationJump).not.toHaveAttribute("data-education-outbound-link");
+    expect(informationJump).not.toHaveAttribute("target");
+    expect(informationJump).not.toHaveAttribute("aria-label");
   });
 
   it("places the transparent Library-scale catalog after the intro", () => {

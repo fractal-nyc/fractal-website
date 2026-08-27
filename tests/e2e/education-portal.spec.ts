@@ -32,10 +32,24 @@ test("Education portal keeps one wide accessible catalog across input modes", as
   await expect(sectorName).toHaveCSS("color", await page.locator("h1").evaluate((element) => getComputedStyle(element).color));
   const intro = page.locator("[data-education-intro]");
   const portal = page.locator("[data-fractalu-portal]");
-  await expect(page.getByRole("link", { name: /Stay tuned for future semesters/ })).toHaveAttribute(
+  const futureSemestersLink = page.getByRole("link", {
+    name: /Stay tuned for future semesters/,
+  });
+  await expect(futureSemestersLink).toHaveAttribute(
     "href",
     "https://fractaluniversity.substack.com",
   );
+  await expect(futureSemestersLink).toHaveCSS("font-family", /JetBrains Mono/);
+  const heroArrow = futureSemestersLink.locator("svg[data-education-outbound-arrow]");
+  await expect(heroArrow).toHaveCount(1);
+  await expect(heroArrow).toHaveAttribute("aria-hidden", "true");
+  const informationJump = page.getByRole("link", { name: "What is FractalU?" });
+  await expect(informationJump.locator("[data-education-hero-action-label]")).toHaveCSS(
+    "font-family",
+    /Fraunces/,
+  );
+  await expect(informationJump).toHaveAttribute("href", "#what-is-fractalu");
+  await expect(informationJump).not.toHaveAttribute("data-education-outbound-link");
   await expect(page.getByRole("link", { name: /Visit Fractal AI Accelerator/ })).toHaveCount(0);
   await expect(portal).toBeVisible();
   expect(
@@ -87,6 +101,32 @@ test("Education portal keeps one wide accessible catalog across input modes", as
   await expect(page.locator("[data-course-collection]")).toHaveCount(1);
   await expect(catalog.locator("[data-instructor-bio]")).toHaveCount(20);
   await expect(catalog.locator("[data-instructor-record]")).toHaveCount(23);
+  const outboundLinks = page.locator("[data-education-outbound-link]");
+  await expect(outboundLinks).toHaveCount(53);
+  await expect(outboundLinks.locator("svg[data-education-outbound-arrow]")).toHaveCount(53);
+  expect(
+    await outboundLinks.evaluateAll((links) =>
+      links.every(
+        (link) =>
+          !link.textContent?.includes("→") &&
+          !link.getAttribute("aria-label")?.includes("→") &&
+          (() => {
+            const arrows = link.querySelectorAll(
+              "svg[data-education-outbound-arrow][aria-hidden='true']",
+            );
+            return (
+              arrows.length === 1 &&
+              arrows[0].classList.contains("lucide-arrow-up-right")
+            );
+          })(),
+      ),
+    ),
+  ).toBe(true);
+  expect(
+    await outboundLinks.evaluateAll((links) =>
+      links.every((link) => link.scrollWidth <= link.clientWidth + 1),
+    ),
+  ).toBe(true);
 
   const clubs = page.getByTestId("fractalu-clubs");
   const clubCards = clubs.locator("article[data-club-id]");
@@ -164,24 +204,54 @@ test("Education portal keeps one wide accessible catalog across input modes", as
 
   const technology = page.getByRole("button", { name: "Technology" });
   const allFilter = page.getByRole("button", { name: "All" });
-  const selectedFilterColors = await allFilter.evaluate((button) => ({
+  const selectedFilterStyles = await allFilter.evaluate((button) => ({
     background: getComputedStyle(button).backgroundColor,
     color: getComputedStyle(button).color,
+    borderColor: getComputedStyle(button).borderColor,
+    borderWidth: getComputedStyle(button).borderWidth,
   }));
+  const restingFilterStyles = await technology.evaluate((button) => ({
+    background: getComputedStyle(button).backgroundColor,
+    color: getComputedStyle(button).color,
+    borderColor: getComputedStyle(button).borderColor,
+    borderWidth: getComputedStyle(button).borderWidth,
+  }));
+  expect(restingFilterStyles.background).toBe(selectedFilterStyles.background);
+  expect(restingFilterStyles.color).toBe(selectedFilterStyles.color);
+  expect(restingFilterStyles.borderColor).not.toBe(selectedFilterStyles.borderColor);
+  expect(restingFilterStyles.borderWidth).toBe("2px");
+  expect(selectedFilterStyles.borderWidth).toBe("2px");
   expect(
     await technology.evaluate((button) => Number.parseFloat(getComputedStyle(button).minHeight)),
   ).toBeGreaterThanOrEqual(44);
   if (!hasTouch) {
     await technology.hover();
-    await expect(technology).toHaveCSS("background-color", selectedFilterColors.background);
-    await expect(technology).toHaveCSS("color", selectedFilterColors.color);
+    await expect(technology).toHaveCSS("background-color", restingFilterStyles.background);
+    await expect(technology).toHaveCSS("color", restingFilterStyles.color);
+    await expect(technology).toHaveCSS("border-color", selectedFilterStyles.borderColor);
     await page.mouse.move(0, 0);
-    await technology.focus();
-    await expect(technology).toHaveCSS("background-color", selectedFilterColors.background);
-    await expect(technology).toHaveCSS("color", selectedFilterColors.color);
+    const filters = filterGroup.getByRole("button");
+    const filterNames = await filters.allTextContents();
+    const technologyIndex = filterNames.indexOf("Technology");
+    expect(technologyIndex).toBeGreaterThan(0);
+    await filters.nth(technologyIndex - 1).focus();
+    await page.keyboard.press("Tab");
+    await expect(technology).toBeFocused();
+    await expect(technology).toHaveCSS("background-color", restingFilterStyles.background);
+    await expect(technology).toHaveCSS("color", restingFilterStyles.color);
+    await expect(technology).toHaveCSS("border-color", selectedFilterStyles.borderColor);
+    expect(await technology.evaluate((button) => getComputedStyle(button).boxShadow)).not.toBe(
+      "none",
+    );
   }
   await technology.click();
   await expect(technology).toHaveAttribute("aria-pressed", "true");
+  await expect(technology).toHaveCSS("background-color", restingFilterStyles.background);
+  await expect(technology).toHaveCSS("color", restingFilterStyles.color);
+  await expect(technology).toHaveCSS("border-color", selectedFilterStyles.borderColor);
+  await expect(allFilter).toHaveCSS("background-color", restingFilterStyles.background);
+  await expect(allFilter).toHaveCSS("color", restingFilterStyles.color);
+  await expect(allFilter).toHaveCSS("border-color", restingFilterStyles.borderColor);
   await expect(page.getByText("3 courses shown.")).toHaveText("3 courses shown.");
   await expect(catalog.locator("article")).toHaveCount(3);
   await page.getByRole("button", { name: "All" }).click();
@@ -345,6 +415,40 @@ test("Education portal keeps one wide accessible catalog across input modes", as
 
   const canon = page.locator('section[aria-labelledby="fractalu-canon-title"]');
   await expect(canon).toBeVisible();
+  const resourceGroup = page.locator("[data-fractalu-resource-links]");
+  const resourceLinks = resourceGroup.locator("[data-fractalu-resource-link]");
+  await expect(resourceLinks).toHaveCount(3);
+  const resourceFontSizes = await resourceLinks.evaluateAll((links) =>
+    links.map((link) => getComputedStyle(link).fontSize),
+  );
+  expect(new Set(resourceFontSizes).size).toBe(1);
+  for (const link of await resourceLinks.all()) {
+    await expect(link).toHaveCSS("font-family", /JetBrains Mono/);
+    await expect(link).toHaveCSS("text-transform", "uppercase");
+    expect(
+      await link.evaluate((element) => Number.parseFloat(getComputedStyle(element).minHeight)),
+    ).toBeGreaterThanOrEqual(44);
+    await link.focus();
+    await expect(link).toBeFocused();
+    await expect(link).toHaveCSS("outline-style", "none");
+  }
+  const canonLink = resourceGroup.getByRole("link", {
+    name: "Read the FractalU canon PDF (opens in a new tab)",
+  });
+  await expect(canonLink).toHaveAttribute("href", "https://ajr.fyi/files/fractal-canon.pdf");
+  await expect(canonLink.locator("svg[data-education-outbound-arrow]")).toHaveCount(1);
+  const substackLink = resourceGroup.getByRole("link", {
+    name: "FractalU Substack (opens in a new tab)",
+  });
+  await expect(substackLink).toHaveAttribute("href", "https://fractaluniversity.substack.com");
+  await expect(substackLink.locator("svg[data-education-outbound-arrow]")).toHaveCount(1);
+  const resourceEmail = resourceGroup.getByRole("link", {
+    name: "fractalu@fractalnyc.com",
+  });
+  await expect(resourceEmail).toHaveAttribute("href", "mailto:fractalu@fractalnyc.com");
+  await expect(resourceEmail).not.toHaveAttribute("target");
+  await expect(resourceEmail).not.toHaveAttribute("aria-label");
+  await expect(resourceEmail.locator("svg[data-education-outbound-arrow]")).toHaveCount(1);
   await expect(page.locator("[data-fractalu-final-collage], [data-testid='fractalu-collage']")).toHaveCount(0);
   await expect(page.getByRole("region", { name: "Fractal University in community" })).toHaveCount(0);
 
