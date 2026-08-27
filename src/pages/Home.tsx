@@ -8,6 +8,7 @@ import { gallerySections } from "@/data/storyPhotos";
 import { FadeIn } from "@/components/ui/FadeIn";
 import { MandelbrotCorners } from "@/components/ui/MandelbrotCorners";
 import { SECTIONS } from "@/data/houses";
+import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 import { useEffect } from "react";
 
 // Story's single gold identity accent matches the octahedron Story face. Used
@@ -24,12 +25,14 @@ const IAN_CHAT_URL =
   "https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ0ektkyvH1NQIxPdiKXPASm0WqwG7ee6QKJCDPIarnT5mS_WvLqDLaBb8Pk_va_YlVRXz6DRwnb";
 
 export function Home() {
+  const prefersReducedMotion = usePrefersReducedMotion();
+
   useEffect(() => {
-    document.documentElement.style.scrollBehavior = "smooth";
+    document.documentElement.style.scrollBehavior = prefersReducedMotion ? "auto" : "smooth";
     return () => {
       document.documentElement.style.scrollBehavior = "auto";
     };
-  }, []);
+  }, [prefersReducedMotion]);
 
   return (
     <main className="min-h-screen bg-background text-foreground selection:bg-foreground selection:text-background">
