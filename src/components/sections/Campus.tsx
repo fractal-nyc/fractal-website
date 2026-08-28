@@ -172,10 +172,17 @@ function PrimaryButton({
   );
 }
 
-export function MembershipButtonGroup() {
+export type MembershipButtonGroupLayout = "responsive" | "stacked" | "side-by-side";
+
+export function MembershipButtonGroup({ layout = "responsive" }: { layout?: MembershipButtonGroupLayout }) {
+  const layoutClass = layout === "stacked"
+    ? "flex-col"
+    : layout === "side-by-side"
+      ? "flex-row"
+      : "flex-col md:flex-row";
   return (
     <div className="w-full">
-      <div className="flex flex-col md:flex-row gap-4 items-stretch w-full">
+      <div className={`flex ${layoutClass} gap-4 items-stretch w-full`} data-membership-layout={layout}>
         <PrimaryButton href={STRIPE_FULLTIME_URL} fullWidth>
           <span className="flex flex-col items-center gap-1">
             <span>Full time membership</span>

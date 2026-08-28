@@ -9,7 +9,7 @@ pnpm install
 pnpm components
 ```
 
-Open `http://localhost:5173/components/`. Search by a human term such as “note,” “article,” “class,” “outsource link,” or by a technical component name. Use the global Color Pairing and Surface controls to preview themeable specimens. The catalog imports the real production components and `src/index.css`; it does not maintain a duplicate mock component set or token file.
+Open `http://localhost:5173/components/`. Search by a human term such as “note,” “article,” “class,” “outsource link,” or by a technical component name. Use the global Color Pairing and Surface controls to preview themeable specimens. Each live specimen shows only the content, state, size, and layout controls that its production component actually supports; reference-only components deliberately show no fake controls. The catalog imports the real production components and `src/index.css`; it does not maintain a duplicate mock component set or token file.
 
 Build and verify it independently with:
 

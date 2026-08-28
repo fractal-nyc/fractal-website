@@ -44,11 +44,39 @@ try {
   }
 
   const note = page.locator("#note-callout");
-  await note.getByLabel("Sample content").fill("Semester reminder");
-  await note.getByLabel("State").selectOption("long");
+  await note.getByLabel("Note label").fill("Semester reminder");
+  await note.getByLabel("Body content").selectOption("long");
+  await note.getByLabel("Actions").selectOption("without");
+  await note.getByLabel("Corner size").selectOption("lg");
   await note.getByLabel("Preview width").selectOption("320");
   if (await note.locator('[data-preview-width="320"]').count() !== 1) fail("Specimen viewport control did not update the preview.");
   if (!(await note.getByText("Semester reminder").count())) fail("Specimen content control did not update the production component.");
+  if (await note.getByRole("button", { name: "Optional action" }).count()) fail("Specimen state control did not remove optional actions.");
+  if ((await note.locator(".library-canvas svg").first().getAttribute("width")) !== "60") fail("Specimen size control did not enlarge Mandelbrot corners.");
+
+  const facts = page.locator("#course-fact-grid");
+  await facts.getByLabel("Fact values").selectOption("long");
+  if (!(await facts.getByText(/Every Wednesday evening/).count())) fail("Course Fact Grid state control did not change values.");
+
+  const subjectFilter = page.locator("#course-subject-filter");
+  await subjectFilter.getByLabel("Filter state").selectOption("new");
+  if (!(await subjectFilter.getByRole("button", { name: "Civic Practice" }).count())) fail("Course Subject Filter did not show its new-category state.");
+  await subjectFilter.getByLabel("Filter state").selectOption("empty");
+  if (!(await subjectFilter.getByText("0 courses shown.").count())) fail("Course Subject Filter did not announce its empty-result state.");
+
+  const quote = page.locator("#editorial-quote");
+  await quote.getByLabel("Quote text").fill("A changed editorial quotation.");
+  if (!(await quote.getByText("A changed editorial quotation.").count())) fail("Editorial Quote content control did not update copy.");
+  await quote.getByLabel("Citation").selectOption("without");
+  if (await quote.locator("blockquote footer").count()) fail("Editorial Quote citation control did not remove the citation.");
+
+  const corners = page.locator("#mandelbrot-corner-frame");
+  await corners.getByLabel("Corner size").selectOption("lg");
+  if ((await corners.locator(".library-canvas svg").first().getAttribute("width")) !== "60") fail("Mandelbrot Corner Frame size control did not change the real icons.");
+
+  const reference = page.locator("#page-frame");
+  if (await reference.locator("fieldset").count()) fail("Reference-only entries exposed fake specimen controls.");
+  if (await page.getByLabel("Sample content").count()) fail("Legacy universal sample controls remain in the catalog.");
 
   const importArea = page.getByLabel("Paste catalog JSON");
   await importArea.fill(JSON.stringify({ semester: "Fall 2026", sourceProvenance: null, courses: [null], clubs: [null] }));
@@ -69,11 +97,16 @@ try {
   const copied = await page.evaluate(() => navigator.clipboard.readText());
   if (/"(?:uiState|instructor|unknown)"/.test(copied)) fail("Normalized export retained forbidden keys.");
 
-  for (const width of [375, 1440]) {
-    await page.setViewportSize({ width, height: width === 375 ? 812 : 900 });
+  for (const width of [320, 375, 767, 769, 1023, 1025, 1180, 1440]) {
+    await page.setViewportSize({ width, height: width <= 375 ? 812 : 900 });
     const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
     if (overflow > 1) fail(`Component library overflows horizontally at ${width}px by ${overflow}px.`);
   }
+  await page.setViewportSize({ width: 375, height: 812 });
+  await page.evaluate(() => { document.documentElement.style.fontSize = "24px"; });
+  const largeTextOverflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
+  if (largeTextOverflow > 1) fail(`Component library overflows with 24px root text by ${largeTextOverflow}px.`);
+  await page.evaluate(() => { document.documentElement.style.fontSize = ""; });
   if (errors.length) fail(`Browser page errors: ${errors.join(" | ")}`);
 
   const productionPage = await context.newPage();

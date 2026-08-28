@@ -18,6 +18,15 @@ describe("team component registry", () => {
       expect(entry.accessibility).toBeTruthy();
       expect(entry.responsive).toBeTruthy();
       expect(Boolean(entry.render) || Boolean(entry.referenceOnly)).toBe(true);
+      expect(new Set(entry.controls.map(({ id }) => id)).size).toBe(entry.controls.length);
+      if (entry.referenceOnly) expect(entry.controls).toEqual([]);
+      for (const control of entry.controls) {
+        expect(control.defaultValue).not.toBe(control.testValue);
+        if (control.kind === "select" || control.kind === "preview-width") {
+          expect(control.options.map(({ value }) => value)).toContain(control.defaultValue);
+          expect(control.options.map(({ value }) => value)).toContain(control.testValue);
+        }
+      }
       if (entry.sourcePath.startsWith("src/")) expect(fs.existsSync(path.resolve(entry.sourcePath))).toBe(true);
     }
   });
@@ -45,5 +54,15 @@ describe("team component registry", () => {
     expect(COMPONENT_COLORWAYS.find(({ id }) => id === "education")?.accent).toBe(HOUSES.find(({ id }) => id === "school")?.palette.light);
     expect(COMPONENT_COLORWAYS.find(({ id }) => id === "story")?.accent).toBe(SECTIONS.story.accent);
     expect(COMPONENT_COLORWAYS.find(({ id }) => id === "story")?.allowedSurfaces).toEqual(["paper"]);
+  });
+
+  it("declares truthful component-specific controls for the reviewed specimens", () => {
+    const controlsFor = (id: string) => COMPONENT_REGISTRY.find((entry) => entry.id === id)!.controls.map(({ label }) => label);
+    expect(controlsFor("course-fact-grid")).toContain("Fact values");
+    expect(controlsFor("course-subject-filter")).toContain("Filter state");
+    expect(controlsFor("editorial-quote")).toContain("Citation");
+    expect(controlsFor("mandelbrot-corner-frame")).toContain("Corner size");
+    expect(controlsFor("paper-grain-overlay")).toEqual([]);
+    expect(COMPONENT_REGISTRY.filter(({ referenceOnly }) => referenceOnly).every(({ controls }) => controls.length === 0)).toBe(true);
   });
 });
