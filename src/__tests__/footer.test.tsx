@@ -104,6 +104,13 @@ describe("Footer", () => {
       expect(bgForegroundSections.length).toBeGreaterThanOrEqual(1);
     });
 
+    it("should extend the footer surface through bottom overscroll", () => {
+      const { container } = render(<Footer />);
+      expect(container.querySelector("footer")?.getAttribute("style")).toContain(
+        "box-shadow: 0 100svh 0 100svh hsl(var(--foreground))",
+      );
+    });
+
     it('should display "New York City Collective" tagline', () => {
       render(<Footer />);
       expect(screen.getByText("New York City Collective")).toBeTruthy();

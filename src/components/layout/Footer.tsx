@@ -16,7 +16,13 @@ export function Footer() {
   };
 
   return (
-    <footer data-site-footer className="relative overflow-hidden">
+    <footer
+      data-site-footer
+      className="relative overflow-hidden"
+      // Extend the footer surface through the browser's bottom rubber-band
+      // overscroll without changing the footer's intrinsic document height.
+      style={{ boxShadow: "0 100svh 0 100svh hsl(var(--foreground))" }}
+    >
       {/* Branding band — black background, Fractal in camelCase italic. The
           Discord/Ian CTA that used to sit above this now lives in its own
           section on the home page (Home.tsx "Curious about Fractal?"). */}
