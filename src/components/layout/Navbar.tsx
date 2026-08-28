@@ -20,9 +20,9 @@ interface SectionLink {
   name: string;
   href: string;
   color: string;
-  // FRAC-13: the house `.deep` shade, used for the nav-link hover/focus color
-  // deepen. Political Club's identity color is already `.deep`, so it has no
-  // deeper shade — it reuses `color` and communicates hover via the underline.
+  // FRAC-13: the house `.deep` shade, used for the higher-contrast nav-link
+  // default. Political Club's identity color is already `.deep`, so it reuses
+  // the same value for its interactive state and communicates via the underline.
   colorDeep: string;
 }
 
@@ -127,9 +127,9 @@ function NavLink(link: SectionLink) {
   return (
     <SectionAnchor
       link={link}
-      // FRAC-13: .nav-link gives the persistent house-colored underline that
-      // thickens + deepens to `.deep` on hover/focus. The spans inherit `color`
-      // from the anchor (set via --nav-c), so they need no color of their own.
+      // FRAC-13: .nav-link uses `.deep` for its high-contrast default and
+      // shifts to `.light` on hover/focus/active/highlight. The spans inherit
+      // `color` from the anchor (set via --nav-c / --nav-c-deep).
       className={isActive ? "nav-link is-active" : "nav-link"}
       style={{ "--nav-c": color, "--nav-c-deep": colorDeep } as React.CSSProperties}
       // FRAC-14: publish this link's route to the hero octahedron so the matching
