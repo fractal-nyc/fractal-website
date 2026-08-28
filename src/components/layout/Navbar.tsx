@@ -8,8 +8,9 @@ import { setHeroNavHover, useHeroNavHover } from "@/hooks/useHeroNavHover";
 
 // FRAC-24: Per-link colors derive from the canonical House palette where a
 // House exists. Non-house links read from the SECTIONS record instead. House
-// links default to `.light`; Political Club uses `.deep` because its page uses
-// the deep surface.
+// links expose their `.light` and `.deep` palette tokens. The shared nav rule
+// defaults to `.deep` for contrast, with explicit per-link exceptions encoded
+// by `defaultTone` when a section's design calls for `.light` at rest.
 // (Story used to be a link too, but it folded into Home in the content port.)
 function houseColor(route: string, prefer: "light" | "deep" = "light"): string {
   const palette = HOUSES.find((h) => h.route === route)?.palette;
@@ -21,15 +22,15 @@ interface SectionLink {
   href: string;
   color: string;
   // FRAC-13: the house `.deep` shade, used for the higher-contrast nav-link
-  // default. Political Club's identity color is already `.deep`, so it reuses
-  // the same value for its interactive state and communicates via the underline.
+  // default unless a section explicitly sets `defaultTone` to `light`.
   colorDeep: string;
+  defaultTone?: "light" | "deep";
 }
 
 const sectionLinks: SectionLink[] = [
   { name: "Campus",         href: "/campus",            color: houseColor("/campus"),                    colorDeep: houseColor("/campus", "deep") },
   { name: "Co-Living",      href: "/co-living",         color: houseColor("/co-living"),                 colorDeep: houseColor("/co-living", "deep") },
-  { name: "Education",      href: "/education",         color: houseColor("/education"),                 colorDeep: houseColor("/education", "deep") },
+  { name: "Education",      href: "/education",         color: houseColor("/education"),                 colorDeep: houseColor("/education", "deep"), defaultTone: "light" },
   { name: "Events",         href: "/events",            color: houseColor("/events"),                    colorDeep: houseColor("/events", "deep") },
   { name: "Political Club", href: "/political-club",    color: houseColor("/political-club", "deep"),    colorDeep: houseColor("/political-club", "deep") },
   { name: "Library",        href: "/library",           color: houseColor("/library"),                   colorDeep: houseColor("/library", "deep") },
@@ -127,11 +128,15 @@ function NavLink(link: SectionLink) {
   return (
     <SectionAnchor
       link={link}
-      // FRAC-13: .nav-link uses `.deep` for its high-contrast default and
-      // shifts to `.light` on hover/focus/active/highlight. The spans inherit
-      // `color` from the anchor (set via --nav-c / --nav-c-deep).
+      // FRAC-13: .nav-link uses the section's semantic default tone and shifts
+      // to `.light` on hover/focus/active/highlight. The spans inherit `color`
+      // from the anchor's token variables.
       className={isActive ? "nav-link is-active" : "nav-link"}
-      style={{ "--nav-c": color, "--nav-c-deep": colorDeep } as React.CSSProperties}
+      style={{
+        "--nav-c": color,
+        "--nav-c-deep": colorDeep,
+        "--nav-c-default": link.defaultTone === "light" ? color : colorDeep,
+      } as React.CSSProperties}
       // FRAC-14: publish this link's route to the hero octahedron so the matching
       // vertex node glows and rotates to the front while the link is hovered or
       // keyboard-focused. Cleared on leave/blur so the octant resumes auto-spin.
@@ -356,6 +361,7 @@ export function Navbar() {
                         fontStyle: "normal",
                         "--nav-c": link.color,
                         "--nav-c-deep": link.colorDeep,
+                        "--nav-c-default": link.defaultTone === "light" ? link.color : link.colorDeep,
                       } as React.CSSProperties}
                     >
                       {link.name}

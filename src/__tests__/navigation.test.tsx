@@ -214,6 +214,7 @@ describe("Internal Education section link", () => {
     for (const anchor of anchors) {
       expect(anchor.style.getPropertyValue("--nav-c")).toBe(education.palette.light);
       expect(anchor.style.getPropertyValue("--nav-c-deep")).toBe(education.palette.deep);
+      expect(anchor.style.getPropertyValue("--nav-c-default")).toBe(education.palette.light);
     }
 
     const educationNodes = OUTER_NAV_NODES.filter(({ label }) =>
