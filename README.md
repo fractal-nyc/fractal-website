@@ -18,7 +18,7 @@ Community site for Fractal NYC — a network of coliving houses, a campus, event
 ```sh
 pnpm install
 pnpm dev        # dev server at http://localhost:5173
-pnpm components # team-only component catalog at http://localhost:5173/components/
+pnpm components # team-only visual component gallery and Education editor at http://localhost:5173/components/
 ```
 
 Other commands:

@@ -50,7 +50,7 @@ export function SpecimenCard({ entry, initialColorway, initialSurface }: { entry
           })}
         </fieldset>}
         <div className="library-canvas" data-preview-width={width}><ComponentColorScope colorway={colorway} surface={surface} className="library-canvas-scope" style={widthStyle}>{entry.render({ colorway, surface, values })}</ComponentColorScope></div>
-      </> : <div className="library-reference"><p className="text-label">Reference specimen</p><p className="text-body mt-2">{entry.referenceOnly}</p></div>}
+      </> : <div className="library-reference"><p className="text-label">Supporting implementation</p><p className="text-body mt-2">{entry.internalReason}</p></div>}
       <footer className="library-specimen-footer"><div><p className="text-label">Ask an agent for this</p><p className="text-body mt-1">{entry.agentPhrase}</p></div><code>{entry.sourcePath}</code></footer>
     </article>
   );

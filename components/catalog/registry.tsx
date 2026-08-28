@@ -26,6 +26,20 @@ import { HOUSES } from "@/data/houses";
 export const COMPONENT_CATEGORIES = ["Foundations & layout", "Actions & controls", "Cards & containers", "Media & decoration", "Brand & complex composites"] as const;
 export type ComponentCategory = typeof COMPONENT_CATEGORIES[number];
 
+export const GALLERY_CATEGORIES = [
+  { id: "common", label: "Common components" },
+  { id: "cards", label: "Cards & boxes" },
+  { id: "actions", label: "Buttons & links" },
+  { id: "forms", label: "Forms & filters" },
+  { id: "media", label: "Images & decoration" },
+  { id: "sections", label: "Page sections" },
+  { id: "basics", label: "Design basics" },
+  { id: "all", label: "All components" },
+] as const;
+export type GalleryCategoryId = typeof GALLERY_CATEGORIES[number]["id"];
+export type ComponentPresentation = "gallery" | "supporting" | "internal";
+export type ComponentPreviewMode = "inline" | "visual-board" | "asset-family" | "full-context" | "invisible";
+
 interface ControlOption<Value extends string = string> { value: Value; label: string }
 interface TextControl<Id extends string = string> { id: Id; kind: "text"; label: string; defaultValue: string; testValue: string }
 interface SelectControl<Id extends string = string, Value extends string = string> { id: Id; kind: "select" | "preview-width"; label: string; defaultValue: Value; testValue: Value; options: readonly ControlOption<Value>[] }
@@ -63,10 +77,15 @@ export interface ComponentRegistryEntry {
   keywords: string[];
   controls: readonly ComponentSpecimenControl[];
   render?: (context: ComponentSpecimenContext) => ReactNode;
-  referenceOnly?: string;
+  presentation?: ComponentPresentation;
+  previewMode?: ComponentPreviewMode;
+  galleryCategory?: Exclude<GalleryCategoryId, "common" | "all">;
+  common?: boolean;
+  aliases?: string[];
+  internalReason?: string;
 }
 
-type SpecimenEntryBase = Omit<ComponentRegistryEntry, "controls" | "render" | "referenceOnly">;
+type SpecimenEntryBase = Omit<ComponentRegistryEntry, "controls" | "render" | "presentation" | "previewMode" | "galleryCategory" | "common" | "aliases" | "internalReason">;
 function defineSpecimen<const Controls extends readonly ComponentSpecimenControl[]>(
   entry: SpecimenEntryBase & {
     controls: Controls;
@@ -107,7 +126,9 @@ const reference = (
   accessibility: "Preserve the component's documented semantics, labels, focus behavior, and reduced-motion behavior.",
   responsive: "Use in its intended page or viewport context; verify at 320px and 375px.",
   agentPhrase: `Use the **${name}** component.`,
-  referenceOnly: "This component owns a page, viewport, animation, or media context that a small specimen would misrepresent. Open its source and production page.",
+  presentation: "internal",
+  previewMode: "invisible",
+  internalReason: "This source is supporting code or owns a context that is not represented by a small standalone tile.",
 });
 
 const sampleCourse = FRACTALU_CATALOG.courses[0];
@@ -121,7 +142,7 @@ const patternSamples = {
   library: { color: house("lab").palette.deep, backgroundClass: "bg-house-library-light" },
 } as const;
 
-export const COMPONENT_REGISTRY: ComponentRegistryEntry[] = [
+const COMPONENT_REGISTRY_BASE: ComponentRegistryEntry[] = [
   defineSpecimen({
     id: "color-pairing", name: "Color Pairing", componentName: "ComponentColorScope", category: "Foundations & layout", sourcePath: "src/components/content/ComponentColorScope.tsx",
     purpose: "Applies one approved token-backed identity and a safe text color to any themeable component.", useWhen: "Wrap a reusable card or control that needs a Fractal section identity.", doNotUseWhen: "Do not accept arbitrary hex values or use a house accent as essential text when its contrast is insufficient.",
@@ -200,4 +221,72 @@ export const COMPONENT_REGISTRY: ComponentRegistryEntry[] = [
   reference("octahedron-hero", "Octahedron Hero", "OctahedronHero", "Brand & complex composites", "src/components/three/OctahedronHero.tsx", "Renders the interactive house-navigation octahedron."),
 ];
 
-export const searchableEntryText = (entry: ComponentRegistryEntry) => [entry.name, entry.componentName, entry.purpose, entry.agentPhrase, ...entry.keywords].join(" ").toLowerCase();
+const COMMON_IDS = new Set(["action-buttons", "outbound-link", "library-article-card", "note-callout", "course-card", "club-card", "campus-audience-highlight", "editorial-quote"]);
+const FORM_IDS = new Set(["archive-search", "filter-chip", "empty-results-message", "library-tag-filter", "course-subject-filter"]);
+const BASIC_BOARD_IDS = new Set(["color-pairing", "page-frame", "type-style", "reading-column", "standard-section-frame", "wide-card-grid", "section-header"]);
+const MEDIA_BOARD_IDS = new Set(["photo-frame", "gallery-image", "photo-gallery"]);
+const FULL_CONTEXT_IDS = new Set(["site-navigation", "campus-section", "hero-search", "housing-map", "meet-space-carousel", "origin-story", "sierpinski-carpet", "fractal-city-scene", "octahedron-hero"]);
+const PENNANT_IDS = new Set(["campus-banner", "co-living-banner", "education-banner", "events-banner", "library-banner", "political-club-banner"]);
+const SUPPORTING_IDS = new Set(["site-footer-marker", "filter-results-summary", "library-article-grid", "metadata-facts-list", "amenity-list", "category-badge", "icon-carousel-control", "archive-toolbar", "education-outbound-compat", "painted-relic-banner"]);
+
+const names: Record<string, { name: string; purpose: string; aliases?: string[] }> = {
+  "outbound-link": { name: "External Link", purpose: "A consistent link for sending someone to another website or email address.", aliases: ["Outbound Link", "outsource link"] },
+  "library-article-card": { name: "Article Card", purpose: "A complete Library article preview with its title, author, description, and link.", aliases: ["Library Article Card"] },
+  "note-callout": { name: "Note Box", purpose: "A bordered note for short, important context or a related action.", aliases: ["Note / Callout Card", "note container"] },
+  "course-card": { name: "Course Card", purpose: "A semester class with instructors, schedule, description, tags, and links.", aliases: ["class container"] },
+  "club-card": { name: "Club Card", purpose: "A recurring Education club or open group with its key details and links.", aliases: ["Club / Open Group Card"] },
+  "campus-audience-highlight": { name: "Campus Highlight", purpose: "A bold Campus card that introduces one audience or destination.", aliases: ["Campus Audience Highlight"] },
+  "action-buttons": { name: "Action Button", purpose: "The standard button styles for a primary action, quiet action, or important destination." },
+  "editorial-quote": { name: "Editorial Quote", purpose: "A prominent quotation with an optional attribution." },
+  "color-pairing": { name: "Site Colors", purpose: "Every approved Fractal color pairing shown on real surfaces." },
+  "type-style": { name: "Type Styles", purpose: "The approved heading, body, label, and input styles shown together." },
+  "page-frame": { name: "Page Frame", purpose: "The standard page width and safe outer spacing at different screen sizes." },
+  "reading-column": { name: "Reading Column", purpose: "A comfortable line length for articles and other longer passages." },
+  "standard-section-frame": { name: "Section Spacing", purpose: "The standard breathing room above, below, and beside a page section." },
+  "wide-card-grid": { name: "Card Grid", purpose: "A responsive arrangement for a repeatable collection of cards." },
+  "section-header": { name: "Section Header", purpose: "The large letter and label that identify a Fractal section." },
+  "campus-banner": { name: "House Pennants", purpose: "The six painted pennants that identify Fractal's houses." },
+};
+
+function galleryCategoryFor(entry: ComponentRegistryEntry): Exclude<GalleryCategoryId, "common" | "all"> {
+  if (FORM_IDS.has(entry.id)) return "forms";
+  if (BASIC_BOARD_IDS.has(entry.id)) return "basics";
+  if (MEDIA_BOARD_IDS.has(entry.id) || entry.category === "Media & decoration" || PENNANT_IDS.has(entry.id)) return "media";
+  if (FULL_CONTEXT_IDS.has(entry.id) || entry.category === "Brand & complex composites") return "sections";
+  if (entry.category === "Actions & controls") return "actions";
+  return "cards";
+}
+
+export const COMPONENT_REGISTRY: ComponentRegistryEntry[] = COMPONENT_REGISTRY_BASE.map((entry) => {
+  const copy = names[entry.id];
+  const isPennant = PENNANT_IDS.has(entry.id);
+  const isSupportingPennant = isPennant && entry.id !== "campus-banner";
+  const presentation: ComponentPresentation = SUPPORTING_IDS.has(entry.id) || isSupportingPennant
+    ? "supporting"
+    : entry.render || BASIC_BOARD_IDS.has(entry.id) || MEDIA_BOARD_IDS.has(entry.id) || FULL_CONTEXT_IDS.has(entry.id) || entry.id === "campus-banner"
+      ? "gallery"
+      : "internal";
+  const previewMode: ComponentPreviewMode = presentation !== "gallery"
+    ? "invisible"
+    : entry.id === "campus-banner"
+      ? "asset-family"
+      : FULL_CONTEXT_IDS.has(entry.id)
+        ? "full-context"
+        : !entry.render || BASIC_BOARD_IDS.has(entry.id) || MEDIA_BOARD_IDS.has(entry.id)
+          ? "visual-board"
+          : "inline";
+  return {
+    ...entry,
+    ...(copy ?? {}),
+    aliases: [...(entry.aliases ?? []), ...(copy?.aliases ?? [])],
+    common: COMMON_IDS.has(entry.id),
+    galleryCategory: galleryCategoryFor(entry),
+    presentation,
+    previewMode,
+    internalReason: presentation !== "gallery" ? entry.internalReason ?? (presentation === "supporting" ? "This source supports a visible gallery pattern rather than standing alone." : "This implementation is not an independently choosable visible pattern.") : undefined,
+    agentPhrase: copy ? `Use the **${copy.name}** component.` : entry.agentPhrase,
+  };
+});
+
+export const galleryEntries = COMPONENT_REGISTRY.filter((entry) => entry.presentation === "gallery");
+export const searchableEntryText = (entry: ComponentRegistryEntry) => [entry.name, entry.componentName, entry.purpose, entry.agentPhrase, ...(entry.aliases ?? []), ...entry.keywords].join(" ").toLowerCase();

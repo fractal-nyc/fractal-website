@@ -2,13 +2,15 @@ import { cleanup, fireEvent, render, within } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 import { SpecimenCard } from "../../components/catalog/SpecimenCard";
 import { COMPONENT_REGISTRY } from "../../components/catalog/registry";
+import { VisualSpecimenCard } from "../../components/catalog/VisualSpecimenCard";
+import { ComponentDetail } from "../../components/catalog/ComponentDetail";
 
 describe("interactive component specimens", () => {
   it("renders only the controls explicitly declared by each entry", () => {
     const referenceEntry = COMPONENT_REGISTRY.find(({ id }) => id === "page-frame")!;
     const { container } = render(<SpecimenCard entry={referenceEntry} initialColorway="neutral" initialSurface="paper" />);
     expect(container.querySelector("fieldset")).not.toBeInTheDocument();
-    expect(within(container).getByText("Reference specimen")).toBeInTheDocument();
+    expect(within(container).getByText("Supporting implementation")).toBeInTheDocument();
   });
 
   it("makes every declared control materially change its specimen output", () => {
@@ -52,5 +54,30 @@ describe("interactive component specimens", () => {
     const surface = within(card).getByLabelText("Surface") as HTMLSelectElement;
     expect(Array.from(surface.options).map(({ value }) => value)).toEqual(["paper"]);
     expect(surface).toHaveValue("paper");
+  });
+
+  it("keeps closed gallery cards visual and moves documentation behind Learn more", () => {
+    const entry = COMPONENT_REGISTRY.find(({ id }) => id === "note-callout")!;
+    const { container } = render(<VisualSpecimenCard entry={entry} onLearnMore={() => undefined} />);
+    expect(within(container).getByText("Note Box")).toBeInTheDocument();
+    expect(container.querySelector(".library-gallery-preview")).toBeInTheDocument();
+    expect(within(container).getByRole("button", { name: "Learn more about Note Box" })).toBeInTheDocument();
+    expect(within(container).queryByText("CalloutCard")).not.toBeInTheDocument();
+    expect(within(container).queryByText("Use when")).not.toBeInTheDocument();
+    expect(container.querySelector("fieldset")).not.toBeInTheDocument();
+  });
+
+  it("orders focused details as preview, controls, then closed usage guidance", () => {
+    const entry = COMPONENT_REGISTRY.find(({ id }) => id === "outbound-link")!;
+    const { container } = render(<ComponentDetail entry={entry} onBack={() => undefined} onOpenLive={() => undefined} />);
+    const preview = container.querySelector(".library-detail-preview")!;
+    const controls = container.querySelector(".library-detail-controls")!;
+    const details = container.querySelector("details")!;
+    expect(preview.compareDocumentPosition(controls) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    expect(controls.compareDocumentPosition(details) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    expect(details).not.toHaveAttribute("open");
+    expect(within(container).getByLabelText("Site color")).toBeInTheDocument();
+    expect(within(container).getByLabelText("Background")).toBeInTheDocument();
+    expect(within(container).getByText("Usage details")).toBeInTheDocument();
   });
 });
