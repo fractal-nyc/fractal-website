@@ -41,22 +41,7 @@ button:focus-visible, input:focus-visible, select:focus-visible, summary:focus-v
 .library-copy-prompt:hover { border-color: var(--color-house-library-deep); }
 .library-empty, .library-invalid-preview, .library-error-summary { border: 1px dashed var(--color-foreground-faint); border-radius: var(--radius-md); padding: 1.25rem; color: var(--color-foreground-muted); }
 
-/* Purpose-built visual boards. */
-.library-color-board { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .45rem; }
-.library-color-swatch { min-height: 3.5rem; display: grid; place-items: center; border: 1px solid var(--component-border); border-radius: var(--radius-md); padding: .4rem; text-align: center; font-family: var(--font-mono); font-size: .55rem; text-transform: uppercase; }
-.library-type-board { display: grid; gap: .45rem; }
-.library-type-board .text-display { font-size: 2rem; }
-.library-type-board .text-title { font-size: 1.75rem; }
-.library-page-frame-board { min-height: 11rem; display: grid; grid-template-columns: 1fr 7fr 1fr; align-items: stretch; border: 1px solid var(--component-border); background: color-mix(in srgb, var(--component-accent) 8%, transparent); }
-.library-page-frame-board > div { display: grid; place-items: center; border-inline: 1px dashed var(--component-border); background: var(--color-background); }
-.library-page-frame-board > span { align-self: center; writing-mode: vertical-rl; font-family: var(--font-mono); font-size: .55rem; text-transform: uppercase; }
-.library-reading-board { max-width: 28rem; display: grid; gap: .7rem; border-inline-start: 3px solid var(--component-accent); padding-inline-start: 1rem; }
-.library-section-board { display: grid; gap: .65rem; text-align: center; font-family: var(--font-mono); font-size: .6rem; text-transform: uppercase; }
-.library-section-board div { border-block: 1px solid var(--component-border); padding-block: 1.8rem; }
-.library-grid-board { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .5rem; }
-.library-grid-board div { aspect-ratio: 1.15; display: grid; place-items: end start; border: 1px solid var(--component-border); border-radius: var(--radius-md); padding: .55rem; background: color-mix(in srgb, var(--component-accent) 10%, transparent); font-family: var(--font-mono); font-size: .6rem; }
-.library-sector-board [data-sector-letter] { font-size: 7rem; }
-.library-sector-board [data-sector-name] { color: var(--color-house-library-deep) !important; }
+/* Purpose-built visual boards and bounded production specimens. */
 .library-photo-board { display: grid; min-height: 12rem; }
 .library-photo-board-family { grid-template-columns: 1.2fr .8fr; grid-template-rows: 1fr 1fr; gap: .45rem; }
 .library-photo-board-family > :first-child { grid-row: 1 / span 2; }
@@ -64,9 +49,10 @@ button:focus-visible, input:focus-visible, select:focus-visible, summary:focus-v
 .library-pennant-board { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); align-items: end; gap: .45rem; }
 .library-pennant-board > div { min-width: 0; text-align: center; font-family: var(--font-mono); font-size: .5rem; }
 .library-pennant-board .painted-relic-banner { width: 100%; height: auto; }
-.library-context-board { position: relative; min-height: 13rem; overflow: hidden; border-radius: var(--radius-md); background: var(--color-foreground); }
-.library-context-board img { width: 100%; height: 13rem; object-fit: cover; opacity: .72; }
-.library-context-board span { position: absolute; inset-inline: 1rem; inset-block-end: 1rem; color: var(--color-background); }
+.library-home-search-stage { min-height: 13rem; display: flex; align-items: flex-end; padding: 1rem; }
+.library-home-search-stage > [data-home-search-bar] { width: 100%; }
+.library-home-search-stage [role="listbox"] { max-height: 9.5rem; }
+.library-photo-carousel-stage { min-width: 0; max-width: 100%; overflow: hidden; background: var(--color-house-campus-light); color: var(--color-background); padding: 1rem .25rem; }
 
 /* Focused component and live preview. */
 .library-detail-shell { display: grid; gap: 1.5rem; padding-block: 1.5rem 5rem; max-width: 78rem; }
@@ -74,6 +60,7 @@ button:focus-visible, input:focus-visible, select:focus-visible, summary:focus-v
 .library-detail-header { display: grid; gap: .5rem; max-width: 46rem; }
 .library-detail-header .text-label { color: var(--color-house-library-deep); }
 .library-detail-header .text-body-lead { color: var(--color-foreground-muted); }
+.library-internal-notice { display: grid; gap: 1.5rem; border: 1px dashed var(--color-foreground-faint); border-radius: var(--radius-md); padding: 1.25rem; color: var(--color-foreground-muted); }
 .library-detail-preview { border: 1px solid var(--color-foreground-faint); background: color-mix(in srgb, var(--color-foreground) 2%, transparent); padding: clamp(.5rem, 2vw, 1.5rem); }
 .library-detail-preview .library-canvas-scope { min-height: 22rem; }
 .library-live-button { justify-self: start; border: 1px solid var(--color-foreground); background: var(--color-foreground); color: var(--color-background); padding-inline: 1rem; }
@@ -97,9 +84,6 @@ button:focus-visible, input:focus-visible, select:focus-visible, summary:focus-v
 .library-full-preview-bar { position: sticky; inset-block-start: 0; z-index: 1000; padding-inline: max(clamp(1.5rem, 4.5vw, 4rem), env(safe-area-inset-left), env(safe-area-inset-right)); }
 .library-full-preview-bar button { text-decoration: underline; text-underline-offset: .2rem; }
 .library-preview-loading { display: grid; min-height: calc(100vh - 4rem); place-items: center; font-family: var(--font-mono); }
-.library-live-contained { min-height: calc(100vh - 4rem); padding: 3rem max(clamp(1.5rem, 4.5vw, 4rem), env(safe-area-inset-left)); }
-.library-live-campus { min-height: calc(100vh - 4rem); display: grid; align-items: center; background: var(--color-house-campus-light); padding: 3rem 1rem; }
-.library-live-carpet, .library-live-hero { position: relative; min-height: calc(100vh - 4rem); overflow: hidden; }
 
 /* Education workshop remains its own focused tool. */
 .library-workshop { padding-block: 2rem 5rem; }

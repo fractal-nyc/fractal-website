@@ -22,6 +22,8 @@ import { FadeIn } from "@/components/ui/FadeIn";
 import { PUBLICATION_DOCUMENTS } from "@/data/publications-documents";
 import { FRACTALU_CATALOG } from "@/data/fractalu";
 import { HOUSES } from "@/data/houses";
+import { HomeSearchBar } from "@/components/sections/HomeSearchBar";
+import { MeetTheSpaceCarousel } from "@/components/sections/MeetTheSpaceCarousel";
 
 export const COMPONENT_CATEGORIES = ["Foundations & layout", "Actions & controls", "Cards & containers", "Media & decoration", "Brand & complex composites"] as const;
 export type ComponentCategory = typeof COMPONENT_CATEGORIES[number];
@@ -32,8 +34,6 @@ export const GALLERY_CATEGORIES = [
   { id: "actions", label: "Buttons & links" },
   { id: "forms", label: "Forms & filters" },
   { id: "media", label: "Images & decoration" },
-  { id: "sections", label: "Page sections" },
-  { id: "basics", label: "Design basics" },
   { id: "all", label: "All components" },
 ] as const;
 export type GalleryCategoryId = typeof GALLERY_CATEGORIES[number]["id"];
@@ -143,6 +143,11 @@ const patternSamples = {
   events: { color: house("events").palette.deep, backgroundClass: "bg-house-events-light" },
   library: { color: house("lab").palette.deep, backgroundClass: "bg-house-library-light" },
 } as const;
+const campusCarouselPhotos = [
+  { src: "/images/campus/coworking-space.webp", alt: "Tables and chairs in the Fractal Campus coworking space", caption: "Shared coworking space" },
+  { src: "/images/campus/rooftop.webp", alt: "Outdoor seating on the Fractal Campus rooftop", caption: "The Campus rooftop" },
+  { src: "/images/campus/kitchen.webp", alt: "The community kitchen inside Fractal Campus", caption: "Community kitchen" },
+];
 
 const COMPONENT_REGISTRY_BASE: ComponentRegistryEntry[] = [
   defineSpecimen({
@@ -219,9 +224,24 @@ const COMPONENT_REGISTRY_BASE: ComponentRegistryEntry[] = [
   reference("political-club-banner", "Political Club House Pennant", "PoliticalClubBannerSVG", "Brand & complex composites", "src/components/house/PoliticalClubBannerSVG.tsx", "Renders the Political Club identity through Painted Relic Banner."),
   reference("painted-relic-banner", "House Pennant Renderer", "PaintedRelicBanner", "Brand & complex composites", "src/components/house/PaintedRelicBanner.tsx", "Shared renderer for all six painted house pennants."),
   reference("campus-section", "Campus Section", "Campus", "Brand & complex composites", "src/components/sections/Campus.tsx", "Composes the full Campus story, actions, audience highlights, quote, amenities, and carousel."),
-  reference("hero-search", "Hero Search / Combobox", "Hero", "Brand & complex composites", "src/components/sections/Hero.tsx", "Provides the homepage hero and keyboard-accessible destination search.", ["combobox", "global search"]),
+  defineSpecimen({
+    id: "hero-search", name: "Home Search Bar", componentName: "HomeSearchBar", category: "Actions & controls", sourcePath: "src/components/sections/HomeSearchBar.tsx",
+    purpose: "Lets a visitor search Fractal pages, people, houses, articles, and topics from one combobox.", useWhen: "Use when the Home search experience is the right way to discover destinations across the whole site.", doNotUseWhen: "Do not use as a collection filter or install its page-global slash shortcut outside the Home hero.",
+    contentFields: ["result selection behavior"], variants: ["Empty", "Grouped results", "No results", "Keyboard option focus"], themeable: false, surfaceModes: ["paper"],
+    accessibility: "Uses combobox/listbox semantics, grouped results, Arrow key navigation, Enter selection, Escape dismissal, and visible focus.", responsive: "The control fills its bounded container; its current production placement is desktop-only in the Home hero.", usedOn: "Home (desktop hero search).",
+    agentPhrase: "Use the **Home Search Bar** component.", promptNeeds: "placement and selected-result behavior", keywords: ["combobox", "global search", "search bar", "homepage search", "hero search"], aliases: ["Hero Search / Combobox", "Hero Search", "homepage search", "global search", "search bar"], controls: [],
+    render: () => <div className="library-home-search-stage"><HomeSearchBar onSelectResult={() => undefined} enableGlobalShortcut={false} /></div>,
+  }),
+  reference("home-hero", "Home Hero", "Hero", "Brand & complex composites", "src/components/sections/Hero.tsx", "Owns the Home viewport, scene, navigation fallback, responsive footer, and desktop search placement.", ["hero"]),
   reference("housing-map", "Housing Map", "HousingMap", "Brand & complex composites", "src/components/sections/HousingMap.tsx", "Shows the interactive Co-Living neighborhood map."),
-  reference("meet-space-carousel", "Meet the Space Carousel", "MeetTheSpaceCarousel", "Brand & complex composites", "src/components/sections/MeetTheSpaceCarousel.tsx", "Shows Campus photos, captions, and carousel controls."),
+  defineSpecimen({
+    id: "meet-space-carousel", name: "Photo Carousel", componentName: "MeetTheSpaceCarousel", category: "Media & decoration", sourcePath: "src/components/sections/MeetTheSpaceCarousel.tsx",
+    purpose: "Presents a browsable sequence of Campus photos with captions, progress, and looping controls.", useWhen: "Use for a small, intentional photo story where every image has useful alt text and a caption.", doNotUseWhen: "Do not use for decorative imagery, an uncurated image dump, or content without complete descriptions.",
+    contentFields: ["photo source", "descriptive alt text", "caption"], variants: ["Previous / next", "Direct photo dots", "Keyboard navigation", "Looped sequence", "Reduced motion"], themeable: false, surfaceModes: ["paper"],
+    accessibility: "Every photo has descriptive alt text; labeled controls, current-photo state, keyboard navigation, and reduced-motion behavior remain production-native.", responsive: "Shows a centered single-card treatment on compact screens and an overlapping coverflow when space and motion preferences allow.", usedOn: "Campus, in the Meet the Space section.",
+    agentPhrase: "Use the **Photo Carousel** component.", promptNeeds: "ordered photos with alt text and captions", keywords: ["carousel", "slider", "images", "campus carousel", "image carousel", "photo slider"], aliases: ["Meet the Space Carousel", "Campus carousel", "image carousel", "photo slider"], controls: [],
+    render: () => <div className="library-photo-carousel-stage"><MeetTheSpaceCarousel photos={campusCarouselPhotos} /></div>,
+  }),
   reference("origin-story", "Origin Story", "OriginStory", "Brand & complex composites", "src/components/sections/OriginStory.tsx", "Presents the long-form Fractal founding narrative."),
   reference("sierpinski-carpet", "Sierpinski Carpet", "SierpinskiCarpet", "Brand & complex composites", "src/components/sections/SierpinskiCarpet.tsx", "Renders the reduced-motion-aware recursive brand animation."),
   reference("fractal-city-scene", "Fractal City Scene", "FractalCityScene", "Brand & complex composites", "src/components/three/FractalCityScene.tsx", "Owns the homepage WebGL scene."),
@@ -229,12 +249,18 @@ const COMPONENT_REGISTRY_BASE: ComponentRegistryEntry[] = [
 ];
 
 const COMMON_IDS = new Set(["action-buttons", "outbound-link", "inline-text-link", "library-article-card", "note-callout", "course-card", "club-card", "campus-audience-highlight", "editorial-quote"]);
-const FORM_IDS = new Set(["archive-search", "filter-chip", "empty-results-message", "library-tag-filter", "course-subject-filter"]);
+const FORM_IDS = new Set(["hero-search", "archive-search", "filter-chip", "empty-results-message", "library-tag-filter", "course-subject-filter"]);
 const BASIC_BOARD_IDS = new Set(["color-pairing", "page-frame", "type-style", "reading-column", "standard-section-frame", "wide-card-grid", "section-header"]);
 const MEDIA_BOARD_IDS = new Set(["photo-frame", "gallery-image", "photo-gallery"]);
-const FULL_CONTEXT_IDS = new Set(["site-navigation", "campus-section", "hero-search", "housing-map", "meet-space-carousel", "origin-story", "sierpinski-carpet", "fractal-city-scene", "octahedron-hero"]);
+const PAGE_OWNED_IDS = new Set(["site-navigation", "campus-section", "home-hero", "housing-map", "origin-story", "sierpinski-carpet", "fractal-city-scene", "octahedron-hero"]);
 const PENNANT_IDS = new Set(["campus-banner", "co-living-banner", "education-banner", "events-banner", "library-banner", "political-club-banner"]);
 const SUPPORTING_IDS = new Set(["site-footer-marker", "filter-results-summary", "library-article-grid", "metadata-facts-list", "amenity-list", "category-badge", "icon-carousel-control", "archive-toolbar", "education-outbound-compat", "painted-relic-banner"]);
+const GALLERY_IDS = new Set([
+  "content-card", "action-buttons", "outbound-link", "inline-text-link", "hero-search", "archive-search", "filter-chip", "empty-results-message", "library-tag-filter",
+  "library-article-card", "note-callout", "course-card", "course-fact-grid", "club-card", "course-subject-filter", "campus-audience-highlight", "membership-button-group",
+  "embed-frame", "editorial-quote", "mandelbrot-corner-frame", "mandelbrot-icon", "paper-grain-overlay", "fractal-pattern", "fade-in", "meet-space-carousel",
+  "photo-frame", "gallery-image", "photo-gallery", "campus-banner",
+]);
 
 const names: Record<string, { name: string; purpose: string; aliases?: string[] }> = {
   "outbound-link": { name: "Standalone Link", purpose: "A prominent link that stands on its own and carries the diagonal outbound arrow.", aliases: ["External Link", "Outbound Link", "outsource link"] },
@@ -257,9 +283,7 @@ const names: Record<string, { name: string; purpose: string; aliases?: string[] 
 
 function galleryCategoryFor(entry: ComponentRegistryEntry): Exclude<GalleryCategoryId, "common" | "all"> {
   if (FORM_IDS.has(entry.id)) return "forms";
-  if (BASIC_BOARD_IDS.has(entry.id)) return "basics";
   if (MEDIA_BOARD_IDS.has(entry.id) || entry.category === "Media & decoration" || PENNANT_IDS.has(entry.id)) return "media";
-  if (FULL_CONTEXT_IDS.has(entry.id) || entry.category === "Brand & complex composites") return "sections";
   if (entry.category === "Actions & controls") return "actions";
   return "cards";
 }
@@ -270,16 +294,14 @@ export const COMPONENT_REGISTRY: ComponentRegistryEntry[] = COMPONENT_REGISTRY_B
   const isSupportingPennant = isPennant && entry.id !== "campus-banner";
   const presentation: ComponentPresentation = SUPPORTING_IDS.has(entry.id) || isSupportingPennant
     ? "supporting"
-    : entry.render || BASIC_BOARD_IDS.has(entry.id) || MEDIA_BOARD_IDS.has(entry.id) || FULL_CONTEXT_IDS.has(entry.id) || entry.id === "campus-banner"
+    : GALLERY_IDS.has(entry.id)
       ? "gallery"
       : "internal";
   const previewMode: ComponentPreviewMode = presentation !== "gallery"
     ? "invisible"
     : entry.id === "campus-banner"
       ? "asset-family"
-      : FULL_CONTEXT_IDS.has(entry.id)
-        ? "full-context"
-        : !entry.render || BASIC_BOARD_IDS.has(entry.id) || MEDIA_BOARD_IDS.has(entry.id)
+      : !entry.render || MEDIA_BOARD_IDS.has(entry.id)
           ? "visual-board"
           : "inline";
   const publicName = copy?.name ?? entry.name;
@@ -289,13 +311,24 @@ export const COMPONENT_REGISTRY: ComponentRegistryEntry[] = COMPONENT_REGISTRY_B
     ...(copy ?? {}),
     aliases: [...(entry.aliases ?? []), ...(copy?.aliases ?? [])],
     common: COMMON_IDS.has(entry.id),
-    galleryCategory: galleryCategoryFor(entry),
+    galleryCategory: presentation === "gallery" ? galleryCategoryFor(entry) : undefined,
     presentation,
     previewMode,
-    internalReason: presentation !== "gallery" ? entry.internalReason ?? (presentation === "supporting" ? "This source supports a visible gallery pattern rather than standing alone." : "This implementation is not an independently choosable visible pattern.") : undefined,
+    internalReason: presentation !== "gallery" ? entry.internalReason ?? (presentation === "supporting" ? "This source supports a visible gallery pattern rather than standing alone." : BASIC_BOARD_IDS.has(entry.id) ? "This design foundation is applied automatically and is not a component someone adds to a page." : PAGE_OWNED_IDS.has(entry.id) ? "This page-owned implementation is retained for source coverage, not offered as a reusable component." : "This implementation is not an independently choosable visible pattern.") : undefined,
     agentPhrase: `Use the **“${publicName}”** component from the Fractal NYC component library on the page or section I’m working on. Inherit the target page or section’s approved house/section color tokens where this component supports them; otherwise keep its approved default. Use the real production component and preserve its accessibility and responsive behavior. Ask only if the required ${promptNeeds} are unclear.`,
   };
 });
 
-export const galleryEntries = COMPONENT_REGISTRY.filter((entry) => entry.presentation === "gallery");
+function moveGalleryEntryBefore(entries: ComponentRegistryEntry[], id: string, beforeId: string) {
+  const moving = entries.find((entry) => entry.id === id);
+  if (!moving) return entries;
+  return entries.flatMap((entry) => entry.id === id ? [] : entry.id === beforeId ? [moving, entry] : [entry]);
+}
+
+const visibleEntries = COMPONENT_REGISTRY.filter((entry) => entry.presentation === "gallery");
+export const galleryEntries = moveGalleryEntryBefore(
+  moveGalleryEntryBefore(visibleEntries, "hero-search", "archive-search"),
+  "meet-space-carousel",
+  "embed-frame",
+);
 export const searchableEntryText = (entry: ComponentRegistryEntry) => [entry.name, entry.componentName, entry.purpose, entry.agentPhrase, ...(entry.aliases ?? []), ...entry.keywords].join(" ").toLowerCase();

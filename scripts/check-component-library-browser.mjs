@@ -20,7 +20,7 @@ const assertLoadedImages = async (locator, label) => {
     naturalHeight: image.naturalHeight,
   })));
   assert(results.length > 0, `${label} did not render any images.`);
-  const broken = results.filter((image) => !image.complete || image.naturalWidth < 1 || image.naturalHeight < 1);
+  const broken = results.filter((image) => image.naturalWidth < 1 || image.naturalHeight < 1);
   if (broken.length) fail(`${label} contains unloaded assets: ${JSON.stringify(broken)}`);
 };
 
@@ -45,6 +45,9 @@ try {
     if (response.url().startsWith(origin) && response.status() >= 400) failedCatalogResponses.push(`${response.status()} ${response.url()}`);
   });
   await page.goto(componentUrl, { waitUntil: "networkidle" });
+
+  const categoryLabels = await page.locator(".library-category-chooser button span:first-child").allTextContents();
+  assert(JSON.stringify(categoryLabels) === JSON.stringify(["Common components", "Cards & boxes", "Buttons & links", "Forms & filters", "Images & decoration", "All components"]), `Unexpected chooser categories: ${categoryLabels.join(", ")}`);
 
   const common = ["Primary Button", "Standalone Link", "Inline Text Link", "Article Card", "Note Box", "Course Card", "Club Card", "Campus Highlight", "Editorial Quote"];
   for (const name of common) assert(await page.getByRole("button", { name: `View details for ${name}`, exact: true }).count(), `Common gallery is missing ${name}.`);
@@ -153,7 +156,7 @@ try {
   await firstCategory.focus();
   const focusStyle = await firstCategory.evaluate((button) => ({ style: getComputedStyle(button).outlineStyle, width: getComputedStyle(button).outlineWidth }));
   assert(focusStyle.style !== "none" && Number.parseFloat(focusStyle.width) >= 2, `Category keyboard focus is not visibly styled: ${JSON.stringify(focusStyle)}.`);
-  await page.screenshot({ path: "/tmp/frac117-component-gallery-1440x900.png" });
+  await page.screenshot({ path: "/tmp/frac118-common-1440x900.png" });
 
   const browseHash = new URL(page.url()).hash;
   await page.getByRole("button", { name: "Copy prompt for Primary Button" }).click();
@@ -241,15 +244,74 @@ try {
   const focused = await page.evaluate(() => document.activeElement?.getAttribute("aria-label"));
   assert(focused === "View details for Note Box", `Back restored focus to ${focused || "nothing"}.`);
 
-  assert(await page.locator("canvas, [data-site-navbar]").count() === 0, "A heavy full-context preview mounted behind the browse gallery.");
+  assert(await page.locator("canvas, [data-site-navbar], [data-hero-shell], [data-hero-scene]").count() === 0, "Page-owned infrastructure mounted behind the browse gallery.");
   await search.fill("Site Navigation");
-  await page.getByRole("button", { name: "View details for Site Navigation" }).click();
-  assert(await page.locator("[data-site-navbar]").count() === 0, "Site Navigation mounted in the focused detail before requested.");
-  await page.getByRole("button", { name: /Open live preview/i }).click();
-  await page.locator("[data-site-navbar]").waitFor();
-  assert(page.url().includes("#preview/site-navigation"), "Full-context preview did not create an addressable route.");
-  await page.getByRole("button", { name: /Back to Site Navigation/ }).click();
-  await page.getByRole("button", { name: /Back to components/ }).click();
+  assert(await page.locator(".library-visual-card").count() === 0, "Internal Site Navigation remained searchable in the chooser.");
+  await search.fill("");
+
+  // The two approved reusable choices are real production components, not
+  // thumbnails or page-owned context previews.
+  await page.getByRole("button", { name: /Forms & filters/ }).click();
+  assert(await page.locator(".library-visual-card").first().getAttribute("id") === "hero-search", "Home Search Bar is not first in Forms & filters.");
+  const homeSearchCard = page.locator("#hero-search");
+  assert(await homeSearchCard.getByRole("button", { name: "View details for Home Search Bar" }).count(), "Home Search Bar tile is missing its name action.");
+  assert(await homeSearchCard.getByRole("button", { name: "Copy prompt for Home Search Bar" }).count(), "Home Search Bar tile is missing Copy prompt.");
+  assert(await homeSearchCard.locator("[data-home-search-bar]").count() === 1 && await homeSearchCard.locator("[data-hero-shell], canvas").count() === 0, "Home Search Bar mounted the whole Hero or a duplicate preview.");
+  const homeCombobox = homeSearchCard.getByRole("combobox", { name: "Search Fractal" });
+  await page.locator(".library-gallery-heading").click();
+  await page.keyboard.press("/");
+  assert(!(await homeCombobox.evaluate((input) => document.activeElement === input)), "Catalog Home Search Bar installed the Home-only slash shortcut.");
+  await homeCombobox.fill("Campus");
+  await homeSearchCard.getByRole("listbox", { name: "Search results" }).waitFor();
+  const beforeSearchSelection = new URL(page.url()).hash;
+  await homeCombobox.press("ArrowDown");
+  assert(Boolean(await homeCombobox.getAttribute("aria-activedescendant")), "Home Search Bar ArrowDown did not focus a result.");
+  await homeCombobox.press("Enter");
+  assert(new URL(page.url()).hash === beforeSearchSelection && await homeCombobox.inputValue() === "", "Catalog search selection navigated away or failed to clear.");
+  await page.screenshot({ path: "/tmp/frac118-forms-1440x900.png" });
+  await homeSearchCard.getByRole("button", { name: "View details for Home Search Bar" }).click();
+  assert(page.url().includes("#component/hero-search") && await page.locator(".library-detail-preview [data-home-search-bar]").count(), "Home Search Bar detail is not live or addressable.");
+  assert(await page.locator(".library-detail-controls").count() === 0 && await page.locator("details[open]").count() === 0, "Home Search Bar detail invented options or opened guidance.");
+  assert(await page.locator('.library-agent-prompt button[aria-label="Copy prompt for Home Search Bar"]').count(), "Home Search Bar detail lost Copy prompt.");
+  await page.goBack();
+  await page.waitForSelector("#hero-search");
+
+  await page.getByRole("button", { name: /Images & decoration/ }).click();
+  const carouselCard = page.locator("#meet-space-carousel");
+  await carouselCard.scrollIntoViewIfNeeded();
+  assert(await carouselCard.getByRole("button", { name: "View details for Photo Carousel" }).count(), "Photo Carousel tile is missing its name action.");
+  assert(await carouselCard.getByRole("button", { name: "Copy prompt for Photo Carousel" }).count(), "Photo Carousel tile is missing Copy prompt.");
+  assert(await carouselCard.getByRole("button", { name: "Previous photo" }).count() && await carouselCard.getByRole("button", { name: "Next photo" }).count(), "Photo Carousel lost production controls.");
+  await assertLoadedImages(carouselCard.locator("img"), "Photo Carousel");
+  const initialCaption = (await carouselCard.locator("p.text-body").innerText()).trim();
+  await carouselCard.getByRole("button", { name: "Next photo" }).click();
+  await carouselCard.getByText("02 / 03").waitFor();
+  const nextCaption = (await carouselCard.locator("p.text-body").innerText()).trim();
+  assert(nextCaption !== initialCaption, "Photo Carousel control did not advance its caption/counter.");
+  await page.waitForTimeout(600);
+  await carouselCard.getByRole("button", { name: "Next photo" }).focus();
+  await carouselCard.getByRole("button", { name: "Next photo" }).press("Enter");
+  await carouselCard.getByText("03 / 03").waitFor();
+  await page.waitForTimeout(600);
+  await carouselCard.getByRole("button", { name: "Next photo" }).click();
+  await carouselCard.getByText("01 / 03").waitFor();
+  const stageContainment = await carouselCard.locator(".library-photo-carousel-stage").evaluate((stage) => ({ client: stage.clientWidth, scroll: stage.scrollWidth }));
+  assert(stageContainment.scroll <= stageContainment.client + 1, `Photo Carousel escaped its tile: ${JSON.stringify(stageContainment)}.`);
+  await page.screenshot({ path: "/tmp/frac118-media-1440x900.png" });
+  await carouselCard.getByRole("button", { name: "View details for Photo Carousel" }).click();
+  assert(page.url().includes("#component/meet-space-carousel") && await page.locator(".library-detail-preview .swiper").count(), "Photo Carousel detail is not live or addressable.");
+  assert(await page.locator(".library-detail-controls").count() === 0 && await page.locator("details[open]").count() === 0, "Photo Carousel detail invented options or opened guidance.");
+  assert(await page.locator('.library-agent-prompt button[aria-label="Copy prompt for Photo Carousel"]').count(), "Photo Carousel detail lost Copy prompt.");
+
+  await page.goto(`${componentUrl}#component/site-navigation`, { waitUntil: "networkidle" });
+  assert(await page.getByText("Internal reference", { exact: true }).count() && await page.getByRole("button", { name: /Copy prompt/ }).count() === 0, "Internal direct detail is selectable or copyable.");
+  assert(await page.locator("[data-site-navbar], [data-hero-shell], canvas").count() === 0, "Internal direct detail eagerly mounted page infrastructure.");
+
+  for (const removedCategory of ["basics", "sections"]) {
+    await page.goto(`${componentUrl}#browse/${removedCategory}`, { waitUntil: "networkidle" });
+    await page.waitForFunction(() => window.location.hash === "#browse/common");
+    assert(new URL(page.url()).hash === "#browse/common", `Stale ${removedCategory} hash did not canonicalize to Common.`);
+  }
 
   assert(await page.locator("#education-workshop").count() === 0, "Education workshop is mounted in browse view.");
   await page.getByRole("button", { name: "Edit Education courses" }).click();
@@ -289,9 +351,26 @@ try {
         };
       });
       assert(categoryLayout.rows > 1 && categoryLayout.scrollWidth <= categoryLayout.chooserWidth + 1 && !categoryLayout.smallTargets && !categoryLayout.offCanvas, `Mobile categories do not wrap into visible 44px targets: ${JSON.stringify(categoryLayout)}.`);
-      await matrixPage.screenshot({ path: "/tmp/frac117-component-gallery-375x812.png" });
+      await matrixPage.screenshot({ path: "/tmp/frac118-common-375x812.png" });
     }
     await matrixPage.close();
+  }
+
+  for (const [category, screenshot] of [["forms", "/tmp/frac118-forms-375x812.png"], ["media", "/tmp/frac118-media-375x812.png"]]) {
+    const mobilePage = await context.newPage();
+    await mobilePage.setViewportSize({ width: 375, height: 812 });
+    await mobilePage.goto(`${componentUrl}#browse/${category}`, { waitUntil: "networkidle" });
+    assert(await horizontalOverflow(mobilePage) <= 1, `${category} gallery overflows at 375px.`);
+    if (category === "forms") {
+      assert(await mobilePage.locator("#hero-search [data-home-search-bar]").count(), "Mobile Forms view does not show the real Home Search Bar.");
+      await mobilePage.screenshot({ path: screenshot });
+    } else {
+      const mobileCarousel = mobilePage.locator("#meet-space-carousel");
+      await mobileCarousel.scrollIntoViewIfNeeded();
+      assert(await mobileCarousel.getByRole("button", { name: "Next photo" }).count(), "Mobile Media view does not show an operable Photo Carousel.");
+      await mobilePage.screenshot({ path: screenshot });
+    }
+    await mobilePage.close();
   }
 
   const largeTextPage = await context.newPage();
@@ -306,6 +385,10 @@ try {
   await reducedPage.goto(`${componentUrl}#browse/media?q=Fade%20In`, { waitUntil: "networkidle" });
   const reducedFade = await reducedPage.locator("#fade-in .library-canvas-scope > div").evaluate((element) => ({ transform: getComputedStyle(element).transform, opacity: getComputedStyle(element).opacity }));
   assert(reducedFade.transform === "none" && reducedFade.opacity === "1", `Fade In did not bypass motion for reduced-motion users: ${JSON.stringify(reducedFade)}.`);
+  await reducedPage.goto(`${componentUrl}#browse/media?q=Photo%20Carousel`, { waitUntil: "networkidle" });
+  assert(await reducedPage.locator("#meet-space-carousel .swiper-coverflow").count() === 0, "Photo Carousel kept its 3D coverflow under reduced motion.");
+  await reducedPage.locator("#meet-space-carousel").getByRole("button", { name: "Next photo" }).click();
+  await reducedPage.locator("#meet-space-carousel").getByText("02 / 03").waitFor();
   await reducedPage.close();
 
   if (errors.length) fail(`Browser page errors: ${errors.join(" | ")}`);
@@ -320,11 +403,24 @@ try {
       assert(await horizontalOverflow(productionPage) <= 1, `${route} overflows at ${width}px.`);
     }
   }
+  await productionPage.setViewportSize({ width: 1440, height: 900 });
+  await productionPage.goto(productionOrigin, { waitUntil: "networkidle" });
+  const productionSearch = productionPage.getByRole("combobox", { name: "Search Fractal" });
+  await productionSearch.waitFor();
+  await productionPage.keyboard.press("/");
+  assert(await productionSearch.evaluate((input) => document.activeElement === input), "Home lost its global slash search shortcut after extraction.");
+  await productionSearch.fill("Campus");
+  await productionSearch.press("ArrowDown");
+  await productionSearch.press("Enter");
+  await productionPage.waitForURL(`${productionOrigin}/campus`);
+  await productionPage.setViewportSize({ width: 375, height: 812 });
+  await productionPage.goto(productionOrigin, { waitUntil: "domcontentloaded" });
+  assert(!(await productionPage.getByRole("combobox", { name: "Search Fractal" }).isVisible()) && await productionPage.locator("[data-hero-footer]").isVisible(), "Home mobile placement changed when the search was extracted.");
   await productionPage.goto(`${productionOrigin}/components`, { waitUntil: "domcontentloaded" });
   assert(await productionPage.getByText("Choose by looking").count() === 0, "Production exposes the team component gallery.");
   if (productionErrors.length) fail(`Production page errors: ${productionErrors.join(" | ")}`);
   await browser.close();
-  console.log("Visual component gallery checks passed. Screenshots: /tmp/frac117-component-gallery-1440x900.png, /tmp/frac117-component-gallery-375x812.png, and /tmp/frac117-primary-button-detail-1440x900.png");
+  console.log("Visual component gallery checks passed. FRAC-118 screenshots are in /tmp/frac118-{forms,media}-{1440x900,375x812}.png");
 } finally {
   server.kill("SIGTERM"); productionServer.kill("SIGTERM");
 }

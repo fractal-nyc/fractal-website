@@ -138,4 +138,30 @@ describe("interactive component specimens", () => {
     expect(inlineView.container.querySelector(".library-gallery-preview p a[data-outbound-link]")).toBeInTheDocument();
     expect(inlineView.container.querySelector(".library-gallery-preview [data-outbound-arrow]")).not.toBeInTheDocument();
   });
+
+  it("renders internal inventory as a non-copyable technical notice", () => {
+    const entry = COMPONENT_REGISTRY.find(({ id }) => id === "site-navigation")!;
+    const { container } = render(<ComponentDetail entry={entry} onBack={() => undefined} onOpenLive={() => undefined} />);
+    expect(within(container).getByText("Internal reference")).toBeInTheDocument();
+    expect(within(container).getByText(/not an option to copy/i)).toBeInTheDocument();
+    expect(within(container).queryByRole("button", { name: /copy prompt/i })).not.toBeInTheDocument();
+    expect(container.querySelector("[data-site-navbar], canvas, .library-detail-preview")).not.toBeInTheDocument();
+  });
+
+  it("renders the real Home search and Photo Carousel as separate minimal tiles", () => {
+    const search = COMPONENT_REGISTRY.find(({ id }) => id === "hero-search")!;
+    const searchView = render(<VisualSpecimenCard entry={search} onOpen={() => undefined} />);
+    expect(within(searchView.container).getByRole("combobox", { name: "Search Fractal" })).toBeInTheDocument();
+    expect(searchView.container.querySelector("[data-hero-shell], canvas")).not.toBeInTheDocument();
+    expect(within(searchView.container).getByRole("button", { name: "Copy prompt for Home Search Bar" })).toBeInTheDocument();
+    searchView.unmount();
+
+    const carousel = COMPONENT_REGISTRY.find(({ id }) => id === "meet-space-carousel")!;
+    const carouselView = render(<VisualSpecimenCard entry={carousel} onOpen={() => undefined} />);
+    expect(within(carouselView.container).getByRole("button", { name: "Previous photo" })).toBeInTheDocument();
+    expect(within(carouselView.container).getByRole("button", { name: "Next photo" })).toBeInTheDocument();
+    expect(within(carouselView.container).getAllByRole("button", { name: /Go to photo/ })).toHaveLength(3);
+    expect(within(carouselView.container).getByText("01 / 03")).toBeInTheDocument();
+    expect(within(carouselView.container).getByRole("button", { name: "Copy prompt for Photo Carousel" })).toBeInTheDocument();
+  });
 });

@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { CategoryChooser } from "./catalog/CategoryChooser";
 import { ComponentDetail } from "./catalog/ComponentDetail";
-import { FullContextPreview } from "./catalog/FullContextPreview";
 import { VisualSpecimenCard } from "./catalog/VisualSpecimenCard";
 import { COMPONENT_REGISTRY, GALLERY_CATEGORIES, galleryEntries, searchableEntryText, type ComponentRegistryEntry, type GalleryCategoryId } from "./catalog/registry";
 import { EducationContentWorkshop } from "./workshop/EducationContentWorkshop";
@@ -14,7 +13,7 @@ type CatalogRoute =
 
 const validCategories = new Set<string>(GALLERY_CATEGORIES.map(({ id }) => id));
 
-function readRoute(hash = window.location.hash): CatalogRoute {
+export function readRoute(hash = window.location.hash): CatalogRoute {
   const raw = hash.replace(/^#/, "");
   const [path, search = ""] = raw.split("?");
   if (path === "education") return { view: "education" };
@@ -70,9 +69,12 @@ export function ComponentLibraryApp() {
   };
 
   useEffect(() => {
-    if (!window.location.hash) history.replaceState({ catalog: true }, "", routeHash(route));
+    const canonical = routeHash(readRoute());
+    if (window.location.hash !== canonical) history.replaceState({ catalog: true }, "", canonical);
     const sync = () => {
       const next = readRoute();
+      const nextCanonical = routeHash(next);
+      if (window.location.hash !== nextCanonical) history.replaceState({ catalog: true }, "", nextCanonical);
       setRoute(next);
       window.scrollTo({ top: 0, behavior: "instant" });
       if (next.view === "browse" && restoreFocusId.current) {
@@ -92,6 +94,6 @@ export function ComponentLibraryApp() {
   if (route.view === "education") return <main className="library-page"><div className="library-tool-bar"><button className="library-back" type="button" onClick={() => navigate(readRoute(previousBrowse.current))}>← Back to components</button><p className="text-label">Education editing tool</p></div><EducationContentWorkshop /></main>;
   const entry = COMPONENT_REGISTRY.find(({ id }) => id === route.id);
   if (!entry) return <main className="library-page"><div className="library-detail-shell"><button className="library-back" onClick={() => navigate({ view: "browse", category: "common", query: "" })}>← Back to components</button><h1 className="text-title normal-case">Component not found</h1></div></main>;
-  if (route.view === "preview") return <FullContextPreview entry={entry} onBack={() => navigate({ view: "detail", id: entry.id })} />;
+  if (route.view === "preview") return <ComponentDetail entry={entry} onBack={() => navigate({ view: "browse", category: "common", query: "" })} onOpenLive={() => undefined} />;
   return <ComponentDetail entry={entry} onBack={() => navigate(readRoute(previousBrowse.current))} onOpenLive={() => navigate({ view: "preview", id: entry.id })} />;
 }

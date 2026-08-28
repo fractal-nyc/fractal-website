@@ -13,9 +13,9 @@ Open `http://localhost:5173/components/`. The first screen is a visual chooser: 
 
 Each tile is deliberately minimal: a live preview, a clickable component name, and **Copy prompt**. Select the name when you want the focused view and its real options. Use **Copy prompt** when you already recognize the component and want to hand a configuration-free request directly to an agent. The copied request tells the agent to inherit the target page, house, or section tokens wherever the component supports them, so no color choice is required first.
 
-The focused view keeps the large live preview first, then shows only the options that component truly supports. Open **Usage details** for boundaries, current site usage, accessibility notes, technical source, and the same agent prompt. Site color and Background choices remain limited to approved token-backed combinations. Full-page components have a separate lazy **Open live preview** so their navigation, maps, motion, and viewport behavior do not run behind the gallery.
+The focused view keeps the large live preview first, then shows only the options that component truly supports. Open **Usage details** for boundaries, current site usage, accessibility notes, technical source, and the same agent prompt. Site color and Background choices remain limited to approved token-backed combinations.
 
-Choose **Edit Education courses** for semester work. It opens as a separate tool and never appears below the browse gallery. Browse, category, focused component, full preview, and workshop URLs are reload-safe and shareable. The gallery imports real production components and `src/index.css`; it does not maintain a duplicate mock component set or token file.
+Choose **Edit Education courses** for semester work. It opens as a separate tool and never appears below the browse gallery. Browse, category, focused component, and workshop URLs are reload-safe and shareable. The gallery imports real production components and `src/index.css`; it does not maintain a duplicate mock component set or token file.
 
 Build and verify it independently with:
 
@@ -30,14 +30,12 @@ The output is `dist-components/`. Normal `pnpm build` still produces only the pu
 
 Use these names in requests to designers, editors, or agents:
 
-- Design basics: **Site Colors**, **Type Styles**, **Page Frame**, **Reading Column**, **Section Spacing**, **Card Grid**, and **Section Header**.
 - Buttons and links: **Primary Button** is the branded Mandelbrot-corner CTA; **Standalone Link** is a prominent link that sits on its own and carries a diagonal arrow; **Inline Text Link** is an underlined link within a sentence and has no arrow.
-- Forms and filters: **Archive Search Field**, **Filter Chip**, **Empty Results Message**, **Library Tag Filter**, and **Course Subject Filter**.
+- Forms and filters: **Home Search Bar** is the real desktop Home combobox for finding pages, people, houses, articles, and topics. It was previously called **Hero Search / Combobox**. This category also includes **Archive Search Field**, **Filter Chip**, **Empty Results Message**, **Library Tag Filter**, and **Course Subject Filter**.
 - Cards and boxes: **Content Card**, **Article Card**, **Note Box**, **Course Card**, **Course Fact Grid**, **Club Card**, **Campus Highlight**, **Membership Button Group**, and **Editorial Quote**.
-- Media: **Embedded Content Frame**, **Photo Frame**, **Mandelbrot Corner Frame**, **Mandelbrot Icon**, **Paper Grain Overlay**, **Fractal Pattern**, **Fade In**, **Gallery Image**, **Photo Gallery**.
-- Complex composites: each named **House Pennant**, **House Pennant Renderer**, **Campus Section**, **Hero Search / Combobox**, **Housing Map**, **Meet the Space Carousel**, **Origin Story**, **Sierpinski Carpet**, **Fractal City Scene**, and **Octahedron Hero**.
+- Media: **Photo Carousel** is the real carousel currently used in Campus’s Meet the Space section and was previously called **Meet the Space Carousel**. This category also includes **Embedded Content Frame**, **Photo Frame**, **Mandelbrot Corner Frame**, **Mandelbrot Icon**, **Paper Grain Overlay**, **Fractal Pattern**, **Fade In**, **Gallery Image**, **Photo Gallery**, and **House Pennants**.
 
-The interactive registry is authoritative for each name’s purpose, fields, variants, usage boundaries, responsive notes, accessibility notes, source path, and agent-ready phrase. Supporting and invisible implementation files stay inventoried without cluttering the visual chooser. A coverage test fails if a new production component file is added without a registry entry.
+The interactive registry is authoritative for each name’s purpose, fields, variants, usage boundaries, responsive notes, accessibility notes, source path, and agent-ready phrase. Foundations such as site colors, page frames, type rules, and section spacing are applied automatically by agents rather than copied as components. Page infrastructure such as the Navbar, whole Hero, maps, and WebGL scenes is likewise retained as internal inventory instead of being offered as a reusable tile. Supporting and invisible implementation files remain source-accounted without cluttering the visual chooser. A coverage test fails if a new production component file is added without a registry entry.
 
 ## Color pairings
 

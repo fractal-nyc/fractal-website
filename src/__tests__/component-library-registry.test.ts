@@ -4,6 +4,7 @@ import { describe, expect, it } from "vitest";
 import { COMPONENT_REGISTRY, GALLERY_CATEGORIES, galleryEntries, searchableEntryText } from "../../components/catalog/registry";
 import { COMPONENT_COLORWAYS } from "@/components/content/ComponentColorScope";
 import { HOUSES, SECTIONS } from "@/data/houses";
+import { readRoute } from "../../components/ComponentLibraryApp";
 
 describe("team component registry", () => {
   it("uses unique stable labels and agent phrases with complete guidance", () => {
@@ -56,6 +57,10 @@ describe("team component registry", () => {
     expect(search("outbound link").map(({ name }) => name)).toContain("Standalone Link");
     expect(search("outsource link").map(({ name }) => name)).toContain("Standalone Link");
     expect(search("prose link").map(({ name }) => name)).toContain("Inline Text Link");
+    expect(search("homepage search").map(({ name }) => name)).toContain("Home Search Bar");
+    expect(search("hero search").map(({ name }) => name)).toContain("Home Search Bar");
+    expect(search("meet the space carousel").map(({ name }) => name)).toContain("Photo Carousel");
+    expect(search("photo slider").map(({ name }) => name)).toContain("Photo Carousel");
     expect(COMPONENT_COLORWAYS.map(({ id }) => id)).toEqual(["neutral", "co-living", "events", "campus", "education", "library", "political-club", "story", "people"]);
     expect(COMPONENT_COLORWAYS.find(({ id }) => id === "education")?.accent).toBe(HOUSES.find(({ id }) => id === "school")?.palette.light);
     expect(COMPONENT_COLORWAYS.find(({ id }) => id === "story")?.accent).toBe(SECTIONS.story.accent);
@@ -73,7 +78,7 @@ describe("team component registry", () => {
   });
 
   it("provides a visual preview and plain-language category for every gallery entry", () => {
-    expect(GALLERY_CATEGORIES.map(({ label }) => label)).toEqual(["Common components", "Cards & boxes", "Buttons & links", "Forms & filters", "Images & decoration", "Page sections", "Design basics", "All components"]);
+    expect(GALLERY_CATEGORIES.map(({ label }) => label)).toEqual(["Common components", "Cards & boxes", "Buttons & links", "Forms & filters", "Images & decoration", "All components"]);
     for (const entry of galleryEntries) {
       expect(entry.galleryCategory).toBeTruthy();
       expect(entry.previewMode).not.toBe("invisible");
@@ -94,5 +99,34 @@ describe("team component registry", () => {
   it("keeps supporting and invisible implementation sources out of the visual gallery", () => {
     expect(galleryEntries.some(({ id }) => id === "site-footer-marker")).toBe(false);
     expect(COMPONENT_REGISTRY.filter(({ presentation }) => presentation === "internal").every(({ internalReason }) => Boolean(internalReason))).toBe(true);
+    const hiddenIds = ["color-pairing", "page-frame", "type-style", "reading-column", "standard-section-frame", "wide-card-grid", "section-header", "site-navigation", "campus-section", "home-hero", "housing-map", "origin-story", "sierpinski-carpet", "fractal-city-scene", "octahedron-hero"];
+    for (const id of hiddenIds) {
+      const entry = COMPONENT_REGISTRY.find((candidate) => candidate.id === id)!;
+      expect(entry.presentation).not.toBe("gallery");
+      expect(entry.previewMode).toBe("invisible");
+      expect(entry.galleryCategory).toBeUndefined();
+      expect(galleryEntries).not.toContain(entry);
+    }
+  });
+
+  it("exposes only the approved reusable search and carousel from page-owned experiences", () => {
+    const search = COMPONENT_REGISTRY.find(({ id }) => id === "hero-search")!;
+    expect(search).toMatchObject({ name: "Home Search Bar", componentName: "HomeSearchBar", sourcePath: "src/components/sections/HomeSearchBar.tsx", presentation: "gallery", galleryCategory: "forms", previewMode: "inline", themeable: false });
+    expect(search.controls).toEqual([]);
+    expect(search.usedOn).toMatch(/Home/i);
+
+    const carousel = COMPONENT_REGISTRY.find(({ id }) => id === "meet-space-carousel")!;
+    expect(carousel).toMatchObject({ name: "Photo Carousel", componentName: "MeetTheSpaceCarousel", presentation: "gallery", galleryCategory: "media", previewMode: "inline", themeable: false });
+    expect(carousel.controls).toEqual([]);
+    expect(carousel.usedOn).toMatch(/Campus/i);
+    expect(COMPONENT_REGISTRY.find(({ id }) => id === "home-hero")?.sourcePath).toBe("src/components/sections/Hero.tsx");
+    const heroSource = fs.readFileSync("src/components/sections/Hero.tsx", "utf8");
+    expect(heroSource).toMatch(/<HomeSearchBar[\s\S]*enableGlobalShortcut/);
+    expect(heroSource).toMatch(/className="hidden lg:block absolute bottom-12/);
+  });
+
+  it("canonicalizes removed chooser hashes to Common components", () => {
+    expect(readRoute("#browse/basics")).toEqual({ view: "browse", category: "common", query: "" });
+    expect(readRoute("#browse/sections?q=hero")).toEqual({ view: "browse", category: "common", query: "hero" });
   });
 });

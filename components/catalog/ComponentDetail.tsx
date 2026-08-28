@@ -18,6 +18,16 @@ export function ComponentDetail({ entry, onBack, onOpenLive }: { entry: Componen
   const allowedSurfaces = useMemo(() => entry.surfaceModes.filter((candidate) => getAllowedComponentSurfaces(colorway).includes(candidate)), [colorway, entry]);
   const width = entry.controls.some((control) => control.kind === "preview-width") ? values.previewWidth ?? "full" : "full";
 
+  if (entry.presentation !== "gallery") {
+    return <main className="library-page library-detail-page">
+      <div className="library-detail-shell">
+        <button type="button" className="library-back" onClick={onBack}>← Back to components</button>
+        <header className="library-detail-header"><p className="text-label">Internal reference</p><h1 className="text-title normal-case">{entry.name}</h1><p className="text-body-lead">{entry.internalReason}</p></header>
+        <div className="library-internal-notice"><p className="text-body">This is applied automatically or belongs to a larger page experience. It is not an option to copy into a page.</p><dl className="library-guidance"><div><dt>Technical name</dt><dd>{entry.componentName}</dd></div><div><dt>Source</dt><dd><code>{entry.sourcePath}</code></dd></div></dl></div>
+      </div>
+    </main>;
+  }
+
   return <main className="library-page library-detail-page">
     <div className="library-detail-shell">
       <button type="button" className="library-back" onClick={onBack}>← Back to components</button>
