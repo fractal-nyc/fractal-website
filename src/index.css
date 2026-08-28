@@ -266,10 +266,10 @@
      underline grows downward (below the baseline), so in an items-baseline
      row the letters never shift. padding-bottom clears serif descenders. */
   .nav-link {
-    color: var(--nav-c-deep, var(--nav-c, currentColor));
+    color: var(--nav-c-default, var(--nav-c-deep, var(--nav-c, currentColor)));
     padding-bottom: 0.12em;
     border-bottom: 1px solid
-      color-mix(in srgb, var(--nav-c-deep, var(--nav-c, currentColor)) 45%, transparent);
+      color-mix(in srgb, var(--nav-c-default, var(--nav-c-deep, var(--nav-c, currentColor))) 45%, transparent);
     transition:
       color 300ms ease,
       border-color 300ms ease,
