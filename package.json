@@ -13,6 +13,7 @@
     "typecheck": "tsc --noEmit",
     "typecheck:components": "tsc --noEmit -p tsconfig.components.json",
     "check:production-leakage": "node scripts/check-production-leakage.mjs",
+    "check:components-browser": "node scripts/check-component-library-browser.mjs",
     "conformance": "node scripts/design-conformance.mjs",
     "test": "vitest run",
     "test:watch": "vitest",

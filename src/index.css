@@ -5,7 +5,7 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
 
-@theme inline {
+@theme static inline {
   --font-sans: 'Inter', system-ui, sans-serif;
   --font-serif: 'Fraunces', serif;
   --font-mono: 'JetBrains Mono', monospace;

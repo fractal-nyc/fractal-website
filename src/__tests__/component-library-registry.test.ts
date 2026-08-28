@@ -3,6 +3,7 @@ import path from "node:path";
 import { describe, expect, it } from "vitest";
 import { COMPONENT_REGISTRY, searchableEntryText } from "../../components/catalog/registry";
 import { COMPONENT_COLORWAYS } from "@/components/content/ComponentColorScope";
+import { HOUSES, SECTIONS } from "@/data/houses";
 
 describe("team component registry", () => {
   it("uses unique stable labels and agent phrases with complete guidance", () => {
@@ -41,6 +42,8 @@ describe("team component registry", () => {
     expect(search("class container").map(({ name }) => name)).toContain("Course Card");
     expect(search("outsource link").map(({ name }) => name)).toContain("Outbound Link");
     expect(COMPONENT_COLORWAYS.map(({ id }) => id)).toEqual(["neutral", "co-living", "events", "campus", "education", "library", "political-club", "story", "people"]);
-    expect(JSON.stringify(COMPONENT_COLORWAYS)).not.toMatch(/#[0-9a-f]{3,8}/i);
+    expect(COMPONENT_COLORWAYS.find(({ id }) => id === "education")?.accent).toBe(HOUSES.find(({ id }) => id === "school")?.palette.light);
+    expect(COMPONENT_COLORWAYS.find(({ id }) => id === "story")?.accent).toBe(SECTIONS.story.accent);
+    expect(COMPONENT_COLORWAYS.find(({ id }) => id === "story")?.allowedSurfaces).toEqual(["paper"]);
   });
 });

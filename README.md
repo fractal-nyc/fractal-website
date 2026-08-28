@@ -30,6 +30,7 @@ pnpm typecheck  # TypeScript check
 pnpm test       # vitest suite
 pnpm typecheck:components # type-check the separate catalog
 pnpm build:components     # build only the catalog to dist-components/
+pnpm check:components-browser # verify catalog interactions, colorways, and migrated pages
 ```
 
 Responsive and native-mobile verification:

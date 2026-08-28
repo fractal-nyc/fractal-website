@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { FRACTALU_CATALOG_SNAPSHOT, getFractalUCategories, hydrateFractalUCatalog, validateFractalUCatalog, type FractalUCatalogSnapshot } from "@/data/fractalu";
+import { FRACTALU_CATALOG_SNAPSHOT, getFractalUCategories, hydrateFractalUCatalog, normalizeFractalUCatalogSnapshot, validateFractalUCatalog, type FractalUCatalogSnapshot } from "@/data/fractalu";
 
 const clone = () => JSON.parse(JSON.stringify(FRACTALU_CATALOG_SNAPSHOT)) as FractalUCatalogSnapshot;
 
@@ -21,6 +21,36 @@ describe("FractalU serializable catalog boundary", () => {
     const result = validateFractalUCatalog(draft);
     expect(result.valid).toBe(false);
     expect(result.errors.map(({ path }) => path)).toEqual(expect.arrayContaining(["courses.1.id", "courses.0.instructors", "courses.0.applicationUrl", "clubs.0.detailsLabel"]));
+  });
+
+  it("normalizes untrusted JSON to the exact serializable schema", () => {
+    const imported = clone() as FractalUCatalogSnapshot & { uiState?: string };
+    imported.uiState = "must not survive";
+    Object.assign(imported.courses[0], { instructor: "derived", unknown: true });
+    Object.assign(imported.courses[0].instructors[0], { uiOpen: true });
+    const normalized = normalizeFractalUCatalogSnapshot(imported);
+    const serialized = JSON.stringify(normalized);
+    expect(serialized).not.toContain("uiState");
+    expect(serialized).not.toContain('"instructor"');
+    expect(serialized).not.toContain("unknown");
+    expect(serialized).not.toContain("uiOpen");
+    expect(validateFractalUCatalog(normalized)).toEqual({ valid: true, errors: [] });
+  });
+
+  it("turns malformed collection records into validation-safe records", () => {
+    const normalized = normalizeFractalUCatalogSnapshot({
+      semester: "Fall 2026",
+      sourceProvenance: null,
+      courses: [null],
+      clubs: [42],
+    });
+    expect(() => validateFractalUCatalog(normalized)).not.toThrow();
+    expect(validateFractalUCatalog(normalized).errors.map(({ path }) => path)).toEqual(expect.arrayContaining([
+      "sourceProvenance.url",
+      "courses.0.title",
+      "courses.0.instructors",
+      "clubs.0.name",
+    ]));
   });
 
   it("preserves instructor order and derives new subject categories from the supplied draft", () => {

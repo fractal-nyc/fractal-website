@@ -77,6 +77,71 @@ export interface FractalUValidationResult {
   errors: FractalUValidationError[];
 }
 
+const stringValue = (value: unknown) => typeof value === "string" ? value : "";
+const optionalStringValue = (value: unknown) => typeof value === "string" ? value : undefined;
+
+/**
+ * Copy an untrusted value into the exact repository JSON shape. Unknown,
+ * derived (`instructor`), and editor-only keys are intentionally discarded.
+ * Malformed collection members become render-safe empty records so validation
+ * can point at them without the editor ever dereferencing arbitrary JSON.
+ */
+export function normalizeFractalUCatalogSnapshot(value: unknown): FractalUCatalogSnapshot {
+  const root = isRecord(value) ? value : {};
+  const source = isRecord(root.sourceProvenance) ? root.sourceProvenance : {};
+  const courses = Array.isArray(root.courses) ? root.courses : [];
+  const clubs = Array.isArray(root.clubs) ? root.clubs : [];
+
+  return {
+    semester: stringValue(root.semester),
+    sourceProvenance: {
+      url: stringValue(source.url),
+      verifiedAt: stringValue(source.verifiedAt),
+      lastModified: stringValue(source.lastModified),
+      etag: stringValue(source.etag),
+      byteLength: typeof source.byteLength === "number" ? source.byteLength : -1,
+      sha256: stringValue(source.sha256),
+    },
+    courses: courses.map((value) => {
+      const course = isRecord(value) ? value : {};
+      const instructors = Array.isArray(course.instructors) ? course.instructors : [];
+      return {
+        id: stringValue(course.id),
+        title: stringValue(course.title),
+        category: stringValue(course.category),
+        instructors: instructors.map((value) => {
+          const instructor = isRecord(value) ? value : {};
+          return { name: stringValue(instructor.name), bio: stringValue(instructor.bio) };
+        }),
+        schedule: stringValue(course.schedule),
+        dates: stringValue(course.dates),
+        location: stringValue(course.location),
+        price: stringValue(course.price),
+        description: stringValue(course.description),
+        detailsUrl: optionalStringValue(course.detailsUrl),
+        detailsLabel: optionalStringValue(course.detailsLabel),
+        applicationUrl: stringValue(course.applicationUrl),
+        applicationLabel: stringValue(course.applicationLabel),
+        videoUrl: optionalStringValue(course.videoUrl),
+      };
+    }),
+    clubs: clubs.map((value) => {
+      const club = isRecord(value) ? value : {};
+      return {
+        id: stringValue(club.id),
+        name: stringValue(club.name),
+        description: stringValue(club.description),
+        schedule: stringValue(club.schedule),
+        location: stringValue(club.location),
+        detailsUrl: optionalStringValue(club.detailsUrl),
+        detailsLabel: optionalStringValue(club.detailsLabel),
+        actionUrl: stringValue(club.actionUrl),
+        actionLabel: stringValue(club.actionLabel),
+      };
+    }),
+  };
+}
+
 const REQUIRED_PROVENANCE_FIELDS = [
   "url",
   "verifiedAt",

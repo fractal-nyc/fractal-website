@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
-import { COMPONENT_COLORWAYS, type ComponentColorwayId, type ComponentSurfaceMode, ComponentColorScope } from "@/components/content/ComponentColorScope";
+import { COMPONENT_COLORWAYS, getAllowedComponentSurfaces, type ComponentColorwayId, type ComponentSurfaceMode } from "@/components/content/ComponentColorScope";
 import { COMPONENT_CATEGORIES, COMPONENT_REGISTRY, searchableEntryText } from "./catalog/registry";
+import { SpecimenCard } from "./catalog/SpecimenCard";
 import { EducationContentWorkshop } from "./workshop/EducationContentWorkshop";
 
 export function ComponentLibraryApp() {
@@ -9,6 +10,7 @@ export function ComponentLibraryApp() {
   const [surface, setSurface] = useState<ComponentSurfaceMode>("paper");
   const normalized = query.trim().toLowerCase();
   const entries = useMemo(() => COMPONENT_REGISTRY.filter((entry) => !normalized || searchableEntryText(entry).includes(normalized)), [normalized]);
+  const allowedSurfaces = getAllowedComponentSurfaces(colorway);
 
   return (
     <main className="library-page">
@@ -17,8 +19,8 @@ export function ComponentLibraryApp() {
           <div><p className="text-label text-house-library-deep">Team-only local document</p><h1 className="text-display mt-2">Fractal NYC Component Library</h1><p className="text-body-lead mt-4 max-w-3xl text-foreground-muted">Find a plain-English component name, inspect the real production implementation, then use its “Ask an agent” phrase to keep new work consistent.</p></div>
           <div className="library-global-controls">
             <label className="library-control"><span>Search components</span><input type="search" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="note, class, article, external link…" /></label>
-            <label className="library-control"><span>Color pairing</span><select value={colorway} onChange={(event) => setColorway(event.target.value as ComponentColorwayId)}>{COMPONENT_COLORWAYS.map((item) => <option key={item.id} value={item.id}>{item.name}</option>)}</select></label>
-            <label className="library-control"><span>Surface</span><select value={surface} onChange={(event) => setSurface(event.target.value as ComponentSurfaceMode)}><option value="paper">Paper</option><option value="light">Light</option><option value="deep">Deep</option></select></label>
+            <label className="library-control"><span>Color pairing</span><select value={colorway} onChange={(event) => { const next = event.target.value as ComponentColorwayId; setColorway(next); if (!getAllowedComponentSurfaces(next).includes(surface)) setSurface(getAllowedComponentSurfaces(next)[0]); }}>{COMPONENT_COLORWAYS.map((item) => <option key={item.id} value={item.id}>{item.name}</option>)}</select></label>
+            <label className="library-control"><span>Surface</span><select value={surface} onChange={(event) => setSurface(event.target.value as ComponentSurfaceMode)}>{allowedSurfaces.map((item) => <option key={item} value={item}>{item[0].toUpperCase() + item.slice(1)}</option>)}</select></label>
           </div>
         </div>
       </header>
@@ -30,7 +32,7 @@ export function ComponentLibraryApp() {
           {COMPONENT_CATEGORIES.map((category) => {
             const categoryEntries = entries.filter((entry) => entry.category === category);
             if (!categoryEntries.length) return null;
-            return <section key={category} id={`category-${category.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`} className="library-category"><h2 className="text-title normal-case">{category}</h2><div className="library-specimen-grid">{categoryEntries.map((entry) => <article key={entry.id} id={entry.id} className="library-specimen"><header><p className="text-label text-house-library-deep">{entry.name}</p><h3 className="text-subtitle mt-2 normal-case">{entry.componentName}</h3><p className="text-body mt-3 text-foreground-muted">{entry.purpose}</p></header><dl className="library-guidance"><div><dt>Use when</dt><dd>{entry.useWhen}</dd></div><div><dt>Do not use when</dt><dd>{entry.doNotUseWhen}</dd></div><div><dt>Content fields</dt><dd>{entry.contentFields.join(" · ")}</dd></div><div><dt>Variants and states</dt><dd>{entry.variants.join(" · ")}</dd></div><div><dt>Accessibility</dt><dd>{entry.accessibility}</dd></div><div><dt>Responsive behavior</dt><dd>{entry.responsive}</dd></div></dl>{entry.render ? <div className="library-canvas"><ComponentColorScope colorway={colorway} surface={surface} className="library-canvas-scope">{entry.render({ colorway, surface })}</ComponentColorScope></div> : <div className="library-reference"><p className="text-label">Reference specimen</p><p className="text-body mt-2">{entry.referenceOnly}</p></div>}<footer className="library-specimen-footer"><div><p className="text-label">Ask an agent for this</p><p className="text-body mt-1">{entry.agentPhrase}</p></div><code>{entry.sourcePath}</code></footer></article>)}</div></section>;
+            return <section key={category} id={`category-${category.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`} className="library-category"><h2 className="text-title normal-case">{category}</h2><div className="library-specimen-grid">{categoryEntries.map((entry) => <SpecimenCard key={entry.id} entry={entry} initialColorway={colorway} initialSurface={surface} />)}</div></section>;
           })}
         </div>
       </div>

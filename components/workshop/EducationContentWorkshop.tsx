@@ -1,17 +1,18 @@
 import { useMemo, useState, type ChangeEvent, type ReactNode } from "react";
 import { Button } from "@/components/ui/button";
-import { ComponentColorScope, COMPONENT_COLORWAYS, type ComponentColorwayId } from "@/components/content/ComponentColorScope";
+import { ComponentColorScope, COMPONENT_COLORWAYS, getAllowedComponentSurfaces, type ComponentColorwayId, type ComponentSurfaceMode } from "@/components/content/ComponentColorScope";
 import { FractalUCatalogView } from "@/components/education/FractalUniversityPortal";
 import {
   FRACTALU_CATALOG_SNAPSHOT,
   hydrateFractalUCatalog,
+  normalizeFractalUCatalogSnapshot,
   validateFractalUCatalog,
   type FractalUCatalogSnapshot,
   type FractalUCourseSnapshot,
   type FractalUClub,
 } from "@/data/fractalu";
 
-const cloneSnapshot = (value: FractalUCatalogSnapshot): FractalUCatalogSnapshot => JSON.parse(JSON.stringify(value)) as FractalUCatalogSnapshot;
+const cloneSnapshot = (value: FractalUCatalogSnapshot): FractalUCatalogSnapshot => normalizeFractalUCatalogSnapshot(JSON.parse(JSON.stringify(value)));
 const fieldId = (path: string) => `workshop-${path.replace(/[^a-z0-9]+/gi, "-")}`;
 const slugify = (value: string) => value.toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") || "new-item";
 
@@ -49,12 +50,14 @@ function reorder<T>(items: T[], from: number, to: number) {
 export function EducationContentWorkshop({ initialSnapshot = FRACTALU_CATALOG_SNAPSHOT }: { initialSnapshot?: FractalUCatalogSnapshot }) {
   const [draft, setDraft] = useState(() => cloneSnapshot(initialSnapshot));
   const [colorway, setColorway] = useState<ComponentColorwayId>("education");
+  const [surface, setSurface] = useState<ComponentSurfaceMode>("deep");
   const [importText, setImportText] = useState("");
   const [notice, setNotice] = useState("");
   const validation = useMemo(() => validateFractalUCatalog(draft), [draft]);
   const errors = useMemo(() => new Map(validation.errors.map((error) => [error.path, error.message])), [validation.errors]);
   const hydrated = validation.valid ? hydrateFractalUCatalog(draft) : null;
-  const normalized = JSON.stringify(draft, null, 2) + "\n";
+  const normalized = JSON.stringify(normalizeFractalUCatalogSnapshot(draft), null, 2) + "\n";
+  const allowedPreviewSurfaces = getAllowedComponentSurfaces(colorway);
 
   const updateCourse = (index: number, patch: Partial<FractalUCourseSnapshot>) => setDraft((current) => ({ ...current, courses: current.courses.map((course, courseIndex) => courseIndex === index ? { ...course, ...patch } : course) }));
   const updateClub = (index: number, patch: Partial<FractalUClub>) => setDraft((current) => ({ ...current, clubs: current.clubs.map((club, clubIndex) => clubIndex === index ? { ...club, ...patch } : club) }));
@@ -63,13 +66,23 @@ export function EducationContentWorkshop({ initialSnapshot = FRACTALU_CATALOG_SN
 
   const importJson = () => {
     try {
-      const parsed = JSON.parse(importText) as Partial<FractalUCatalogSnapshot>;
-      if (!parsed || typeof parsed !== "object" || !Array.isArray(parsed.courses) || !Array.isArray(parsed.clubs) || !parsed.sourceProvenance) throw new Error("JSON must include sourceProvenance, courses, and clubs.");
-      setDraft(parsed as FractalUCatalogSnapshot);
-      setNotice("Imported into this local draft. Review validation before export.");
+      const parsed: unknown = JSON.parse(importText);
+      const rawValidation = validateFractalUCatalog(parsed);
+      setDraft(normalizeFractalUCatalogSnapshot(parsed));
+      setNotice(rawValidation.valid
+        ? "Imported and normalized into this local draft. Unknown and derived keys were removed."
+        : `Imported safely with ${rawValidation.errors.length} validation ${rawValidation.errors.length === 1 ? "error" : "errors"}. Review the summary before export.`);
     } catch (error) {
       setNotice(error instanceof Error ? `Import failed: ${error.message}` : "Import failed.");
     }
+  };
+
+  const focusError = (path: string) => {
+    const target = document.getElementById(fieldId(path));
+    if (!target) return;
+    const details = target.closest("details");
+    if (details) details.open = true;
+    requestAnimationFrame(() => target.focus({ preventScroll: true }));
   };
 
   const copyJson = async () => {
@@ -93,31 +106,31 @@ export function EducationContentWorkshop({ initialSnapshot = FRACTALU_CATALOG_SN
       </header>
 
       <div className="library-workshop-grid">
-        <div className="library-editor" aria-label="Education draft editor">
+        <div id={fieldId("catalog")} className="library-editor" aria-label="Education draft editor" tabIndex={-1}>
           {!validation.valid && (
             <div className="library-error-summary" role="alert" aria-labelledby="validation-title">
               <h3 id="validation-title" className="text-subtitle normal-case">Fix {validation.errors.length} validation {validation.errors.length === 1 ? "error" : "errors"}</h3>
-              <ul className="mt-3 list-disc space-y-2 pl-5 text-body">{validation.errors.map((error) => <li key={`${error.path}-${error.message}`}><a href={`#${fieldId(error.path)}`} className="underline">{error.path}: {error.message}</a></li>)}</ul>
+              <ul className="mt-3 list-disc space-y-2 pl-5 text-body">{validation.errors.map((error) => <li key={`${error.path}-${error.message}`}><a href={`#${fieldId(error.path)}`} className="underline" onClick={(event) => { event.preventDefault(); focusError(error.path); }}>{error.path}: {error.message}</a></li>)}</ul>
             </div>
           )}
 
-          <fieldset className="library-fieldset">
+          <fieldset id={fieldId("sourceProvenance")} className="library-fieldset" tabIndex={-1}>
             <legend className="text-subtitle normal-case">Semester and provenance</legend>
             <Field label="Semester" path="semester" value={draft.semester} error={errors.get("semester")} onChange={(semester) => setDraft((current) => ({ ...current, semester }))} />
             {(["url", "verifiedAt", "lastModified", "etag", "sha256"] as const).map((key) => <Field key={key} label={key} path={`sourceProvenance.${key}`} value={draft.sourceProvenance[key]} error={errors.get(`sourceProvenance.${key}`)} onChange={(value) => setDraft((current) => ({ ...current, sourceProvenance: { ...current.sourceProvenance, [key]: value } }))} />)}
             <Field label="byteLength" path="sourceProvenance.byteLength" value={draft.sourceProvenance.byteLength} error={errors.get("sourceProvenance.byteLength")} onChange={(value) => setDraft((current) => ({ ...current, sourceProvenance: { ...current.sourceProvenance, byteLength: Number(value) } }))} />
           </fieldset>
 
-          <section className="library-editor-section" aria-labelledby="courses-editor-title">
+          <section id={fieldId("courses")} className="library-editor-section" aria-labelledby="courses-editor-title" tabIndex={-1}>
             <div className="library-section-heading"><h3 id="courses-editor-title" className="text-title normal-case">Courses</h3><Button type="button" onClick={() => setDraft((current) => ({ ...current, courses: [...current.courses, emptyCourse(current.courses.length)] }))}>Add course</Button></div>
             {draft.courses.map((course, courseIndex) => (
-              <details key={`${course.id}-${courseIndex}`} className="library-record" open={courseIndex === 0}>
+              <details id={fieldId(`courses.${courseIndex}`)} key={`${course.id}-${courseIndex}`} className="library-record" open={courseIndex === 0} tabIndex={-1}>
                 <summary className="text-subtitle cursor-pointer normal-case">{course.title || `Course ${courseIndex + 1}`}</summary>
                 <div className="library-record-body">
                   <div className="library-record-actions"><MoveButtons index={courseIndex} length={draft.courses.length} onMove={(to) => setDraft((current) => ({ ...current, courses: reorder(current.courses, courseIndex, to) }))} /><Button type="button" variant="outline" onClick={() => duplicateCourse(courseIndex)}>Duplicate</Button><Button type="button" variant="ghost" onClick={() => setDraft((current) => ({ ...current, courses: current.courses.filter((_, index) => index !== courseIndex) }))}>Delete</Button></div>
                   {(["id", "title", "category", "schedule", "dates", "location", "price", "description", "detailsUrl", "detailsLabel", "applicationUrl", "applicationLabel", "videoUrl"] as const).map((key) => <Field key={key} label={key} path={`courses.${courseIndex}.${key}`} value={course[key] ?? ""} multiline={key === "description"} error={errors.get(`courses.${courseIndex}.${key}`)} onChange={(value) => updateCourse(courseIndex, { [key]: key === "id" ? slugify(value) : value || undefined })} />)}
-                  <fieldset className="library-fieldset library-nested"><legend className="text-subtitle normal-case">Ordered instructors</legend>
-                    {course.instructors.map((instructor, instructorIndex) => <div className="library-instructor" key={`${instructor.name}-${instructorIndex}`}><Field label="Name" path={`courses.${courseIndex}.instructors.${instructorIndex}.name`} value={instructor.name} error={errors.get(`courses.${courseIndex}.instructors.${instructorIndex}.name`)} onChange={(name) => updateCourse(courseIndex, { instructors: course.instructors.map((item, index) => index === instructorIndex ? { ...item, name } : item) })} /><Field label="Biography" path={`courses.${courseIndex}.instructors.${instructorIndex}.bio`} value={instructor.bio} multiline error={errors.get(`courses.${courseIndex}.instructors.${instructorIndex}.bio`)} onChange={(bio) => updateCourse(courseIndex, { instructors: course.instructors.map((item, index) => index === instructorIndex ? { ...item, bio } : item) })} /><div className="library-record-actions"><MoveButtons index={instructorIndex} length={course.instructors.length} onMove={(to) => updateCourse(courseIndex, { instructors: reorder(course.instructors, instructorIndex, to) })} /><Button type="button" variant="ghost" onClick={() => updateCourse(courseIndex, { instructors: course.instructors.filter((_, index) => index !== instructorIndex) })}>Delete instructor</Button></div></div>)}
+                  <fieldset id={fieldId(`courses.${courseIndex}.instructors`)} className="library-fieldset library-nested" tabIndex={-1}><legend className="text-subtitle normal-case">Ordered instructors</legend>
+                    {course.instructors.map((instructor, instructorIndex) => <div id={fieldId(`courses.${courseIndex}.instructors.${instructorIndex}`)} className="library-instructor" key={`${instructor.name}-${instructorIndex}`} tabIndex={-1}><Field label="Name" path={`courses.${courseIndex}.instructors.${instructorIndex}.name`} value={instructor.name} error={errors.get(`courses.${courseIndex}.instructors.${instructorIndex}.name`)} onChange={(name) => updateCourse(courseIndex, { instructors: course.instructors.map((item, index) => index === instructorIndex ? { ...item, name } : item) })} /><Field label="Biography" path={`courses.${courseIndex}.instructors.${instructorIndex}.bio`} value={instructor.bio} multiline error={errors.get(`courses.${courseIndex}.instructors.${instructorIndex}.bio`)} onChange={(bio) => updateCourse(courseIndex, { instructors: course.instructors.map((item, index) => index === instructorIndex ? { ...item, bio } : item) })} /><div className="library-record-actions"><MoveButtons index={instructorIndex} length={course.instructors.length} onMove={(to) => updateCourse(courseIndex, { instructors: reorder(course.instructors, instructorIndex, to) })} /><Button type="button" variant="ghost" onClick={() => updateCourse(courseIndex, { instructors: course.instructors.filter((_, index) => index !== instructorIndex) })}>Delete instructor</Button></div></div>)}
                     <Button type="button" variant="outline" onClick={() => updateCourse(courseIndex, { instructors: [...course.instructors, { name: "New instructor", bio: "Instructor biography" }] })}>Add instructor</Button>
                   </fieldset>
                 </div>
@@ -125,9 +138,9 @@ export function EducationContentWorkshop({ initialSnapshot = FRACTALU_CATALOG_SN
             ))}
           </section>
 
-          <section className="library-editor-section" aria-labelledby="clubs-editor-title">
+          <section id={fieldId("clubs")} className="library-editor-section" aria-labelledby="clubs-editor-title" tabIndex={-1}>
             <div className="library-section-heading"><h3 id="clubs-editor-title" className="text-title normal-case">Clubs &amp; open groups</h3><Button type="button" onClick={() => setDraft((current) => ({ ...current, clubs: [...current.clubs, emptyClub(current.clubs.length)] }))}>Add club</Button></div>
-            {draft.clubs.map((club, clubIndex) => <details key={`${club.id}-${clubIndex}`} className="library-record"><summary className="text-subtitle cursor-pointer normal-case">{club.name || `Club ${clubIndex + 1}`}</summary><div className="library-record-body"><div className="library-record-actions"><MoveButtons index={clubIndex} length={draft.clubs.length} onMove={(to) => setDraft((current) => ({ ...current, clubs: reorder(current.clubs, clubIndex, to) }))} /><Button type="button" variant="outline" onClick={() => duplicateClub(clubIndex)}>Duplicate</Button><Button type="button" variant="ghost" onClick={() => setDraft((current) => ({ ...current, clubs: current.clubs.filter((_, index) => index !== clubIndex) }))}>Delete</Button></div>{(["id", "name", "description", "schedule", "location", "detailsUrl", "detailsLabel", "actionUrl", "actionLabel"] as const).map((key) => <Field key={key} label={key} path={`clubs.${clubIndex}.${key}`} value={club[key] ?? ""} multiline={key === "description"} error={errors.get(`clubs.${clubIndex}.${key}`)} onChange={(value) => updateClub(clubIndex, { [key]: key === "id" ? slugify(value) : value || undefined })} />)}</div></details>)}
+            {draft.clubs.map((club, clubIndex) => <details id={fieldId(`clubs.${clubIndex}`)} key={`${club.id}-${clubIndex}`} className="library-record" tabIndex={-1}><summary className="text-subtitle cursor-pointer normal-case">{club.name || `Club ${clubIndex + 1}`}</summary><div className="library-record-body"><div className="library-record-actions"><MoveButtons index={clubIndex} length={draft.clubs.length} onMove={(to) => setDraft((current) => ({ ...current, clubs: reorder(current.clubs, clubIndex, to) }))} /><Button type="button" variant="outline" onClick={() => duplicateClub(clubIndex)}>Duplicate</Button><Button type="button" variant="ghost" onClick={() => setDraft((current) => ({ ...current, clubs: current.clubs.filter((_, index) => index !== clubIndex) }))}>Delete</Button></div>{(["id", "name", "description", "schedule", "location", "detailsUrl", "detailsLabel", "actionUrl", "actionLabel"] as const).map((key) => <Field key={key} label={key} path={`clubs.${clubIndex}.${key}`} value={club[key] ?? ""} multiline={key === "description"} error={errors.get(`clubs.${clubIndex}.${key}`)} onChange={(value) => updateClub(clubIndex, { [key]: key === "id" ? slugify(value) : value || undefined })} />)}</div></details>)}
           </section>
 
           <fieldset className="library-fieldset"><legend className="text-subtitle normal-case">Import, reset, and export</legend>
@@ -140,8 +153,8 @@ export function EducationContentWorkshop({ initialSnapshot = FRACTALU_CATALOG_SN
         </div>
 
         <aside className="library-preview" aria-label="Live Education preview">
-          <div className="library-preview-controls"><label className="text-label">Preview color pairing<select value={colorway} onChange={(event) => setColorway(event.target.value as ComponentColorwayId)}>{COMPONENT_COLORWAYS.map((item) => <option key={item.id} value={item.id}>{item.name}</option>)}</select></label></div>
-          {hydrated ? <ComponentColorScope colorway={colorway} surface="deep" className="library-education-preview rounded-lg"><FractalUCatalogView catalog={hydrated} colorway={colorway} animate={false} /></ComponentColorScope> : <div className="library-invalid-preview"><p className="text-subtitle normal-case">Preview paused</p><p className="text-body mt-2">Fix the validation errors to render the draft with production components.</p></div>}
+          <div className="library-preview-controls"><label className="text-label">Preview color pairing<select value={colorway} onChange={(event) => { const next = event.target.value as ComponentColorwayId; setColorway(next); if (!getAllowedComponentSurfaces(next).includes(surface)) setSurface(getAllowedComponentSurfaces(next)[0]); }}>{COMPONENT_COLORWAYS.map((item) => <option key={item.id} value={item.id}>{item.name}</option>)}</select></label><label className="text-label">Preview surface<select value={surface} onChange={(event) => setSurface(event.target.value as ComponentSurfaceMode)}>{allowedPreviewSurfaces.map((item) => <option key={item} value={item}>{item[0].toUpperCase() + item.slice(1)}</option>)}</select></label></div>
+          {hydrated ? <ComponentColorScope colorway={colorway} surface={surface} className="library-education-preview rounded-lg"><FractalUCatalogView catalog={hydrated} colorway={colorway} animate={false} /></ComponentColorScope> : <div className="library-invalid-preview"><p className="text-subtitle normal-case">Preview paused</p><p className="text-body mt-2">Fix the validation errors to render the draft with production components.</p></div>}
         </aside>
       </div>
     </section>
