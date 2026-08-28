@@ -7,7 +7,8 @@ import { SectorHeader } from "@/components/layout/SectorHeader";
 import { FadeIn } from "@/components/ui/FadeIn";
 import { FractalPattern } from "@/components/ui/FractalPattern";
 import { HousingMap } from "@/components/sections/HousingMap";
-import { MandelbrotCorners } from "@/components/ui/MandelbrotCorners";
+import { CalloutCard } from "@/components/content/CalloutCard";
+import { ComponentColorScope } from "@/components/content/ComponentColorScope";
 import { CoLivingBannerSVG } from "@/components/house/CoLivingBannerSVG";
 import { HOUSES } from "@/data/houses";
 
@@ -124,16 +125,9 @@ export function CoLivingPage() {
         <section className="w-full mt-16 md:mt-24">
           <div className="page-gutter max-w-xl mx-auto">
             <FadeIn delay={0.1}>
-              <MandelbrotCorners
-                size="sm"
-                opacity={0.15}
-                className="border [border-color:var(--accent,currentColor)] rounded-md p-7 md:px-10 md:py-8 bg-background text-foreground text-left"
-              >
-                <div>
-                  <p className="text-label text-house-co-living-deep mb-2 md:mb-3">
-                    Visiting NYC?
-                  </p>
-                  <p className="text-body leading-relaxed text-foreground-muted">
+              <ComponentColorScope colorway="co-living" surface="paper" className="bg-transparent">
+              <CalloutCard label="Visiting NYC?">
+                  <p>
                     Community members regularly offer sublets and short stays.
                     Fill out our{" "}
                     <a
@@ -155,8 +149,8 @@ export function CoLivingPage() {
                     </a>{" "}
                     to stay at Fractal.
                   </p>
-                </div>
-              </MandelbrotCorners>
+              </CalloutCard>
+              </ComponentColorScope>
             </FadeIn>
           </div>
         </section>

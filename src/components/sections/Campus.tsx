@@ -172,7 +172,7 @@ function PrimaryButton({
   );
 }
 
-function MembershipTiers() {
+export function MembershipButtonGroup() {
   return (
     <div className="w-full">
       <div className="flex flex-col md:flex-row gap-4 items-stretch w-full">
@@ -193,7 +193,7 @@ function MembershipTiers() {
   );
 }
 
-function AudienceCard({
+export function AudienceHighlight({
   num,
   title,
   description,
@@ -209,14 +209,15 @@ function AudienceCard({
   // shared paper-grain overlay, Mandelbrot corners, and the cream-frost hover
   // (bg → --btn-fill, text → --btn-text/accent). `--accent` is campus-deep on
   // this page, so the card's rest color matches the sitewide CTA buttons.
-  const cardClass = cn(
+  const cardClass = [
     "group relative overflow-hidden flex flex-col gap-2 rounded-md p-7 shadow-lg",
-    "border bg-[var(--accent,currentColor)] text-background",
+    "border bg-[var(--component-accent,var(--accent,currentColor))] text-[var(--component-on-accent,var(--color-background))]",
     "[border-color:var(--accent,currentColor)]",
+    "[border-color:var(--component-accent,var(--accent,currentColor))]",
     "[backdrop-filter:blur(6px)] [-webkit-backdrop-filter:blur(6px)] [isolation:isolate] [transform:translateZ(0)]",
     "transition-colors duration-300",
-    "hover:bg-[var(--btn-fill,rgba(242,234,216,0.16))] hover:text-[var(--btn-text,var(--accent,currentColor))]",
-  );
+    "hover:bg-[var(--btn-fill,rgba(242,234,216,0.16))] hover:text-[var(--btn-text,var(--component-accent,var(--accent,currentColor)))]",
+  ].join(" ");
   const body = (
     <>
       {/* Eyebrow numeral: the .text-label chrome tier (mono/uppercase/wide
@@ -243,7 +244,7 @@ function AudienceCard({
         href={href}
         target="_blank"
         rel="noopener noreferrer"
-        className={cn(cardClass, "no-underline")}
+        className={`${cardClass} no-underline`}
       >
         {body}
         {decorations}
@@ -283,7 +284,7 @@ export function Campus() {
                 </InlineLink>
               </p>
               <div className="flex flex-col gap-4 items-center mb-4 max-w-2xl mx-auto">
-                <MembershipTiers />
+                <MembershipButtonGroup />
               </div>
               <p className="text-body-lead text-background/70 text-center">
                 First time here? Drop by for free! Contact Crystal (
@@ -354,7 +355,7 @@ export function Campus() {
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
               {audiences.map((audience) => (
-                <AudienceCard key={audience.num} {...audience} />
+                <AudienceHighlight key={audience.num} {...audience} />
               ))}
             </div>
           </div>

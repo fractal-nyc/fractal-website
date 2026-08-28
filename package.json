@@ -6,9 +6,13 @@
   "packageManager": "pnpm@10.33.0",
   "scripts": {
     "dev": "vite --host 0.0.0.0",
+    "components": "vite --config vite.components.config.ts --host 0.0.0.0",
     "build": "vite build",
+    "build:components": "vite build --config vite.components.config.ts",
     "serve": "vite preview --host 0.0.0.0",
     "typecheck": "tsc --noEmit",
+    "typecheck:components": "tsc --noEmit -p tsconfig.components.json",
+    "check:production-leakage": "node scripts/check-production-leakage.mjs",
     "conformance": "node scripts/design-conformance.mjs",
     "test": "vitest run",
     "test:watch": "vitest",

@@ -6,7 +6,8 @@ import { OriginStory } from "@/components/sections/OriginStory";
 import { PhotoGallery } from "@/components/gallery/PhotoGallery";
 import { gallerySections } from "@/data/storyPhotos";
 import { FadeIn } from "@/components/ui/FadeIn";
-import { MandelbrotCorners } from "@/components/ui/MandelbrotCorners";
+import { CalloutCard } from "@/components/content/CalloutCard";
+import { ComponentColorScope } from "@/components/content/ComponentColorScope";
 import { SECTIONS } from "@/data/houses";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 import { useEffect } from "react";
@@ -78,15 +79,12 @@ export function Home() {
       <section className="pb-24 md:pb-32">
         <div className="max-w-2xl mx-auto page-gutter">
           <FadeIn>
-            <MandelbrotCorners
-              size="sm"
-              opacity={0.15}
-              className="border [border-color:var(--color-section-story)] rounded-md p-7 md:px-10 md:py-8 bg-[color-mix(in_srgb,var(--color-section-story)_8%,transparent)] text-foreground text-left"
+            <ComponentColorScope colorway="story" surface="paper" className="bg-transparent">
+            <CalloutCard
+              label={<span style={{ color: PEOPLE_COLOR }}>Curious about Fractal?</span>}
+              surface="tint"
             >
-              <p className="text-label mb-3" style={{ color: PEOPLE_COLOR }}>
-                Curious about Fractal?
-              </p>
-              <p className="text-body text-foreground/85 leading-relaxed">
+              <p className="text-foreground/85">
                 Join our{" "}
                 <a
                   href={DISCORD_URL}
@@ -107,7 +105,8 @@ export function Home() {
                 </a>
                 .
               </p>
-            </MandelbrotCorners>
+            </CalloutCard>
+            </ComponentColorScope>
           </FadeIn>
         </div>
       </section>

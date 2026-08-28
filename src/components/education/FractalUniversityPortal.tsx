@@ -9,9 +9,16 @@ import {
 import { EducationOutboundLink } from "@/components/education/EducationOutboundLink";
 import { MandelbrotCorners } from "@/components/ui/MandelbrotCorners";
 import { FadeIn } from "@/components/ui/FadeIn";
+import { CalloutCard } from "@/components/content/CalloutCard";
+import { ComponentColorScope, type ComponentColorwayId } from "@/components/content/ComponentColorScope";
+import { ContentCard } from "@/components/content/ContentCard";
+import { FactGrid } from "@/components/content/FactGrid";
+import { FilterGroup } from "@/components/content/FilterGroup";
+import { EmptyResultsMessage } from "@/components/content/EmptyResultsMessage";
 import {
   FRACTALU_CATALOG,
-  FRACTALU_CATEGORIES,
+  getFractalUCategories,
+  type FractalUCatalog,
   type FractalUClub,
   type FractalUCourse,
 } from "@/data/fractalu";
@@ -195,7 +202,7 @@ function CourseActions({ course }: { course: FractalUCourse }) {
   );
 }
 
-interface CourseCardProps {
+export interface CourseCardProps {
   course: FractalUCourse;
   isFinePointer: boolean;
   pinnedInstructorId: string | null;
@@ -204,7 +211,7 @@ interface CourseCardProps {
   setSuppressedInstructorId: (id: string | null) => void;
 }
 
-function CourseCard({
+export function CourseCard({
   course,
   isFinePointer,
   pinnedInstructorId,
@@ -217,13 +224,13 @@ function CourseCard({
 
   return (
     <MandelbrotCorners size="xs" opacity={0.12} className="h-full min-w-0">
-    <article
-      className="fractalu-course-card group min-w-0 max-w-full rounded-lg border border-foreground-faint bg-background p-6 text-foreground"
+    <ContentCard
+      className="fractalu-course-card group h-full text-foreground"
       data-course-category={course.category}
       data-course-id={course.id}
     >
       <div className="mb-2 flex min-w-0 items-start gap-3 md:mb-3">
-        <p className="text-label min-w-0 [overflow-wrap:anywhere] text-house-education-light">
+        <p className="text-label min-w-0 [overflow-wrap:anywhere] text-[var(--component-accent,var(--color-house-education-light))]">
           {course.category}
         </p>
       </div>
@@ -243,7 +250,7 @@ function CourseCard({
             <span
               tabIndex={0}
               aria-describedby={descriptionId}
-              className="block min-w-0 rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-house-education-light"
+              className="block min-w-0 rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--component-focus,var(--color-house-education-light))]"
               data-course-title-fallback
             >
               {course.title}
@@ -268,29 +275,28 @@ function CourseCard({
         <CourseDescriptionPreview course={course} />
       </div>
 
-      <dl
-        className="mt-4 grid min-w-0 grid-cols-2 gap-x-3 gap-y-2 text-sm text-foreground-muted md:mt-5 md:gap-3"
-        data-course-facts
-      >
-        {[
-          ["Schedule", course.schedule],
-          ["Dates", course.dates],
-          ["Location", course.location],
-          ["Price", course.price],
-        ].map(([label, value]) => (
-          <div key={label} className="min-w-0 [overflow-wrap:anywhere]">
-            <dt className="text-label text-foreground">{label}</dt>
-            <dd className="mt-0.5">{value}</dd>
-          </div>
-        ))}
-      </dl>
+      <CourseFactGrid course={course} />
       <CourseActions course={course} />
       <div
-        className="mt-4 h-0.5 w-8 rounded-full bg-house-education-light opacity-40 transition-all duration-300 group-hover:w-12 group-hover:opacity-70 group-focus-within:w-12 group-focus-within:opacity-70 md:mt-6"
+        className="mt-4 h-0.5 w-8 rounded-full bg-[var(--component-accent,var(--color-house-education-light))] opacity-40 transition-all duration-300 group-hover:w-12 group-hover:opacity-70 group-focus-within:w-12 group-focus-within:opacity-70 md:mt-6"
         aria-hidden="true"
       />
-    </article>
+    </ContentCard>
     </MandelbrotCorners>
+  );
+}
+
+export function CourseFactGrid({ course }: { course: FractalUCourse }) {
+  return (
+    <FactGrid
+      items={[
+        { label: "Schedule", value: course.schedule },
+        { label: "Dates", value: course.dates },
+        { label: "Location", value: course.location },
+        { label: "Price", value: course.price },
+      ]}
+      className="mt-4 text-foreground-muted md:mt-5 md:gap-3"
+    />
   );
 }
 
@@ -334,6 +340,7 @@ function CourseCatalog({
       data-course-collection
       data-preview-mode={isFinePointer ? "enhanced" : "inline"}
     >
+      {courses.length === 0 && <EmptyResultsMessage title="No courses match this subject." guidance="Choose another subject to continue browsing." />}
       {courses.map((course, index) => (
         <RevealSlot
           key={course.id}
@@ -355,11 +362,11 @@ function CourseCatalog({
   );
 }
 
-function ClubCard({ club }: { club: FractalUClub }) {
+export function ClubCard({ club }: { club: FractalUClub }) {
   return (
     <MandelbrotCorners size="xs" opacity={0.12} className="h-full min-w-0">
-    <article
-      className="fractalu-club-card group min-w-0 max-w-full rounded-lg border border-foreground-faint bg-background p-6 text-foreground"
+    <ContentCard
+      className="fractalu-club-card group h-full text-foreground"
       data-club-id={club.id}
     >
       <h3 className="text-subtitle normal-case text-foreground [overflow-wrap:anywhere]">
@@ -396,7 +403,7 @@ function ClubCard({ club }: { club: FractalUClub }) {
           {club.actionLabel}
         </EducationOutboundLink>
       </div>
-    </article>
+    </ContentCard>
     </MandelbrotCorners>
   );
 }
@@ -447,15 +454,8 @@ function FractalUInformation() {
           aria-labelledby="fractalu-teach-title"
           data-fractalu-information-reveal="teach"
         >
-          <MandelbrotCorners
-            size="sm"
-            opacity={0.15}
-            className="rounded-md border bg-background p-9 text-left text-foreground [border-color:var(--accent,currentColor)]"
-          >
-            <p id="fractalu-teach-title" className="text-label mb-3 text-house-education-deep">
-              Want to teach?
-            </p>
-            <p className="text-body leading-relaxed text-foreground-muted">
+          <CalloutCard label="Want to teach?" labelId="fractalu-teach-title" className="p-9">
+            <p>
               We&apos;re always looking for instructors with something to share — a
               craft, a body of work, an obsession. Email{" "}
               <EducationOutboundLink
@@ -467,7 +467,7 @@ function FractalUInformation() {
               </EducationOutboundLink>{" "}
               with a sentence or two about what you&apos;d teach.
             </p>
-          </MandelbrotCorners>
+          </CalloutCard>
         </section>
       </FadeIn>
 
@@ -550,19 +550,36 @@ function FractalUInformation() {
   );
 }
 
-export function FractalUniversityPortal() {
+export interface FractalUCatalogViewProps {
+  catalog: FractalUCatalog;
+  colorway?: ComponentColorwayId;
+  showInformation?: boolean;
+  animate?: boolean;
+}
+
+export function FractalUCatalogView({
+  catalog,
+  colorway = "education",
+  showInformation = false,
+  animate = true,
+}: FractalUCatalogViewProps) {
   const [activeCategory, setActiveCategory] = useState("All");
   const [hasFiltered, setHasFiltered] = useState(false);
   const usesLargeText = useLargeTextScale();
   const isFinePointer =
     useMediaQuery(FINE_POINTER_PREVIEW_QUERY) && !usesLargeText;
+  const categories = useMemo(() => getFractalUCategories(catalog), [catalog]);
   const courses = useMemo(
     () =>
       activeCategory === "All"
-        ? FRACTALU_CATALOG.courses
-        : FRACTALU_CATALOG.courses.filter(({ category }) => category === activeCategory),
-    [activeCategory],
+        ? catalog.courses
+        : catalog.courses.filter(({ category }) => category === activeCategory),
+    [activeCategory, catalog],
   );
+
+  useEffect(() => {
+    if (!categories.includes(activeCategory)) setActiveCategory("All");
+  }, [activeCategory, categories]);
 
   return (
     <section className="mt-6 md:mt-24" aria-labelledby="fractalu-catalog-title" data-fractalu-portal>
@@ -578,7 +595,7 @@ export function FractalUniversityPortal() {
             data-fractalu-reveal-delay="0.30"
           >
             <p className="text-label text-background/85" data-fractalu-semester-eyebrow>
-              {FRACTALU_CATALOG.semester}
+              {catalog.semester}
             </p>
             <h2 id="fractalu-catalog-title" className="text-title mt-3 normal-case text-background">
               Course Catalog
@@ -596,51 +613,27 @@ export function FractalUniversityPortal() {
             data-fractalu-reveal-group="filters"
             data-fractalu-reveal-delay="0.40"
           >
-            <p
-              id="fractalu-filter-label"
-              className="text-label mb-2 text-background/85 md:mb-3"
-              data-fractalu-filter-eyebrow
-            >
-              Filter classes by subject
-            </p>
-            <div
-              role="group"
-              aria-labelledby="fractalu-filter-label"
-              className="fractalu-filter-row flex flex-wrap gap-1 overflow-visible pb-0 md:gap-2"
-            >
-              {FRACTALU_CATEGORIES.map((category) => {
-                const selected = category === activeCategory;
-                return (
-                  <button
-                    key={category}
-                    type="button"
-                    aria-pressed={selected}
-                    onClick={() => {
-                      setHasFiltered(true);
-                      setActiveCategory(category);
-                    }}
-                    className={`min-h-11 min-w-11 shrink-0 rounded-md border-2 bg-background px-1 py-2 font-mono text-xs text-foreground-muted transition-colors focus-visible:border-house-education-light focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-house-education-light focus-visible:ring-offset-2 focus-visible:ring-offset-house-education-deep md:px-4 ${
-                      selected
-                        ? "border-house-education-light shadow-sm"
-                        : "border-foreground-faint hover:border-house-education-light"
-                    }`}
-                  >
-                    {category}
-                  </button>
-                );
-              })}
-            </div>
-            <p className="sr-only" aria-live="polite" aria-atomic="true">
-              {courses.length} {courses.length === 1 ? "course" : "courses"} shown.
-            </p>
+            <ComponentColorScope colorway={colorway} surface="paper" className="fractalu-filter-row bg-transparent text-background/85">
+              <FilterGroup
+                id="fractalu-filter-label"
+                labelClassName="text-background/85"
+                label="Filter classes by subject"
+                options={categories}
+                selected={activeCategory}
+                onChange={(category) => {
+                  setHasFiltered(true);
+                  setActiveCategory(category);
+                }}
+                resultCount={courses.length}
+                resultNoun="course"
+              />
+            </ComponentColorScope>
           </div>
         </FadeIn>
 
-        <CourseCatalog
-          courses={courses}
-          isFinePointer={isFinePointer}
-          animateInitialCards={!hasFiltered}
-        />
+        <ComponentColorScope colorway={colorway} surface="paper" className="bg-transparent">
+          <CourseCatalog courses={courses} isFinePointer={isFinePointer} animateInitialCards={animate && !hasFiltered} />
+        </ComponentColorScope>
 
         <section className="mt-20" aria-labelledby="fractalu-clubs-title">
           <FadeIn>
@@ -653,20 +646,31 @@ export function FractalUniversityPortal() {
             </h2>
           </FadeIn>
           <div className="mt-6 grid min-w-0 gap-4 md:grid-cols-2 md:gap-6" data-testid="fractalu-clubs">
-            {FRACTALU_CATALOG.clubs.map((club, index) => (
+            {catalog.clubs.map((club, index) => (
               <RevealSlot
                 key={club.id}
                 kind="club"
                 delay={index * COURSE_REVEAL_STEP}
+                animate={animate}
               >
-                <ClubCard club={club} />
+                <ComponentColorScope colorway={colorway} surface="paper" className="h-full bg-transparent">
+                  <ClubCard club={club} />
+                </ComponentColorScope>
               </RevealSlot>
             ))}
           </div>
         </section>
       </div>
 
-      <FractalUInformation />
+      {showInformation && <FractalUInformation />}
     </section>
   );
+}
+
+export function CourseSubjectFilter({ categories, selected, onChange, resultCount }: { categories: readonly string[]; selected: string; onChange: (value: string) => void; resultCount?: number }) {
+  return <FilterGroup label="Filter classes by subject" options={categories} selected={selected} onChange={onChange} resultCount={resultCount} resultNoun="course" />;
+}
+
+export function FractalUniversityPortal() {
+  return <FractalUCatalogView catalog={FRACTALU_CATALOG} showInformation />;
 }
