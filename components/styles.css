@@ -6,7 +6,7 @@
 .library-title-block h1 { font-size: clamp(2rem, 5vw, 3.25rem); line-height: 1; }
 .library-title-block .text-body { color: var(--color-foreground-muted); max-width: 38rem; }
 .library-mode-switch { display: flex; min-width: 0; gap: .35rem; padding: .25rem; border: 1px solid var(--color-foreground-faint); border-radius: var(--radius-lg); }
-.library-mode-switch button, .library-category-chooser button, .library-learn-more, .library-back, .library-live-button, .library-agent-prompt button, .library-full-preview-bar button { min-height: 2.75rem; border-radius: var(--radius-md); font-family: var(--font-mono); font-size: .75rem; letter-spacing: .06em; }
+.library-mode-switch button, .library-category-chooser button, .library-component-name, .library-copy-prompt, .library-back, .library-live-button, .library-agent-prompt button, .library-full-preview-bar button { min-height: 2.75rem; border-radius: var(--radius-md); font-family: var(--font-mono); font-size: .75rem; letter-spacing: .06em; }
 .library-mode-switch button { flex: 1 1 0; padding-inline: .75rem; color: var(--color-foreground-muted); }
 .library-mode-switch button[aria-current="page"] { background: var(--color-foreground); color: var(--color-background); }
 .library-search input { width: 100%; min-height: 3rem; border: 1px solid var(--color-foreground-faint); border-radius: var(--radius-lg); background: var(--color-background); padding-inline: 1rem; color: var(--color-foreground); font-family: var(--font-mono); font-size: 1rem; }
@@ -27,19 +27,18 @@ button:focus-visible, input:focus-visible, select:focus-visible, summary:focus-v
   .library-gallery-heading h2, .library-gallery-heading > p { display: none; }
 }
 .library-gallery-grid { display: grid; grid-template-columns: minmax(0, 1fr); align-items: start; gap: 1rem; }
-.library-visual-card { min-width: 0; align-self: start; display: grid; grid-template-rows: auto auto auto; gap: .85rem; border: 1px solid var(--color-foreground-faint); border-radius: var(--radius-lg); background: var(--color-background); padding: 1rem; overflow: hidden; }
-.library-card-copy { display: grid; gap: .35rem; }
-.library-card-copy .text-subtitle { font-size: 1.35rem; line-height: 1.1; }
-.library-card-copy .text-body { color: var(--color-foreground-muted); font-size: .875rem; line-height: 1.4; }
+.library-visual-card { min-width: 0; align-self: start; display: grid; grid-template-rows: auto auto; gap: .85rem; border: 1px solid var(--color-foreground-faint); border-radius: var(--radius-lg); background: var(--color-background); padding: 1rem; overflow: hidden; }
 .library-canvas { min-width: 0; container-type: inline-size; border-radius: var(--radius-md); overflow: clip; }
 .library-canvas-scope { min-height: 13.75rem; display: grid; align-content: center; padding: 1rem; margin-inline: auto; }
 .library-gallery-preview { min-height: 13.75rem; }
 .library-gallery-preview .library-canvas-scope { min-height: 13.75rem; }
-.library-card-footer { display: flex; min-width: 0; align-items: center; justify-content: space-between; gap: 1rem; border-block-start: 1px solid var(--color-foreground-faint); padding-block-start: .65rem; }
-.library-learn-more { flex: 0 0 auto; color: var(--color-house-library-deep); text-decoration: underline; text-underline-offset: .22rem; }
-.library-mini-swatches { display: flex; min-width: 0; gap: .2rem; }
-.library-mini-swatches span { width: .7rem; height: .7rem; border: 1px solid color-mix(in srgb, var(--color-foreground) 18%, transparent); border-radius: 999px; }
-.library-fixed-style { color: var(--color-foreground-muted); font-size: .6rem; }
+.library-card-actions { min-width: 0; display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: stretch; gap: .5rem; }
+.library-copy-control { display: contents; }
+.library-component-name, .library-copy-prompt { min-width: 0; padding-inline: .75rem; text-transform: uppercase; }
+.library-component-name { overflow-wrap: anywhere; border: 1px solid transparent; color: var(--color-foreground); text-align: start; }
+.library-component-name:hover { border-color: var(--color-foreground-faint); }
+.library-copy-prompt { border: 1px solid var(--color-foreground-faint); color: var(--color-house-library-deep); }
+.library-copy-prompt:hover { border-color: var(--color-house-library-deep); }
 .library-empty, .library-invalid-preview, .library-error-summary { border: 1px dashed var(--color-foreground-faint); border-radius: var(--radius-md); padding: 1.25rem; color: var(--color-foreground-muted); }
 
 /* Purpose-built visual boards. */

@@ -45,14 +45,14 @@ function BrowseView({ route, navigate, rememberTrigger }: { route: Extract<Catal
 
   return <main className="library-page">
     <header className="library-header"><div className="library-header-inner">
-      <div className="library-title-block"><p className="text-label text-house-library-deep">Team component gallery</p><h1 className="text-title normal-case">Choose by looking</h1><p className="text-body">See the real component first. Open Learn more only when you need instructions.</p></div>
+      <div className="library-title-block"><p className="text-label text-house-library-deep">Team component gallery</p><h1 className="text-title normal-case">Choose by looking</h1><p className="text-body">Select a component name for options, or copy its prompt and hand it to an agent.</p></div>
       <div className="library-mode-switch" aria-label="Component library tools"><button type="button" aria-current="page">Browse components</button><button type="button" onClick={() => navigate({ view: "education" })}>Edit Education courses</button></div>
       <label className="library-search"><span className="sr-only">Search components</span><input type="search" value={route.query} onChange={(event) => navigate({ ...route, query: event.target.value }, true)} placeholder="Search: note, course, link…" /></label>
       <CategoryChooser active={route.category} counts={counts} onChange={(category) => navigate({ view: "browse", category, query: route.query })} />
     </div></header>
     <section className="library-gallery-shell" aria-labelledby="gallery-title">
       <div className="library-gallery-heading"><div><p className="text-label">{normalized ? "Search results" : GALLERY_CATEGORIES.find(({ id }) => id === route.category)?.label}</p><h2 id="gallery-title" className="text-title normal-case">{normalized ? "Components matching your search" : "Pick the one that looks right"}</h2><p className="sr-only" role="status" aria-live="polite" aria-atomic="true">{normalized ? `${filtered.length} ${filtered.length === 1 ? "match" : "matches"}` : `${filtered.length} components shown`}</p></div>{!normalized && route.category === "common" && <p className="text-body">The patterns editors use most often.</p>}</div>
-      {filtered.length ? <div className="library-gallery-grid">{filtered.map((entry) => <VisualSpecimenCard key={entry.id} entry={entry} onLearnMore={(selected) => rememberTrigger(selected)} />)}</div> : <div className="library-empty"><h2 className="text-subtitle normal-case">Nothing matches that search</h2><p className="text-body">Try “note,” “article,” “course,” “outsource link,” or a technical component name.</p></div>}
+      {filtered.length ? <div className="library-gallery-grid">{filtered.map((entry) => <VisualSpecimenCard key={entry.id} entry={entry} onOpen={(selected) => rememberTrigger(selected)} />)}</div> : <div className="library-empty"><h2 className="text-subtitle normal-case">Nothing matches that search</h2><p className="text-body">Try “note,” “article,” “course,” “outsource link,” or a technical component name.</p></div>}
     </section>
   </main>;
 }
@@ -77,7 +77,7 @@ export function ComponentLibraryApp() {
       window.scrollTo({ top: 0, behavior: "instant" });
       if (next.view === "browse" && restoreFocusId.current) {
         const id = restoreFocusId.current;
-        requestAnimationFrame(() => document.querySelector<HTMLButtonElement>(`#${CSS.escape(id)} .library-learn-more`)?.focus());
+        requestAnimationFrame(() => document.querySelector<HTMLButtonElement>(`#${CSS.escape(id)} .library-component-name`)?.focus());
       }
     };
     window.addEventListener("popstate", sync);

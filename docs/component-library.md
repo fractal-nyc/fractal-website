@@ -11,7 +11,9 @@ pnpm components
 
 Open `http://localhost:5173/components/`. The first screen is a visual chooser: every card leads with the real production component or source asset, followed by its stable plain-English name. Start with **Common components**, browse a visual category, or search for a term such as “note,” “article,” “class,” or even “outsource link.”
 
-Choose **Learn more** only after you recognize the component you want. The focused view keeps the large live preview first, then shows only the options that component truly supports. Open **Usage details** for boundaries, accessibility notes, the technical source, and a copyable **Tell an agent** phrase. Site color and Background choices remain limited to approved token-backed combinations. Full-page components have a separate lazy **Open live preview** so their navigation, maps, motion, and viewport behavior do not run behind the gallery.
+Each tile is deliberately minimal: a live preview, a clickable component name, and **Copy prompt**. Select the name when you want the focused view and its real options. Use **Copy prompt** when you already recognize the component and want to hand a configuration-free request directly to an agent. The copied request tells the agent to inherit the target page, house, or section tokens wherever the component supports them, so no color choice is required first.
+
+The focused view keeps the large live preview first, then shows only the options that component truly supports. Open **Usage details** for boundaries, current site usage, accessibility notes, technical source, and the same agent prompt. Site color and Background choices remain limited to approved token-backed combinations. Full-page components have a separate lazy **Open live preview** so their navigation, maps, motion, and viewport behavior do not run behind the gallery.
 
 Choose **Edit Education courses** for semester work. It opens as a separate tool and never appears below the browse gallery. Browse, category, focused component, full preview, and workshop URLs are reload-safe and shareable. The gallery imports real production components and `src/index.css`; it does not maintain a duplicate mock component set or token file.
 
@@ -29,7 +31,8 @@ The output is `dist-components/`. Normal `pnpm build` still produces only the pu
 Use these names in requests to designers, editors, or agents:
 
 - Design basics: **Site Colors**, **Type Styles**, **Page Frame**, **Reading Column**, **Section Spacing**, **Card Grid**, and **Section Header**.
-- Buttons, links, and filters: **Action Button**, **External Link**, **Archive Search Field**, **Filter Chip**, **Empty Results Message**, **Library Tag Filter**, and **Course Subject Filter**.
+- Buttons and links: **Primary Button** is the branded Mandelbrot-corner CTA; **Standalone Link** is a prominent link that sits on its own and carries a diagonal arrow; **Inline Text Link** is an underlined link within a sentence and has no arrow.
+- Forms and filters: **Archive Search Field**, **Filter Chip**, **Empty Results Message**, **Library Tag Filter**, and **Course Subject Filter**.
 - Cards and boxes: **Content Card**, **Article Card**, **Note Box**, **Course Card**, **Course Fact Grid**, **Club Card**, **Campus Highlight**, **Membership Button Group**, and **Editorial Quote**.
 - Media: **Embedded Content Frame**, **Photo Frame**, **Mandelbrot Corner Frame**, **Mandelbrot Icon**, **Paper Grain Overlay**, **Fractal Pattern**, **Fade In**, **Gallery Image**, **Photo Gallery**.
 - Complex composites: each named **House Pennant**, **House Pennant Renderer**, **Campus Section**, **Hero Search / Combobox**, **Housing Map**, **Meet the Space Carousel**, **Origin Story**, **Sierpinski Carpet**, **Fractal City Scene**, and **Octahedron Hero**.
@@ -78,7 +81,9 @@ Inline errors link to their fields. Export actions stay disabled until the draft
 
 > Add this item using the **Article Card** component with its category, title, byline, description, URL, and tags.
 
-> Format this destination with the **External Link** component in the Standalone presentation. Preserve safe new-tab behavior and the diagonal arrow.
+> Format this destination with the **Standalone Link** component. Preserve safe new-tab behavior and the diagonal arrow. (“External link,” “Outbound Link,” and “outsource link” all resolve to this component.)
+
+> Link these words inside the sentence with the **Inline Text Link** component. Do not add an arrow or button container.
 
 ## Boundaries
 

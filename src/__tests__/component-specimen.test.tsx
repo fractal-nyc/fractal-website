@@ -1,5 +1,5 @@
-import { cleanup, fireEvent, render, within } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
+import { cleanup, fireEvent, render, waitFor, within } from "@testing-library/react";
+import { describe, expect, it, vi } from "vitest";
 import { SpecimenCard } from "../../components/catalog/SpecimenCard";
 import { COMPONENT_REGISTRY } from "../../components/catalog/registry";
 import { VisualSpecimenCard } from "../../components/catalog/VisualSpecimenCard";
@@ -56,15 +56,53 @@ describe("interactive component specimens", () => {
     expect(surface).toHaveValue("paper");
   });
 
-  it("keeps closed gallery cards visual and moves documentation behind Learn more", () => {
+  it("keeps closed gallery cards preview-first with only name and copy actions", () => {
     const entry = COMPONENT_REGISTRY.find(({ id }) => id === "note-callout")!;
-    const { container } = render(<VisualSpecimenCard entry={entry} onLearnMore={() => undefined} />);
-    expect(within(container).getByText("Note Box")).toBeInTheDocument();
-    expect(container.querySelector(".library-gallery-preview")).toBeInTheDocument();
-    expect(within(container).getByRole("button", { name: "Learn more about Note Box" })).toBeInTheDocument();
+    const onOpen = vi.fn();
+    const { container } = render(<VisualSpecimenCard entry={entry} onOpen={onOpen} />);
+    const card = container.querySelector("article")!;
+    expect(card.children).toHaveLength(2);
+    expect(card.firstElementChild).toHaveClass("library-gallery-preview");
+    expect(card.lastElementChild).toHaveClass("library-card-actions");
+    const name = within(container).getByRole("button", { name: "View details for Note Box" });
+    const copy = within(container).getByRole("button", { name: "Copy prompt for Note Box" });
+    expect(within(card.lastElementChild as HTMLElement).getAllByRole("button")).toEqual([name, copy]);
+    fireEvent.click(name);
+    expect(onOpen).toHaveBeenCalledWith(entry, name);
     expect(within(container).queryByText("CalloutCard")).not.toBeInTheDocument();
     expect(within(container).queryByText("Use when")).not.toBeInTheDocument();
+    expect(within(container).queryByText(entry.purpose)).not.toBeInTheDocument();
+    expect(within(container).queryByText(/learn more/i)).not.toBeInTheDocument();
+    expect(container.querySelector(".library-mini-swatches, .library-fixed-style")).not.toBeInTheDocument();
     expect(container.querySelector("fieldset")).not.toBeInTheDocument();
+  });
+
+  it("copies the same context-aware prompt from browse and detail with localized feedback", async () => {
+    const entry = COMPONENT_REGISTRY.find(({ id }) => id === "action-buttons")!;
+    const writeText = vi.fn().mockResolvedValue(undefined);
+    Object.defineProperty(navigator, "clipboard", { configurable: true, value: { writeText } });
+    const { container, unmount } = render(<VisualSpecimenCard entry={entry} onOpen={() => undefined} />);
+    fireEvent.click(within(container).getByRole("button", { name: "Copy prompt for Primary Button" }));
+    await waitFor(() => expect(writeText).toHaveBeenCalledWith(entry.agentPhrase.replaceAll("**", "")));
+    expect(within(container).getByText("Copied")).toBeInTheDocument();
+    expect(within(container).getByRole("status")).toHaveTextContent("Prompt copied for Primary Button");
+    unmount();
+
+    const detail = render(<ComponentDetail entry={entry} onBack={() => undefined} onOpenLive={() => undefined} />);
+    fireEvent.click(within(detail.container).getByRole("button", { name: "Copy prompt for Primary Button" }));
+    await waitFor(() => expect(writeText).toHaveBeenCalledTimes(2));
+    expect(writeText).toHaveBeenLastCalledWith(entry.agentPhrase.replaceAll("**", ""));
+  });
+
+  it("reports clipboard rejection without opening the component", async () => {
+    const entry = COMPONENT_REGISTRY.find(({ id }) => id === "outbound-link")!;
+    const onOpen = vi.fn();
+    Object.defineProperty(navigator, "clipboard", { configurable: true, value: { writeText: vi.fn().mockRejectedValue(new Error("denied")) } });
+    const { container } = render(<VisualSpecimenCard entry={entry} onOpen={onOpen} />);
+    fireEvent.click(within(container).getByRole("button", { name: "Copy prompt for Standalone Link" }));
+    await waitFor(() => expect(within(container).getByText("Copy failed")).toBeInTheDocument());
+    expect(within(container).getByRole("status")).toHaveTextContent("Could not copy prompt for Standalone Link");
+    expect(onOpen).not.toHaveBeenCalled();
   });
 
   it("orders focused details as preview, controls, then closed usage guidance", () => {
@@ -79,5 +117,25 @@ describe("interactive component specimens", () => {
     expect(within(container).getByLabelText("Site color")).toBeInTheDocument();
     expect(within(container).getByLabelText("Background")).toBeInTheDocument();
     expect(within(container).getByText("Usage details")).toBeInTheDocument();
+  });
+
+  it("renders the three public action choices as distinct production patterns", () => {
+    const primary = COMPONENT_REGISTRY.find(({ id }) => id === "action-buttons")!;
+    const standalone = COMPONENT_REGISTRY.find(({ id }) => id === "outbound-link")!;
+    const inline = COMPONENT_REGISTRY.find(({ id }) => id === "inline-text-link")!;
+    const primaryView = render(<VisualSpecimenCard entry={primary} onOpen={() => undefined} />);
+    expect(primaryView.container.querySelectorAll(".library-gallery-preview button")).toHaveLength(1);
+    expect(within(primaryView.container).queryByText(/outline action|quiet action|disabled|inline link/i)).not.toBeInTheDocument();
+    expect(primary.controls.map(({ id }) => id)).not.toContain("primaryState");
+    primaryView.unmount();
+
+    const standaloneView = render(<VisualSpecimenCard entry={standalone} onOpen={() => undefined} />);
+    expect(standaloneView.container.querySelectorAll(".library-gallery-preview a[data-outbound-link]")).toHaveLength(1);
+    expect(standaloneView.container.querySelectorAll(".library-gallery-preview [data-outbound-arrow]")).toHaveLength(1);
+    standaloneView.unmount();
+
+    const inlineView = render(<VisualSpecimenCard entry={inline} onOpen={() => undefined} />);
+    expect(inlineView.container.querySelector(".library-gallery-preview p a[data-outbound-link]")).toBeInTheDocument();
+    expect(inlineView.container.querySelector(".library-gallery-preview [data-outbound-arrow]")).not.toBeInTheDocument();
   });
 });

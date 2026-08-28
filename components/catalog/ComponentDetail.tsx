@@ -7,22 +7,16 @@ import {
 } from "@/components/content/ComponentColorScope";
 import type { ComponentRegistryEntry, SpecimenControlValues } from "./registry";
 import { compatibleTheme, ComponentPreview, defaultValuesFor } from "./ComponentPreview";
+import { CopyPromptButton, plainAgentPrompt } from "./CopyPromptButton";
 
 export function ComponentDetail({ entry, onBack, onOpenLive }: { entry: ComponentRegistryEntry; onBack: () => void; onOpenLive: () => void }) {
   const initial = compatibleTheme(entry);
   const [colorway, setColorway] = useState<ComponentColorwayId>(initial.colorway);
   const [surface, setSurface] = useState<ComponentSurfaceMode>(initial.surface);
   const [values, setValues] = useState<SpecimenControlValues>(() => defaultValuesFor(entry));
-  const [copied, setCopied] = useState(false);
   const availableColorways = useMemo(() => COMPONENT_COLORWAYS.filter((item) => entry.surfaceModes.some((candidate) => item.allowedSurfaces.includes(candidate))), [entry]);
   const allowedSurfaces = useMemo(() => entry.surfaceModes.filter((candidate) => getAllowedComponentSurfaces(colorway).includes(candidate)), [colorway, entry]);
   const width = entry.controls.some((control) => control.kind === "preview-width") ? values.previewWidth ?? "full" : "full";
-
-  const copyPhrase = async () => {
-    await navigator.clipboard.writeText(entry.agentPhrase.replaceAll("**", ""));
-    setCopied(true);
-    window.setTimeout(() => setCopied(false), 1800);
-  };
 
   return <main className="library-page library-detail-page">
     <div className="library-detail-shell">
@@ -42,8 +36,8 @@ export function ComponentDetail({ entry, onBack, onOpenLive }: { entry: Componen
       <details className="library-usage-details">
         <summary>Usage details</summary>
         <div className="library-usage-body">
-          <dl className="library-guidance"><div><dt>Use when</dt><dd>{entry.useWhen}</dd></div><div><dt>Do not use when</dt><dd>{entry.doNotUseWhen}</dd></div><div><dt>Content to provide</dt><dd>{entry.contentFields.join(" · ")}</dd></div><div><dt>Options and states</dt><dd>{entry.variants.join(" · ")}</dd></div><div><dt>Accessibility</dt><dd>{entry.accessibility}</dd></div><div><dt>Responsive behavior</dt><dd>{entry.responsive}</dd></div><div><dt>Technical name</dt><dd>{entry.componentName}</dd></div><div><dt>Source</dt><dd><code>{entry.sourcePath}</code></dd></div></dl>
-          <section className="library-agent-prompt"><p className="text-label">Tell an agent</p><p className="text-body">{entry.agentPhrase.replaceAll("**", "")}</p><button type="button" onClick={copyPhrase}>Copy prompt</button><span className="sr-only" role="status" aria-live="polite">{copied ? "Prompt copied" : ""}</span></section>
+          <dl className="library-guidance"><div><dt>Use when</dt><dd>{entry.useWhen}</dd></div><div><dt>Do not use when</dt><dd>{entry.doNotUseWhen}</dd></div><div><dt>Content to provide</dt><dd>{entry.contentFields.join(" · ")}</dd></div><div><dt>Options and states</dt><dd>{entry.variants.join(" · ")}</dd></div>{entry.usedOn && <div><dt>Used on the site</dt><dd>{entry.usedOn}</dd></div>}<div><dt>Accessibility</dt><dd>{entry.accessibility}</dd></div><div><dt>Responsive behavior</dt><dd>{entry.responsive}</dd></div><div><dt>Technical name</dt><dd>{entry.componentName}</dd></div><div><dt>Source</dt><dd><code>{entry.sourcePath}</code></dd></div></dl>
+          <section className="library-agent-prompt"><p className="text-label">Tell an agent</p><p className="text-body">{plainAgentPrompt(entry.agentPhrase)}</p><CopyPromptButton componentName={entry.name} prompt={entry.agentPhrase} /></section>
         </div>
       </details>
     </div>

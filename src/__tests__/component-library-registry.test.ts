@@ -11,7 +11,9 @@ describe("team component registry", () => {
     expect(new Set(COMPONENT_REGISTRY.map(({ name }) => name)).size).toBe(COMPONENT_REGISTRY.length);
     for (const entry of COMPONENT_REGISTRY) {
       expect(entry.id).toMatch(/^[a-z0-9]+(?:-[a-z0-9]+)*$/);
-      expect(entry.agentPhrase).toContain(`**${entry.name}**`);
+      expect(entry.agentPhrase).toContain(`**“${entry.name}”**`);
+      expect(entry.agentPhrase).toContain("Inherit the target page or section’s approved house/section color tokens");
+      expect(entry.agentPhrase).toContain("preserve its accessibility and responsive behavior");
       expect(entry.purpose).toBeTruthy();
       expect(entry.useWhen).toBeTruthy();
       expect(entry.doNotUseWhen).toBeTruthy();
@@ -49,7 +51,11 @@ describe("team component registry", () => {
     const search = (query: string) => COMPONENT_REGISTRY.filter((entry) => searchableEntryText(entry).includes(query));
     expect(search("note").map(({ name }) => name)).toContain("Note Box");
     expect(search("class container").map(({ name }) => name)).toContain("Course Card");
-    expect(search("outsource link").map(({ name }) => name)).toContain("External Link");
+    expect(search("action button").map(({ name }) => name)).toContain("Primary Button");
+    expect(search("external link").map(({ name }) => name)).toContain("Standalone Link");
+    expect(search("outbound link").map(({ name }) => name)).toContain("Standalone Link");
+    expect(search("outsource link").map(({ name }) => name)).toContain("Standalone Link");
+    expect(search("prose link").map(({ name }) => name)).toContain("Inline Text Link");
     expect(COMPONENT_COLORWAYS.map(({ id }) => id)).toEqual(["neutral", "co-living", "events", "campus", "education", "library", "political-club", "story", "people"]);
     expect(COMPONENT_COLORWAYS.find(({ id }) => id === "education")?.accent).toBe(HOUSES.find(({ id }) => id === "school")?.palette.light);
     expect(COMPONENT_COLORWAYS.find(({ id }) => id === "story")?.accent).toBe(SECTIONS.story.accent);
@@ -74,7 +80,15 @@ describe("team component registry", () => {
       expect(Boolean(entry.render) || ["visual-board", "asset-family", "full-context"].includes(entry.previewMode!)).toBe(true);
       expect(entry.name).not.toMatch(/ComponentColorScope|FractalUniversityPortal|DocumentCard/);
     }
-    expect(galleryEntries.filter(({ common }) => common).map(({ name }) => name)).toEqual(["Action Button", "External Link", "Article Card", "Note Box", "Course Card", "Club Card", "Campus Highlight", "Editorial Quote"]);
+    expect(galleryEntries.filter(({ common }) => common).map(({ name }) => name)).toEqual(["Primary Button", "Standalone Link", "Inline Text Link", "Article Card", "Note Box", "Course Card", "Club Card", "Campus Highlight", "Editorial Quote"]);
+  });
+
+  it("keeps editor-only actions and transient states out of the public chooser", () => {
+    const galleryNames = galleryEntries.map(({ name }) => name);
+    expect(galleryNames).not.toEqual(expect.arrayContaining(["Disabled", "Outline Button", "Quiet Action", "Inline Button Link"]));
+    expect(galleryEntries.some(({ id }) => id === "education-outbound-compat")).toBe(false);
+    expect(COMPONENT_REGISTRY.find(({ id }) => id === "action-buttons")?.variants.join(" ")).toMatch(/disabled/i);
+    expect(COMPONENT_REGISTRY.find(({ id }) => id === "course-card")?.variants).toContain("Linked title");
   });
 
   it("keeps supporting and invisible implementation sources out of the visual gallery", () => {
