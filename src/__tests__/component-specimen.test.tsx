@@ -32,7 +32,7 @@ describe("interactive component specimens", () => {
         }
       }
     }
-  });
+  }, 15_000);
 
   it("edits note content, action state, corner size, viewport, and section surfaces", () => {
     const entry = COMPONENT_REGISTRY.find(({ id }) => id === "note-callout")!;

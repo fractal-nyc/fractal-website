@@ -51,7 +51,7 @@ function ContextBoard({ id }: { id: string }) {
   const image = id === "housing-map" ? "/images/banners/neighborhood.webp"
     : id === "campus-section" || id === "meet-space-carousel" ? "/images/campus/coworking-space.webp"
       : id === "origin-story" ? "/images/fractal-nyc-diagram.png" : "/images/hero/fractal-background-640.webp";
-  return <div className="library-context-board"><img src={image} alt="" /><span className="text-label">Full-page interactive preview</span></div>;
+  return <div className="library-context-board"><img src={image} alt="" width="640" height="360" loading="lazy" decoding="async" /><span className="text-label">Full-page interactive preview</span></div>;
 }
 
 export function VisualBoard({ entry }: { entry: ComponentRegistryEntry }): ReactNode {
