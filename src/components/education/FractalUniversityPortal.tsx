@@ -7,6 +7,7 @@ import {
   type ReactNode,
 } from "react";
 import { EducationOutboundLink } from "@/components/education/EducationOutboundLink";
+import { OutboundLink } from "@/components/content/OutboundLink";
 import { MandelbrotCorners } from "@/components/ui/MandelbrotCorners";
 import { FadeIn } from "@/components/ui/FadeIn";
 import { CalloutCard } from "@/components/content/CalloutCard";
@@ -382,7 +383,7 @@ export function ClubCard({ club }: { club: FractalUClub }) {
         ].map(([label, value]) => (
           <div key={label} className="min-w-0 [overflow-wrap:anywhere]">
             <dt className="text-label text-foreground">{label}</dt>
-            <dd className="mt-0.5">{value}</dd>
+            <dd className="text-body mt-0.5">{value}</dd>
           </div>
         ))}
       </dl>
@@ -458,13 +459,13 @@ function FractalUInformation() {
             <p>
               We&apos;re always looking for instructors with something to share — a
               craft, a body of work, an obsession. Email{" "}
-              <EducationOutboundLink
+              <OutboundLink
                 href="mailto:fractalu@fractalnyc.com"
-                typography="body"
+                variant="inline"
                 className="align-middle"
               >
                 fractalu@fractalnyc.com
-              </EducationOutboundLink>{" "}
+              </OutboundLink>{" "}
               with a sentence or two about what you&apos;d teach.
             </p>
           </CalloutCard>

@@ -2,8 +2,8 @@ import { FadeIn } from "@/components/ui/FadeIn";
 import { SectorHeader } from "@/components/layout/SectorHeader";
 import { Button } from "@/components/ui/button";
 import { MeetTheSpaceCarousel } from "@/components/sections/MeetTheSpaceCarousel";
-import { CornerDecorations } from "@/components/ui/MandelbrotCorners";
-import { PaperGrain } from "@/components/ui/PaperGrain";
+import { HighlightBox } from "@/components/content/HighlightBox";
+import { OutboundLink } from "@/components/content/OutboundLink";
 import { cn } from "@/lib/utils";
 
 const LUMA_EVENTS_URL = "https://lu.ma/nyc-tech";
@@ -16,9 +16,6 @@ const GOOGLE_MAPS_URL =
 const CRYSTAL_MAILTO = "mailto:crystal@fractalnyc.com";
 const DISCORD_URL = "https://discord.gg/Er974gPTXe";
 
-const inlineLinkClass =
-  "underline decoration-background/40 hover:decoration-background transition-colors";
-
 function InlineLink({
   href,
   children,
@@ -28,13 +25,10 @@ function InlineLink({
   children: React.ReactNode;
   external?: boolean;
 }) {
-  const externalProps = external
-    ? { target: "_blank" as const, rel: "noopener noreferrer" }
-    : {};
   return (
-    <a href={href} {...externalProps} className={inlineLinkClass}>
+    <OutboundLink href={href} variant="inline" tone="dark" {...(!external ? { target: undefined, rel: undefined } : {})}>
       {children}
-    </a>
+    </OutboundLink>
   );
 }
 
@@ -211,59 +205,7 @@ export function AudienceHighlight({
   description: string;
   href: string | null;
 }) {
-  // FRAC-7: the audience cards adopt the frosted-Button design schema (see
-  // ui/button.tsx default variant) — accent fill + border, backdrop blur, the
-  // shared paper-grain overlay, Mandelbrot corners, and the cream-frost hover
-  // (bg → --btn-fill, text → --btn-text/accent). `--accent` is campus-deep on
-  // this page, so the card's rest color matches the sitewide CTA buttons.
-  const cardClass = [
-    "group relative overflow-hidden flex flex-col gap-2 rounded-md p-7 shadow-lg",
-    "border bg-[var(--component-accent,var(--accent,currentColor))] text-[var(--component-on-accent,var(--color-background))]",
-    "[border-color:var(--accent,currentColor)]",
-    "[border-color:var(--component-accent,var(--accent,currentColor))]",
-    "[backdrop-filter:blur(6px)] [-webkit-backdrop-filter:blur(6px)] [isolation:isolate] [transform:translateZ(0)]",
-    "transition-colors duration-300",
-    "hover:bg-[var(--btn-fill,rgba(242,234,216,0.16))] hover:text-[var(--btn-text,var(--component-accent,var(--accent,currentColor)))]",
-  ].join(" ");
-  const body = (
-    <>
-      {/* Eyebrow numeral: the .text-label chrome tier (mono/uppercase/wide
-          tracking), inheriting the card text color so it inverts with the
-          frost hover — FRAC-7 retired the italic gold treatment. */}
-      <span className="text-label">{num}</span>
-      <span className="text-subtitle normal-case">{title}</span>
-      {/* opacity (not a fixed token color) so the description follows
-          currentColor through the hover inversion. */}
-      <span className="text-body opacity-75 leading-relaxed">{description}</span>
-    </>
-  );
-  // Decorative chrome, mirrored from the Button: paper grain + corner
-  // Mandelbrots. p-7 (28px) clears the size="xs" safe-padding minimum (24px).
-  const decorations = (
-    <>
-      <PaperGrain />
-      <CornerDecorations size="xs" opacity={0.8} />
-    </>
-  );
-  if (href) {
-    return (
-      <a
-        href={href}
-        target="_blank"
-        rel="noopener noreferrer"
-        className={`${cardClass} no-underline`}
-      >
-        {body}
-        {decorations}
-      </a>
-    );
-  }
-  return (
-    <div className={cardClass}>
-      {body}
-      {decorations}
-    </div>
-  );
+  return <HighlightBox eyebrow={num} title={title} description={description} href={href} accessibleName={title} />;
 }
 
 export function Campus() {
@@ -362,7 +304,7 @@ export function Campus() {
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
               {audiences.map((audience) => (
-                <AudienceHighlight key={audience.num} {...audience} />
+                <HighlightBox key={audience.num} eyebrow={audience.num} title={audience.title} description={audience.description} href={audience.href} accessibleName={audience.title} />
               ))}
             </div>
           </div>

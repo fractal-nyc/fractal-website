@@ -88,7 +88,7 @@ export function DocumentCard({ document, className = "", colorway = "library" }:
       </h3>
 
       {/* Author */}
-      <p className="text-label text-foreground-muted mt-1">{document.byline}</p>
+      <p className="text-aside text-foreground-muted mt-1">{document.byline}</p>
 
       {/* Description */}
       {document.description && (

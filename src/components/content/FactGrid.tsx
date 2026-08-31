@@ -8,7 +8,7 @@ export function FactGrid({ items, className = "" }: { items: readonly FactItem[]
       {items.map((item, index) => (
         <div key={`${String(item.label)}-${index}`} className="min-w-0 [overflow-wrap:anywhere]">
           <dt className="text-label text-foreground text-[var(--component-on-surface,var(--color-foreground))]">{item.label}</dt>
-          <dd className="mt-0.5 text-[var(--component-muted,var(--color-foreground-muted))]">{item.value}</dd>
+          <dd className="text-body mt-0.5 text-[var(--component-muted,var(--color-foreground-muted))]">{item.value}</dd>
         </div>
       ))}
     </dl>

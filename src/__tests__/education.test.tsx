@@ -88,7 +88,7 @@ describe("EducationPage", () => {
     }
   });
 
-  it("covers the complete 53-link outbound inventory without changing destinations", () => {
+  it("covers the complete standalone outbound inventory without changing destinations", () => {
     const { container } = renderEducationPage();
     const expectedHrefs = [
       "https://fractaluniversity.substack.com",
@@ -101,7 +101,6 @@ describe("EducationPage", () => {
         ...(club.detailsUrl ? [club.detailsUrl] : []),
         club.actionUrl,
       ]),
-      "mailto:fractalu@fractalnyc.com",
       "https://ajr.fyi/files/fractal-canon.pdf",
       "https://fractaluniversity.substack.com",
       "mailto:fractalu@fractalnyc.com",
@@ -110,7 +109,7 @@ describe("EducationPage", () => {
       container.querySelectorAll<HTMLAnchorElement>("[data-education-outbound-link]"),
     );
 
-    expect(expectedHrefs).toHaveLength(53);
+    expect(expectedHrefs).toHaveLength(52);
     expect(outboundLinks).toHaveLength(expectedHrefs.length);
     expect(outboundLinks.map((link) => link.getAttribute("href")).sort()).toEqual(
       [...expectedHrefs].sort(),

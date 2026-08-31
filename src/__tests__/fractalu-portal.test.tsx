@@ -31,7 +31,6 @@ function expectedPortalOutboundHrefs() {
       ...(club.detailsUrl ? [club.detailsUrl] : []),
       club.actionUrl,
     ]),
-    "mailto:fractalu@fractalnyc.com",
     "https://ajr.fyi/files/fractal-canon.pdf",
     "https://fractaluniversity.substack.com",
     "mailto:fractalu@fractalnyc.com",
@@ -268,18 +267,15 @@ describe("FractalUniversityPortal", () => {
     expect(filterBlock).not.toHaveClass("border-b");
     const group = screen.getByRole("group", { name: "Filter classes by subject" });
     const filters = within(group).getAllByRole("button");
-    expect(group).toHaveClass("flex-wrap", "gap-1", "overflow-visible");
+    expect(group).toHaveClass("flex-wrap", "gap-2", "overflow-visible");
     expect(group).not.toHaveClass("overflow-x-auto");
     expect(filters.map((button) => button.textContent)).toEqual(FRACTALU_CATEGORIES);
     expect(filters.every((button) => button.className.includes("min-h-11"))).toBe(true);
     expect(filters.every((button) => button.className.includes("min-w-11"))).toBe(true);
-    expect(filters.every((button) => button.className.includes("px-1"))).toBe(true);
-    expect(filters.every((button) => button.className.includes("md:px-4"))).toBe(true);
-    expect(filters.every((button) => button.className.includes("border-2"))).toBe(true);
-    expect(filters.every((button) => button.className.includes("bg-background"))).toBe(true);
-    expect(filters.every((button) => button.className.includes("text-foreground-muted"))).toBe(
-      true,
-    );
+    expect(filters.every((button) => button.className.includes("px-4"))).toBe(true);
+    expect(filters.every((button) => button.className.includes("rounded-full"))).toBe(true);
+    expect(filters.some((button) => button.className.includes("bg-[var(--component-accent"))).toBe(true);
+    expect(filters.filter((button) => button.getAttribute("aria-pressed") === "false").every((button) => button.className.includes("bg-background") && button.className.includes("text-foreground-muted"))).toBe(true);
     expect(
       filters.every(
         (button) =>
@@ -290,30 +286,16 @@ describe("FractalUniversityPortal", () => {
     ).toBe(true);
     const all = screen.getByRole("button", { name: "All" });
     expect(all).toHaveAttribute("aria-pressed", "true");
-    expect(all).toHaveClass("border-house-education-light", "shadow-sm");
+    expect(all.className).toContain("bg-[var(--component-accent");
     const technology = screen.getByRole("button", { name: "Technology" });
-    expect(technology).toHaveClass(
-      "border-foreground-faint",
-      "hover:border-house-education-light",
-      "focus-visible:border-house-education-light",
-      "focus-visible:ring-house-education-light",
-      "focus-visible:ring-offset-2",
-      "focus-visible:ring-offset-house-education-deep",
-    );
+    expect(technology).toHaveClass("border-foreground-faint", "focus-visible:ring-offset-2");
+    expect(technology.className).toContain("hover:border-[var(--component-accent");
 
     fireEvent.click(technology);
     expect(technology).toHaveAttribute("aria-pressed", "true");
-    expect(technology).toHaveClass(
-      "border-house-education-light",
-      "bg-background",
-      "text-foreground-muted",
-    );
+    expect(technology.className).toContain("bg-[var(--component-accent");
     expect(all).toHaveAttribute("aria-pressed", "false");
-    expect(all).toHaveClass(
-      "border-foreground-faint",
-      "bg-background",
-      "text-foreground-muted",
-    );
+    expect(all).toHaveClass("border-foreground-faint", "bg-background", "text-foreground-muted");
     expect(within(screen.getByTestId("fractalu-course-catalog")).getAllByRole("article")).toHaveLength(3);
     expect(screen.getByText("3 courses shown.")).toHaveAttribute("aria-live", "polite");
     expect(screen.queryByText("The Lost Generation Close Reading")).toBeNull();
@@ -534,7 +516,7 @@ describe("FractalUniversityPortal", () => {
     const outboundLinks = Array.from(
       container.querySelectorAll<HTMLAnchorElement>("[data-education-outbound-link]"),
     );
-    expect(expectedHrefs).toHaveLength(52);
+    expect(expectedHrefs).toHaveLength(51);
     expect(outboundLinks).toHaveLength(expectedHrefs.length);
     expect(outboundLinks.map((link) => link.getAttribute("href")).sort()).toEqual(
       [...expectedHrefs].sort(),
@@ -581,16 +563,12 @@ describe("FractalUniversityPortal", () => {
     const teachingEmail = within(callout as HTMLElement).getByRole("link", {
       name: "fractalu@fractalnyc.com",
     });
-    expect(teachingEmail).toHaveClass("text-body");
     expect(teachingEmail).not.toHaveClass("text-label");
+    expect(teachingEmail.closest(".text-body")).toBeTruthy();
     expect(teachingEmail).toHaveAttribute("href", "mailto:fractalu@fractalnyc.com");
     expect(teachingEmail).not.toHaveAttribute("target");
     expect(teachingEmail).not.toHaveAttribute("rel");
-    expect(teachingEmail.querySelectorAll("svg")).toHaveLength(1);
-    expect(teachingEmail.querySelector("[data-education-outbound-arrow]")).toHaveAttribute(
-      "aria-hidden",
-      "true",
-    );
+    expect(teachingEmail.querySelectorAll("svg")).toHaveLength(0);
     expect(screen.getByText("Take yourself and others seriously.")).toBeTruthy();
     expect(screen.getByRole("link", { name: /Read the FractalU canon PDF/ })).toHaveAttribute(
       "href",

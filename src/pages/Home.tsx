@@ -7,6 +7,7 @@ import { PhotoGallery } from "@/components/gallery/PhotoGallery";
 import { gallerySections } from "@/data/storyPhotos";
 import { FadeIn } from "@/components/ui/FadeIn";
 import { CalloutCard } from "@/components/content/CalloutCard";
+import { OutboundLink } from "@/components/content/OutboundLink";
 import { ComponentColorScope } from "@/components/content/ComponentColorScope";
 import { SECTIONS } from "@/data/houses";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
@@ -86,23 +87,13 @@ export function Home() {
             >
               <p className="text-foreground/85">
                 Join our{" "}
-                <a
-                  href={DISCORD_URL}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-foreground underline underline-offset-2 decoration-foreground/40 hover:decoration-foreground transition-colors"
-                >
+                <OutboundLink href={DISCORD_URL} variant="inline">
                   Discord
-                </a>{" "}
+                </OutboundLink>{" "}
                 and say hi. Or if you prefer a one-on-one conversation,{" "}
-                <a
-                  href={IAN_CHAT_URL}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-foreground underline underline-offset-2 decoration-foreground/40 hover:decoration-foreground transition-colors"
-                >
+                <OutboundLink href={IAN_CHAT_URL} variant="inline">
                   schedule a virtual chat with Ian
-                </a>
+                </OutboundLink>
                 .
               </p>
             </CalloutCard>

@@ -8,6 +8,7 @@ import { FadeIn } from "@/components/ui/FadeIn";
 import { FractalPattern } from "@/components/ui/FractalPattern";
 import { HousingMap } from "@/components/sections/HousingMap";
 import { CalloutCard } from "@/components/content/CalloutCard";
+import { OutboundLink } from "@/components/content/OutboundLink";
 import { ComponentColorScope } from "@/components/content/ComponentColorScope";
 import { CoLivingBannerSVG } from "@/components/house/CoLivingBannerSVG";
 import { HOUSES } from "@/data/houses";
@@ -130,23 +131,13 @@ export function CoLivingPage() {
                   <p>
                     Community members regularly offer sublets and short stays.
                     Fill out our{" "}
-                    <a
-                      href="https://airtable.com/appDkSh1TsmjHzacK/shrbrfFHeMTcSJ9dd"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-foreground underline underline-offset-2 decoration-foreground-muted/40 hover:decoration-foreground"
-                    >
+                    <OutboundLink href="https://airtable.com/appDkSh1TsmjHzacK/shrbrfFHeMTcSJ9dd" variant="inline">
                       housing interest form
-                    </a>{" "}
+                    </OutboundLink>{" "}
                     or ask in our{" "}
-                    <a
-                      href="https://discord.gg/Er974gPTXe"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-foreground underline underline-offset-2 decoration-foreground-muted/40 hover:decoration-foreground"
-                    >
+                    <OutboundLink href="https://discord.gg/Er974gPTXe" variant="inline">
                       Discord
-                    </a>{" "}
+                    </OutboundLink>{" "}
                     to stay at Fractal.
                   </p>
               </CalloutCard>

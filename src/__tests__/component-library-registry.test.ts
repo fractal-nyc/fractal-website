@@ -49,7 +49,7 @@ describe("team component registry", () => {
   });
 
   it("finds plain-English aliases and exposes only canonical colorways", () => {
-    const search = (query: string) => COMPONENT_REGISTRY.filter((entry) => searchableEntryText(entry).includes(query));
+    const search = (query: string) => galleryEntries.filter((entry) => searchableEntryText(entry).includes(query));
     expect(search("note").map(({ name }) => name)).toContain("Note Box");
     expect(search("class container").map(({ name }) => name)).toContain("Course Card");
     expect(search("action button").map(({ name }) => name)).toContain("Primary Button");
@@ -57,8 +57,13 @@ describe("team component registry", () => {
     expect(search("outbound link").map(({ name }) => name)).toContain("Standalone Link");
     expect(search("outsource link").map(({ name }) => name)).toContain("Standalone Link");
     expect(search("prose link").map(({ name }) => name)).toContain("Inline Text Link");
-    expect(search("homepage search").map(({ name }) => name)).toContain("Home Search Bar");
-    expect(search("hero search").map(({ name }) => name)).toContain("Home Search Bar");
+    expect(search("inter outbound link").map(({ name }) => name)).toContain("Prominent Text Link");
+    expect(search("homepage search").map(({ name }) => name)).toContain("Search Bar");
+    expect(search("hero search").map(({ name }) => name)).toContain("Search Bar");
+    expect(search("archive search field").map(({ name }) => name)).toContain("Search Bar");
+    expect(search("library tag filter").map(({ name }) => name)).toContain("Filter Bar");
+    expect(search("course subject filter").map(({ name }) => name)).toContain("Filter Bar");
+    expect(search("campus highlight").map(({ name }) => name)).toContain("Highlight Box");
     expect(search("meet the space carousel").map(({ name }) => name)).toContain("Photo Carousel");
     expect(search("photo slider").map(({ name }) => name)).toContain("Photo Carousel");
     expect(COMPONENT_COLORWAYS.map(({ id }) => id)).toEqual(["neutral", "co-living", "events", "campus", "education", "library", "political-club", "story", "people"]);
@@ -69,23 +74,26 @@ describe("team component registry", () => {
 
   it("declares truthful component-specific controls for the reviewed specimens", () => {
     const controlsFor = (id: string) => COMPONENT_REGISTRY.find((entry) => entry.id === id)!.controls.map(({ label }) => label);
-    expect(controlsFor("course-fact-grid")).toContain("Fact values");
-    expect(controlsFor("course-subject-filter")).toContain("Filter state");
+    expect(controlsFor("course-card")).toContain("Content variant");
+    expect(controlsFor("filter-bar")).toContain("Selection behavior");
     expect(controlsFor("editorial-quote")).toContain("Citation");
-    expect(controlsFor("mandelbrot-corner-frame")).toContain("Corner size");
-    expect(controlsFor("paper-grain-overlay")).toEqual([]);
+    expect(controlsFor("note-callout")).not.toContain("Actions");
     expect(COMPONENT_REGISTRY.filter(({ presentation }) => presentation !== "gallery").filter(({ render }) => !render).every(({ controls }) => controls.length === 0)).toBe(true);
   });
 
   it("provides a visual preview and plain-language category for every gallery entry", () => {
-    expect(GALLERY_CATEGORIES.map(({ label }) => label)).toEqual(["Common components", "Cards & boxes", "Buttons & links", "Forms & filters", "Images & decoration", "All components"]);
+    expect(GALLERY_CATEGORIES.map(({ label }) => label)).toEqual(["Common components", "Cards & boxes", "Buttons & links", "Forms & filters", "Images & media", "All components"]);
+    expect(galleryEntries).toHaveLength(15);
     for (const entry of galleryEntries) {
       expect(entry.galleryCategory).toBeTruthy();
       expect(entry.previewMode).not.toBe("invisible");
       expect(Boolean(entry.render) || ["visual-board", "asset-family", "full-context"].includes(entry.previewMode!)).toBe(true);
       expect(entry.name).not.toMatch(/ComponentColorScope|FractalUniversityPortal|DocumentCard/);
     }
-    expect(galleryEntries.filter(({ common }) => common).map(({ name }) => name)).toEqual(["Primary Button", "Standalone Link", "Inline Text Link", "Article Card", "Note Box", "Course Card", "Club Card", "Campus Highlight", "Editorial Quote"]);
+    expect(galleryEntries.filter(({ common }) => common).map(({ name }) => name)).toEqual(["Primary Button", "Standalone Link", "Prominent Text Link", "Inline Text Link", "Article Card", "Note Box", "Course Card", "Club Card", "Highlight Box"]);
+    expect(galleryEntries.filter(({ galleryCategory }) => galleryCategory === "actions").map(({ name }) => name)).toEqual(["Primary Button", "Standalone Link", "Prominent Text Link", "Inline Text Link"]);
+    expect(galleryEntries.filter(({ galleryCategory }) => galleryCategory === "forms").map(({ name }) => name)).toEqual(["Search Bar", "Filter Bar"]);
+    expect(galleryEntries.filter(({ galleryCategory }) => galleryCategory === "media").map(({ name }) => name).sort()).toEqual(["House Pennants", "Photo Carousel", "Photo Gallery"]);
   });
 
   it("keeps editor-only actions and transient states out of the public chooser", () => {
@@ -99,7 +107,7 @@ describe("team component registry", () => {
   it("keeps supporting and invisible implementation sources out of the visual gallery", () => {
     expect(galleryEntries.some(({ id }) => id === "site-footer-marker")).toBe(false);
     expect(COMPONENT_REGISTRY.filter(({ presentation }) => presentation === "internal").every(({ internalReason }) => Boolean(internalReason))).toBe(true);
-    const hiddenIds = ["color-pairing", "page-frame", "type-style", "reading-column", "standard-section-frame", "wide-card-grid", "section-header", "site-navigation", "campus-section", "home-hero", "housing-map", "origin-story", "sierpinski-carpet", "fractal-city-scene", "octahedron-hero"];
+    const hiddenIds = ["color-pairing", "page-frame", "type-style", "reading-column", "standard-section-frame", "wide-card-grid", "section-header", "site-navigation", "campus-section", "home-hero", "housing-map", "origin-story", "sierpinski-carpet", "fractal-city-scene", "octahedron-hero", "content-card", "course-fact-grid", "membership-button-group", "empty-results-message", "hero-search", "archive-search", "filter-chip", "library-tag-filter", "course-subject-filter", "embed-frame", "mandelbrot-corner-frame", "mandelbrot-icon", "paper-grain-overlay", "fractal-pattern", "fade-in", "gallery-image", "photo-frame"];
     for (const id of hiddenIds) {
       const entry = COMPONENT_REGISTRY.find((candidate) => candidate.id === id)!;
       expect(entry.presentation).not.toBe("gallery");
@@ -109,11 +117,12 @@ describe("team component registry", () => {
     }
   });
 
-  it("exposes only the approved reusable search and carousel from page-owned experiences", () => {
-    const search = COMPONENT_REGISTRY.find(({ id }) => id === "hero-search")!;
-    expect(search).toMatchObject({ name: "Home Search Bar", componentName: "HomeSearchBar", sourcePath: "src/components/sections/HomeSearchBar.tsx", presentation: "gallery", galleryCategory: "forms", previewMode: "inline", themeable: false });
-    expect(search.controls).toEqual([]);
-    expect(search.usedOn).toMatch(/Home/i);
+  it("exposes one shared search choice and retains thin behavior wrappers internally", () => {
+    const search = COMPONENT_REGISTRY.find(({ id }) => id === "search-bar")!;
+    expect(search).toMatchObject({ name: "Search Bar", componentName: "SearchBar", sourcePath: "src/components/content/SearchBar.tsx", presentation: "gallery", galleryCategory: "forms", previewMode: "inline", themeable: true });
+    expect(search.controls.map(({ label }) => label)).toContain("Search behavior");
+    expect(search.usedOn).toMatch(/Home.*Library/i);
+    for (const id of ["hero-search", "archive-search"]) expect(COMPONENT_REGISTRY.find((entry) => entry.id === id)).toMatchObject({ presentation: "internal", previewMode: "invisible" });
 
     const carousel = COMPONENT_REGISTRY.find(({ id }) => id === "meet-space-carousel")!;
     expect(carousel).toMatchObject({ name: "Photo Carousel", componentName: "MeetTheSpaceCarousel", presentation: "gallery", galleryCategory: "media", previewMode: "inline", themeable: false });

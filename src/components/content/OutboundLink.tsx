@@ -1,10 +1,11 @@
 import type { AnchorHTMLAttributes, ReactNode } from "react";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowDown, ArrowUpRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export type OutboundLinkTone = "light" | "dark";
-export type OutboundLinkVariant = "inline" | "standalone" | "linked-title";
+export type OutboundLinkVariant = "inline" | "standalone" | "prominent" | "linked-title";
 export type OutboundLinkTypography = "label" | "body" | "body-lead";
+export type OutboundLinkArrow = "outbound" | "down" | "none";
 
 export interface OutboundLinkProps extends Omit<AnchorHTMLAttributes<HTMLAnchorElement>, "children" | "href"> {
   href: string;
@@ -13,6 +14,7 @@ export interface OutboundLinkProps extends Omit<AnchorHTMLAttributes<HTMLAnchorE
   tone?: OutboundLinkTone;
   variant?: OutboundLinkVariant;
   typography?: OutboundLinkTypography;
+  arrow?: OutboundLinkArrow;
   arrowClassName?: string;
 }
 
@@ -24,7 +26,8 @@ export function OutboundLink({
   accessibleName,
   tone = "light",
   variant = "standalone",
-  typography = "label",
+  typography,
+  arrow,
   className,
   arrowClassName,
   ...props
@@ -32,6 +35,9 @@ export function OutboundLink({
   const opensNewTab = /^https?:\/\//.test(href);
   const visibleLabel = typeof children === "string" ? withoutStraightArrow(children) : children;
   const normalizedName = accessibleName ? withoutStraightArrow(accessibleName) : undefined;
+  const resolvedTypography = typography ?? (variant === "standalone" ? "label" : variant === "prominent" ? "body-lead" : undefined);
+  const resolvedArrow = arrow ?? (variant === "inline" ? "none" : "outbound");
+  const Arrow = resolvedArrow === "down" ? ArrowDown : ArrowUpRight;
   return (
     <a
       {...props}
@@ -45,16 +51,16 @@ export function OutboundLink({
         tone === "dark"
           ? "text-background decoration-background/40 hover:decoration-background focus-visible:decoration-background focus-visible:ring-background focus-visible:ring-offset-house-education-deep"
           : "text-foreground decoration-foreground/40 hover:decoration-foreground focus-visible:decoration-foreground focus-visible:ring-[var(--component-focus,var(--color-house-education-light))] focus-visible:ring-offset-background",
-        variant === "standalone" && "inline-flex min-h-11 flex-wrap items-center gap-x-1.5 rounded-md",
+        (variant === "standalone" || variant === "prominent") && "inline-flex min-h-11 flex-wrap items-center gap-x-1.5 rounded-md",
         variant === "linked-title" && "fractalu-course-title-link inline-flex items-start gap-2 rounded-sm",
         variant === "inline" && "rounded-sm",
-        variant === "linked-title" ? "" : typography === "body-lead" ? "text-body-lead" : typography === "body" ? "text-body" : "text-label",
+        resolvedTypography === "body-lead" ? "text-body-lead" : resolvedTypography === "body" ? "text-body" : resolvedTypography === "label" ? "text-label" : "",
         className,
       ].filter(Boolean).join(" ")}
     >
       {visibleLabel}
-      {variant !== "inline" && (
-        <ArrowUpRight
+      {resolvedArrow !== "none" && (
+        <Arrow
           size={variant === "linked-title" ? 18 : 15}
           strokeWidth={1.5}
           className={cn("shrink-0", variant === "linked-title" && "fractalu-course-link-arrow mt-1 text-[var(--component-accent,var(--color-house-education-light))]", arrowClassName)}
@@ -62,6 +68,7 @@ export function OutboundLink({
           data-outbound-arrow
           data-education-outbound-arrow={"data-education-outbound-link" in props ? "" : undefined}
           data-course-external-icon={variant === "linked-title" ? "" : undefined}
+          data-education-internal-arrow={resolvedArrow === "down" ? "" : undefined}
         />
       )}
     </a>

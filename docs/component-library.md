@@ -26,14 +26,22 @@ pnpm build:components
 
 The output is `dist-components/`. Normal `pnpm build` still produces only the public site in `dist/`.
 
-## Stable plain-English names
+## The 15 public choices
 
 Use these names in requests to designers, editors, or agents:
 
-- Buttons and links: **Primary Button** is the branded Mandelbrot-corner CTA; **Standalone Link** is a prominent link that sits on its own and carries a diagonal arrow; **Inline Text Link** is an underlined link within a sentence and has no arrow.
-- Forms and filters: **Home Search Bar** is the real desktop Home combobox for finding pages, people, houses, articles, and topics. It was previously called **Hero Search / Combobox**. This category also includes **Archive Search Field**, **Filter Chip**, **Empty Results Message**, **Library Tag Filter**, and **Course Subject Filter**.
-- Cards and boxes: **Content Card**, **Article Card**, **Note Box**, **Course Card**, **Course Fact Grid**, **Club Card**, **Campus Highlight**, **Membership Button Group**, and **Editorial Quote**.
-- Media: **Photo Carousel** is the real carousel currently used in Campus’s Meet the Space section and was previously called **Meet the Space Carousel**. This category also includes **Embedded Content Frame**, **Photo Frame**, **Mandelbrot Corner Frame**, **Mandelbrot Icon**, **Paper Grain Overlay**, **Fractal Pattern**, **Fade In**, **Gallery Image**, **Photo Gallery**, and **House Pennants**.
+- Buttons and links: **Primary Button**, **Standalone Link**, **Prominent Text Link**, and **Inline Text Link**.
+- Forms and filters: **Search Bar** and **Filter Bar**.
+- Cards and boxes: **Article Card**, **Note Box**, **Course Card**, **Club Card**, **Highlight Box**, and **Editorial Quote**.
+- Images and media: **Photo Carousel**, **Photo Gallery**, and **House Pennants**.
+
+The four link choices are intentionally separate. **Primary Button** is the branded Mandelbrot-corner call to action. **Standalone Link** is a compact mono link that sits on its own and has a diagonal outbound arrow. **Prominent Text Link** is the larger Inter text-and-arrow treatment used in prominent Education page areas. **Inline Text Link** stays in the surrounding Inter prose, is underlined, and has no arrow.
+
+**Search Bar** owns one visual shell with two real behavior modes: site search is the Home combobox that finds and navigates to site results, while collection search filters the current archive and has one working clear control. **Filter Bar** owns the reusable row of filter chips. Its Education mode selects one subject at a time; its Library mode can select several tags and show result counts. Editors change the labels, selection mode, and inherited site tokens rather than creating a new kind of search or filter.
+
+**Note Box** never contains a button action. If its prose needs a destination, use an **Inline Text Link** inside the note. **Highlight Box** is the generic name for the accent-filled pattern first used for Campus highlights; it is not restricted to the Campus colors. Article, Course, and Club cards keep typography tied to content roles: display text for titles, Inter for names/bylines and prose, and mono for labels and compact metadata. Course facts remain part of the **Course Card**, not a separate public component.
+
+Only the three items listed under Images and media are public choices. Photo Gallery is the real gallery component, not a placeholder frame. Supporting shells, empty states, fact grids, membership groups, corner decorations, embed frames, textures, motion helpers, and page structure remain internal implementation inventory. Old phrases such as “Home Search Bar,” “Archive Search Field,” “Library Tag Filter,” “Course Subject Filter,” “Campus Highlight,” and “Meet the Space Carousel” remain searchable aliases that lead to the current public name.
 
 The interactive registry is authoritative for each name’s purpose, fields, variants, usage boundaries, responsive notes, accessibility notes, source path, and agent-ready phrase. Foundations such as site colors, page frames, type rules, and section spacing are applied automatically by agents rather than copied as components. Page infrastructure such as the Navbar, whole Hero, maps, and WebGL scenes is likewise retained as internal inventory instead of being offered as a reusable tile. Supporting and invisible implementation files remain source-accounted without cluttering the visual chooser. A coverage test fails if a new production component file is added without a registry entry.
 
@@ -51,7 +59,7 @@ Ask an agent to edit `src/data/fractalu-catalog.json`. This serializable JSON is
 
 Example:
 
-> Refresh the Education semester in `src/data/fractalu-catalog.json` from the verified public source. Preserve ordered instructor biographies and truthful source provenance. Use the existing **Course Card**, **Club / Open Group Card**, **Course Fact Grid**, **Course Subject Filter**, and **Outbound Link** components. Run `pnpm typecheck`, `pnpm test`, and `pnpm build`.
+> Refresh the Education semester in `src/data/fractalu-catalog.json` from the verified public source. Preserve ordered instructor biographies and truthful source provenance. Use the existing **Course Card** (including its facts), **Club Card**, **Filter Bar**, and appropriate shared link components. Run `pnpm typecheck`, `pnpm test`, and `pnpm build`.
 
 ### Human workshop path
 
@@ -73,13 +81,15 @@ Inline errors link to their fields. Export actions stay disabled until the draft
 
 > Add this recurring program using the **Club Card** component. Include name, description, schedule, location, optional details link, and required action link.
 
-> Add the new category to the course data. Let the **Course Subject Filter** derive it from the catalog; do not hard-code a second tag list.
+> Add the new category to the course data. Let the Education **Filter Bar** derive its single-select chips from the catalog; do not hard-code a second tag list.
 
 > Add this short explanation using the **Note Box** component with the Campus site color and Paper background.
 
 > Add this item using the **Article Card** component with its category, title, byline, description, URL, and tags.
 
 > Format this destination with the **Standalone Link** component. Preserve safe new-tab behavior and the diagonal arrow. (“External link,” “Outbound Link,” and “outsource link” all resolve to this component.)
+
+> Add this large Education-style destination with the **Prominent Text Link** component. Keep the Inter body-lead type and arrow.
 
 > Link these words inside the sentence with the **Inline Text Link** component. Do not add an arrow or button container.
 

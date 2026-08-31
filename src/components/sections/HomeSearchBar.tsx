@@ -1,7 +1,6 @@
 import {
   useEffect,
   useId,
-  useLayoutEffect,
   useRef,
   useState,
 } from "react";
@@ -20,6 +19,7 @@ import {
   useGlobalSearch,
   type SearchResult,
 } from "@/hooks/use-global-search";
+import { SearchBar } from "@/components/content/SearchBar";
 
 // FRAC-13: single, static placeholder — cleared on focus so the empty,
 // caret-ready field visibly invites typing. Thin-space-separated dots (instead
@@ -51,14 +51,9 @@ export function HomeSearchBar({
   // ArrowUp can move back to -1 (input regains focus visually). Pointer hover
   // also drives this so keyboard and mouse stay in sync.
   const [focusedIndex, setFocusedIndex] = useState(-1);
-  // FRAC-43: thick blinking cursor overlay state. isFocused gates render so
-  // the decorative caret only shows while typing; caretLeft is the measured
-  // text-width offset from the mirror span below.
   const [isFocused, setIsFocused] = useState(false);
-  const [caretLeft, setCaretLeft] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
-  const mirrorRef = useRef<HTMLSpanElement>(null);
 
   // FRAC-13: the placeholder shown — cleared on focus so the empty, caret-ready
   // field visibly invites typing.
@@ -86,14 +81,6 @@ export function HomeSearchBar({
     document.addEventListener("keydown", onKey);
     return () => document.removeEventListener("keydown", onKey);
   }, [enableGlobalShortcut]);
-
-  // FRAC-43: measure rendered text width same-frame so the caret sits flush at
-  // end-of-text. Focus toggling matters because the placeholder string is what
-  // is measured when query is empty.
-  useLayoutEffect(() => {
-    if (!mirrorRef.current) return;
-    setCaretLeft(mirrorRef.current.offsetWidth);
-  }, [query, isFocused]);
 
   // FRAC-33: stable IDs for combobox/listbox/option ARIA wiring.
   const listboxId = useId();
@@ -151,11 +138,10 @@ export function HomeSearchBar({
   return (
     <div className="relative" ref={containerRef} data-home-search-bar>
       <div className="relative">
-        <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-foreground/40" />
-        <input
+        <SearchBar
           ref={inputRef}
-          type="text"
           value={query}
+          label="Search Fractal"
           onChange={(e) => {
             setQuery(e.target.value);
             setIsOpen(true);
@@ -174,53 +160,9 @@ export function HomeSearchBar({
           aria-activedescendant={
             focusedIndex >= 0 ? optionId(focusedIndex) : undefined
           }
-          aria-label="Search Fractal"
-          style={{ caretColor: "transparent" }}
-          className="w-full text-input text-foreground/60 border border-foreground/20 rounded-md bg-background/90 backdrop-blur-sm placeholder:text-foreground/60 outline-none transition-all duration-200 focus:border-foreground/50 focus:text-foreground/80 focus:ring-2 focus:ring-foreground/15 h-[30px] pl-8 pr-9"
+          onClear={clear}
+          endAdornment={hasResults ? <CornerDownLeft className="h-3 w-3" /> : !isFocused && !query ? <kbd className="inline-flex h-[18px] min-w-[18px] items-center justify-center rounded border border-foreground/20 bg-foreground/5 px-1 font-mono text-[11px] leading-none">/</kbd> : null}
         />
-        <span
-          ref={mirrorRef}
-          aria-hidden="true"
-          className="text-input"
-          style={{
-            position: "absolute",
-            visibility: "hidden",
-            whiteSpace: "pre",
-            pointerEvents: "none",
-            top: 0,
-            left: 0,
-          }}
-        >
-          {query || placeholder}
-        </span>
-        <span
-          aria-hidden="true"
-          className="absolute inline-block w-[9px] h-[18px] bg-foreground/70 animate-blink pointer-events-none"
-          style={{
-            left: 32 + caretLeft,
-            top: "50%",
-            transform: "translateY(-50%)",
-          }}
-        />
-
-        {hasResults ? (
-          <span
-            aria-hidden="true"
-            className="absolute right-2.5 top-1/2 -translate-y-1/2 inline-flex items-center gap-1 text-[10px] leading-none text-foreground/45 pointer-events-none"
-          >
-            <CornerDownLeft className="h-3 w-3" />
-          </span>
-        ) : (
-          !isFocused &&
-          !query && (
-            <kbd
-              aria-hidden="true"
-              className="absolute right-2.5 top-1/2 -translate-y-1/2 inline-flex items-center justify-center h-[18px] min-w-[18px] px-1 rounded border border-foreground/20 bg-foreground/5 text-[11px] leading-none font-mono text-foreground/45 pointer-events-none"
-            >
-              /
-            </kbd>
-          )
-        )}
       </div>
 
       {isOpen && (hasResults || noResults) && (

@@ -34,7 +34,7 @@ describe("interactive component specimens", () => {
     }
   }, 15_000);
 
-  it("edits note content, action state, corner size, viewport, and section surfaces", () => {
+  it("edits note content, corner size, viewport, and section surfaces without an action slot", () => {
     const entry = COMPONENT_REGISTRY.find(({ id }) => id === "note-callout")!;
     const { container } = render(<SpecimenCard entry={entry} initialColorway="neutral" initialSurface="deep" />);
     const card = container.querySelector("article") as HTMLElement;
@@ -43,8 +43,8 @@ describe("interactive component specimens", () => {
 
     fireEvent.change(within(card).getByLabelText("Body content"), { target: { value: "long" } });
     expect(within(card).getByText(/deliberately long specimen/i)).toBeInTheDocument();
-    fireEvent.change(within(card).getByLabelText("Actions"), { target: { value: "without" } });
-    expect(within(card).queryByRole("button", { name: "Optional action" })).not.toBeInTheDocument();
+    expect(within(card).queryByLabelText("Actions")).not.toBeInTheDocument();
+    expect(within(card).queryByRole("button", { name: /action/i })).not.toBeInTheDocument();
     fireEvent.change(within(card).getByLabelText("Corner size"), { target: { value: "lg" } });
     expect(card.querySelector(".library-canvas svg")).toHaveAttribute("width", "60");
     fireEvent.change(within(card).getByLabelText("Preview width"), { target: { value: "320" } });
@@ -119,9 +119,10 @@ describe("interactive component specimens", () => {
     expect(within(container).getByText("Usage details")).toBeInTheDocument();
   });
 
-  it("renders the three public action choices as distinct production patterns", () => {
+  it("renders the four public action choices as distinct production patterns", () => {
     const primary = COMPONENT_REGISTRY.find(({ id }) => id === "action-buttons")!;
     const standalone = COMPONENT_REGISTRY.find(({ id }) => id === "outbound-link")!;
+    const prominent = COMPONENT_REGISTRY.find(({ id }) => id === "prominent-text-link")!;
     const inline = COMPONENT_REGISTRY.find(({ id }) => id === "inline-text-link")!;
     const primaryView = render(<VisualSpecimenCard entry={primary} onOpen={() => undefined} />);
     expect(primaryView.container.querySelectorAll(".library-gallery-preview button")).toHaveLength(1);
@@ -134,9 +135,15 @@ describe("interactive component specimens", () => {
     expect(standaloneView.container.querySelectorAll(".library-gallery-preview [data-outbound-arrow]")).toHaveLength(1);
     standaloneView.unmount();
 
+    const prominentView = render(<VisualSpecimenCard entry={prominent} onOpen={() => undefined} />);
+    expect(prominentView.container.querySelector("a[data-outbound-link]")).toHaveClass("text-body-lead");
+    expect(prominentView.container.querySelectorAll("[data-outbound-arrow]")).toHaveLength(1);
+    prominentView.unmount();
+
     const inlineView = render(<VisualSpecimenCard entry={inline} onOpen={() => undefined} />);
     expect(inlineView.container.querySelector(".library-gallery-preview p a[data-outbound-link]")).toBeInTheDocument();
     expect(inlineView.container.querySelector(".library-gallery-preview [data-outbound-arrow]")).not.toBeInTheDocument();
+    expect(inlineView.container.querySelector(".library-gallery-preview p a[data-outbound-link]")).not.toHaveClass("text-label");
   });
 
   it("renders internal inventory as a non-copyable technical notice", () => {
@@ -148,12 +155,12 @@ describe("interactive component specimens", () => {
     expect(container.querySelector("[data-site-navbar], canvas, .library-detail-preview")).not.toBeInTheDocument();
   });
 
-  it("renders the real Home search and Photo Carousel as separate minimal tiles", () => {
-    const search = COMPONENT_REGISTRY.find(({ id }) => id === "hero-search")!;
+  it("renders the shared Search Bar and real Photo Carousel as separate minimal tiles", () => {
+    const search = COMPONENT_REGISTRY.find(({ id }) => id === "search-bar")!;
     const searchView = render(<VisualSpecimenCard entry={search} onOpen={() => undefined} />);
     expect(within(searchView.container).getByRole("combobox", { name: "Search Fractal" })).toBeInTheDocument();
     expect(searchView.container.querySelector("[data-hero-shell], canvas")).not.toBeInTheDocument();
-    expect(within(searchView.container).getByRole("button", { name: "Copy prompt for Home Search Bar" })).toBeInTheDocument();
+    expect(within(searchView.container).getByRole("button", { name: "Copy prompt for Search Bar" })).toBeInTheDocument();
     searchView.unmount();
 
     const carousel = COMPONENT_REGISTRY.find(({ id }) => id === "meet-space-carousel")!;

@@ -38,7 +38,7 @@ export function SpecimenCard({ entry, initialColorway, initialSurface }: { entry
 
   return (
     <article id={entry.id} className="library-specimen">
-      <header><p className="text-label text-house-library-deep">{entry.name}</p><h3 className="text-subtitle mt-2 normal-case">{entry.componentName}</h3><p className="text-body mt-3 text-foreground-muted">{entry.purpose}</p></header>
+      <header><p className="text-label text-foreground">{entry.name}</p><h3 className="text-subtitle mt-2 normal-case">{entry.componentName}</h3><p className="text-body mt-3 text-foreground-muted">{entry.purpose}</p></header>
       <dl className="library-guidance"><div><dt>Use when</dt><dd>{entry.useWhen}</dd></div><div><dt>Do not use when</dt><dd>{entry.doNotUseWhen}</dd></div><div><dt>Content fields</dt><dd>{entry.contentFields.join(" · ")}</dd></div><div><dt>Variants and states</dt><dd>{entry.variants.join(" · ")}</dd></div><div><dt>Accessibility</dt><dd>{entry.accessibility}</dd></div><div><dt>Responsive behavior</dt><dd>{entry.responsive}</dd></div></dl>
       {entry.render ? <>
         {entry.controls.length > 0 && <fieldset className="library-specimen-controls"><legend>Try this component</legend>

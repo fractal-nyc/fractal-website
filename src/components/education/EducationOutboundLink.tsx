@@ -2,7 +2,7 @@ import type { OutboundLinkProps } from "@/components/content/OutboundLink";
 import { OutboundLink } from "@/components/content/OutboundLink";
 
 interface EducationOutboundLinkProps extends Omit<OutboundLinkProps, "variant"> {
-  variant?: "standalone" | "course-title";
+  variant?: "inline" | "standalone" | "prominent" | "course-title";
 }
 
 /** Compatibility name for existing Education call sites. Prefer OutboundLink in new work. */

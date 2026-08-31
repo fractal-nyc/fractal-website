@@ -36,7 +36,7 @@ describe("Events page — content width", () => {
     const primaryContent = within(contentColumn as HTMLElement);
     expect(primaryContent.getByText("Events")).toBeTruthy();
     expect(primaryContent.getByText("See You at Fractal")).toBeTruthy();
-    expect(primaryContent.getByRole("link", { name: "Luma →" })).toBeTruthy();
+    expect(primaryContent.getByRole("link", { name: "Luma (opens in a new tab)" })).toBeTruthy();
     expect(primaryContent.getByText("Host an event in our space")).toBeTruthy();
   });
 

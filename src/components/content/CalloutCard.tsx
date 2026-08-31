@@ -4,14 +4,13 @@ import { MandelbrotCorners, type MandelbrotCornerSize } from "@/components/ui/Ma
 interface CalloutCardProps {
   label: ReactNode;
   children: ReactNode;
-  actions?: ReactNode;
   cornerSize?: MandelbrotCornerSize;
   surface?: "paper" | "tint";
   className?: string;
   labelId?: string;
 }
 
-export function CalloutCard({ label, children, actions, cornerSize = "sm", surface = "paper", className, labelId }: CalloutCardProps) {
+export function CalloutCard({ label, children, cornerSize = "sm", surface = "paper", className, labelId }: CalloutCardProps) {
   return (
     <MandelbrotCorners
       size={cornerSize}
@@ -25,7 +24,6 @@ export function CalloutCard({ label, children, actions, cornerSize = "sm", surfa
     >
       <p id={labelId} className="text-label mb-3 text-[var(--component-accent,var(--accent,currentColor))]">{label}</p>
       <div className="text-body leading-relaxed text-[var(--component-muted,var(--color-foreground-muted))]">{children}</div>
-      {actions && <div className="mt-4 flex flex-wrap gap-3">{actions}</div>}
     </MandelbrotCorners>
   );
 }

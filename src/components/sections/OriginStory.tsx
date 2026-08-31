@@ -1,4 +1,5 @@
 import { FadeIn } from "@/components/ui/FadeIn";
+import { OutboundLink } from "@/components/content/OutboundLink";
 
 export function OriginStory() {
   return (
@@ -38,23 +39,13 @@ export function OriginStory() {
         <FadeIn>
           <p className="text-body-lead">
             In 2025, we taught an online class helping small groups of friends create their own neighborhood campuses. That lead to{" "}
-            <a
-              href="https://fractalgva.ch/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="underline underline-offset-2 decoration-foreground/40 hover:decoration-foreground transition-colors"
-            >
+            <OutboundLink href="https://fractalgva.ch/" variant="inline">
               Fractal Geneva
-            </a>
+            </OutboundLink>
             ,{" "}
-            <a
-              href="https://fractal.boston/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="underline underline-offset-2 decoration-foreground/40 hover:decoration-foreground transition-colors"
-            >
+            <OutboundLink href="https://fractal.boston/" variant="inline">
               Fractal Boston
-            </a>
+            </OutboundLink>
             , and half a dozen other campuses worldwide.
           </p>
         </FadeIn>
