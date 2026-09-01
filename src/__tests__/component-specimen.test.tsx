@@ -121,9 +121,19 @@ describe("interactive component specimens", () => {
     expect(onSurfaceOpen).toHaveBeenCalledWith(note, openLink);
     noteView.unmount();
 
+    const primary = COMPONENT_REGISTRY.find(({ id }) => id === "action-buttons")!;
+    const onActionSurfaceOpen = vi.fn();
+    const primaryView = render(<VisualSpecimenCard entry={primary} onOpen={onActionSurfaceOpen} />);
+    const primaryOpenLink = within(primaryView.container).getByRole("link", { name: "View options for Primary Button" });
+    fireEvent.click(primaryView.container.querySelector(".library-gallery-preview--compact-actions .library-canvas-scope")!);
+    expect(onActionSurfaceOpen).toHaveBeenCalledWith(primary, primaryOpenLink);
+    primaryView.unmount();
+
     const representativeControls = [
       ["action-buttons", "button"],
       ["outbound-link", "a"],
+      ["outbound-text-link", "a"],
+      ["inline-text-link", "a"],
       ["search-bar", "input"],
       ["filter-bar", "button"],
       ["meet-space-carousel", "button"],
@@ -207,17 +217,20 @@ describe("interactive component specimens", () => {
     const outbound = COMPONENT_REGISTRY.find(({ id }) => id === "outbound-text-link")!;
     const inline = COMPONENT_REGISTRY.find(({ id }) => id === "inline-text-link")!;
     const primaryView = render(<VisualSpecimenCard entry={primary} onOpen={() => undefined} />);
+    expect(primaryView.container.querySelector(".library-gallery-preview")).toHaveClass("library-gallery-preview--compact-actions");
     expect(primaryView.container.querySelectorAll(".library-gallery-preview button")).toHaveLength(1);
     expect(within(primaryView.container).queryByText(/outline action|quiet action|disabled|inline link/i)).not.toBeInTheDocument();
     expect(primary.controls.map(({ id }) => id)).not.toContain("primaryState");
     primaryView.unmount();
 
     const standaloneView = render(<VisualSpecimenCard entry={standalone} onOpen={() => undefined} />);
+    expect(standaloneView.container.querySelector(".library-gallery-preview")).toHaveClass("library-gallery-preview--compact-actions");
     expect(standaloneView.container.querySelectorAll(".library-gallery-preview a[data-outbound-link]")).toHaveLength(1);
     expect(standaloneView.container.querySelectorAll(".library-gallery-preview [data-outbound-arrow]")).toHaveLength(1);
     standaloneView.unmount();
 
     const outboundView = render(<VisualSpecimenCard entry={outbound} onOpen={() => undefined} />);
+    expect(outboundView.container.querySelector(".library-gallery-preview")).toHaveClass("library-gallery-preview--compact-actions");
     const outboundAnchor = outboundView.container.querySelector("a[data-outbound-link]");
     expect(outboundAnchor).toHaveClass("font-sans");
     expect(outboundAnchor).not.toHaveClass("text-body", "text-body-lead", "text-label");
@@ -226,11 +239,20 @@ describe("interactive component specimens", () => {
     outboundView.unmount();
 
     const inlineView = render(<VisualSpecimenCard entry={inline} onOpen={() => undefined} />);
+    expect(inlineView.container.querySelector(".library-gallery-preview")).toHaveClass("library-gallery-preview--compact-actions");
     expect(inlineView.container.querySelector(".library-gallery-preview p a[data-outbound-link]")).toBeInTheDocument();
     expect(inlineView.container.querySelector(".library-gallery-preview [data-outbound-arrow]")).not.toBeInTheDocument();
     expect(inlineView.container.querySelector(".library-gallery-preview p a[data-outbound-link]")).toHaveClass("font-sans");
     expect(inlineView.container.querySelector(".library-gallery-preview p a[data-outbound-link]")).not.toHaveClass("text-label", "text-body", "text-body-lead");
     expect(inlineView.container.querySelector("[data-text-link-context='body']")).toHaveClass("text-body");
+    inlineView.unmount();
+
+    for (const id of ["library-article-card", "search-bar"]) {
+      const entry = COMPONENT_REGISTRY.find((candidate) => candidate.id === id)!;
+      const view = render(<VisualSpecimenCard entry={entry} onOpen={() => undefined} />);
+      expect(view.container.querySelector(".library-gallery-preview")).not.toHaveClass("library-gallery-preview--compact-actions");
+      view.unmount();
+    }
   });
 
   it("previews Outbound and Inline Text Links in body or lead contexts without changing component identity", () => {
@@ -340,6 +362,7 @@ describe("interactive component specimens", () => {
 
       const detail = render(<ComponentDetail entry={entry} onBack={() => undefined} onOpenLive={() => undefined} />);
       const detailScope = detail.container.querySelector(".library-detail-preview > .library-canvas-scope");
+      expect(detail.container.querySelector(".library-detail-preview")).not.toHaveClass("library-gallery-preview--compact-actions");
       expect(detailScope, entry.id).toHaveAttribute("data-component-colorway", entry.defaultColorway);
       expect(detailScope, entry.id).toHaveAttribute("data-component-surface", entry.defaultSurface);
       detail.unmount();
@@ -371,14 +394,14 @@ describe("interactive component specimens", () => {
   it("derives public link tone from the selected canvas surface", () => {
     for (const [id, initialTone] of [
       ["outbound-link", "light"],
-      ["outbound-text-link", "dark"],
-      ["inline-text-link", "dark"],
+      ["outbound-text-link", "light"],
+      ["inline-text-link", "light"],
     ] as const) {
       const entry = COMPONENT_REGISTRY.find((candidate) => candidate.id === id)!;
       const view = render(<ComponentDetail entry={entry} onBack={() => undefined} onOpenLive={() => undefined} />);
       const link = () => view.container.querySelector(".library-detail-preview a[data-outbound-link]")!;
       expect(link()).toHaveAttribute("data-outbound-tone", initialTone);
-      expect(link()).toHaveClass(initialTone === "dark" ? "text-background" : "text-foreground");
+      expect(link()).toHaveClass("text-foreground");
       expect(link()).toHaveClass("component-surface-link");
       expect(link()).toHaveAttribute("data-outbound-surface-adaptive", "");
 

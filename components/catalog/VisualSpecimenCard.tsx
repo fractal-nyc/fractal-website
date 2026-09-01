@@ -34,6 +34,9 @@ const interactiveTargetSelector = [
 
 export function VisualSpecimenCard({ entry, onOpen }: { entry: ComponentRegistryEntry; onOpen: (entry: ComponentRegistryEntry, trigger: HTMLAnchorElement) => void }) {
   const openLink = useRef<HTMLAnchorElement>(null);
+  const previewClassName = entry.galleryCategory === "actions"
+    ? "library-gallery-preview library-gallery-preview--compact-actions"
+    : "library-gallery-preview";
   const open = () => {
     if (openLink.current) onOpen(entry, openLink.current);
   };
@@ -49,7 +52,7 @@ export function VisualSpecimenCard({ entry, onOpen }: { entry: ComponentRegistry
       open();
     }}
   >
-    <ComponentPreview entry={entry} className="library-gallery-preview" />
+    <ComponentPreview entry={entry} className={previewClassName} />
     <div className="library-card-actions">
       <a
         ref={openLink}

@@ -78,9 +78,9 @@ describe("team component registry", () => {
   it("declares one approved representative native context for every public specimen", () => {
     const expected = {
       "action-buttons": ["events", "light"],
-      "outbound-link": ["events", "light"],
-      "outbound-text-link": ["education", "deep"],
-      "inline-text-link": ["campus", "light"],
+      "outbound-link": ["neutral", "paper"],
+      "outbound-text-link": ["neutral", "paper"],
+      "inline-text-link": ["neutral", "paper"],
       "search-bar": ["neutral", "paper"],
       "filter-bar": ["education", "deep"],
       "library-article-card": ["library", "light"],
@@ -133,6 +133,10 @@ describe("team component registry", () => {
     }
     expect(galleryEntries.filter(({ common }) => common).map(({ name }) => name)).toEqual(["Primary Button", "Standalone Link", "Outbound Text Link", "Inline Text Link", "Article Card", "Note Box", "Course Card", "Club Card", "Highlight Box"]);
     expect(galleryEntries.filter(({ galleryCategory }) => galleryCategory === "actions").map(({ name }) => name)).toEqual(["Primary Button", "Standalone Link", "Outbound Text Link", "Inline Text Link"]);
+    expect(COMPONENT_REGISTRY.find(({ id }) => id === "action-buttons")).toMatchObject({ defaultColorway: "events", defaultSurface: "light" });
+    for (const id of ["outbound-link", "outbound-text-link", "inline-text-link"]) {
+      expect(COMPONENT_REGISTRY.find((entry) => entry.id === id)).toMatchObject({ defaultColorway: "neutral", defaultSurface: "paper" });
+    }
     expect(galleryEntries.filter(({ galleryCategory }) => galleryCategory === "forms").map(({ name }) => name)).toEqual(["Search Bar", "Filter Bar"]);
     expect(galleryEntries.filter(({ galleryCategory }) => galleryCategory === "media").map(({ name }) => name).sort()).toEqual(["House Pennants", "Photo Carousel", "Photo Gallery"]);
   });

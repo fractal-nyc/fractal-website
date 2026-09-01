@@ -11,6 +11,30 @@ const fail = (message) => { throw new Error(message); };
 const assert = (condition, message) => { if (!condition) fail(message); };
 const overflow = (page) => page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
 const columns = (page) => page.locator(".library-gallery-grid").evaluate((element) => getComputedStyle(element).gridTemplateColumns.split(" ").length);
+const actionStageGeometry = (page) => page.evaluate(() => Object.fromEntries([
+  "action-buttons",
+  "outbound-link",
+  "outbound-text-link",
+  "inline-text-link",
+].map((id) => {
+  const preview = document.querySelector(`#${id} .library-gallery-preview`);
+  const scope = preview?.querySelector(":scope > .library-canvas-scope");
+  const example = scope?.firstElementChild;
+  if (!(preview instanceof HTMLElement) || !(scope instanceof HTMLElement) || !(example instanceof HTMLElement)) return [id, null];
+  const scopeBox = scope.getBoundingClientRect();
+  const exampleBox = example.getBoundingClientRect();
+  return [id, {
+    compact: preview.classList.contains("library-gallery-preview--compact-actions"),
+    previewHeight: preview.getBoundingClientRect().height,
+    scopeHeight: scopeBox.height,
+    exampleHeight: exampleBox.height,
+    centerXDelta: Math.abs((scopeBox.left + scopeBox.width / 2) - (exampleBox.left + exampleBox.width / 2)),
+    centerYDelta: Math.abs((scopeBox.top + scopeBox.height / 2) - (exampleBox.top + exampleBox.height / 2)),
+    clipped: scope.scrollHeight > scope.clientHeight + 1 || scope.scrollWidth > scope.clientWidth + 1,
+    inlineHeight: scope.style.height,
+    inlineMaxHeight: scope.style.maxHeight,
+  }];
+})));
 const loadedImages = async (locator, label) => {
   const images = await locator.evaluateAll((nodes) => nodes.map((node) => ({ src: node.currentSrc || node.src, width: node.naturalWidth, height: node.naturalHeight })));
   assert(images.length > 0, `${label} rendered no images.`);
@@ -78,15 +102,15 @@ try {
       copies: card.querySelectorAll(".library-copy-prompt").length,
     })));
     assert(cards.every(({ children, preview, names: nameCount, opens, cues, copies }) => children === 2 && preview && nameCount === 1 && opens === 1 && cues === 1 && copies === 1), `${category} has a non-minimal or undiscoverable tile.`);
-    await page.screenshot({ path: `/tmp/frac130-${category}-1440x900.png` });
+    await page.screenshot({ path: category === "actions" ? "/tmp/frac131-actions-1440x900.png" : `/tmp/frac130-${category}-1440x900.png` });
   }
 
   await page.goto(`${componentUrl}#browse/all`, { waitUntil: "networkidle" });
   const nativeCanvasTokens = {
     "action-buttons": "--color-house-events-light",
-    "outbound-link": "--color-house-events-light",
-    "outbound-text-link": "--color-house-education-deep",
-    "inline-text-link": "--color-house-campus-light",
+    "outbound-link": "--color-background",
+    "outbound-text-link": "--color-background",
+    "inline-text-link": "--color-background",
     "search-bar": "--color-background",
     "filter-bar": "--color-house-education-deep",
     "library-article-card": "--color-house-library-light",
@@ -125,6 +149,12 @@ try {
     assert(colors.card === colors.chrome, `${id} recolored the catalogue card chrome: ${JSON.stringify(colors)}.`);
     assert(colors.actionsTop >= colors.canvasBottom, `${id} native color escaped behind its label/actions: ${JSON.stringify(colors)}.`);
   }
+  const desktopActionGeometry = await actionStageGeometry(page);
+  const standardCardStageHeight = await page.locator("#library-article-card .library-gallery-preview > .library-canvas-scope").evaluate((scope) => scope.getBoundingClientRect().height);
+  assert(Object.values(desktopActionGeometry).every((value) => value?.compact), `Only action stages should carry the compact modifier: ${JSON.stringify(desktopActionGeometry)}.`);
+  assert(Object.values(desktopActionGeometry).every((value) => value && value.centerXDelta <= 2 && value.centerYDelta <= 2), `Desktop action examples are not centered: ${JSON.stringify(desktopActionGeometry)}.`);
+  assert(Object.values(desktopActionGeometry).every((value) => value && value.scopeHeight < standardCardStageHeight * .75), `Desktop action stages are not materially shorter than the Article Card stage (${standardCardStageHeight}px): ${JSON.stringify(desktopActionGeometry)}.`);
+  assert(Object.values(desktopActionGeometry).every((value) => value && !value.clipped && value.inlineHeight === "" && value.inlineMaxHeight === ""), `Desktop action stages are fixed or clipped: ${JSON.stringify(desktopActionGeometry)}.`);
   const paperCardContexts = await page.evaluate(() => Object.fromEntries([
     ["library-article-card", "[data-document-byline]"],
     ["course-card", ".fractalu-course-card"],
@@ -200,7 +230,7 @@ try {
   await focusCard.locator(".library-open-component").focus();
   const focusFeedback = await focusCard.evaluate((card) => ({ border: getComputedStyle(card).borderColor, shadow: getComputedStyle(card).boxShadow }));
   assert(focusFeedback.border === activeChrome.foreground && focusFeedback.shadow !== "none", `View options focus has no equivalent card feedback: ${JSON.stringify(focusFeedback)}.`);
-  await page.screenshot({ path: "/tmp/frac130-common-1440x900.png" });
+  await page.screenshot({ path: "/tmp/frac131-common-1440x900.png" });
 
   const search = page.getByRole("searchbox", { name: "Search components" });
   for (const [query, expected] of [
@@ -244,6 +274,13 @@ try {
 
   await page.goto(`${componentUrl}#browse/actions`, { waitUntil: "networkidle" });
   const actionsHash = new URL(page.url()).hash;
+  const primaryStage = page.locator("#action-buttons .library-gallery-preview--compact-actions .library-canvas-scope");
+  const primaryStageBox = await primaryStage.boundingBox();
+  assert(primaryStageBox, "Primary Button compact stage has no layout box.");
+  await page.mouse.click(primaryStageBox.x + 2, primaryStageBox.y + 2);
+  await page.waitForFunction(() => window.location.hash === "#component/action-buttons");
+  await page.goBack({ waitUntil: "networkidle" });
+  await page.waitForFunction(() => window.location.hash === "#browse/actions");
   await page.locator("#action-buttons .library-gallery-preview button").click();
   assert(new URL(page.url()).hash === actionsHash, "Primary Button preview opened its card.");
   await page.locator("#outbound-link .library-gallery-preview a[data-outbound-link]").evaluate((link) => link.addEventListener("click", (event) => event.preventDefault(), { once: true }));
@@ -262,8 +299,8 @@ try {
   assert(Math.abs(linkRoles.outbound.size - linkRoles.inline.size) < 0.1, `Outbound and Inline chooser sizes differ: ${JSON.stringify(linkRoles)}.`);
   const nativeLinkTreatments = await page.evaluate(() => Object.fromEntries([
     ["outbound-link", "light"],
-    ["outbound-text-link", "dark"],
-    ["inline-text-link", "dark"],
+    ["outbound-text-link", "light"],
+    ["inline-text-link", "light"],
   ].map(([id, expectedTone]) => {
     const card = document.querySelector(`#${id}`);
     const scope = card?.querySelector(".library-gallery-preview > .library-canvas-scope");
@@ -306,6 +343,36 @@ try {
     await page.goto(`${componentUrl}#component/${id}`, { waitUntil: "networkidle" });
     const scope = page.locator(".library-detail-preview > .library-canvas-scope");
     const link = page.locator(".library-detail-preview a[data-outbound-link]");
+    assert(await page.locator(".library-detail-preview.library-gallery-preview--compact-actions").count() === 0, `${id} detail inherited the browse-only compact modifier.`);
+    const paper = await page.evaluate(() => {
+      const canvas = document.querySelector(".library-detail-preview > .library-canvas-scope");
+      const anchor = document.querySelector(".library-detail-preview a[data-outbound-link]");
+      return canvas && anchor ? {
+        colorway: canvas.getAttribute("data-component-colorway"),
+        surface: canvas.getAttribute("data-component-surface"),
+        tone: anchor.getAttribute("data-outbound-tone"),
+        background: getComputedStyle(canvas).backgroundColor,
+        canvasColor: getComputedStyle(canvas).color,
+        linkColor: getComputedStyle(anchor).color,
+      } : null;
+    });
+    assert(paper && paper.colorway === "neutral" && paper.surface === "paper" && paper.tone === "light" && paper.canvasColor === paper.linkColor, `${id} did not start on safe Neutral/Paper: ${JSON.stringify(paper)}.`);
+    await page.getByLabel("Site color").selectOption("education");
+    await page.getByLabel("Background").selectOption("deep");
+    await page.waitForTimeout(100);
+    const educationDeep = await page.evaluate(() => {
+      const canvas = document.querySelector(".library-detail-preview > .library-canvas-scope");
+      const anchor = document.querySelector(".library-detail-preview a[data-outbound-link]");
+      return canvas && anchor ? {
+        colorway: canvas.getAttribute("data-component-colorway"),
+        surface: canvas.getAttribute("data-component-surface"),
+        tone: anchor.getAttribute("data-outbound-tone"),
+        background: getComputedStyle(canvas).backgroundColor,
+        canvasColor: getComputedStyle(canvas).color,
+        linkColor: getComputedStyle(anchor).color,
+      } : null;
+    });
+    assert(educationDeep && educationDeep.colorway === "education" && educationDeep.surface === "deep" && educationDeep.tone === "dark" && educationDeep.canvasColor !== educationDeep.background && educationDeep.linkColor !== educationDeep.background && educationDeep.background !== paper.background, `${id} did not adapt safely to Education/Deep: ${JSON.stringify({ paper, educationDeep })}.`);
     await page.getByLabel("Site color").selectOption("neutral");
     await page.getByLabel("Background").selectOption("paper");
     await page.waitForTimeout(200);
@@ -320,7 +387,7 @@ try {
         linkColor: getComputedStyle(anchor).color,
       } : null;
     });
-    assert(alternate && alternate.colorway === "neutral" && alternate.surface === "paper" && alternate.tone === "light" && alternate.canvasColor === alternate.linkColor, `${id} did not adapt safely after changing its approved pairing: ${JSON.stringify(alternate)}.`);
+    assert(alternate && alternate.colorway === "neutral" && alternate.surface === "paper" && alternate.tone === "light" && alternate.canvasColor === alternate.linkColor, `${id} did not return safely to its approved pairing: ${JSON.stringify(alternate)}.`);
     assert(await scope.count() === 1 && await link.count() === 1, `${id} stopped using its production preview after changing theme.`);
   }
 
@@ -625,6 +692,27 @@ try {
     await mobile.screenshot({ path: `/tmp/frac130-${category}-375x812.png` });
     await mobile.close();
   }
+  for (const [width, screenshot] of [[320, "/tmp/frac131-actions-320x812.png"], [375, "/tmp/frac131-actions-375x812.png"]]) {
+    const actionsMobile = await context.newPage();
+    await actionsMobile.setViewportSize({ width, height: 812 });
+    await actionsMobile.goto(`${componentUrl}#browse/actions`, { waitUntil: "networkidle" });
+    assert(await columns(actionsMobile) === 1, `${width}px action gallery is not one column.`);
+    assert(await overflow(actionsMobile) <= 1, `Action gallery overflows at ${width}px.`);
+    const geometry = await actionStageGeometry(actionsMobile);
+    assert(Object.values(geometry).every((value) => value?.compact && value.centerXDelta <= 2 && value.centerYDelta <= 2 && !value.clipped), `${width}px action stages are not naturally centered: ${JSON.stringify(geometry)}.`);
+    const controlTargets = await actionsMobile.evaluate(() => Object.fromEntries([
+      ["action-buttons", "button"],
+      ["outbound-link", "a[data-outbound-link]"],
+      ["outbound-text-link", "a[data-outbound-link]"],
+    ].map(([id, selector]) => {
+      const target = document.querySelector(`#${id} .library-gallery-preview ${selector}`);
+      const box = target?.getBoundingClientRect();
+      return [id, box ? { width: box.width, height: box.height } : null];
+    })));
+    assert(Object.values(controlTargets).every((box) => box && box.width >= 44 && box.height >= 44), `${width}px action targets shrank below 44px: ${JSON.stringify(controlTargets)}.`);
+    await actionsMobile.screenshot({ path: screenshot, fullPage: true });
+    await actionsMobile.close();
+  }
   for (const id of ["outbound-text-link", "inline-text-link"]) {
     const mobile = await context.newPage();
     await mobile.setViewportSize({ width: 375, height: 812 });
@@ -734,6 +822,29 @@ try {
   assert(await overflow(largeText) <= 1, "Course Card overflows with a long subject and 24px root text.");
   await largeText.screenshot({ path: "/tmp/frac129-course-card-large-text-1440x900.png" });
   await largeText.close();
+
+  const largeActionText = await context.newPage();
+  // Doubled root text at 2560px provides the same effective content width as a 1280px viewport at 200% text zoom.
+  await largeActionText.setViewportSize({ width: 2560, height: 1440 });
+  await largeActionText.goto(`${componentUrl}#browse/actions`, { waitUntil: "networkidle" });
+  const actionHeightsBeforeLargeText = await actionStageGeometry(largeActionText);
+  await largeActionText.evaluate(() => { document.documentElement.style.fontSize = "32px"; });
+  const actionHeightsAfterLargeText = await actionStageGeometry(largeActionText);
+  const largeActionOverflow = await largeActionText.evaluate(() => ({
+    amount: document.documentElement.scrollWidth - document.documentElement.clientWidth,
+    offenders: [...document.querySelectorAll("body *")].map((element) => {
+      const box = element.getBoundingClientRect();
+      return box.right > document.documentElement.clientWidth + 1 || box.left < -1
+        ? { tag: element.tagName, className: element.className, text: element.textContent?.trim().slice(0, 60), left: box.left, right: box.right, width: box.width }
+        : null;
+    }).filter(Boolean).slice(0, 12),
+  }));
+  assert(largeActionOverflow.amount <= 1, `Action gallery overflows at 200% root text: ${JSON.stringify(largeActionOverflow)}.`);
+  assert(Object.entries(actionHeightsAfterLargeText).every(([id, value]) => value && !value.clipped && value.scopeHeight >= actionHeightsBeforeLargeText[id].scopeHeight && value.centerXDelta <= 2 && value.centerYDelta <= 2), `Action stages did not grow naturally at 200% text: ${JSON.stringify({ actionHeightsBeforeLargeText, actionHeightsAfterLargeText })}.`);
+  assert(await largeActionText.locator(".library-gallery-preview [data-outbound-arrow]").count() === 2, "Action arrows disappeared at 200% text.");
+  assert(await largeActionText.locator(".library-card-actions .library-copy-prompt").count() === 4 && await largeActionText.locator(".library-card-actions .library-open-component").count() === 4, "Action tile controls became unreachable at 200% text.");
+  await largeActionText.screenshot({ path: "/tmp/frac131-actions-large-text-2560x1440.png", fullPage: true });
+  await largeActionText.close();
 
   for (const id of ["outbound-text-link", "inline-text-link"]) {
     const largeLink = await context.newPage();
@@ -975,7 +1086,7 @@ try {
   assert(productionErrors.length === 0, `Production page errors: ${productionErrors.join(" | ")}`);
 
   await browser.close();
-  console.log("Component-library and production browser checks passed; native-color evidence is in /tmp/frac130-*.png.");
+  console.log("Component-library and production browser checks passed; compact-action evidence is in /tmp/frac131-*.png.");
 } finally {
   catalogServer.kill("SIGTERM");
   productionServer.kill("SIGTERM");
