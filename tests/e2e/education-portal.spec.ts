@@ -50,9 +50,13 @@ test("Education portal keeps one wide accessible catalog across input modes", as
   await expect(futureSemestersLink).toHaveAttribute("target", "_blank");
   await expect(futureSemestersLink).toHaveAttribute("rel", "noopener noreferrer");
   await expect(futureSemestersLink).toHaveCSS("font-family", /Inter/);
-  await expect(futureSemestersLink).toHaveCSS("font-size", "18px");
   await expect(futureSemestersLink).not.toHaveClass(/text-body(?:-lead)?|text-label/);
   await expect(futureSemestersLink.locator("..")).toHaveClass(/text-body-lead/);
+  expect(
+    await futureSemestersLink.evaluate((link) => getComputedStyle(link).fontSize),
+  ).toBe(
+    await futureSemestersLink.locator("..").evaluate((context) => getComputedStyle(context).fontSize),
+  );
   const heroArrow = futureSemestersLink.locator("svg[data-education-outbound-arrow]");
   await expect(heroArrow).toHaveCount(1);
   await expect(heroArrow).toHaveAttribute("aria-hidden", "true");
@@ -62,9 +66,13 @@ test("Education portal keeps one wide accessible catalog across input modes", as
     "font-family",
     /Inter/,
   );
-  await expect(informationJump).toHaveCSS("font-size", "18px");
   await expect(informationJump).not.toHaveClass(/text-body(?:-lead)?|text-label/);
   await expect(informationJump.locator("..")).toHaveClass(/text-body-lead/);
+  expect(
+    await informationJump.evaluate((link) => getComputedStyle(link).fontSize),
+  ).toBe(
+    await informationJump.locator("..").evaluate((context) => getComputedStyle(context).fontSize),
+  );
   await expect(informationJump).toHaveAttribute("href", "#what-is-fractalu");
   await expect(informationJump).not.toHaveAttribute("data-education-outbound-link");
   const informationArrow = informationJump.locator("svg[data-education-internal-arrow]");
