@@ -4,6 +4,7 @@ import { SpecimenCard } from "../../components/catalog/SpecimenCard";
 import { COMPONENT_REGISTRY } from "../../components/catalog/registry";
 import { VisualSpecimenCard } from "../../components/catalog/VisualSpecimenCard";
 import { ComponentDetail } from "../../components/catalog/ComponentDetail";
+import { ComponentLibraryApp } from "../../components/ComponentLibraryApp";
 
 describe("interactive component specimens", () => {
   it("renders only the controls explicitly declared by each entry", () => {
@@ -56,7 +57,7 @@ describe("interactive component specimens", () => {
     expect(surface).toHaveValue("paper");
   });
 
-  it("keeps closed gallery cards preview-first with only name and copy actions", () => {
+  it("keeps closed gallery cards preview-first with one View options link and one Copy Prompt button", () => {
     const entry = COMPONENT_REGISTRY.find(({ id }) => id === "note-callout")!;
     const onOpen = vi.fn();
     const { container } = render(<VisualSpecimenCard entry={entry} onOpen={onOpen} />);
@@ -64,17 +65,71 @@ describe("interactive component specimens", () => {
     expect(card.children).toHaveLength(2);
     expect(card.firstElementChild).toHaveClass("library-gallery-preview");
     expect(card.lastElementChild).toHaveClass("library-card-actions");
-    const name = within(container).getByRole("button", { name: "View details for Note Box" });
+    const open = within(container).getByRole("link", { name: "View options for Note Box" });
     const copy = within(container).getByRole("button", { name: "Copy prompt for Note Box" });
-    expect(within(card.lastElementChild as HTMLElement).getAllByRole("button")).toEqual([name, copy]);
-    fireEvent.click(name);
-    expect(onOpen).toHaveBeenCalledWith(entry, name);
+    expect(open).toHaveAttribute("href", "#component/note-callout");
+    expect(open).toContainElement(within(container).getByText("Note Box"));
+    expect(within(card.lastElementChild as HTMLElement).getAllByRole("link")).toEqual([open]);
+    expect(within(card.lastElementChild as HTMLElement).getAllByRole("button")).toEqual([copy]);
+    expect(open.querySelector("button")).not.toBeInTheDocument();
+    expect(copy.querySelector("a")).not.toBeInTheDocument();
+    fireEvent.click(open);
+    expect(onOpen).toHaveBeenCalledTimes(1);
+    expect(onOpen).toHaveBeenCalledWith(entry, open);
     expect(within(container).queryByText("CalloutCard")).not.toBeInTheDocument();
     expect(within(container).queryByText("Use when")).not.toBeInTheDocument();
     expect(within(container).queryByText(entry.purpose)).not.toBeInTheDocument();
     expect(within(container).queryByText(/learn more/i)).not.toBeInTheDocument();
     expect(container.querySelector(".library-mini-swatches, .library-fixed-style")).not.toBeInTheDocument();
     expect(container.querySelector("fieldset")).not.toBeInTheDocument();
+  });
+
+  it("opens from a non-control card surface but never steals live preview controls", () => {
+    const note = COMPONENT_REGISTRY.find(({ id }) => id === "note-callout")!;
+    const onSurfaceOpen = vi.fn();
+    const noteView = render(<VisualSpecimenCard entry={note} onOpen={onSurfaceOpen} />);
+    const openLink = within(noteView.container).getByRole("link", { name: "View options for Note Box" });
+    fireEvent.click(noteView.container.querySelector(".library-canvas-scope")!);
+    expect(onSurfaceOpen).toHaveBeenCalledTimes(1);
+    expect(onSurfaceOpen).toHaveBeenCalledWith(note, openLink);
+    noteView.unmount();
+
+    const representativeControls = [
+      ["action-buttons", "button"],
+      ["outbound-link", "a"],
+      ["search-bar", "input"],
+      ["filter-bar", "button"],
+      ["meet-space-carousel", "button"],
+    ] as const;
+    for (const [id, selector] of representativeControls) {
+      const entry = COMPONENT_REGISTRY.find((candidate) => candidate.id === id)!;
+      const onOpen = vi.fn();
+      const view = render(<VisualSpecimenCard entry={entry} onOpen={onOpen} />);
+      const control = view.container.querySelector(`.library-gallery-preview ${selector}`) as HTMLElement;
+      expect(control, `${id} should render a representative ${selector}`).toBeInTheDocument();
+      if (control instanceof HTMLAnchorElement) control.addEventListener("click", (event) => event.preventDefault(), { once: true });
+      fireEvent.click(control);
+      expect(onOpen, `${id} control should not open its card`).not.toHaveBeenCalled();
+      view.unmount();
+      cleanup();
+    }
+  });
+
+  it("renders the browse shell with one title and none of the removed instructional copy", () => {
+    window.history.replaceState(null, "", "/components/#browse/common");
+    const { container } = render(<ComponentLibraryApp />);
+    expect(within(container).getAllByRole("heading", { name: "Component Library" })).toHaveLength(1);
+    expect(container.querySelectorAll(".library-gallery-heading")).toHaveLength(0);
+    for (const phrase of [
+      "Team component gallery",
+      "Choose by looking",
+      "Select a component name for options, or copy its prompt and hand it to an agent.",
+      "Pick the one that looks right",
+      "The patterns editors use most often.",
+    ]) expect(within(container).queryByText(phrase)).not.toBeInTheDocument();
+    expect(within(container).getByRole("searchbox", { name: "Search components" })).toBeInTheDocument();
+    expect(within(container).getByRole("button", { name: "Browse components" })).toBeInTheDocument();
+    expect(within(container).getByRole("button", { name: "Edit Education courses" })).toBeInTheDocument();
   });
 
   it("copies the same context-aware prompt from browse and detail with localized feedback", async () => {

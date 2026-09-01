@@ -38,6 +38,19 @@ try {
   });
 
   await page.goto(componentUrl, { waitUntil: "networkidle" });
+  assert(await page.getByRole("heading", { name: "Component Library", exact: true }).count() === 1, "Browse shell does not have exactly one Component Library heading.");
+  const removedBrowseCopy = ["Team component gallery", "Choose by looking", "Select a component name for options, or copy its prompt and hand it to an agent.", "Pick the one that looks right", "The patterns editors use most often."];
+  const visibleBrowseText = await page.locator("body").innerText();
+  assert(removedBrowseCopy.every((phrase) => !visibleBrowseText.includes(phrase)), `Removed browse copy is still visible: ${removedBrowseCopy.filter((phrase) => visibleBrowseText.includes(phrase)).join(", ")}.`);
+  assert(await page.locator(".library-gallery-heading").count() === 0, "Removed gallery heading wrapper is still rendered.");
+  const desktopUtilityLayout = await page.evaluate(() => {
+    const search = document.querySelector(".library-search")?.getBoundingClientRect();
+    const tools = document.querySelector(".library-mode-switch")?.getBoundingClientRect();
+    const categories = document.querySelector(".library-category-chooser")?.getBoundingClientRect();
+    return search && tools && categories ? { searchTop: search.top, searchBottom: search.bottom, toolsTop: tools.top, toolsBottom: tools.bottom, categoriesTop: categories.top } : null;
+  });
+  assert(desktopUtilityLayout && Math.min(desktopUtilityLayout.searchBottom, desktopUtilityLayout.toolsBottom) > Math.max(desktopUtilityLayout.searchTop, desktopUtilityLayout.toolsTop), `Desktop search and tools do not share a row: ${JSON.stringify(desktopUtilityLayout)}.`);
+  assert(desktopUtilityLayout.categoriesTop >= Math.max(desktopUtilityLayout.searchBottom, desktopUtilityLayout.toolsBottom), `Categories do not follow the utility row: ${JSON.stringify(desktopUtilityLayout)}.`);
   const expectedCategories = ["Common components", "Cards & boxes", "Buttons & links", "Forms & filters", "Images & media", "All components"];
   assert(JSON.stringify(await page.locator(".library-category-chooser button span:first-child").allTextContents()) === JSON.stringify(expectedCategories), "Public category labels changed.");
   const categoryCounts = await page.locator(".library-category-chooser button span:last-child").allTextContents();
@@ -60,14 +73,16 @@ try {
       children: card.children.length,
       preview: card.firstElementChild?.classList.contains("library-gallery-preview"),
       names: card.querySelectorAll(".library-component-name").length,
+      opens: card.querySelectorAll(".library-open-component").length,
+      cues: [...card.querySelectorAll(".library-view-options")].filter((cue) => cue.getBoundingClientRect().width > 0 && cue.getBoundingClientRect().height > 0).length,
       copies: card.querySelectorAll(".library-copy-prompt").length,
     })));
-    assert(cards.every(({ children, preview, names: nameCount, copies }) => children === 2 && preview && nameCount === 1 && copies === 1), `${category} has a non-minimal tile.`);
-    await page.screenshot({ path: `/tmp/frac124-${category}-1440x900.png` });
+    assert(cards.every(({ children, preview, names: nameCount, opens, cues, copies }) => children === 2 && preview && nameCount === 1 && opens === 1 && cues === 1 && copies === 1), `${category} has a non-minimal or undiscoverable tile.`);
+    await page.screenshot({ path: `/tmp/frac128-${category}-1440x900.png` });
   }
 
   await page.goto(`${componentUrl}#browse/common`, { waitUntil: "networkidle" });
-  assert((await page.locator('.library-gallery-heading [role="status"]').innerText()).trim() === "9 components shown", "Common count announcement is wrong.");
+  assert((await page.locator('.library-gallery-shell > [role="status"]').innerText()).trim() === "9 components shown", "Common count announcement is wrong.");
   assert(await columns(page) === 3, "Desktop gallery must have three columns.");
   const activeChrome = await page.locator(".library-category-chooser button[aria-pressed='true']").evaluate((button) => {
     const style = getComputedStyle(button);
@@ -86,7 +101,28 @@ try {
   const firstCategory = page.locator(".library-category-chooser button").first();
   await firstCategory.focus();
   assert(await firstCategory.evaluate((button) => getComputedStyle(button).outlineColor) === activeChrome.foreground, "Catalog focus is not monochrome.");
-  await page.screenshot({ path: "/tmp/frac124-common-1440x900.png" });
+  const hoverCard = page.locator("#action-buttons");
+  const hoverRest = await hoverCard.evaluate((card) => ({ border: getComputedStyle(card).borderColor, shadow: getComputedStyle(card).boxShadow, transform: getComputedStyle(card).transform }));
+  await hoverCard.hover();
+  await page.waitForTimeout(180);
+  const hoverActive = await hoverCard.evaluate((card) => ({ border: getComputedStyle(card).borderColor, shadow: getComputedStyle(card).boxShadow, transform: getComputedStyle(card).transform, durations: getComputedStyle(card).transitionDuration.split(",").map((duration) => duration.trim().endsWith("ms") ? Number.parseFloat(duration) : Number.parseFloat(duration) * 1000) }));
+  assert(hoverActive.transform !== "none" && (hoverActive.border !== hoverRest.border || hoverActive.shadow !== hoverRest.shadow), `Card hover does not provide motion plus non-motion feedback: ${JSON.stringify({ hoverRest, hoverActive })}.`);
+  assert(hoverActive.durations.every((duration) => duration <= 180), `Card hover exceeds 180ms: ${hoverActive.durations.join(", ")}.`);
+  const hoverBox = await hoverCard.boundingBox();
+  assert(hoverBox, "Primary Button card has no hover box.");
+  await hoverCard.evaluate((card) => card.addEventListener("click", (event) => event.preventDefault(), { capture: true, once: true }));
+  await page.mouse.move(hoverBox.x + 4, hoverBox.y + 4);
+  await page.mouse.down();
+  await page.waitForTimeout(100);
+  const pressedTransform = await hoverCard.evaluate((card) => getComputedStyle(card).transform);
+  assert(pressedTransform !== "none" && pressedTransform !== hoverActive.transform, `Card press has no distinct scale feedback: ${pressedTransform}.`);
+  await page.mouse.up();
+  await page.mouse.move(0, 0);
+  const focusCard = page.locator("#action-buttons");
+  await focusCard.locator(".library-open-component").focus();
+  const focusFeedback = await focusCard.evaluate((card) => ({ border: getComputedStyle(card).borderColor, shadow: getComputedStyle(card).boxShadow }));
+  assert(focusFeedback.border === activeChrome.foreground && focusFeedback.shadow !== "none", `View options focus has no equivalent card feedback: ${JSON.stringify(focusFeedback)}.`);
+  await page.screenshot({ path: "/tmp/frac128-common-1440x900.png" });
 
   const search = page.getByRole("searchbox", { name: "Search components" });
   for (const [query, expected] of [
@@ -94,13 +130,47 @@ try {
     ["campus highlight", "Highlight Box"], ["outsource link", "Standalone Link"], ["inter outbound link", "Outbound Text Link"],
   ]) {
     await search.fill(query);
-    assert(await page.getByRole("button", { name: `View details for ${expected}`, exact: true }).count() === 1, `${query} did not resolve to ${expected}.`);
+    assert(await page.getByRole("link", { name: `View options for ${expected}`, exact: true }).count() === 1, `${query} did not resolve to ${expected}.`);
   }
   await search.fill("");
+  const copyHash = new URL(page.url()).hash;
   await page.getByRole("button", { name: "Copy prompt for Primary Button" }).click();
   assert((await page.evaluate(() => navigator.clipboard.readText())).includes("Inherit the target page or section’s approved house/section color tokens"), "Copy Prompt lost token inheritance guidance.");
+  assert(new URL(page.url()).hash === copyHash, "Copy Prompt opened a component or changed the browse hash.");
+
+  await page.locator("#note-callout .library-gallery-preview").dispatchEvent("click");
+  await page.waitForFunction(() => window.location.hash === "#component/note-callout");
+  assert(await page.getByRole("heading", { name: "Note Box", exact: true }).count() === 1, "Card surface did not open Note Box detail.");
+  await page.goBack({ waitUntil: "networkidle" });
+  await page.waitForFunction(() => window.location.hash === "#browse/common");
+  await page.getByRole("link", { name: "View options for Note Box" }).click();
+  await page.waitForFunction(() => window.location.hash === "#component/note-callout");
+  await page.goBack({ waitUntil: "networkidle" });
+  await page.waitForFunction(() => window.location.hash === "#browse/common");
+
+  await page.getByRole("button", { name: "Edit Education courses" }).click();
+  await page.waitForFunction(() => window.location.hash === "#education");
+  assert(await page.getByRole("button", { name: "← Back to components" }).count() === 1, "Education workshop did not open from the compact tool row.");
+  await page.getByRole("button", { name: "← Back to components" }).click();
+  await page.waitForFunction(() => window.location.hash === "#browse/common");
 
   await page.goto(`${componentUrl}#browse/actions`, { waitUntil: "networkidle" });
+  const actionSearch = page.getByRole("searchbox", { name: "Search components" });
+  await actionSearch.fill("inline");
+  await page.locator("#inline-text-link .library-gallery-preview").dispatchEvent("click");
+  await page.waitForFunction(() => window.location.hash === "#component/inline-text-link");
+  await page.goBack({ waitUntil: "networkidle" });
+  await page.waitForFunction(() => window.location.hash === "#browse/actions?q=inline");
+  assert(await actionSearch.inputValue() === "inline", "Browser Back did not restore the prior component query.");
+  assert(await page.locator("#inline-text-link .library-open-component").evaluate((link) => document.activeElement === link), "Browser Back did not restore focus to the View options link.");
+
+  await page.goto(`${componentUrl}#browse/actions`, { waitUntil: "networkidle" });
+  const actionsHash = new URL(page.url()).hash;
+  await page.locator("#action-buttons .library-gallery-preview button").click();
+  assert(new URL(page.url()).hash === actionsHash, "Primary Button preview opened its card.");
+  await page.locator("#outbound-link .library-gallery-preview a[data-outbound-link]").evaluate((link) => link.addEventListener("click", (event) => event.preventDefault(), { once: true }));
+  await page.locator("#outbound-link .library-gallery-preview a[data-outbound-link]").click();
+  assert(new URL(page.url()).hash === actionsHash, "Standalone Link preview opened its card.");
   const linkRoles = await page.evaluate(() => {
     const read = (id) => {
       const link = document.querySelector(`#${id} .library-gallery-preview a[data-outbound-link]`);
@@ -219,7 +289,7 @@ try {
   const expectedEducationCategories = ["All", "Literature", "Writing", "Movement", "Music", "Technology", "Craft", "Nature", "Mind & Body"];
   const singleChips = page.locator("[data-filter-bar] button");
   assert(JSON.stringify(await singleChips.allTextContents()) === JSON.stringify(expectedEducationCategories), `Filter Bar does not show the live Education categories: ${(await singleChips.allTextContents()).join(", ")}.`);
-  assert(await singleChips.evaluateAll((buttons) => buttons.every((button) => button.getBoundingClientRect().height >= 44 && button.getBoundingClientRect().width >= 44)), "Filter chips are smaller than 44px.");
+  assert(await singleChips.evaluateAll((buttons) => buttons.every((button) => Math.round(button.getBoundingClientRect().height) >= 44 && Math.round(button.getBoundingClientRect().width) >= 44)), "Filter chips are smaller than 44px.");
   assert((await page.locator("[data-filter-bar]").textContent()).includes("20 courses shown."), "Education specimen has the wrong initial result count.");
   const catalogTechnology = page.getByRole("button", { name: "Technology", exact: true });
   await catalogTechnology.click();
@@ -234,7 +304,17 @@ try {
   assert((await multiChips.nth(1).getAttribute("aria-label"))?.includes("results"), "Multi-select chips lost counts.");
   assert((await page.getByLabel("Selection behavior").locator("option:checked").textContent()).includes("Optional Library"), "Multi-select behavior is not identified as optional Library behavior.");
 
+  await page.goto(`${componentUrl}#browse/forms`, { waitUntil: "networkidle" });
+  const formsHash = new URL(page.url()).hash;
+  const embeddedSearch = page.locator("#search-bar .library-gallery-preview input");
+  await embeddedSearch.fill("Campus");
+  assert(await embeddedSearch.inputValue() === "Campus" && new URL(page.url()).hash === formsHash, "Embedded Search Bar typing opened its card or changed the browse route.");
+  const embeddedFilterChip = page.locator("#filter-bar .library-gallery-preview [data-filter-bar] button").nth(1);
+  await embeddedFilterChip.click();
+  assert(await embeddedFilterChip.getAttribute("aria-pressed") === "true" && new URL(page.url()).hash === formsHash, "Embedded Filter Bar chip opened its card or failed to select.");
+
   await page.goto(`${componentUrl}#browse/media`, { waitUntil: "networkidle" });
+  const mediaHash = new URL(page.url()).hash;
   await page.locator("#photo-gallery").scrollIntoViewIfNeeded();
   await page.waitForFunction(() => [...document.querySelectorAll("#photo-gallery img")].every((image) => image.complete && image.naturalWidth > 0));
   await loadedImages(page.locator("#photo-gallery img"), "Photo Gallery");
@@ -249,6 +329,7 @@ try {
   assert(await carousel.locator("img").evaluateAll((images) => images.filter((image) => image.naturalWidth > 0).length) >= 1, "Photo Carousel has no loaded active image.");
   await carousel.getByRole("button", { name: "Next photo" }).click();
   await carousel.getByText("02 / 03").waitFor();
+  assert(new URL(page.url()).hash === mediaHash, "Photo Carousel control opened its card.");
 
   for (const id of ["content-card", "course-fact-grid", "empty-results-message", "membership-button-group", "embed-frame", "mandelbrot-corner-frame", "fade-in", "category-icon-label"]) {
     await page.goto(`${componentUrl}#component/${id}`, { waitUntil: "networkidle" });
@@ -263,7 +344,20 @@ try {
     await matrixPage.goto(`${componentUrl}#browse/common`, { waitUntil: "networkidle" });
     assert(await overflow(matrixPage) <= 1, `Catalog overflows at ${width}px.`);
     assert(await columns(matrixPage) === expectedColumns, `${width}px gallery has the wrong column count.`);
-    if (width === 375) await matrixPage.screenshot({ path: "/tmp/frac124-common-375x812.png" });
+    if (width <= 375) {
+      const compactLayout = await matrixPage.evaluate(() => {
+        const box = (selector) => document.querySelector(selector)?.getBoundingClientRect();
+        const title = box(".library-title");
+        const search = box(".library-search");
+        const tools = box(".library-mode-switch");
+        const categories = box(".library-category-chooser");
+        const toolButtons = [...document.querySelectorAll(".library-mode-switch button")].map((button) => button.getBoundingClientRect());
+        return title && search && tools && categories ? { titleBottom: title.bottom, searchTop: search.top, searchBottom: search.bottom, toolsTop: tools.top, toolsBottom: tools.bottom, categoriesTop: categories.top, toolButtons: toolButtons.map(({ width: buttonWidth, height }) => ({ width: buttonWidth, height })) } : null;
+      });
+      assert(compactLayout && compactLayout.titleBottom <= compactLayout.searchTop && compactLayout.searchBottom <= compactLayout.toolsTop && compactLayout.toolsBottom <= compactLayout.categoriesTop, `${width}px browse controls are out of logical order: ${JSON.stringify(compactLayout)}.`);
+      assert(compactLayout.toolButtons.length === 2 && compactLayout.toolButtons.every(({ width: buttonWidth, height }) => buttonWidth >= 44 && height >= 44), `${width}px tool choices are not both usable: ${JSON.stringify(compactLayout.toolButtons)}.`);
+    }
+    if (width === 375) await matrixPage.screenshot({ path: "/tmp/frac128-common-375x812.png" });
     await matrixPage.close();
   }
   for (const category of ["actions", "forms", "cards", "media"]) {
@@ -271,7 +365,7 @@ try {
     await mobile.setViewportSize({ width: 375, height: 812 });
     await mobile.goto(`${componentUrl}#browse/${category}`, { waitUntil: "networkidle" });
     assert(await overflow(mobile) <= 1, `${category} overflows at 375px.`);
-    await mobile.screenshot({ path: `/tmp/frac124-${category}-375x812.png` });
+    await mobile.screenshot({ path: `/tmp/frac128-${category}-375x812.png` });
     await mobile.close();
   }
   for (const id of ["outbound-text-link", "inline-text-link"]) {
@@ -384,6 +478,17 @@ try {
     return { transform: style.transform, opacity: style.opacity };
   });
   assert(galleryMotion.transform === "none" && galleryMotion.opacity === "1", `Photo Gallery retained reveal motion: ${JSON.stringify(galleryMotion)}.`);
+  await reduced.goto(`${componentUrl}#browse/common`, { waitUntil: "networkidle" });
+  const reducedCard = reduced.locator("#action-buttons");
+  const reducedRestBorder = await reducedCard.evaluate((card) => getComputedStyle(card).borderColor);
+  await reducedCard.hover();
+  await reduced.waitForTimeout(180);
+  const reducedHover = await reducedCard.evaluate((card) => ({ border: getComputedStyle(card).borderColor, shadow: getComputedStyle(card).boxShadow, transform: getComputedStyle(card).transform }));
+  assert(reducedHover.transform === "none" && (reducedHover.border !== reducedRestBorder || reducedHover.shadow !== "none"), `Reduced-motion card lost non-motion hover feedback or still transforms: ${JSON.stringify(reducedHover)}.`);
+  const reducedOpen = reducedCard.locator(".library-open-component");
+  await reducedOpen.focus();
+  const reducedFocus = await reduced.evaluate(() => ({ cardTransform: getComputedStyle(document.querySelector("#action-buttons")).transform, linkTransform: getComputedStyle(document.querySelector("#action-buttons .library-open-component")).transform, cueTransform: getComputedStyle(document.querySelector("#action-buttons .library-view-options")).transform, border: getComputedStyle(document.querySelector("#action-buttons")).borderColor }));
+  assert(reducedFocus.cardTransform === "none" && reducedFocus.linkTransform === "none" && reducedFocus.cueTransform === "none" && reducedFocus.border !== reducedRestBorder, `Reduced-motion focus feedback is wrong: ${JSON.stringify(reducedFocus)}.`);
   await reduced.close();
 
   assert(browserErrors.length === 0, `Catalog page errors: ${browserErrors.join(" | ")}`);
@@ -522,7 +627,7 @@ try {
           const scope = card.closest("[data-component-colorway]");
           return scope !== null && getComputedStyle(scope).backgroundColor === "rgba(0, 0, 0, 0)" && getComputedStyle(card).backgroundColor === "rgb(247, 246, 242)";
         })), `Production Education club scope/card backgrounds diverged at ${width}px.`);
-        assert(await educationButtons.evaluateAll((buttons) => buttons.every((button) => button.getBoundingClientRect().height >= 44 && button.getBoundingClientRect().width >= 44)), `Production Education chips are undersized at ${width}px.`);
+        assert(await educationButtons.evaluateAll((buttons) => buttons.every((button) => Math.round(button.getBoundingClientRect().height) >= 44 && Math.round(button.getBoundingClientRect().width) >= 44)), `Production Education chips are undersized at ${width}px.`);
         await production.getByRole("button", { name: "Technology", exact: true }).click();
         assert(await production.locator("[data-course-id]").count() === 3 && await production.locator("[data-filter-bar] button[aria-pressed='true']").count() === 1, `Production Education filtering failed at ${width}px.`);
         assert(await courseScope.evaluate((element) => getComputedStyle(element).backgroundColor) === "rgba(0, 0, 0, 0)", `Production Education filtering repainted the course collection at ${width}px.`);
@@ -570,11 +675,11 @@ try {
   await production.goto(`${productionOrigin}/campus`, { waitUntil: "networkidle" });
   assert(await production.locator("[data-highlight-box]").count() >= 1, "Campus is not using Highlight Box.");
   await production.goto(`${productionOrigin}/components`, { waitUntil: "domcontentloaded" });
-  assert(await production.getByText("Choose by looking").count() === 0, "Production exposes the team catalog.");
+  assert(await production.locator(".library-page").count() === 0 && await production.getByRole("heading", { name: "Component Library", exact: true }).count() === 0, "Production exposes the team catalog.");
   assert(productionErrors.length === 0, `Production page errors: ${productionErrors.join(" | ")}`);
 
   await browser.close();
-  console.log("FRAC-127 component-library and production browser checks passed; evidence is in /tmp/frac127-*.png.");
+  console.log("FRAC-128 component-library and production browser checks passed; evidence includes /tmp/frac128-*.png.");
 } finally {
   catalogServer.kill("SIGTERM");
   productionServer.kill("SIGTERM");

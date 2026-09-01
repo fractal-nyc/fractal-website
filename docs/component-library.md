@@ -9,9 +9,9 @@ pnpm install
 pnpm components
 ```
 
-Open `http://localhost:5173/components/`. The first screen is a visual chooser: every card leads with the real production component or source asset, followed by its stable plain-English name. Start with **Common components**, browse a visual category, or search for a term such as “note,” “article,” “class,” or even “outsource link.”
+Open `http://localhost:5173/components/`. The browse screen has one **Component Library** heading, followed by a compact search/tool row, category choices, and the visual component grid. Every card leads with the real production component or source asset, followed by its stable plain-English name. Start with **Common components**, browse a visual category, or search for a term such as “note,” “article,” “class,” or even “outsource link.”
 
-Each tile is deliberately minimal: a live preview, a clickable component name, and **Copy prompt**. Select the name when you want the focused view and its real options. Use **Copy prompt** when you already recognize the component and want to hand a configuration-free request directly to an agent. The copied request tells the agent to inherit the target page, house, or section tokens wherever the component supports them, so no color choice is required first.
+Each tile is deliberately minimal: a live preview, a **View options** link, and **Copy prompt**. Select **View options** or the card's non-control surface when you want the focused view and its real options. Live preview controls and **Copy prompt** remain independent: using them never opens the focused view. Use **Copy prompt** when you already recognize the component and want to hand a configuration-free request directly to an agent. The copied request tells the agent to inherit the target page, house, or section tokens wherever the component supports them, so no color choice is required first.
 
 The focused view keeps the large live preview first, then shows only the options that component truly supports. Open **Usage details** for boundaries, current site usage, accessibility notes, technical source, and the same agent prompt. Site color and Background choices remain limited to approved token-backed combinations.
 
