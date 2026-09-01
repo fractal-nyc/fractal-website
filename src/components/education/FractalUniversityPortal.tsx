@@ -305,15 +305,18 @@ export function CourseFactGrid({ course }: { course: FractalUCourse }) {
   );
 }
 
-function CourseCatalog({
-  courses,
-  isFinePointer,
-  animateInitialCards,
-}: {
+export interface CourseCardCollectionProps {
   courses: FractalUCourse[];
-  isFinePointer: boolean;
-  animateInitialCards: boolean;
-}) {
+  animateInitialCards?: boolean;
+}
+
+export function CourseCardCollection({
+  courses,
+  animateInitialCards = true,
+}: CourseCardCollectionProps) {
+  const usesLargeText = useLargeTextScale();
+  const isFinePointer =
+    useMediaQuery(FINE_POINTER_PREVIEW_QUERY) && !usesLargeText;
   const [pinnedInstructorId, setPinnedInstructorId] = useState<string | null>(null);
   const [suppressedInstructorId, setSuppressedInstructorId] = useState<string | null>(null);
 
@@ -570,9 +573,6 @@ export function FractalUCatalogView({
 }: FractalUCatalogViewProps) {
   const [activeCategory, setActiveCategory] = useState("All");
   const [hasFiltered, setHasFiltered] = useState(false);
-  const usesLargeText = useLargeTextScale();
-  const isFinePointer =
-    useMediaQuery(FINE_POINTER_PREVIEW_QUERY) && !usesLargeText;
   const categories = useMemo(() => getFractalUCategories(catalog), [catalog]);
   const courses = useMemo(
     () =>
@@ -636,7 +636,10 @@ export function FractalUCatalogView({
           surface="paper"
           style={{ backgroundColor: "transparent" }}
         >
-          <CourseCatalog courses={courses} isFinePointer={isFinePointer} animateInitialCards={animate && !hasFiltered} />
+          <CourseCardCollection
+            courses={courses}
+            animateInitialCards={animate && !hasFiltered}
+          />
         </ComponentColorScope>
 
         <section className="mt-20" aria-labelledby="fractalu-clubs-title">

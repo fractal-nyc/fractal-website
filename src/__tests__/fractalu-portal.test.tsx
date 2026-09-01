@@ -2,6 +2,7 @@ import { act, fireEvent, render, screen, within } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import {
   CourseCard,
+  CourseCardCollection,
   FractalUCatalogView,
   FractalUniversityPortal,
 } from "@/components/education/FractalUniversityPortal";
@@ -115,6 +116,67 @@ afterEach(() => {
 });
 
 describe("FractalUniversityPortal", () => {
+  it("owns enhanced Course Card interaction when reused as a collection", () => {
+    mockFinePointer(true);
+    const course = FRACTALU_CATALOG.courses[0];
+    render(
+      <CourseCardCollection courses={[course]} animateInitialCards={false} />,
+    );
+
+    const catalog = screen.getByTestId("fractalu-course-catalog");
+    expect(catalog).toHaveAttribute("data-course-collection");
+    expect(catalog).toHaveAttribute("data-preview-mode", "enhanced");
+    expect(catalog.querySelector('[data-fractalu-reveal-slot="course"]')).toHaveAttribute(
+      "data-fractalu-reveal-mode",
+      "static",
+    );
+
+    const instructor = within(catalog).getByRole("button", {
+      name: course.instructor,
+    });
+    const bioId = `${course.id}-instructor-bio`;
+    const preview = instructor.closest("[data-pinned]")!;
+    expect(instructor).toHaveAttribute("aria-controls", bioId);
+    expect(instructor).toHaveAttribute("aria-expanded", "false");
+
+    fireEvent.click(instructor);
+    expect(instructor).toHaveAttribute("aria-expanded", "true");
+    expect(preview).toHaveAttribute("data-pinned", "true");
+
+    fireEvent.keyDown(instructor, { key: "Escape" });
+    expect(instructor).toHaveAttribute("aria-expanded", "false");
+    expect(instructor).toHaveFocus();
+    expect(preview).toHaveAttribute("data-pinned", "false");
+    expect(preview).toHaveAttribute("data-suppressed", "true");
+
+    act(() =>
+      within(catalog)
+        .getByRole("link", { name: new RegExp(`Apply for ${course.title}`) })
+        .focus(),
+    );
+    expect(preview).toHaveAttribute("data-suppressed", "false");
+  });
+
+  it("keeps reusable Course Cards inline and in reading order without a fine pointer", () => {
+    mockFinePointer(false);
+    const course = FRACTALU_CATALOG.courses[0];
+    render(
+      <CourseCardCollection courses={[course]} animateInitialCards={false} />,
+    );
+
+    const catalog = screen.getByTestId("fractalu-course-catalog");
+    expect(catalog).toHaveAttribute("data-preview-mode", "inline");
+    expect(within(catalog).queryByRole("button", { name: course.instructor })).toBeNull();
+    const instructor = catalog.querySelector("[data-instructor-name]")!;
+    const description = catalog.querySelector("[data-course-description]")!;
+    const biography = catalog.querySelector("[data-instructor-bio]")!;
+    expect(instructor.tagName).toBe("P");
+    expect(instructor.compareDocumentPosition(biography) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    expect(biography.compareDocumentPosition(description) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    expect(within(catalog).getByText(course.description)).toBeTruthy();
+    expect(within(catalog).getByText(course.instructors[0].bio)).toBeTruthy();
+  });
+
   it("renders one 20-course collection and the four-group snapshot", () => {
     render(<FractalUniversityPortal />);
     const catalog = screen.getByTestId("fractalu-course-catalog");

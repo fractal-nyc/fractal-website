@@ -240,7 +240,102 @@ try {
     assert((await lockup.locator("span:last-child").textContent()).trim() === subject, `${subject} did not preserve its visible label.`);
   }
   assert(await page.getByLabel(/icon name/i).count() === 0, "Course Card exposes a manual icon-name control.");
-  await page.screenshot({ path: "/tmp/frac124-component-course-1440x900.png" });
+  await courseSubject.selectOption("Literature");
+  const galleryCourseCollection = page.locator(".library-detail-preview [data-course-collection]");
+  const galleryCourseCard = galleryCourseCollection.locator("[data-course-id]");
+  const galleryCourseDescription = galleryCourseCard.locator("[data-course-description]");
+  const galleryInstructor = galleryCourseCard.locator("[data-instructor-name]");
+  const galleryBiography = galleryCourseCard.locator("[data-instructor-bio]");
+  await page.mouse.move(0, 0);
+  await page.waitForTimeout(220);
+  assert(await galleryCourseCollection.getAttribute("data-preview-mode") === "enhanced", "Desktop Course Card specimen is not using the production enhanced collection mode.");
+  assert(await galleryCourseCollection.locator('[data-fractalu-reveal-mode="static"]').count() === 1, "Course Card specimen did not disable only its entrance reveal.");
+  const restingPreviewState = await galleryCourseCard.evaluate((card) => {
+    const description = card.querySelector("[data-course-description]");
+    const biography = card.querySelector("[data-instructor-bio]");
+    const cardStyle = getComputedStyle(card);
+    return {
+      cardHeight: card.getBoundingClientRect().height,
+      border: cardStyle.borderColor,
+      shadow: cardStyle.boxShadow,
+      transform: cardStyle.transform,
+      descriptionPosition: description ? getComputedStyle(description).position : null,
+      descriptionVisibility: description ? getComputedStyle(description).visibility : null,
+      biographyPosition: biography ? getComputedStyle(biography).position : null,
+      biographyVisibility: biography ? getComputedStyle(biography).visibility : null,
+    };
+  });
+  assert(restingPreviewState.cardHeight < 700 && restingPreviewState.descriptionPosition === "absolute" && restingPreviewState.descriptionVisibility === "hidden" && restingPreviewState.biographyPosition === "absolute" && restingPreviewState.biographyVisibility === "hidden", `Desktop Course Card is not compact at rest: ${JSON.stringify(restingPreviewState)}.`);
+  await page.screenshot({ path: "/tmp/frac129-course-card-rest-1440x900.png" });
+
+  await galleryCourseCard.hover();
+  await page.waitForTimeout(220);
+  const galleryHoverState = await galleryCourseCard.evaluate((card) => {
+    const style = getComputedStyle(card);
+    return { border: style.borderColor, shadow: style.boxShadow, transform: style.transform };
+  });
+  assert(galleryHoverState.transform !== restingPreviewState.transform && galleryHoverState.border !== restingPreviewState.border && galleryHoverState.shadow !== restingPreviewState.shadow, `Course Card specimen lost its production lift/border/shadow response: ${JSON.stringify({ restingPreviewState, galleryHoverState })}.`);
+
+  const productionParity = await context.newPage();
+  await productionParity.setViewportSize({ width: 1440, height: 900 });
+  await productionParity.goto(`${productionOrigin}/education`, { waitUntil: "networkidle" });
+  await productionParity.waitForTimeout(700);
+  const productionCourseCard = productionParity.locator("[data-course-id]").first();
+  await productionCourseCard.hover();
+  await productionParity.waitForTimeout(220);
+  const productionHoverState = await productionCourseCard.evaluate((card) => {
+    const style = getComputedStyle(card);
+    return { border: style.borderColor, shadow: style.boxShadow, transform: style.transform };
+  });
+  assert(JSON.stringify(galleryHoverState) === JSON.stringify(productionHoverState), `Gallery and production Course Card hover responses differ: ${JSON.stringify({ galleryHoverState, productionHoverState })}.`);
+  await productionParity.close();
+
+  const galleryCourseTitle = galleryCourseCard.locator(".fractalu-course-title-link");
+  await galleryCourseTitle.hover();
+  await page.waitForTimeout(180);
+  assert(await galleryCourseDescription.evaluate((element) => getComputedStyle(element).visibility) === "visible", "Course title hover did not reveal its description preview.");
+  assert(await galleryBiography.evaluate((element) => getComputedStyle(element).visibility) === "hidden", "Course title hover incorrectly revealed the instructor biography.");
+  await page.screenshot({ path: "/tmp/frac129-course-card-title-preview-1440x900.png" });
+
+  const galleryApplyLink = galleryCourseCard.getByRole("link", { name: /Apply for The Lost Generation Close Reading/ });
+  await galleryApplyLink.focus();
+  await galleryApplyLink.evaluate((element) => element.blur());
+  await galleryInstructor.hover();
+  await page.waitForTimeout(180);
+  assert(await galleryBiography.evaluate((element) => getComputedStyle(element).visibility) === "visible", "Instructor hover did not reveal the biography preview.");
+  assert(await galleryCourseDescription.evaluate((element) => getComputedStyle(element).visibility) === "hidden", "Instructor hover incorrectly revealed the course description.");
+  await page.screenshot({ path: "/tmp/frac129-course-card-instructor-preview-1440x900.png" });
+
+  await galleryInstructor.click();
+  assert(await galleryInstructor.getAttribute("aria-expanded") === "true", "Instructor click did not pin the biography preview.");
+  await page.mouse.move(0, 0);
+  assert(await galleryBiography.evaluate((element) => getComputedStyle(element).visibility) === "visible", "Pinned biography closed when the pointer left.");
+  await page.keyboard.press("Escape");
+  assert(await galleryInstructor.getAttribute("aria-expanded") === "false", "Escape did not close the pinned biography.");
+  assert(await galleryInstructor.evaluate((element) => document.activeElement === element), "Escape did not restore focus to the instructor control.");
+  assert(await galleryInstructor.locator("..").getAttribute("data-suppressed") === "true", "Escape did not suppress the focus-within preview.");
+  await page.waitForTimeout(180);
+  assert(await galleryBiography.evaluate((element) => getComputedStyle(element).visibility) === "hidden", "Escape left the suppressed biography visible.");
+  await galleryApplyLink.focus();
+  assert(await galleryInstructor.locator("..").getAttribute("data-suppressed") === "false", "Biography suppression did not reset after focus left.");
+  await galleryCourseTitle.focus();
+  await page.waitForTimeout(180);
+  assert(await galleryCourseDescription.evaluate((element) => getComputedStyle(element).visibility) === "visible", "Course title focus did not reveal its description preview.");
+
+  await page.goto(`${componentUrl}#browse/common`, { waitUntil: "networkidle" });
+  const galleryTileCollection = page.locator("#course-card [data-course-collection]");
+  const galleryTileDescription = galleryTileCollection.locator("[data-course-description]");
+  await page.mouse.move(0, 0);
+  await page.waitForTimeout(220);
+  assert(await galleryTileCollection.getAttribute("data-preview-mode") === "enhanced", "Browse-tile Course Card is not using the production enhanced collection mode.");
+  assert(await galleryTileDescription.evaluate((element) => getComputedStyle(element).visibility) === "hidden", "Browse-tile Course Card is not compact at rest.");
+  await page.locator("#course-card").scrollIntoViewIfNeeded();
+  await page.screenshot({ path: "/tmp/frac129-course-card-gallery-rest-1440x900.png" });
+  await galleryTileCollection.locator(".fractalu-course-title-link").hover();
+  await page.waitForTimeout(180);
+  assert(await galleryTileDescription.evaluate((element) => getComputedStyle(element).visibility) === "visible", "Browse-tile Course Card title hover did not reveal its description.");
+  assert(await page.locator("#course-card .library-canvas").evaluate((element) => getComputedStyle(element).overflow) === "visible" && await page.locator("#course-card").evaluate((element) => getComputedStyle(element).overflow) === "visible", "Browse-tile Course Card preview is clipped by gallery-only overflow.");
+  await page.screenshot({ path: "/tmp/frac129-course-card-gallery-title-preview-1440x900.png" });
 
   await page.goto(`${componentUrl}#component/search-bar`, { waitUntil: "networkidle" });
   await page.reload({ waitUntil: "networkidle" });
@@ -411,8 +506,18 @@ try {
     assert(await lockup.getAttribute("data-category-icon-key") === "shapes", `${width}px Course Card lost its fallback icon.`);
     const mobileInstructorFont = await courseMobile.locator(".library-detail-preview [data-instructor-name]").evaluate((element) => getComputedStyle(element).fontFamily);
     assert(mobileInstructorFont.includes("Inter"), `${width}px Course Card instructor is not Inter: ${mobileInstructorFont}.`);
+    const mobileCollection = courseMobile.locator(".library-detail-preview [data-course-collection]");
+    const mobileDescription = mobileCollection.locator("[data-course-description]");
+    const mobileBiography = mobileCollection.locator("[data-instructor-bio]");
+    assert(await mobileCollection.getAttribute("data-preview-mode") === "inline", `${width}px Course Card did not use inline mode.`);
+    assert(await mobileCollection.getByRole("button", { name: "Elena Navarrete" }).count() === 0, `${width}px instructor should be non-interactive body text.`);
+    assert(await mobileDescription.evaluate((element) => {
+      const style = getComputedStyle(element);
+      return style.position === "static" && style.visibility === "visible";
+    }), `${width}px course description is not inline and visible.`);
+    assert(await mobileBiography.evaluate((element) => getComputedStyle(element).display) === "none", `${width}px compact biography policy changed.`);
     assert(await overflow(courseMobile) <= 1, `Course Card long subject overflows at ${width}px.`);
-    await courseMobile.screenshot({ path: `/tmp/frac124-component-course-${suffix}.png` });
+    await courseMobile.screenshot({ path: `/tmp/frac129-component-course-${suffix}.png` });
     await courseMobile.close();
   }
   for (const [id, modes] of [["search-bar", [["Search behavior", "site", "search-site"], ["Search behavior", "collection", "search-collection"]]], ["filter-bar", [["Selection behavior", "single", "filter-single"], ["Selection behavior", "multiple", "filter-multiple"]]]]) {
@@ -444,14 +549,21 @@ try {
   await reducedSearch.close();
 
   const largeText = await context.newPage();
-  await largeText.setViewportSize({ width: 375, height: 812 });
+  await largeText.setViewportSize({ width: 1440, height: 900 });
   await largeText.goto(`${componentUrl}#component/course-card`, { waitUntil: "networkidle" });
   await largeText.getByLabel("Subject and icon").selectOption("Experimental category");
   await largeText.evaluate(() => { document.documentElement.style.fontSize = "24px"; });
   await largeText.locator(".library-detail-preview [data-category-icon-label] span:last-child").evaluate((label) => {
     label.textContent = "Experimental interdisciplinary investigations across many practices";
   });
+  await largeText.waitForFunction(() => document.querySelector(".library-detail-preview [data-course-collection]")?.getAttribute("data-preview-mode") === "inline");
+  assert(await largeText.locator(".library-detail-preview [data-course-description]").evaluate((element) => {
+    const style = getComputedStyle(element);
+    return style.position === "static" && style.visibility === "visible";
+  }), "Large-text Course Card left its description hover-dependent.");
+  assert(await largeText.locator(".library-detail-preview [data-instructor-name]").evaluate((element) => element.tagName === "P"), "Large-text Course Card kept an enhanced instructor button.");
   assert(await overflow(largeText) <= 1, "Course Card overflows with a long subject and 24px root text.");
+  await largeText.screenshot({ path: "/tmp/frac129-course-card-large-text-1440x900.png" });
   await largeText.close();
 
   for (const id of ["outbound-text-link", "inline-text-link"]) {
@@ -489,6 +601,21 @@ try {
   await reducedOpen.focus();
   const reducedFocus = await reduced.evaluate(() => ({ cardTransform: getComputedStyle(document.querySelector("#action-buttons")).transform, linkTransform: getComputedStyle(document.querySelector("#action-buttons .library-open-component")).transform, cueTransform: getComputedStyle(document.querySelector("#action-buttons .library-view-options")).transform, border: getComputedStyle(document.querySelector("#action-buttons")).borderColor }));
   assert(reducedFocus.cardTransform === "none" && reducedFocus.linkTransform === "none" && reducedFocus.cueTransform === "none" && reducedFocus.border !== reducedRestBorder, `Reduced-motion focus feedback is wrong: ${JSON.stringify(reducedFocus)}.`);
+  await reduced.goto(`${componentUrl}#component/course-card`, { waitUntil: "networkidle" });
+  const reducedCourseCard = reduced.locator(".library-detail-preview [data-course-id]");
+  const reducedCourseDescription = reducedCourseCard.locator("[data-course-description]");
+  await reduced.mouse.move(0, 0);
+  await reduced.waitForTimeout(20);
+  const reducedCourseRest = await reducedCourseCard.evaluate((card) => ({ border: getComputedStyle(card).borderColor, shadow: getComputedStyle(card).boxShadow }));
+  await reducedCourseCard.hover();
+  await reduced.waitForTimeout(20);
+  const reducedCourseHover = await reducedCourseCard.evaluate((card) => ({ border: getComputedStyle(card).borderColor, shadow: getComputedStyle(card).boxShadow, transform: getComputedStyle(card).transform, transitionDuration: getComputedStyle(card).transitionDuration }));
+  assert(reducedCourseHover.transform === "none" && reducedCourseHover.transitionDuration.split(",").every((duration) => Number.parseFloat(duration) === 0) && (reducedCourseHover.border !== reducedCourseRest.border || reducedCourseHover.shadow !== reducedCourseRest.shadow), `Reduced-motion Course Card feedback is wrong: ${JSON.stringify({ reducedCourseRest, reducedCourseHover })}.`);
+  await reducedCourseCard.locator(".fractalu-course-title-link").hover();
+  assert(await reducedCourseDescription.evaluate((element) => {
+    const style = getComputedStyle(element);
+    return style.visibility === "visible" && style.transform === "none" && style.transitionDuration.split(",").every((duration) => Number.parseFloat(duration) === 0);
+  }), "Reduced-motion Course Card lost its non-motion description reveal.");
   await reduced.close();
 
   assert(browserErrors.length === 0, `Catalog page errors: ${browserErrors.join(" | ")}`);
@@ -679,7 +806,7 @@ try {
   assert(productionErrors.length === 0, `Production page errors: ${productionErrors.join(" | ")}`);
 
   await browser.close();
-  console.log("FRAC-128 component-library and production browser checks passed; evidence includes /tmp/frac128-*.png.");
+  console.log("Component-library and production browser checks passed; Course Card evidence includes /tmp/frac129-*.png.");
 } finally {
   catalogServer.kill("SIGTERM");
   productionServer.kill("SIGTERM");

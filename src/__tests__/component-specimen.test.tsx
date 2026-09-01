@@ -1,10 +1,37 @@
 import { cleanup, fireEvent, render, waitFor, within } from "@testing-library/react";
-import { describe, expect, it, vi } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { SpecimenCard } from "../../components/catalog/SpecimenCard";
 import { COMPONENT_REGISTRY } from "../../components/catalog/registry";
 import { VisualSpecimenCard } from "../../components/catalog/VisualSpecimenCard";
 import { ComponentDetail } from "../../components/catalog/ComponentDetail";
 import { ComponentLibraryApp } from "../../components/ComponentLibraryApp";
+
+const FINE_POINTER_QUERY =
+  "(min-width: 64rem) and (hover: hover) and (pointer: fine)";
+const originalMatchMedia = window.matchMedia;
+
+function mockFinePointer(matches: boolean) {
+  Object.defineProperty(window, "matchMedia", {
+    configurable: true,
+    value: vi.fn().mockImplementation((query: string) => ({
+      matches: query === FINE_POINTER_QUERY ? matches : false,
+      media: query,
+      onchange: null,
+      addEventListener: vi.fn(),
+      removeEventListener: vi.fn(),
+      addListener: vi.fn(),
+      removeListener: vi.fn(),
+      dispatchEvent: vi.fn(),
+    })),
+  });
+}
+
+afterEach(() => {
+  Object.defineProperty(window, "matchMedia", {
+    configurable: true,
+    value: originalMatchMedia,
+  });
+});
 
 describe("interactive component specimens", () => {
   it("renders only the controls explicitly declared by each entry", () => {
@@ -234,11 +261,22 @@ describe("interactive component specimens", () => {
     expect(articleView.container.querySelector("[data-category-icon-label]")).toBeInTheDocument();
     articleView.unmount();
 
+    mockFinePointer(true);
     const course = COMPONENT_REGISTRY.find(({ id }) => id === "course-card")!;
     const courseView = render(
       <ComponentDetail entry={course} onBack={() => undefined} onOpenLive={() => undefined} />,
     );
     const instructor = courseView.container.querySelector("[data-instructor-name]");
+    const collection = courseView.container.querySelector("[data-course-collection]");
+    expect(collection).toHaveAttribute("data-preview-mode", "enhanced");
+    expect(collection?.querySelector('[data-fractalu-reveal-slot="course"]')).toHaveAttribute(
+      "data-fractalu-reveal-mode",
+      "static",
+    );
+    expect(within(collection as HTMLElement).getByRole("button", { name: "Elena Navarrete" })).toHaveAttribute(
+      "aria-controls",
+      `${collection?.querySelector("[data-course-id]")?.getAttribute("data-course-id")}-instructor-bio`,
+    );
     expect(instructor).toHaveClass("text-body");
     expect(instructor).not.toHaveClass("text-label");
     expect(courseView.container.querySelector("[data-category-icon-label]")).toHaveAttribute(
