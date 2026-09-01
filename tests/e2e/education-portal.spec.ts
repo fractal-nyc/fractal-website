@@ -50,6 +50,9 @@ test("Education portal keeps one wide accessible catalog across input modes", as
   await expect(futureSemestersLink).toHaveAttribute("target", "_blank");
   await expect(futureSemestersLink).toHaveAttribute("rel", "noopener noreferrer");
   await expect(futureSemestersLink).toHaveCSS("font-family", /Inter/);
+  await expect(futureSemestersLink).toHaveCSS("font-size", "18px");
+  await expect(futureSemestersLink).not.toHaveClass(/text-body(?:-lead)?|text-label/);
+  await expect(futureSemestersLink.locator("..")).toHaveClass(/text-body-lead/);
   const heroArrow = futureSemestersLink.locator("svg[data-education-outbound-arrow]");
   await expect(heroArrow).toHaveCount(1);
   await expect(heroArrow).toHaveAttribute("aria-hidden", "true");
@@ -59,6 +62,9 @@ test("Education portal keeps one wide accessible catalog across input modes", as
     "font-family",
     /Inter/,
   );
+  await expect(informationJump).toHaveCSS("font-size", "18px");
+  await expect(informationJump).not.toHaveClass(/text-body(?:-lead)?|text-label/);
+  await expect(informationJump.locator("..")).toHaveClass(/text-body-lead/);
   await expect(informationJump).toHaveAttribute("href", "#what-is-fractalu");
   await expect(informationJump).not.toHaveAttribute("data-education-outbound-link");
   const informationArrow = informationJump.locator("svg[data-education-internal-arrow]");
@@ -186,8 +192,8 @@ test("Education portal keeps one wide accessible catalog across input modes", as
   await expect(catalog.locator("[data-instructor-bio]")).toHaveCount(20);
   await expect(catalog.locator("[data-instructor-record]")).toHaveCount(23);
   const outboundLinks = page.locator("[data-education-outbound-link]");
-  await expect(outboundLinks).toHaveCount(53);
-  await expect(outboundLinks.locator("svg[data-education-outbound-arrow]")).toHaveCount(53);
+  await expect(outboundLinks).toHaveCount(52);
+  await expect(outboundLinks.locator("svg[data-education-outbound-arrow]")).toHaveCount(52);
   expect(
     await outboundLinks.evaluateAll((links) =>
       links.every(

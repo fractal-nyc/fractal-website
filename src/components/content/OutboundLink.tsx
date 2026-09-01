@@ -3,8 +3,7 @@ import { ArrowDown, ArrowUpRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export type OutboundLinkTone = "light" | "dark";
-export type OutboundLinkVariant = "inline" | "standalone" | "prominent" | "linked-title";
-export type OutboundLinkTypography = "label" | "body" | "body-lead";
+export type OutboundLinkVariant = "inline" | "standalone" | "outbound" | "linked-title";
 export type OutboundLinkArrow = "outbound" | "down" | "none";
 
 export interface OutboundLinkProps extends Omit<AnchorHTMLAttributes<HTMLAnchorElement>, "children" | "href"> {
@@ -13,7 +12,6 @@ export interface OutboundLinkProps extends Omit<AnchorHTMLAttributes<HTMLAnchorE
   accessibleName?: string;
   tone?: OutboundLinkTone;
   variant?: OutboundLinkVariant;
-  typography?: OutboundLinkTypography;
   arrow?: OutboundLinkArrow;
   arrowClassName?: string;
 }
@@ -26,7 +24,6 @@ export function OutboundLink({
   accessibleName,
   tone = "light",
   variant = "standalone",
-  typography,
   arrow,
   className,
   arrowClassName,
@@ -35,7 +32,6 @@ export function OutboundLink({
   const opensNewTab = /^https?:\/\//.test(href);
   const visibleLabel = typeof children === "string" ? withoutStraightArrow(children) : children;
   const normalizedName = accessibleName ? withoutStraightArrow(accessibleName) : undefined;
-  const resolvedTypography = typography ?? (variant === "standalone" ? "label" : variant === "prominent" ? "body-lead" : undefined);
   const resolvedArrow = arrow ?? (variant === "inline" ? "none" : "outbound");
   const Arrow = resolvedArrow === "down" ? ArrowDown : ArrowUpRight;
   return (
@@ -51,10 +47,11 @@ export function OutboundLink({
         tone === "dark"
           ? "text-background decoration-background/40 hover:decoration-background focus-visible:decoration-background focus-visible:ring-background focus-visible:ring-offset-house-education-deep"
           : "text-foreground decoration-foreground/40 hover:decoration-foreground focus-visible:decoration-foreground focus-visible:ring-[var(--component-focus,var(--color-house-education-light))] focus-visible:ring-offset-background",
-        (variant === "standalone" || variant === "prominent") && "inline-flex min-h-11 flex-wrap items-center gap-x-1.5 rounded-md",
+        (variant === "standalone" || variant === "outbound") && "inline-flex min-h-11 flex-wrap items-center gap-x-1.5 rounded-md",
         variant === "linked-title" && "fractalu-course-title-link inline-flex items-start gap-2 rounded-sm",
         variant === "inline" && "rounded-sm",
-        resolvedTypography === "body-lead" ? "text-body-lead" : resolvedTypography === "body" ? "text-body" : resolvedTypography === "label" ? "text-label" : "",
+        variant === "standalone" && "text-label",
+        (variant === "outbound" || variant === "inline") && "font-sans",
         className,
       ].filter(Boolean).join(" ")}
     >

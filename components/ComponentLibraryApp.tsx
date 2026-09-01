@@ -12,13 +12,14 @@ type CatalogRoute =
   | { view: "education" };
 
 const validCategories = new Set<string>(GALLERY_CATEGORIES.map(({ id }) => id));
+const canonicalComponentId = (id: string) => id === "prominent-text-link" ? "outbound-text-link" : id;
 
 export function readRoute(hash = window.location.hash): CatalogRoute {
   const raw = hash.replace(/^#/, "");
   const [path, search = ""] = raw.split("?");
   if (path === "education") return { view: "education" };
-  if (path.startsWith("component/")) return { view: "detail", id: decodeURIComponent(path.slice(10)) };
-  if (path.startsWith("preview/")) return { view: "preview", id: decodeURIComponent(path.slice(8)) };
+  if (path.startsWith("component/")) return { view: "detail", id: canonicalComponentId(decodeURIComponent(path.slice(10))) };
+  if (path.startsWith("preview/")) return { view: "preview", id: canonicalComponentId(decodeURIComponent(path.slice(8))) };
   const requested = path.startsWith("browse/") ? path.slice(7) : "common";
   const category = validCategories.has(requested) ? requested as GalleryCategoryId : "common";
   return { view: "browse", category, query: new URLSearchParams(search).get("q") ?? "" };
@@ -94,6 +95,6 @@ export function ComponentLibraryApp() {
   if (route.view === "education") return <main className="library-page"><div className="library-tool-bar"><button className="library-back" type="button" onClick={() => navigate(readRoute(previousBrowse.current))}>← Back to components</button><p className="text-label">Education editing tool</p></div><EducationContentWorkshop /></main>;
   const entry = COMPONENT_REGISTRY.find(({ id }) => id === route.id);
   if (!entry) return <main className="library-page"><div className="library-detail-shell"><button className="library-back" onClick={() => navigate({ view: "browse", category: "common", query: "" })}>← Back to components</button><h1 className="text-title normal-case">Component not found</h1></div></main>;
-  if (route.view === "preview") return <ComponentDetail entry={entry} onBack={() => navigate({ view: "browse", category: "common", query: "" })} onOpenLive={() => undefined} />;
-  return <ComponentDetail entry={entry} onBack={() => navigate(readRoute(previousBrowse.current))} onOpenLive={() => navigate({ view: "preview", id: entry.id })} />;
+  if (route.view === "preview") return <ComponentDetail key={`preview-${entry.id}`} entry={entry} onBack={() => navigate({ view: "browse", category: "common", query: "" })} onOpenLive={() => undefined} />;
+  return <ComponentDetail key={`detail-${entry.id}`} entry={entry} onBack={() => navigate(readRoute(previousBrowse.current))} onOpenLive={() => navigate({ view: "preview", id: entry.id })} />;
 }

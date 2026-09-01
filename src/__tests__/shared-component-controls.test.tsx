@@ -48,20 +48,33 @@ describe("shared component controls", () => {
     expect(onMultipleChange).toHaveBeenCalledWith(["arts", "all"]);
   });
 
-  it("keeps link typography and arrow semantics distinct", () => {
-    const { container } = render(<p className="text-body">
-      Read the <OutboundLink href="/publications" variant="inline">inline reference</OutboundLink>.
-      <OutboundLink href="/education#courses" variant="prominent">Explore courses</OutboundLink>
-      <OutboundLink href="https://example.com" variant="standalone">External destination</OutboundLink>
-    </p>);
+  it("keeps link behavior distinct while body and lead contexts own text size", () => {
+    const { container } = render(<div>
+      <p className="text-body">Read the <OutboundLink href="/publications" variant="inline">inline reference</OutboundLink>.</p>
+      <div className="text-body-lead"><OutboundLink href="/education#courses" variant="outbound">Explore courses</OutboundLink></div>
+      <OutboundLink href="https://example.com" accessibleName="External destination" variant="standalone">External destination</OutboundLink>
+      <OutboundLink href="mailto:hello@example.com" variant="outbound">Email us</OutboundLink>
+      <OutboundLink href="#information" variant="outbound" arrow="down">Information</OutboundLink>
+    </div>);
 
     const inline = screen.getByRole("link", { name: "inline reference" });
-    expect(inline).not.toHaveClass("text-label", "text-body-lead");
+    expect(inline).toHaveClass("font-sans");
+    expect(inline).not.toHaveClass("text-label", "text-body", "text-body-lead");
+    expect(inline.parentElement).toHaveClass("text-body");
     expect(inline.querySelector("[data-outbound-arrow]")).not.toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "Explore courses" })).toHaveClass("text-body-lead");
-    expect(screen.getByRole("link", { name: "Explore courses" }).querySelector("[data-outbound-arrow]")).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "External destination" })).toHaveClass("text-label");
-    expect(container.querySelectorAll("[data-outbound-arrow]")).toHaveLength(2);
+    const outbound = screen.getByRole("link", { name: "Explore courses" });
+    expect(outbound).toHaveClass("font-sans", "min-h-11");
+    expect(outbound).not.toHaveClass("text-label", "text-body", "text-body-lead");
+    expect(outbound.parentElement).toHaveClass("text-body-lead");
+    expect(outbound.querySelector("[data-outbound-arrow]")).toBeInTheDocument();
+    const standalone = screen.getByRole("link", { name: "External destination (opens in a new tab)" });
+    expect(standalone).toHaveClass("text-label");
+    expect(standalone).not.toHaveClass("font-sans");
+    expect(standalone).toHaveAttribute("target", "_blank");
+    expect(standalone).toHaveAttribute("rel", "noopener noreferrer");
+    expect(screen.getByRole("link", { name: "Email us" })).not.toHaveAttribute("target");
+    expect(screen.getByRole("link", { name: "Information" }).querySelector(".lucide-arrow-down")).toBeInTheDocument();
+    expect(container.querySelectorAll("[data-outbound-arrow]")).toHaveLength(4);
   });
 
   it("renders Highlight Box as static content or an accessible whole-card link", () => {

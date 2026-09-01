@@ -57,7 +57,10 @@ describe("team component registry", () => {
     expect(search("outbound link").map(({ name }) => name)).toContain("Standalone Link");
     expect(search("outsource link").map(({ name }) => name)).toContain("Standalone Link");
     expect(search("prose link").map(({ name }) => name)).toContain("Inline Text Link");
-    expect(search("inter outbound link").map(({ name }) => name)).toContain("Prominent Text Link");
+    expect(search("outbound text link").map(({ name }) => name)).toContain("Outbound Text Link");
+    expect(search("prominent text link").map(({ name }) => name)).toContain("Outbound Text Link");
+    expect(search("inter outbound link").map(({ name }) => name)).toContain("Outbound Text Link");
+    expect(search("text link with arrow").map(({ name }) => name)).toContain("Outbound Text Link");
     expect(search("homepage search").map(({ name }) => name)).toContain("Search Bar");
     expect(search("hero search").map(({ name }) => name)).toContain("Search Bar");
     expect(search("archive search field").map(({ name }) => name)).toContain("Search Bar");
@@ -79,6 +82,8 @@ describe("team component registry", () => {
     expect(controlsFor("filter-bar")).toContain("Selection behavior");
     expect(controlsFor("editorial-quote")).toContain("Citation");
     expect(controlsFor("note-callout")).not.toContain("Actions");
+    expect(controlsFor("outbound-text-link")).toEqual(expect.arrayContaining(["Example text context", "Destination type"]));
+    expect(controlsFor("inline-text-link")).toEqual(expect.arrayContaining(["Example text context", "Destination type"]));
     expect(COMPONENT_REGISTRY.filter(({ presentation }) => presentation !== "gallery").filter(({ render }) => !render).every(({ controls }) => controls.length === 0)).toBe(true);
   });
 
@@ -91,8 +96,8 @@ describe("team component registry", () => {
       expect(Boolean(entry.render) || ["visual-board", "asset-family", "full-context"].includes(entry.previewMode!)).toBe(true);
       expect(entry.name).not.toMatch(/ComponentColorScope|FractalUniversityPortal|DocumentCard/);
     }
-    expect(galleryEntries.filter(({ common }) => common).map(({ name }) => name)).toEqual(["Primary Button", "Standalone Link", "Prominent Text Link", "Inline Text Link", "Article Card", "Note Box", "Course Card", "Club Card", "Highlight Box"]);
-    expect(galleryEntries.filter(({ galleryCategory }) => galleryCategory === "actions").map(({ name }) => name)).toEqual(["Primary Button", "Standalone Link", "Prominent Text Link", "Inline Text Link"]);
+    expect(galleryEntries.filter(({ common }) => common).map(({ name }) => name)).toEqual(["Primary Button", "Standalone Link", "Outbound Text Link", "Inline Text Link", "Article Card", "Note Box", "Course Card", "Club Card", "Highlight Box"]);
+    expect(galleryEntries.filter(({ galleryCategory }) => galleryCategory === "actions").map(({ name }) => name)).toEqual(["Primary Button", "Standalone Link", "Outbound Text Link", "Inline Text Link"]);
     expect(galleryEntries.filter(({ galleryCategory }) => galleryCategory === "forms").map(({ name }) => name)).toEqual(["Search Bar", "Filter Bar"]);
     expect(galleryEntries.filter(({ galleryCategory }) => galleryCategory === "media").map(({ name }) => name).sort()).toEqual(["House Pennants", "Photo Carousel", "Photo Gallery"]);
   });
@@ -166,5 +171,11 @@ describe("team component registry", () => {
   it("canonicalizes removed chooser hashes to Common components", () => {
     expect(readRoute("#browse/basics")).toEqual({ view: "browse", category: "common", query: "" });
     expect(readRoute("#browse/sections?q=hero")).toEqual({ view: "browse", category: "common", query: "hero" });
+  });
+
+  it("canonicalizes old Prominent Text Link detail and preview hashes", () => {
+    expect(readRoute("#component/prominent-text-link")).toEqual({ view: "detail", id: "outbound-text-link" });
+    expect(readRoute("#preview/prominent-text-link")).toEqual({ view: "preview", id: "outbound-text-link" });
+    expect(readRoute("#component/not-a-component")).toEqual({ view: "detail", id: "not-a-component" });
   });
 });

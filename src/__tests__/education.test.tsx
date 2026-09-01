@@ -44,7 +44,7 @@ describe("EducationPage", () => {
       "#what-is-fractalu",
     );
     expect(futureSemesters).toHaveClass(
-      "text-body-lead",
+      "font-sans",
       "text-background/70",
       "min-h-11",
       "decoration-background/40",
@@ -52,12 +52,16 @@ describe("EducationPage", () => {
       "focus-visible:decoration-background",
     );
     expect(informationJump).toHaveClass(
-      "text-body-lead",
+      "font-sans",
       "text-background/70",
       "min-h-11",
       "decoration-background/40",
       "hover:decoration-background",
     );
+    expect(futureSemesters).not.toHaveClass("text-body", "text-body-lead", "text-label");
+    expect(informationJump).not.toHaveClass("text-body", "text-body-lead", "text-label");
+    expect(futureSemesters.parentElement).toHaveClass("text-body-lead");
+    expect(informationJump.parentElement).toHaveClass("text-body-lead");
     const heroArrow = futureSemesters.querySelector("[data-education-outbound-arrow]")!;
     expect(heroArrow.tagName).toBe("svg");
     expect(heroArrow).toHaveClass("lucide-arrow-up-right");

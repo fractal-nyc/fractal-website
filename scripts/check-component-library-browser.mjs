@@ -44,9 +44,9 @@ try {
   assert(JSON.stringify(categoryCounts) === JSON.stringify(["9", "6", "4", "2", "3", "15"]), `Unexpected category counts: ${categoryCounts.join(", ")}.`);
 
   const expectedByCategory = {
-    common: ["Primary Button", "Standalone Link", "Prominent Text Link", "Inline Text Link", "Article Card", "Note Box", "Course Card", "Club Card", "Highlight Box"],
+    common: ["Primary Button", "Standalone Link", "Outbound Text Link", "Inline Text Link", "Article Card", "Note Box", "Course Card", "Club Card", "Highlight Box"],
     cards: ["Article Card", "Note Box", "Course Card", "Club Card", "Highlight Box", "Editorial Quote"],
-    actions: ["Primary Button", "Standalone Link", "Prominent Text Link", "Inline Text Link"],
+    actions: ["Primary Button", "Standalone Link", "Outbound Text Link", "Inline Text Link"],
     forms: ["Search Bar", "Filter Bar"],
     media: ["Photo Gallery", "House Pennants", "Photo Carousel"],
   };
@@ -63,7 +63,7 @@ try {
       copies: card.querySelectorAll(".library-copy-prompt").length,
     })));
     assert(cards.every(({ children, preview, names: nameCount, copies }) => children === 2 && preview && nameCount === 1 && copies === 1), `${category} has a non-minimal tile.`);
-    await page.screenshot({ path: `/tmp/frac123-${category}-1440x900.png` });
+    await page.screenshot({ path: `/tmp/frac124-${category}-1440x900.png` });
   }
 
   await page.goto(`${componentUrl}#browse/common`, { waitUntil: "networkidle" });
@@ -86,12 +86,12 @@ try {
   const firstCategory = page.locator(".library-category-chooser button").first();
   await firstCategory.focus();
   assert(await firstCategory.evaluate((button) => getComputedStyle(button).outlineColor) === activeChrome.foreground, "Catalog focus is not monochrome.");
-  await page.screenshot({ path: "/tmp/frac123-common-1440x900.png" });
+  await page.screenshot({ path: "/tmp/frac124-common-1440x900.png" });
 
   const search = page.getByRole("searchbox", { name: "Search components" });
   for (const [query, expected] of [
     ["homepage search", "Search Bar"], ["archive search field", "Search Bar"], ["course subject filter", "Filter Bar"],
-    ["campus highlight", "Highlight Box"], ["outsource link", "Standalone Link"], ["inter outbound link", "Prominent Text Link"],
+    ["campus highlight", "Highlight Box"], ["outsource link", "Standalone Link"], ["inter outbound link", "Outbound Text Link"],
   ]) {
     await search.fill(query);
     assert(await page.getByRole("button", { name: `View details for ${expected}`, exact: true }).count() === 1, `${query} did not resolve to ${expected}.`);
@@ -104,13 +104,39 @@ try {
   const linkRoles = await page.evaluate(() => {
     const read = (id) => {
       const link = document.querySelector(`#${id} .library-gallery-preview a[data-outbound-link]`);
-      return { font: link ? getComputedStyle(link).fontFamily : "", arrows: link?.querySelectorAll("[data-outbound-arrow]").length ?? 0, height: link?.getBoundingClientRect().height ?? 0 };
+      return { font: link ? getComputedStyle(link).fontFamily : "", size: link ? Number.parseFloat(getComputedStyle(link).fontSize) : 0, arrows: link?.querySelectorAll("[data-outbound-arrow]").length ?? 0, height: link?.getBoundingClientRect().height ?? 0 };
     };
-    return { standalone: read("outbound-link"), prominent: read("prominent-text-link"), inline: read("inline-text-link") };
+    return { standalone: read("outbound-link"), outbound: read("outbound-text-link"), inline: read("inline-text-link") };
   });
   assert(linkRoles.standalone.arrows === 1 && linkRoles.standalone.height >= 44, `Standalone Link role is wrong: ${JSON.stringify(linkRoles)}.`);
-  assert(linkRoles.prominent.arrows === 1 && linkRoles.inline.arrows === 0, `Prominent/Inline arrow roles are wrong: ${JSON.stringify(linkRoles)}.`);
-  assert(linkRoles.prominent.font === linkRoles.inline.font && linkRoles.standalone.font !== linkRoles.inline.font, `Link font roles are wrong: ${JSON.stringify(linkRoles)}.`);
+  assert(linkRoles.outbound.arrows === 1 && linkRoles.inline.arrows === 0, `Outbound/Inline arrow roles are wrong: ${JSON.stringify(linkRoles)}.`);
+  assert(linkRoles.outbound.font === linkRoles.inline.font && linkRoles.standalone.font !== linkRoles.inline.font, `Link font roles are wrong: ${JSON.stringify(linkRoles)}.`);
+  assert(Math.abs(linkRoles.outbound.size - linkRoles.inline.size) < 0.1, `Outbound and Inline chooser sizes differ: ${JSON.stringify(linkRoles)}.`);
+
+  for (const [id, arrowCount] of [["outbound-text-link", 1], ["inline-text-link", 0]]) {
+    await page.goto(`${componentUrl}#component/${id}`, { waitUntil: "networkidle" });
+    const link = page.locator(".library-detail-preview a[data-outbound-link]");
+    const context = page.locator(".library-detail-preview [data-text-link-context]");
+    const readSize = () => link.evaluate((element) => Number.parseFloat(getComputedStyle(element).fontSize));
+    assert(await readSize() === 16, `${id} did not inherit the 16px body context.`);
+    assert(await link.locator("[data-outbound-arrow]").count() === arrowCount, `${id} has the wrong arrow count.`);
+    assert(!(await link.getAttribute("class")).match(/(?:^|\s)text-(?:body|body-lead|label)(?:\s|$)/), `${id} owns a text-size role instead of inheriting it.`);
+    if (id === "inline-text-link") await page.getByLabel("Linked words").fill("crystal@fractalnyc.com");
+    await page.getByLabel("Example text context").selectOption("lead");
+    assert(await readSize() === 18, `${id} did not inherit the 18px lead context.`);
+    assert(await context.getAttribute("data-text-link-context") === "lead", `${id} did not switch its preview context.`);
+    if (id === "inline-text-link") assert((await context.textContent()).includes("crystal@fractalnyc.com"), "Inline lead preview did not use the production Campus Crystal example.");
+    await page.screenshot({ path: `/tmp/frac124-${id}-lead-1440x900.png` });
+    await page.getByLabel("Example text context").selectOption("body");
+    await page.screenshot({ path: `/tmp/frac124-${id}-body-1440x900.png` });
+  }
+
+  for (const legacyView of ["component", "preview"]) {
+    await page.goto(`${componentUrl}#${legacyView}/prominent-text-link`, { waitUntil: "networkidle" });
+    await page.waitForFunction((expected) => window.location.hash === expected, `#${legacyView}/outbound-text-link`);
+    assert(new URL(page.url()).hash === `#${legacyView}/outbound-text-link`, `Legacy ${legacyView} hash did not canonicalize.`);
+    assert(await page.getByRole("heading", { name: "Outbound Text Link" }).count() === 1, `Legacy ${legacyView} hash did not render Outbound Text Link.`);
+  }
 
   await page.goto(`${componentUrl}#component/note-callout`, { waitUntil: "networkidle" });
   await page.reload({ waitUntil: "networkidle" });
@@ -126,9 +152,10 @@ try {
   await page.reload({ waitUntil: "networkidle" });
   const articleBylineFont = await page.locator(".library-detail-preview [data-document-byline]").evaluate((element) => getComputedStyle(element).fontFamily);
   assert(articleBylineFont.includes("Inter"), `Article Card byline is not Inter: ${articleBylineFont}.`);
-  assert(await page.locator(".library-detail-preview [data-document-byline].text-aside").count() === 1, "Article Card lost its text-aside byline role.");
+  const articleBylineStyle = await page.locator(".library-detail-preview [data-document-byline]").evaluate((element) => ({ style: getComputedStyle(element).fontStyle, classes: element.className }));
+  assert(articleBylineStyle.style === "normal" && articleBylineStyle.classes.includes("text-body") && !articleBylineStyle.classes.includes("text-aside"), `Article Card byline is not upright body Inter: ${JSON.stringify(articleBylineStyle)}.`);
   assert(await page.locator(".library-detail-preview [data-category-icon-label] [data-category-icon] svg[aria-hidden='true']").count() === 1, "Article Card lost its decorative shared category icon.");
-  await page.screenshot({ path: "/tmp/frac123-component-article-1440x900.png" });
+  await page.screenshot({ path: "/tmp/frac124-component-article-1440x900.png" });
 
   await page.goto(`${componentUrl}#component/course-card`, { waitUntil: "networkidle" });
   await page.reload({ waitUntil: "networkidle" });
@@ -143,13 +170,13 @@ try {
     assert((await lockup.locator("span:last-child").textContent()).trim() === subject, `${subject} did not preserve its visible label.`);
   }
   assert(await page.getByLabel(/icon name/i).count() === 0, "Course Card exposes a manual icon-name control.");
-  await page.screenshot({ path: "/tmp/frac123-component-course-1440x900.png" });
+  await page.screenshot({ path: "/tmp/frac124-component-course-1440x900.png" });
 
   await page.goto(`${componentUrl}#component/search-bar`, { waitUntil: "networkidle" });
   await page.reload({ waitUntil: "networkidle" });
   await page.getByRole("combobox", { name: "Search Fractal" }).waitFor();
   assert(await page.getByRole("combobox", { name: "Search Fractal" }).count() === 1, "Search Bar site mode is not the real combobox.");
-  await page.screenshot({ path: "/tmp/frac123-search-site-1440x900.png" });
+  await page.screenshot({ path: "/tmp/frac124-search-site-1440x900.png" });
   const catalogHash = new URL(page.url()).hash;
   const siteSearch = page.getByRole("combobox", { name: "Search Fractal" });
   await siteSearch.fill("Campus");
@@ -164,7 +191,7 @@ try {
   assert(await page.getByRole("button", { name: "Clear search" }).count() === 1, "Collection Search Bar does not have exactly one clear control.");
   await page.getByRole("button", { name: "Clear search" }).click();
   assert(await collectionSearch.inputValue() === "" && await collectionSearch.evaluate((input) => document.activeElement === input), "Collection clear did not clear and restore focus.");
-  await page.screenshot({ path: "/tmp/frac123-search-collection-1440x900.png" });
+  await page.screenshot({ path: "/tmp/frac124-search-collection-1440x900.png" });
 
   await page.goto(`${componentUrl}#component/filter-bar`, { waitUntil: "networkidle" });
   await page.reload({ waitUntil: "networkidle" });
@@ -174,13 +201,13 @@ try {
   assert(await singleChips.evaluateAll((buttons) => buttons.every((button) => button.getBoundingClientRect().height >= 44 && button.getBoundingClientRect().width >= 44)), "Filter chips are smaller than 44px.");
   await singleChips.nth(1).click();
   assert(await singleChips.nth(1).getAttribute("aria-pressed") === "true", "Single-select chip did not select.");
-  await page.screenshot({ path: "/tmp/frac123-filter-single-1440x900.png" });
+  await page.screenshot({ path: "/tmp/frac124-filter-single-1440x900.png" });
   await page.getByLabel("Selection behavior").selectOption("multiple");
   const multiChips = page.locator("[data-filter-bar] button");
   await multiChips.nth(1).click();
   assert(await page.locator("[data-filter-bar] button[aria-pressed='true']").count() === 2, "Multi-select Filter Bar did not retain two selections.");
   assert((await multiChips.nth(1).getAttribute("aria-label"))?.includes("results"), "Multi-select chips lost counts.");
-  await page.screenshot({ path: "/tmp/frac123-filter-multiple-1440x900.png" });
+  await page.screenshot({ path: "/tmp/frac124-filter-multiple-1440x900.png" });
 
   await page.goto(`${componentUrl}#browse/media`, { waitUntil: "networkidle" });
   await loadedImages(page.locator("#photo-gallery img"), "Photo Gallery");
@@ -207,7 +234,7 @@ try {
     await matrixPage.goto(`${componentUrl}#browse/common`, { waitUntil: "networkidle" });
     assert(await overflow(matrixPage) <= 1, `Catalog overflows at ${width}px.`);
     assert(await columns(matrixPage) === expectedColumns, `${width}px gallery has the wrong column count.`);
-    if (width === 375) await matrixPage.screenshot({ path: "/tmp/frac123-common-375x812.png" });
+    if (width === 375) await matrixPage.screenshot({ path: "/tmp/frac124-common-375x812.png" });
     await matrixPage.close();
   }
   for (const category of ["actions", "forms", "cards", "media"]) {
@@ -215,7 +242,22 @@ try {
     await mobile.setViewportSize({ width: 375, height: 812 });
     await mobile.goto(`${componentUrl}#browse/${category}`, { waitUntil: "networkidle" });
     assert(await overflow(mobile) <= 1, `${category} overflows at 375px.`);
-    await mobile.screenshot({ path: `/tmp/frac123-${category}-375x812.png` });
+    await mobile.screenshot({ path: `/tmp/frac124-${category}-375x812.png` });
+    await mobile.close();
+  }
+  for (const id of ["outbound-text-link", "inline-text-link"]) {
+    const mobile = await context.newPage();
+    await mobile.setViewportSize({ width: 375, height: 812 });
+    await mobile.goto(`${componentUrl}#component/${id}`, { waitUntil: "networkidle" });
+    const link = mobile.locator(".library-detail-preview a[data-outbound-link]");
+    assert(await link.evaluate((element) => Number.parseFloat(getComputedStyle(element).fontSize)) === 16, `${id} mobile body context is not 16px.`);
+    assert(await overflow(mobile) <= 1, `${id} body context overflows at 375px.`);
+    await mobile.screenshot({ path: `/tmp/frac124-${id}-body-375x812.png` });
+    if (id === "inline-text-link") await mobile.getByLabel("Linked words").fill("crystal@fractalnyc.com");
+    await mobile.getByLabel("Example text context").selectOption("lead");
+    assert(await link.evaluate((element) => Number.parseFloat(getComputedStyle(element).fontSize)) === 18, `${id} mobile lead context is not 18px.`);
+    assert(await overflow(mobile) <= 1, `${id} lead context overflows at 375px.`);
+    await mobile.screenshot({ path: `/tmp/frac124-${id}-lead-375x812.png` });
     await mobile.close();
   }
   const articleMobile = await context.newPage();
@@ -224,7 +266,9 @@ try {
   const mobileBylineFont = await articleMobile.locator(".library-detail-preview [data-document-byline]").evaluate((element) => getComputedStyle(element).fontFamily);
   assert(mobileBylineFont.includes("Inter"), `Mobile Article Card byline is not Inter: ${mobileBylineFont}.`);
   assert(await overflow(articleMobile) <= 1, "Article Card detail overflows at 375px.");
-  await articleMobile.screenshot({ path: "/tmp/frac123-component-article-375x812.png" });
+  const mobileBylineStyle = await articleMobile.locator(".library-detail-preview [data-document-byline]").evaluate((element) => getComputedStyle(element).fontStyle);
+  assert(mobileBylineStyle === "normal", `Mobile Article Card byline is italic: ${mobileBylineStyle}.`);
+  await articleMobile.screenshot({ path: "/tmp/frac124-component-article-375x812.png" });
   await articleMobile.close();
 
   for (const [width, suffix] of [[320, "320x812"], [375, "375x812"]]) {
@@ -245,7 +289,7 @@ try {
     const mobileInstructorFont = await courseMobile.locator(".library-detail-preview [data-instructor-name]").evaluate((element) => getComputedStyle(element).fontFamily);
     assert(mobileInstructorFont.includes("Inter"), `${width}px Course Card instructor is not Inter: ${mobileInstructorFont}.`);
     assert(await overflow(courseMobile) <= 1, `Course Card long subject overflows at ${width}px.`);
-    await courseMobile.screenshot({ path: `/tmp/frac123-component-course-${suffix}.png` });
+    await courseMobile.screenshot({ path: `/tmp/frac124-component-course-${suffix}.png` });
     await courseMobile.close();
   }
   for (const [id, modes] of [["search-bar", [["Search behavior", "site", "search-site"], ["Search behavior", "collection", "search-collection"]]], ["filter-bar", [["Selection behavior", "single", "filter-single"], ["Selection behavior", "multiple", "filter-multiple"]]]]) {
@@ -255,7 +299,7 @@ try {
       await mobile.goto(`${componentUrl}#component/${id}`, { waitUntil: "networkidle" });
       await mobile.getByLabel(label).selectOption(value);
       assert(await overflow(mobile) <= 1, `${filename} detail overflows at 375px.`);
-      await mobile.screenshot({ path: `/tmp/frac123-${filename}-375x812.png` });
+      await mobile.screenshot({ path: `/tmp/frac124-${filename}-375x812.png` });
       await mobile.close();
     }
   }
@@ -270,6 +314,19 @@ try {
   });
   assert(await overflow(largeText) <= 1, "Course Card overflows with a long subject and 24px root text.");
   await largeText.close();
+
+  for (const id of ["outbound-text-link", "inline-text-link"]) {
+    const largeLink = await context.newPage();
+    await largeLink.setViewportSize({ width: 320, height: 812 });
+    await largeLink.goto(`${componentUrl}#component/${id}`, { waitUntil: "networkidle" });
+    await largeLink.evaluate(() => { document.documentElement.style.fontSize = "24px"; });
+    await largeLink.getByLabel(id === "outbound-text-link" ? "Link label" : "Linked words").fill("averylongcontactaddressforsemesterquestions@fractalnyc.com");
+    await largeLink.getByLabel("Destination type").selectOption("email");
+    await largeLink.getByLabel("Example text context").selectOption("lead");
+    assert(await overflow(largeLink) <= 1, `${id} overflows at 320px with a 24px root and long email.`);
+    assert(await largeLink.locator(".library-detail-preview a[data-outbound-link]").isVisible(), `${id} is not visible under large-text stress.`);
+    await largeLink.close();
+  }
 
   const reduced = await context.newPage();
   await reduced.emulateMedia({ reducedMotion: "reduce" });
@@ -302,16 +359,32 @@ try {
       }
       if (route === "/library") {
         const bylineFont = await production.locator("[data-document-byline]").first().evaluate((element) => getComputedStyle(element).fontFamily);
+        const bylineStyle = await production.locator("[data-document-byline]").first().evaluate((element) => getComputedStyle(element).fontStyle);
         assert(bylineFont.includes("Inter"), `Production Library byline is not Inter at ${width}px: ${bylineFont}.`);
+        assert(bylineStyle === "normal", `Production Library byline is italic at ${width}px: ${bylineStyle}.`);
         assert(await production.locator("[data-category-icon-label] [data-category-icon] svg[aria-hidden='true']").count() > 0, "Production Library lost decorative category icons.");
       }
       if (route === "/education") {
         const instructorFont = await production.locator("[data-instructor-name]").first().evaluate((element) => getComputedStyle(element).fontFamily);
         assert(instructorFont.includes("Inter"), `Production Education instructor is not Inter at ${width}px: ${instructorFont}.`);
         assert(await production.locator("[data-course-id]").count() === await production.locator("[data-course-id] [data-category-icon-label]").count(), "Production Education does not have one category icon per Course Card.");
+        const future = production.getByRole("link", { name: /Stay tuned for future semesters/ });
+        const jump = production.getByRole("link", { name: "What is FractalU?" });
+        for (const link of [future, jump]) {
+          assert((await link.evaluate((element) => getComputedStyle(element).fontFamily)).includes("Inter"), `Education hero link is not Inter at ${width}px.`);
+          assert(await link.evaluate((element) => Number.parseFloat(getComputedStyle(element).fontSize)) === 18, `Education hero link does not inherit lead size at ${width}px.`);
+        }
+        assert(await future.locator(".lucide-arrow-up-right").count() === 1 && await future.getAttribute("target") === "_blank" && await future.getAttribute("rel") === "noopener noreferrer", "Education future-semester link semantics changed.");
+        assert(await jump.locator(".lucide-arrow-down").count() === 1 && await jump.getAttribute("target") === null, "Education information jump semantics changed.");
+      }
+      if (route === "/campus") {
+        const crystal = production.getByRole("link", { name: "crystal@fractalnyc.com" });
+        assert((await crystal.getAttribute("href")) === "mailto:crystal@fractalnyc.com", "Crystal contact lost its mailto destination.");
+        assert(await crystal.locator("[data-outbound-arrow]").count() === 0 && await crystal.getAttribute("target") === null && await crystal.getAttribute("rel") === null, "Crystal contact lost inline same-context behavior.");
+        assert((await crystal.evaluate((element) => getComputedStyle(element).fontFamily)).includes("Inter") && await crystal.evaluate((element) => Number.parseFloat(getComputedStyle(element).fontSize)) === 18, `Crystal contact does not inherit lead Inter at ${width}px.`);
       }
       const slug = route === "/" ? "home" : route.slice(1);
-      await production.screenshot({ path: `/tmp/frac123-production-${slug}-${width === 375 ? "375x812" : "1440x900"}.png` });
+      await production.screenshot({ path: `/tmp/frac124-production-${slug}-${width === 375 ? "375x812" : "1440x900"}.png` });
     }
   }
 
@@ -339,7 +412,7 @@ try {
   assert(productionErrors.length === 0, `Production page errors: ${productionErrors.join(" | ")}`);
 
   await browser.close();
-  console.log("FRAC-123 component-library browser checks passed; screenshots are in /tmp/frac123-*.png.");
+  console.log("FRAC-124 component-library browser checks passed; screenshots are in /tmp/frac124-*.png.");
 } finally {
   catalogServer.kill("SIGTERM");
   productionServer.kill("SIGTERM");

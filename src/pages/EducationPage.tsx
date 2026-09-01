@@ -75,12 +75,12 @@ export function EducationPage() {
                   <p className="text-subtitle mt-4 text-background/80 normal-case">
                     An improvised college in New York City.
                   </p>
-                  <div className="mt-4 flex flex-col items-center justify-center gap-x-3 gap-y-0 sm:flex-row sm:flex-wrap">
+                  <div className="text-body-lead mt-4 flex flex-col items-center justify-center gap-x-3 gap-y-0 sm:flex-row sm:flex-wrap">
                     <EducationOutboundLink
                       href="https://fractaluniversity.substack.com"
                       accessibleName="Stay tuned for future semesters"
                       tone="dark"
-                      variant="prominent"
+                      variant="outbound"
                       className="justify-center text-center text-background/70 ![text-underline-offset:auto]"
                     >
                       <span
@@ -94,7 +94,7 @@ export function EducationPage() {
                       href="#what-is-fractalu"
                       onClick={jumpToInformation}
                       tone="dark"
-                      variant="prominent"
+                      variant="outbound"
                       arrow="down"
                       className="justify-center text-center text-background/70 ![text-underline-offset:auto]"
                     >

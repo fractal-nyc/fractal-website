@@ -122,7 +122,7 @@ describe("interactive component specimens", () => {
   it("renders the four public action choices as distinct production patterns", () => {
     const primary = COMPONENT_REGISTRY.find(({ id }) => id === "action-buttons")!;
     const standalone = COMPONENT_REGISTRY.find(({ id }) => id === "outbound-link")!;
-    const prominent = COMPONENT_REGISTRY.find(({ id }) => id === "prominent-text-link")!;
+    const outbound = COMPONENT_REGISTRY.find(({ id }) => id === "outbound-text-link")!;
     const inline = COMPONENT_REGISTRY.find(({ id }) => id === "inline-text-link")!;
     const primaryView = render(<VisualSpecimenCard entry={primary} onOpen={() => undefined} />);
     expect(primaryView.container.querySelectorAll(".library-gallery-preview button")).toHaveLength(1);
@@ -135,15 +135,36 @@ describe("interactive component specimens", () => {
     expect(standaloneView.container.querySelectorAll(".library-gallery-preview [data-outbound-arrow]")).toHaveLength(1);
     standaloneView.unmount();
 
-    const prominentView = render(<VisualSpecimenCard entry={prominent} onOpen={() => undefined} />);
-    expect(prominentView.container.querySelector("a[data-outbound-link]")).toHaveClass("text-body-lead");
-    expect(prominentView.container.querySelectorAll("[data-outbound-arrow]")).toHaveLength(1);
-    prominentView.unmount();
+    const outboundView = render(<VisualSpecimenCard entry={outbound} onOpen={() => undefined} />);
+    const outboundAnchor = outboundView.container.querySelector("a[data-outbound-link]");
+    expect(outboundAnchor).toHaveClass("font-sans");
+    expect(outboundAnchor).not.toHaveClass("text-body", "text-body-lead", "text-label");
+    expect(outboundAnchor?.parentElement).toHaveClass("text-body");
+    expect(outboundView.container.querySelectorAll("[data-outbound-arrow]")).toHaveLength(1);
+    outboundView.unmount();
 
     const inlineView = render(<VisualSpecimenCard entry={inline} onOpen={() => undefined} />);
     expect(inlineView.container.querySelector(".library-gallery-preview p a[data-outbound-link]")).toBeInTheDocument();
     expect(inlineView.container.querySelector(".library-gallery-preview [data-outbound-arrow]")).not.toBeInTheDocument();
-    expect(inlineView.container.querySelector(".library-gallery-preview p a[data-outbound-link]")).not.toHaveClass("text-label");
+    expect(inlineView.container.querySelector(".library-gallery-preview p a[data-outbound-link]")).toHaveClass("font-sans");
+    expect(inlineView.container.querySelector(".library-gallery-preview p a[data-outbound-link]")).not.toHaveClass("text-label", "text-body", "text-body-lead");
+    expect(inlineView.container.querySelector("[data-text-link-context='body']")).toHaveClass("text-body");
+  });
+
+  it("previews Outbound and Inline Text Links in body or lead contexts without changing component identity", () => {
+    for (const id of ["outbound-text-link", "inline-text-link"]) {
+      const entry = COMPONENT_REGISTRY.find((candidate) => candidate.id === id)!;
+      const view = render(<ComponentDetail entry={entry} onBack={() => undefined} onOpenLive={() => undefined} />);
+      const anchor = view.container.querySelector(".library-detail-preview a[data-outbound-link]")!;
+      expect(anchor).toHaveClass("font-sans");
+      expect(anchor).not.toHaveClass("text-body", "text-body-lead", "text-label");
+      expect(view.container.querySelector("[data-text-link-context='body']")).toHaveClass("text-body");
+      fireEvent.change(within(view.container).getByLabelText("Example text context"), { target: { value: "lead" } });
+      expect(view.container.querySelector("[data-text-link-context='lead']")).toHaveClass("text-body-lead");
+      expect(view.container.querySelector(".library-detail-preview a[data-outbound-link]")).toBe(anchor);
+      expect(within(view.container).getByRole("button", { name: `Copy prompt for ${entry.name}` })).toBeInTheDocument();
+      view.unmount();
+    }
   });
 
   it("uses production Inter author roles and derives Course Card icons from subject", () => {
@@ -152,7 +173,8 @@ describe("interactive component specimens", () => {
       <ComponentDetail entry={article} onBack={() => undefined} onOpenLive={() => undefined} />,
     );
     const byline = articleView.container.querySelector("[data-document-byline]");
-    expect(byline).toHaveClass("text-aside");
+    expect(byline).toHaveClass("text-body");
+    expect(byline).not.toHaveClass("text-aside");
     expect(byline).not.toHaveClass("text-label");
     expect(articleView.container.querySelector("[data-category-icon-label]")).toBeInTheDocument();
     articleView.unmount();

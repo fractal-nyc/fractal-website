@@ -30,16 +30,16 @@ The output is `dist-components/`. Normal `pnpm build` still produces only the pu
 
 Use these names in requests to designers, editors, or agents:
 
-- Buttons and links: **Primary Button**, **Standalone Link**, **Prominent Text Link**, and **Inline Text Link**.
+- Buttons and links: **Primary Button**, **Standalone Link**, **Outbound Text Link**, and **Inline Text Link**.
 - Forms and filters: **Search Bar** and **Filter Bar**.
 - Cards and boxes: **Article Card**, **Note Box**, **Course Card**, **Club Card**, **Highlight Box**, and **Editorial Quote**.
 - Images and media: **Photo Carousel**, **Photo Gallery**, and **House Pennants**.
 
-The four link choices are intentionally separate. **Primary Button** is the branded Mandelbrot-corner call to action. **Standalone Link** is a compact mono link that sits on its own and has a diagonal outbound arrow. **Prominent Text Link** is the larger Inter text-and-arrow treatment used in prominent Education page areas. **Inline Text Link** stays in the surrounding Inter prose, is underlined, and has no arrow.
+The four action choices are intentionally separate. **Primary Button** is the branded Mandelbrot-corner call to action. **Standalone Link** is a compact mono link that sits on its own and has a diagonal outbound arrow. **Outbound Text Link** is Inter text with an arrow that sits outside a sentence. **Inline Text Link** is underlined Inter inside a sentence and has no arrow. Outbound and Inline Text Links can both appear in ordinary body copy or larger lead copy: they inherit the surrounding text size instead of encoding “small” versus “prominent” as separate component choices. The arrow-versus-in-a-sentence behavior is how to choose between them.
 
 **Search Bar** owns one visual shell with two real behavior modes: site search is the Home combobox that finds and navigates to site results, while collection search filters the current archive and has one working clear control. **Filter Bar** owns the reusable row of filter chips. Its Education mode selects one subject at a time; its Library mode can select several tags and show result counts. Editors change the labels, selection mode, and inherited site tokens rather than creating a new kind of search or filter.
 
-**Note Box** never contains a button action. If its prose needs a destination, use an **Inline Text Link** inside the note. **Highlight Box** is the generic name for the accent-filled pattern first used for Campus highlights; it is not restricted to the Campus colors. Article, Course, and Club cards keep typography tied to content roles: display text for titles, Inter for names/bylines and prose, and mono for labels and compact metadata. Article bylines use italic Inter; Course instructor names use upright Inter. Course facts remain part of the **Course Card**, not a separate public component. Its subject icon derives automatically from the category text: current subjects use their reviewed semantic icons, while an unfamiliar new category safely displays the generic Shapes icon beside its original label. Editors choose the category, never an icon per course.
+**Note Box** never contains a button action. If its prose needs a destination, use an **Inline Text Link** inside the note. **Highlight Box** is the generic name for the accent-filled pattern first used for Campus highlights; it is not restricted to the Campus colors. Article, Course, and Club cards keep typography tied to content roles: display text for titles, upright Inter for names/bylines and prose, and mono for labels and compact metadata. Article authors and Course instructors both use upright Inter. Course facts remain part of the **Course Card**, not a separate public component. Its subject icon derives automatically from the category text: current subjects use their reviewed semantic icons, while an unfamiliar new category safely displays the generic Shapes icon beside its original label. Editors choose the category, never an icon per course.
 
 Only the three items listed under Images and media are public choices. Photo Gallery is the real gallery component, not a placeholder frame. Supporting shells, empty states, fact grids, membership groups, corner decorations, embed frames, textures, motion helpers, and page structure remain internal implementation inventory. Old phrases such as “Home Search Bar,” “Archive Search Field,” “Library Tag Filter,” “Course Subject Filter,” “Campus Highlight,” and “Meet the Space Carousel” remain searchable aliases that lead to the current public name.
 
@@ -89,9 +89,9 @@ Inline errors link to their fields. Export actions stay disabled until the draft
 
 > Format this destination with the **Standalone Link** component. Preserve safe new-tab behavior and the diagonal arrow. (“External link,” “Outbound Link,” and “outsource link” all resolve to this component.)
 
-> Add this large Education-style destination with the **Prominent Text Link** component. Keep the Inter body-lead type and arrow.
+> Add this destination with the **Outbound Text Link** component. Keep the arrow and inherit the surrounding Inter body or lead text context.
 
-> Link these words inside the sentence with the **Inline Text Link** component. Do not add an arrow or button container.
+> Link these words inside the sentence with the **Inline Text Link** component. Do not add an arrow or button container; inherit the surrounding Inter body or lead text context.
 
 ## Boundaries
 
