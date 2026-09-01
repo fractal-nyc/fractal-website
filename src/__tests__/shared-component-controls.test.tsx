@@ -66,7 +66,9 @@ describe("shared component controls", () => {
 
   it("renders Highlight Box as static content or an accessible whole-card link", () => {
     const { rerender } = render(<HighlightBox eyebrow="On campus" title="Build together" description="A shared place to work." />);
-    expect(screen.getByText("Build together").closest("[data-highlight-box]")?.tagName).toBe("DIV");
+    const staticBox = screen.getByText("Build together").closest("[data-highlight-box]");
+    expect(staticBox?.tagName).toBe("DIV");
+    expect(staticBox).not.toHaveClass("hover:bg-[var(--btn-fill,rgba(242,234,216,0.16))]");
 
     rerender(<HighlightBox eyebrow="On campus" title="Build together" description="A shared place to work." href="https://example.com" accessibleName="Learn about campus" />);
     const linked = screen.getByRole("link", { name: "Learn about campus (opens in a new tab)" });

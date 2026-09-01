@@ -200,12 +200,12 @@ export function HomeSearchBar({
                     selectResult(result);
                   }}
                 >
-                  <Icon className="h-3.5 w-3.5 mt-0.5 shrink-0 opacity-60" />
+                  <Icon aria-hidden="true" className="h-3.5 w-3.5 mt-0.5 shrink-0 opacity-60" />
                   <div className="min-w-0 flex-1">
                     <div className="text-label truncate flex items-center gap-1">
                       {result.title}
                       {result.external && (
-                        <ArrowUpRight className="h-3 w-3 opacity-40 shrink-0" />
+                        <ArrowUpRight aria-hidden="true" className="h-3 w-3 opacity-40 shrink-0" />
                       )}
                     </div>
                     <div className="text-label text-xs text-foreground/60 truncate mt-0.5">

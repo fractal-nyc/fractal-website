@@ -54,8 +54,8 @@ export function DocumentCard({ document, className = "", colorway = "library" }:
       rel="noopener noreferrer"
       className={`
         group flex h-full flex-col rounded-lg text-foreground
-        transition-all duration-200 ease-out
-        hover:scale-[1.02] hover:shadow-lg
+        transition-transform duration-200 ease-out
+        hover:scale-[1.02] hover:shadow-lg motion-reduce:transition-none motion-reduce:hover:scale-100
         focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground
         ${className}
       `}
@@ -69,6 +69,7 @@ export function DocumentCard({ document, className = "", colorway = "library" }:
               size={14}
               strokeWidth={1.5}
               className="text-[var(--component-accent)]"
+              aria-hidden="true"
             />
           </div>
           <span className="text-label text-[var(--component-accent)]">
@@ -78,7 +79,8 @@ export function DocumentCard({ document, className = "", colorway = "library" }:
         <ArrowUpRight
           size={16}
           strokeWidth={1.5}
-          className="text-foreground-muted opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+          className="text-foreground-muted opacity-0 transition-opacity duration-200 group-hover:opacity-100 motion-reduce:transition-none"
+          aria-hidden="true"
         />
       </div>
 
@@ -98,7 +100,7 @@ export function DocumentCard({ document, className = "", colorway = "library" }:
       )}
 
       {/* Accent bar at bottom */}
-      <div className="mt-auto h-0.5 w-8 rounded-full bg-[var(--component-accent)] opacity-40 transition-all duration-300 group-hover:w-12 group-hover:opacity-70" />
+      <div className="mt-auto h-0.5 w-12 origin-left scale-x-2/3 rounded-full bg-[var(--component-accent)] opacity-40 transition-[transform,opacity] duration-300 group-hover:scale-x-100 group-hover:opacity-70 motion-reduce:transition-none" aria-hidden="true" />
       </ContentCard>
     </a>
     </MandelbrotCorners>

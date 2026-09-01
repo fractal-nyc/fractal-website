@@ -279,7 +279,7 @@ export function CourseCard({
       <CourseFactGrid course={course} />
       <CourseActions course={course} />
       <div
-        className="mt-4 h-0.5 w-8 rounded-full bg-[var(--component-accent,var(--color-house-education-light))] opacity-40 transition-all duration-300 group-hover:w-12 group-hover:opacity-70 group-focus-within:w-12 group-focus-within:opacity-70 md:mt-6"
+        className="mt-4 h-0.5 w-12 origin-left scale-x-2/3 rounded-full bg-[var(--component-accent,var(--color-house-education-light))] opacity-40 transition-[transform,opacity] duration-300 group-hover:scale-x-100 group-hover:opacity-70 group-focus-within:scale-x-100 group-focus-within:opacity-70 motion-reduce:transition-none md:mt-6"
         aria-hidden="true"
       />
     </ContentCard>
