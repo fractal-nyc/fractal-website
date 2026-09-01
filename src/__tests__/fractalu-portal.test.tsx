@@ -1,6 +1,9 @@
 import { act, fireEvent, render, screen, within } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { FractalUniversityPortal } from "@/components/education/FractalUniversityPortal";
+import {
+  CourseCard,
+  FractalUniversityPortal,
+} from "@/components/education/FractalUniversityPortal";
 import {
   FRACTALU_CATALOG,
   FRACTALU_CATEGORIES,
@@ -307,15 +310,47 @@ describe("FractalUniversityPortal", () => {
 
   it("uses Library-style category-first hierarchy and source-case course titles", () => {
     render(<FractalUniversityPortal />);
-    const firstCard = within(screen.getByTestId("fractalu-course-catalog")).getAllByRole("article")[0];
+    const catalog = screen.getByTestId("fractalu-course-catalog");
+    const cards = within(catalog).getAllByRole("article");
+    const firstCard = cards[0];
     const category = within(firstCard).getByText(FRACTALU_CATALOG.courses[0].category);
     const title = firstCard.querySelector("h3")!;
     expect(category.compareDocumentPosition(title) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    expect(cards).toHaveLength(20);
+    expect(catalog.querySelectorAll("[data-category-icon-label]")).toHaveLength(20);
+    expect(catalog.querySelectorAll("[data-category-icon]")).toHaveLength(20);
+    for (const icon of catalog.querySelectorAll("[data-category-icon]")) {
+      expect(icon).toHaveClass("h-7", "w-7", "shrink-0");
+      expect(icon).toHaveAttribute("aria-hidden", "true");
+      expect(icon.querySelector("svg")).toHaveAttribute("aria-hidden", "true");
+      expect(icon.querySelector("svg")).toHaveAttribute("focusable", "false");
+    }
     expect(title).toHaveClass("normal-case");
     expect(title.className).not.toMatch(/uppercase/);
     expect(firstCard.querySelector("[data-course-external-icon]")).toBeTruthy();
     expect(firstCard).toHaveClass("fractalu-course-card");
     expect(firstCard.parentElement?.querySelectorAll('svg[width="20"][height="20"]')).toHaveLength(4);
+  });
+
+  it("keeps an unknown long subject visible with a decorative fallback icon", () => {
+    const category = "Experimental interdisciplinary investigations across many practices";
+    const { container } = render(
+      <CourseCard
+        course={{ ...FRACTALU_CATALOG.courses[0], category }}
+        isFinePointer={false}
+        pinnedInstructorId={null}
+        suppressedInstructorId={null}
+        setPinnedInstructorId={() => undefined}
+        setSuppressedInstructorId={() => undefined}
+      />,
+    );
+    const lockup = container.querySelector<HTMLElement>("[data-category-icon-label]")!;
+    const label = within(lockup).getByText(category);
+    const title = container.querySelector("h3")!;
+    expect(lockup).toHaveAttribute("data-category-icon-key", "shapes");
+    expect(label).toHaveClass("text-label", "min-w-0", "[overflow-wrap:anywhere]");
+    expect(lockup.compareDocumentPosition(title) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    expect(within(lockup).queryByRole("img")).toBeNull();
   });
 
   it("links the 19 verified course documents and preserves the Butoh source fallback", () => {
@@ -369,6 +404,8 @@ describe("FractalUniversityPortal", () => {
       description.compareDocumentPosition(facts) & Node.DOCUMENT_POSITION_FOLLOWING,
     ).toBeTruthy();
     expect(biography).toHaveClass("fractalu-instructor-bio");
+    expect(instructorName).toHaveClass("text-body");
+    expect(instructorName).not.toHaveClass("text-label");
     expect(description).not.toHaveClass("hidden", "sr-only");
   });
 
@@ -446,6 +483,8 @@ describe("FractalUniversityPortal", () => {
     const bio = document.getElementById(bioId)!;
     const preview = button.closest("[data-pinned]")!;
     expect(button).toHaveAttribute("aria-expanded", "false");
+    expect(button).toHaveClass("text-body");
+    expect(button).not.toHaveClass("text-label");
     expect(bio).toHaveAttribute("data-instructor-bio");
 
     fireEvent.click(button);
@@ -582,7 +621,7 @@ describe("FractalUniversityPortal", () => {
       '[data-course-id="lost-generation-close-reading"]',
     )!;
     expect(representativeCourse.querySelector("h3")).toHaveClass("text-subtitle");
-    expect(representativeCourse.querySelector("[data-course-category] p")).toHaveClass(
+    expect(representativeCourse.querySelector("[data-category-icon-label] span:last-child")).toHaveClass(
       "text-label",
     );
     for (const term of representativeCourse.querySelectorAll("dt")) {

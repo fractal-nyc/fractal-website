@@ -32,7 +32,7 @@ try {
   const page = await context.newPage();
   const browserErrors = [];
   const failedAssets = [];
-  page.on("pageerror", (error) => browserErrors.push(error.message));
+  page.on("pageerror", (error) => browserErrors.push(error.stack ?? error.message));
   page.on("response", (response) => {
     if (response.url().startsWith(origin) && response.status() >= 400) failedAssets.push(`${response.status()} ${response.url()}`);
   });
@@ -63,7 +63,7 @@ try {
       copies: card.querySelectorAll(".library-copy-prompt").length,
     })));
     assert(cards.every(({ children, preview, names: nameCount, copies }) => children === 2 && preview && nameCount === 1 && copies === 1), `${category} has a non-minimal tile.`);
-    await page.screenshot({ path: `/tmp/frac122-${category}-1440x900.png` });
+    await page.screenshot({ path: `/tmp/frac123-${category}-1440x900.png` });
   }
 
   await page.goto(`${componentUrl}#browse/common`, { waitUntil: "networkidle" });
@@ -86,7 +86,7 @@ try {
   const firstCategory = page.locator(".library-category-chooser button").first();
   await firstCategory.focus();
   assert(await firstCategory.evaluate((button) => getComputedStyle(button).outlineColor) === activeChrome.foreground, "Catalog focus is not monochrome.");
-  await page.screenshot({ path: "/tmp/frac122-common-1440x900.png" });
+  await page.screenshot({ path: "/tmp/frac123-common-1440x900.png" });
 
   const search = page.getByRole("searchbox", { name: "Search components" });
   for (const [query, expected] of [
@@ -122,11 +122,34 @@ try {
   const secondAccent = await page.locator(".library-detail-preview .library-canvas-scope").evaluate((element) => getComputedStyle(element).getPropertyValue("--component-accent"));
   assert(themedAccent && secondAccent && themedAccent !== secondAccent, "Themed specimens no longer change token pairings.");
 
+  await page.goto(`${componentUrl}#component/library-article-card`, { waitUntil: "networkidle" });
+  await page.reload({ waitUntil: "networkidle" });
+  const articleBylineFont = await page.locator(".library-detail-preview [data-document-byline]").evaluate((element) => getComputedStyle(element).fontFamily);
+  assert(articleBylineFont.includes("Inter"), `Article Card byline is not Inter: ${articleBylineFont}.`);
+  assert(await page.locator(".library-detail-preview [data-document-byline].text-aside").count() === 1, "Article Card lost its text-aside byline role.");
+  assert(await page.locator(".library-detail-preview [data-category-icon-label] [data-category-icon] svg[aria-hidden='true']").count() === 1, "Article Card lost its decorative shared category icon.");
+  await page.screenshot({ path: "/tmp/frac123-component-article-1440x900.png" });
+
+  await page.goto(`${componentUrl}#component/course-card`, { waitUntil: "networkidle" });
+  await page.reload({ waitUntil: "networkidle" });
+  const courseInstructorFont = await page.locator(".library-detail-preview [data-instructor-name]").evaluate((element) => getComputedStyle(element).fontFamily);
+  assert(courseInstructorFont.includes("Inter"), `Course Card instructor is not Inter: ${courseInstructorFont}.`);
+  assert(await page.locator(".library-detail-preview [data-instructor-name].text-body").count() === 1, "Course Card lost its text-body instructor role.");
+  const courseSubject = page.getByLabel("Subject and icon");
+  for (const [subject, key] of [["Literature", "book-open"], ["Technology", "cpu"], ["Experimental category", "shapes"]]) {
+    await courseSubject.selectOption(subject);
+    const lockup = page.locator(".library-detail-preview [data-category-icon-label]");
+    assert(await lockup.getAttribute("data-category-icon-key") === key, `${subject} did not resolve to ${key}.`);
+    assert((await lockup.locator("span:last-child").textContent()).trim() === subject, `${subject} did not preserve its visible label.`);
+  }
+  assert(await page.getByLabel(/icon name/i).count() === 0, "Course Card exposes a manual icon-name control.");
+  await page.screenshot({ path: "/tmp/frac123-component-course-1440x900.png" });
+
   await page.goto(`${componentUrl}#component/search-bar`, { waitUntil: "networkidle" });
   await page.reload({ waitUntil: "networkidle" });
   await page.getByRole("combobox", { name: "Search Fractal" }).waitFor();
   assert(await page.getByRole("combobox", { name: "Search Fractal" }).count() === 1, "Search Bar site mode is not the real combobox.");
-  await page.screenshot({ path: "/tmp/frac122-search-site-1440x900.png" });
+  await page.screenshot({ path: "/tmp/frac123-search-site-1440x900.png" });
   const catalogHash = new URL(page.url()).hash;
   const siteSearch = page.getByRole("combobox", { name: "Search Fractal" });
   await siteSearch.fill("Campus");
@@ -141,7 +164,7 @@ try {
   assert(await page.getByRole("button", { name: "Clear search" }).count() === 1, "Collection Search Bar does not have exactly one clear control.");
   await page.getByRole("button", { name: "Clear search" }).click();
   assert(await collectionSearch.inputValue() === "" && await collectionSearch.evaluate((input) => document.activeElement === input), "Collection clear did not clear and restore focus.");
-  await page.screenshot({ path: "/tmp/frac122-search-collection-1440x900.png" });
+  await page.screenshot({ path: "/tmp/frac123-search-collection-1440x900.png" });
 
   await page.goto(`${componentUrl}#component/filter-bar`, { waitUntil: "networkidle" });
   await page.reload({ waitUntil: "networkidle" });
@@ -151,13 +174,13 @@ try {
   assert(await singleChips.evaluateAll((buttons) => buttons.every((button) => button.getBoundingClientRect().height >= 44 && button.getBoundingClientRect().width >= 44)), "Filter chips are smaller than 44px.");
   await singleChips.nth(1).click();
   assert(await singleChips.nth(1).getAttribute("aria-pressed") === "true", "Single-select chip did not select.");
-  await page.screenshot({ path: "/tmp/frac122-filter-single-1440x900.png" });
+  await page.screenshot({ path: "/tmp/frac123-filter-single-1440x900.png" });
   await page.getByLabel("Selection behavior").selectOption("multiple");
   const multiChips = page.locator("[data-filter-bar] button");
   await multiChips.nth(1).click();
   assert(await page.locator("[data-filter-bar] button[aria-pressed='true']").count() === 2, "Multi-select Filter Bar did not retain two selections.");
   assert((await multiChips.nth(1).getAttribute("aria-label"))?.includes("results"), "Multi-select chips lost counts.");
-  await page.screenshot({ path: "/tmp/frac122-filter-multiple-1440x900.png" });
+  await page.screenshot({ path: "/tmp/frac123-filter-multiple-1440x900.png" });
 
   await page.goto(`${componentUrl}#browse/media`, { waitUntil: "networkidle" });
   await loadedImages(page.locator("#photo-gallery img"), "Photo Gallery");
@@ -171,7 +194,7 @@ try {
   await carousel.getByRole("button", { name: "Next photo" }).click();
   await carousel.getByText("02 / 03").waitFor();
 
-  for (const id of ["content-card", "course-fact-grid", "empty-results-message", "membership-button-group", "embed-frame", "mandelbrot-corner-frame", "fade-in"]) {
+  for (const id of ["content-card", "course-fact-grid", "empty-results-message", "membership-button-group", "embed-frame", "mandelbrot-corner-frame", "fade-in", "category-icon-label"]) {
     await page.goto(`${componentUrl}#component/${id}`, { waitUntil: "networkidle" });
     await page.reload({ waitUntil: "networkidle" });
     assert(await page.getByText("Internal reference", { exact: true }).count() === 1 && await page.getByRole("button", { name: /Copy prompt/ }).count() === 0, `${id} is publicly copyable.`);
@@ -184,7 +207,7 @@ try {
     await matrixPage.goto(`${componentUrl}#browse/common`, { waitUntil: "networkidle" });
     assert(await overflow(matrixPage) <= 1, `Catalog overflows at ${width}px.`);
     assert(await columns(matrixPage) === expectedColumns, `${width}px gallery has the wrong column count.`);
-    if (width === 375) await matrixPage.screenshot({ path: "/tmp/frac122-common-375x812.png" });
+    if (width === 375) await matrixPage.screenshot({ path: "/tmp/frac123-common-375x812.png" });
     await matrixPage.close();
   }
   for (const category of ["actions", "forms", "cards", "media"]) {
@@ -192,8 +215,38 @@ try {
     await mobile.setViewportSize({ width: 375, height: 812 });
     await mobile.goto(`${componentUrl}#browse/${category}`, { waitUntil: "networkidle" });
     assert(await overflow(mobile) <= 1, `${category} overflows at 375px.`);
-    await mobile.screenshot({ path: `/tmp/frac122-${category}-375x812.png` });
+    await mobile.screenshot({ path: `/tmp/frac123-${category}-375x812.png` });
     await mobile.close();
+  }
+  const articleMobile = await context.newPage();
+  await articleMobile.setViewportSize({ width: 375, height: 812 });
+  await articleMobile.goto(`${componentUrl}#component/library-article-card`, { waitUntil: "networkidle" });
+  const mobileBylineFont = await articleMobile.locator(".library-detail-preview [data-document-byline]").evaluate((element) => getComputedStyle(element).fontFamily);
+  assert(mobileBylineFont.includes("Inter"), `Mobile Article Card byline is not Inter: ${mobileBylineFont}.`);
+  assert(await overflow(articleMobile) <= 1, "Article Card detail overflows at 375px.");
+  await articleMobile.screenshot({ path: "/tmp/frac123-component-article-375x812.png" });
+  await articleMobile.close();
+
+  for (const [width, suffix] of [[320, "320x812"], [375, "375x812"]]) {
+    const courseMobile = await context.newPage();
+    await courseMobile.setViewportSize({ width, height: 812 });
+    await courseMobile.goto(`${componentUrl}#component/course-card`, { waitUntil: "networkidle" });
+    await courseMobile.getByLabel("Subject and icon").selectOption("Experimental category");
+    const lockup = courseMobile.locator(".library-detail-preview [data-category-icon-label]");
+    await lockup.locator("span:last-child").evaluate((label) => {
+      label.textContent = "Experimental interdisciplinary investigations across many practices";
+    });
+    const iconSize = await lockup.locator("[data-category-icon]").evaluate((icon) => ({
+      width: icon.getBoundingClientRect().width,
+      height: icon.getBoundingClientRect().height,
+    }));
+    assert(iconSize.width === 28 && iconSize.height === 28, `${width}px Course Card icon changed size: ${JSON.stringify(iconSize)}.`);
+    assert(await lockup.getAttribute("data-category-icon-key") === "shapes", `${width}px Course Card lost its fallback icon.`);
+    const mobileInstructorFont = await courseMobile.locator(".library-detail-preview [data-instructor-name]").evaluate((element) => getComputedStyle(element).fontFamily);
+    assert(mobileInstructorFont.includes("Inter"), `${width}px Course Card instructor is not Inter: ${mobileInstructorFont}.`);
+    assert(await overflow(courseMobile) <= 1, `Course Card long subject overflows at ${width}px.`);
+    await courseMobile.screenshot({ path: `/tmp/frac123-component-course-${suffix}.png` });
+    await courseMobile.close();
   }
   for (const [id, modes] of [["search-bar", [["Search behavior", "site", "search-site"], ["Search behavior", "collection", "search-collection"]]], ["filter-bar", [["Selection behavior", "single", "filter-single"], ["Selection behavior", "multiple", "filter-multiple"]]]]) {
     for (const [label, value, filename] of modes) {
@@ -202,16 +255,20 @@ try {
       await mobile.goto(`${componentUrl}#component/${id}`, { waitUntil: "networkidle" });
       await mobile.getByLabel(label).selectOption(value);
       assert(await overflow(mobile) <= 1, `${filename} detail overflows at 375px.`);
-      await mobile.screenshot({ path: `/tmp/frac122-${filename}-375x812.png` });
+      await mobile.screenshot({ path: `/tmp/frac123-${filename}-375x812.png` });
       await mobile.close();
     }
   }
 
   const largeText = await context.newPage();
   await largeText.setViewportSize({ width: 375, height: 812 });
-  await largeText.goto(`${componentUrl}#browse/common`, { waitUntil: "networkidle" });
+  await largeText.goto(`${componentUrl}#component/course-card`, { waitUntil: "networkidle" });
+  await largeText.getByLabel("Subject and icon").selectOption("Experimental category");
   await largeText.evaluate(() => { document.documentElement.style.fontSize = "24px"; });
-  assert(await overflow(largeText) <= 1, "Catalog overflows with 24px root text.");
+  await largeText.locator(".library-detail-preview [data-category-icon-label] span:last-child").evaluate((label) => {
+    label.textContent = "Experimental interdisciplinary investigations across many practices";
+  });
+  assert(await overflow(largeText) <= 1, "Course Card overflows with a long subject and 24px root text.");
   await largeText.close();
 
   const reduced = await context.newPage();
@@ -238,13 +295,23 @@ try {
     for (const route of ["/", "/library", "/education", "/campus"]) {
       await production.goto(`${productionOrigin}${route}`, { waitUntil: "networkidle" });
       assert(await overflow(production) <= 1, `${route} overflows at ${width}px.`);
-      const affected = route === "/library" ? production.locator("[data-archive-search]") : route === "/education" ? production.locator("[data-filter-bar]").first() : route === "/campus" ? production.locator("[data-highlight-box]").first() : null;
+      const affected = route === "/library" ? production.locator("[data-document-byline]").first() : route === "/education" ? production.locator("[data-course-id]").first() : route === "/campus" ? production.locator("[data-highlight-box]").first() : null;
       if (affected) {
         await affected.evaluate((element) => element.scrollIntoView({ block: "center" }));
         await production.waitForTimeout(700);
       }
+      if (route === "/library") {
+        const bylineFont = await production.locator("[data-document-byline]").first().evaluate((element) => getComputedStyle(element).fontFamily);
+        assert(bylineFont.includes("Inter"), `Production Library byline is not Inter at ${width}px: ${bylineFont}.`);
+        assert(await production.locator("[data-category-icon-label] [data-category-icon] svg[aria-hidden='true']").count() > 0, "Production Library lost decorative category icons.");
+      }
+      if (route === "/education") {
+        const instructorFont = await production.locator("[data-instructor-name]").first().evaluate((element) => getComputedStyle(element).fontFamily);
+        assert(instructorFont.includes("Inter"), `Production Education instructor is not Inter at ${width}px: ${instructorFont}.`);
+        assert(await production.locator("[data-course-id]").count() === await production.locator("[data-course-id] [data-category-icon-label]").count(), "Production Education does not have one category icon per Course Card.");
+      }
       const slug = route === "/" ? "home" : route.slice(1);
-      await production.screenshot({ path: `/tmp/frac122-production-${slug}-${width === 375 ? "375x812" : "1440x900"}.png` });
+      await production.screenshot({ path: `/tmp/frac123-production-${slug}-${width === 375 ? "375x812" : "1440x900"}.png` });
     }
   }
 
@@ -272,7 +339,7 @@ try {
   assert(productionErrors.length === 0, `Production page errors: ${productionErrors.join(" | ")}`);
 
   await browser.close();
-  console.log("FRAC-122 component-library browser checks passed; screenshots are in /tmp/frac122-*.png.");
+  console.log("FRAC-123 component-library browser checks passed; screenshots are in /tmp/frac123-*.png.");
 } finally {
   catalogServer.kill("SIGTERM");
   productionServer.kill("SIGTERM");

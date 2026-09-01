@@ -39,7 +39,7 @@ The four link choices are intentionally separate. **Primary Button** is the bran
 
 **Search Bar** owns one visual shell with two real behavior modes: site search is the Home combobox that finds and navigates to site results, while collection search filters the current archive and has one working clear control. **Filter Bar** owns the reusable row of filter chips. Its Education mode selects one subject at a time; its Library mode can select several tags and show result counts. Editors change the labels, selection mode, and inherited site tokens rather than creating a new kind of search or filter.
 
-**Note Box** never contains a button action. If its prose needs a destination, use an **Inline Text Link** inside the note. **Highlight Box** is the generic name for the accent-filled pattern first used for Campus highlights; it is not restricted to the Campus colors. Article, Course, and Club cards keep typography tied to content roles: display text for titles, Inter for names/bylines and prose, and mono for labels and compact metadata. Course facts remain part of the **Course Card**, not a separate public component.
+**Note Box** never contains a button action. If its prose needs a destination, use an **Inline Text Link** inside the note. **Highlight Box** is the generic name for the accent-filled pattern first used for Campus highlights; it is not restricted to the Campus colors. Article, Course, and Club cards keep typography tied to content roles: display text for titles, Inter for names/bylines and prose, and mono for labels and compact metadata. Article bylines use italic Inter; Course instructor names use upright Inter. Course facts remain part of the **Course Card**, not a separate public component. Its subject icon derives automatically from the category text: current subjects use their reviewed semantic icons, while an unfamiliar new category safely displays the generic Shapes icon beside its original label. Editors choose the category, never an icon per course.
 
 Only the three items listed under Images and media are public choices. Photo Gallery is the real gallery component, not a placeholder frame. Supporting shells, empty states, fact grids, membership groups, corner decorations, embed frames, textures, motion helpers, and page structure remain internal implementation inventory. Old phrases such as “Home Search Bar,” “Archive Search Field,” “Library Tag Filter,” “Course Subject Filter,” “Campus Highlight,” and “Meet the Space Carousel” remain searchable aliases that lead to the current public name.
 
@@ -55,7 +55,7 @@ Arbitrary color input is intentionally excluded. “Any pairing” means any app
 
 ### Agent path
 
-Ask an agent to edit `src/data/fractalu-catalog.json`. This serializable JSON is the canonical checked-in source. `src/data/fractalu.ts` runtime-validates it and derives view-only fields such as the joined instructor label. Categories are derived from the supplied catalog rather than maintained in a second list.
+Ask an agent to edit `src/data/fractalu-catalog.json`. This serializable JSON is the canonical checked-in source. `src/data/fractalu.ts` runtime-validates it and derives view-only fields such as the joined instructor label. Categories are derived from the supplied catalog rather than maintained in a second list. Supply only the category text: every new category immediately receives the generic subject icon, and a future recurring category receives a specialized icon through one central mapping rather than a new JSON field.
 
 Example:
 
@@ -81,7 +81,7 @@ Inline errors link to their fields. Export actions stay disabled until the draft
 
 > Add this recurring program using the **Club Card** component. Include name, description, schedule, location, optional details link, and required action link.
 
-> Add the new category to the course data. Let the Education **Filter Bar** derive its single-select chips from the catalog; do not hard-code a second tag list.
+> Add the new category to the course data. Let the Education **Filter Bar** derive its single-select chips and let the **Course Card** derive its subject icon from that category; do not hard-code a second tag list or add an icon field.
 
 > Add this short explanation using the **Note Box** component with the Campus site color and Paper background.
 

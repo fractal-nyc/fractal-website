@@ -13,6 +13,8 @@ import { FadeIn } from "@/components/ui/FadeIn";
 import { CalloutCard } from "@/components/content/CalloutCard";
 import { ComponentColorScope, type ComponentColorwayId } from "@/components/content/ComponentColorScope";
 import { ContentCard } from "@/components/content/ContentCard";
+import { CategoryIconLabel } from "@/components/content/CategoryIconLabel";
+import { resolveCourseSubjectIcon } from "@/components/education/courseSubjectIcons";
 import { FactGrid } from "@/components/content/FactGrid";
 import { FilterGroup } from "@/components/content/FilterGroup";
 import { EmptyResultsMessage } from "@/components/content/EmptyResultsMessage";
@@ -222,6 +224,7 @@ export function CourseCard({
 }: CourseCardProps) {
   const descriptionId = `${course.id}-description`;
   const instructorPinned = pinnedInstructorId === course.id;
+  const subjectIcon = resolveCourseSubjectIcon(course.category);
 
   return (
     <MandelbrotCorners size="xs" opacity={0.12} className="h-full min-w-0">
@@ -230,11 +233,12 @@ export function CourseCard({
       data-course-category={course.category}
       data-course-id={course.id}
     >
-      <div className="mb-2 flex min-w-0 items-start gap-3 md:mb-3">
-        <p className="text-label min-w-0 [overflow-wrap:anywhere] text-[var(--component-accent,var(--color-house-education-light))]">
-          {course.category}
-        </p>
-      </div>
+      <CategoryIconLabel
+        icon={subjectIcon.icon}
+        iconKey={subjectIcon.key}
+        label={course.category}
+        className="mb-2 md:mb-3"
+      />
 
       <div className="fractalu-title-preview relative min-w-0">
         <h3 className="text-subtitle min-w-0 leading-snug normal-case text-foreground [overflow-wrap:anywhere]">

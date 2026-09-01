@@ -75,6 +75,7 @@ describe("team component registry", () => {
   it("declares truthful component-specific controls for the reviewed specimens", () => {
     const controlsFor = (id: string) => COMPONENT_REGISTRY.find((entry) => entry.id === id)!.controls.map(({ label }) => label);
     expect(controlsFor("course-card")).toContain("Content variant");
+    expect(controlsFor("course-card")).toContain("Subject and icon");
     expect(controlsFor("filter-bar")).toContain("Selection behavior");
     expect(controlsFor("editorial-quote")).toContain("Citation");
     expect(controlsFor("note-callout")).not.toContain("Actions");
@@ -107,7 +108,7 @@ describe("team component registry", () => {
   it("keeps supporting and invisible implementation sources out of the visual gallery", () => {
     expect(galleryEntries.some(({ id }) => id === "site-footer-marker")).toBe(false);
     expect(COMPONENT_REGISTRY.filter(({ presentation }) => presentation === "internal").every(({ internalReason }) => Boolean(internalReason))).toBe(true);
-    const hiddenIds = ["color-pairing", "page-frame", "type-style", "reading-column", "standard-section-frame", "wide-card-grid", "section-header", "site-navigation", "campus-section", "home-hero", "housing-map", "origin-story", "sierpinski-carpet", "fractal-city-scene", "octahedron-hero", "content-card", "course-fact-grid", "membership-button-group", "empty-results-message", "hero-search", "archive-search", "filter-chip", "library-tag-filter", "course-subject-filter", "embed-frame", "mandelbrot-corner-frame", "mandelbrot-icon", "paper-grain-overlay", "fractal-pattern", "fade-in", "gallery-image", "photo-frame"];
+    const hiddenIds = ["color-pairing", "page-frame", "type-style", "reading-column", "standard-section-frame", "wide-card-grid", "section-header", "site-navigation", "campus-section", "home-hero", "housing-map", "origin-story", "sierpinski-carpet", "fractal-city-scene", "octahedron-hero", "content-card", "course-fact-grid", "membership-button-group", "empty-results-message", "hero-search", "archive-search", "filter-chip", "library-tag-filter", "course-subject-filter", "embed-frame", "mandelbrot-corner-frame", "mandelbrot-icon", "paper-grain-overlay", "fractal-pattern", "fade-in", "gallery-image", "photo-frame", "category-icon-label"];
     for (const id of hiddenIds) {
       const entry = COMPONENT_REGISTRY.find((candidate) => candidate.id === id)!;
       expect(entry.presentation).not.toBe("gallery");
@@ -115,6 +116,34 @@ describe("team component registry", () => {
       expect(entry.galleryCategory).toBeUndefined();
       expect(galleryEntries).not.toContain(entry);
     }
+  });
+
+  it("keeps Course Card subjects automatic and the shared category lockup internal", () => {
+    const course = COMPONENT_REGISTRY.find(({ id }) => id === "course-card")!;
+    const subject = course.controls.find(({ id }) => id === "subject");
+    expect(subject).toMatchObject({ label: "Subject and icon", testValue: "Experimental category" });
+    expect(subject && "options" in subject ? subject.options.map(({ value }) => value) : []).toEqual([
+      "Craft",
+      "Literature",
+      "Mind & Body",
+      "Movement",
+      "Music",
+      "Nature",
+      "Technology",
+      "Writing",
+      "Experimental category",
+    ]);
+    expect(course.promptNeeds).toMatch(/icon is derived automatically/i);
+    expect(course.contentFields.join(" ")).toMatch(/icon derives automatically/i);
+    expect(COMPONENT_REGISTRY.find(({ id }) => id === "category-icon-label")).toMatchObject({
+      presentation: "internal",
+      previewMode: "invisible",
+    });
+    const catalog = JSON.parse(fs.readFileSync("src/data/fractalu-catalog.json", "utf8")) as {
+      courses: Array<Record<string, unknown>>;
+    };
+    expect(catalog.courses.every((record) => !("icon" in record) && !("iconName" in record))).toBe(true);
+    expect(galleryEntries).toHaveLength(15);
   });
 
   it("exposes one shared search choice and retains thin behavior wrappers internally", () => {

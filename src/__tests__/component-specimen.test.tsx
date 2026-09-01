@@ -146,6 +146,49 @@ describe("interactive component specimens", () => {
     expect(inlineView.container.querySelector(".library-gallery-preview p a[data-outbound-link]")).not.toHaveClass("text-label");
   });
 
+  it("uses production Inter author roles and derives Course Card icons from subject", () => {
+    const article = COMPONENT_REGISTRY.find(({ id }) => id === "library-article-card")!;
+    const articleView = render(
+      <ComponentDetail entry={article} onBack={() => undefined} onOpenLive={() => undefined} />,
+    );
+    const byline = articleView.container.querySelector("[data-document-byline]");
+    expect(byline).toHaveClass("text-aside");
+    expect(byline).not.toHaveClass("text-label");
+    expect(articleView.container.querySelector("[data-category-icon-label]")).toBeInTheDocument();
+    articleView.unmount();
+
+    const course = COMPONENT_REGISTRY.find(({ id }) => id === "course-card")!;
+    const courseView = render(
+      <ComponentDetail entry={course} onBack={() => undefined} onOpenLive={() => undefined} />,
+    );
+    const instructor = courseView.container.querySelector("[data-instructor-name]");
+    expect(instructor).toHaveClass("text-body");
+    expect(instructor).not.toHaveClass("text-label");
+    expect(courseView.container.querySelector("[data-category-icon-label]")).toHaveAttribute(
+      "data-category-icon-key",
+      "book-open",
+    );
+    expect(within(courseView.container).queryByLabelText(/icon name/i)).not.toBeInTheDocument();
+
+    fireEvent.change(within(courseView.container).getByLabelText("Subject and icon"), {
+      target: { value: "Technology" },
+    });
+    expect(courseView.container.querySelector("[data-category-icon-label]")).toHaveAttribute(
+      "data-category-icon-key",
+      "cpu",
+    );
+    expect(within(courseView.container.querySelector("[data-category-icon-label]")!).getByText("Technology")).toBeInTheDocument();
+
+    fireEvent.change(within(courseView.container).getByLabelText("Subject and icon"), {
+      target: { value: "Experimental category" },
+    });
+    expect(courseView.container.querySelector("[data-category-icon-label]")).toHaveAttribute(
+      "data-category-icon-key",
+      "shapes",
+    );
+    expect(within(courseView.container.querySelector("[data-category-icon-label]")!).getByText("Experimental category")).toBeInTheDocument();
+  });
+
   it("renders internal inventory as a non-copyable technical notice", () => {
     const entry = COMPONENT_REGISTRY.find(({ id }) => id === "site-navigation")!;
     const { container } = render(<ComponentDetail entry={entry} onBack={() => undefined} onOpenLive={() => undefined} />);

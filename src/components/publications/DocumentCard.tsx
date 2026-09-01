@@ -3,6 +3,7 @@ import type { LucideIcon } from "lucide-react";
 import { MandelbrotCorners } from "@/components/ui/MandelbrotCorners";
 import { ComponentColorScope, type ComponentColorwayId } from "@/components/content/ComponentColorScope";
 import { ContentCard } from "@/components/content/ContentCard";
+import { CategoryIconLabel } from "@/components/content/CategoryIconLabel";
 import {
   ArrowUpRight,
   BookOpen,
@@ -63,19 +64,11 @@ export function DocumentCard({ document, className = "", colorway = "library" }:
       <ContentCard as="div" className="flex h-full w-full flex-col transition-colors group-hover:border-[var(--component-accent)]">
       {/* Top row: category + external link icon */}
       <div className="flex items-center justify-between mb-3">
-        <div className="flex items-center gap-2">
-          <div className="flex h-7 w-7 items-center justify-center rounded-md bg-[color-mix(in_srgb,var(--component-accent)_12%,transparent)]">
-            <CategoryIcon
-              size={14}
-              strokeWidth={1.5}
-              className="text-[var(--component-accent)]"
-              aria-hidden="true"
-            />
-          </div>
-          <span className="text-label text-[var(--component-accent)]">
-            {categoryLabel}
-          </span>
-        </div>
+        <CategoryIconLabel
+          icon={CategoryIcon}
+          iconKey={document.category}
+          label={categoryLabel}
+        />
         <ArrowUpRight
           size={16}
           strokeWidth={1.5}
@@ -90,7 +83,7 @@ export function DocumentCard({ document, className = "", colorway = "library" }:
       </h3>
 
       {/* Author */}
-      <p className="text-aside text-foreground-muted mt-1">{document.byline}</p>
+      <p className="text-aside text-foreground-muted mt-1" data-document-byline>{document.byline}</p>
 
       {/* Description */}
       {document.description && (
