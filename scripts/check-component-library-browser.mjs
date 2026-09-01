@@ -78,8 +78,70 @@ try {
       copies: card.querySelectorAll(".library-copy-prompt").length,
     })));
     assert(cards.every(({ children, preview, names: nameCount, opens, cues, copies }) => children === 2 && preview && nameCount === 1 && opens === 1 && cues === 1 && copies === 1), `${category} has a non-minimal or undiscoverable tile.`);
-    await page.screenshot({ path: `/tmp/frac128-${category}-1440x900.png` });
+    await page.screenshot({ path: `/tmp/frac130-${category}-1440x900.png` });
   }
+
+  await page.goto(`${componentUrl}#browse/all`, { waitUntil: "networkidle" });
+  const nativeCanvasTokens = {
+    "action-buttons": "--color-house-events-light",
+    "outbound-link": "--color-house-events-light",
+    "outbound-text-link": "--color-house-education-deep",
+    "inline-text-link": "--color-house-campus-light",
+    "search-bar": "--color-background",
+    "filter-bar": "--color-house-education-deep",
+    "library-article-card": "--color-house-library-light",
+    "note-callout": "--color-house-co-living-light",
+    "course-card": "--color-house-education-deep",
+    "club-card": "--color-house-education-deep",
+    "campus-audience-highlight": "--color-house-campus-light",
+    "editorial-quote": "--color-house-campus-light",
+    "meet-space-carousel": "--color-background",
+    "photo-gallery": "--color-background",
+    "campus-banner": "--color-background",
+  };
+  for (const [id, token] of Object.entries(nativeCanvasTokens)) {
+    const colors = await page.locator(`#${id}`).evaluate((card, tokenName) => {
+      const resolve = (value) => {
+        const probe = document.createElement("span");
+        probe.style.color = value;
+        document.body.append(probe);
+        const result = getComputedStyle(probe).color;
+        probe.remove();
+        return result;
+      };
+      const root = getComputedStyle(document.documentElement);
+      const canvas = card.querySelector(".library-gallery-preview > .library-canvas-scope");
+      const actions = card.querySelector(".library-card-actions");
+      return {
+        expected: resolve(root.getPropertyValue(tokenName)),
+        canvas: canvas ? getComputedStyle(canvas).backgroundColor : "",
+        card: getComputedStyle(card).backgroundColor,
+        chrome: resolve(root.getPropertyValue("--color-background")),
+        actionsTop: actions?.getBoundingClientRect().top ?? 0,
+        canvasBottom: canvas?.getBoundingClientRect().bottom ?? 0,
+      };
+    }, token);
+    assert(colors.canvas === colors.expected, `${id} canvas is not using ${token}: ${JSON.stringify(colors)}.`);
+    assert(colors.card === colors.chrome, `${id} recolored the catalogue card chrome: ${JSON.stringify(colors)}.`);
+    assert(colors.actionsTop >= colors.canvasBottom, `${id} native color escaped behind its label/actions: ${JSON.stringify(colors)}.`);
+  }
+  const paperCardContexts = await page.evaluate(() => Object.fromEntries([
+    ["library-article-card", "[data-document-byline]"],
+    ["course-card", ".fractalu-course-card"],
+    ["club-card", ".fractalu-club-card"],
+  ].map(([id, selector]) => {
+    const card = document.querySelector(`#${id}`);
+    const productionContent = card?.querySelector(selector);
+    const outer = card?.querySelector(".library-gallery-preview > .library-canvas-scope");
+    const paper = productionContent?.closest("[data-component-surface='paper']");
+    return [id, {
+      hasPaperScope: Boolean(paper),
+      paperTransparent: paper ? getComputedStyle(paper).backgroundColor === "rgba(0, 0, 0, 0)" : false,
+      contentBackground: productionContent ? getComputedStyle(productionContent.closest(".rounded-lg") ?? productionContent).backgroundColor : "",
+      outerBackground: outer ? getComputedStyle(outer).backgroundColor : "",
+    }];
+  })));
+  assert(Object.values(paperCardContexts).every(({ hasPaperScope, paperTransparent }) => hasPaperScope && paperTransparent), `Native cards lost their transparent paper token scope: ${JSON.stringify(paperCardContexts)}.`);
 
   await page.goto(`${componentUrl}#browse/common`, { waitUntil: "networkidle" });
   assert((await page.locator('.library-gallery-shell > [role="status"]').innerText()).trim() === "9 components shown", "Common count announcement is wrong.");
@@ -122,7 +184,7 @@ try {
   await focusCard.locator(".library-open-component").focus();
   const focusFeedback = await focusCard.evaluate((card) => ({ border: getComputedStyle(card).borderColor, shadow: getComputedStyle(card).boxShadow }));
   assert(focusFeedback.border === activeChrome.foreground && focusFeedback.shadow !== "none", `View options focus has no equivalent card feedback: ${JSON.stringify(focusFeedback)}.`);
-  await page.screenshot({ path: "/tmp/frac128-common-1440x900.png" });
+  await page.screenshot({ path: "/tmp/frac130-common-1440x900.png" });
 
   const search = page.getByRole("searchbox", { name: "Search components" });
   for (const [query, expected] of [
@@ -182,6 +244,29 @@ try {
   assert(linkRoles.outbound.arrows === 1 && linkRoles.inline.arrows === 0, `Outbound/Inline arrow roles are wrong: ${JSON.stringify(linkRoles)}.`);
   assert(linkRoles.outbound.font === linkRoles.inline.font && linkRoles.standalone.font !== linkRoles.inline.font, `Link font roles are wrong: ${JSON.stringify(linkRoles)}.`);
   assert(Math.abs(linkRoles.outbound.size - linkRoles.inline.size) < 0.1, `Outbound and Inline chooser sizes differ: ${JSON.stringify(linkRoles)}.`);
+  const nativeLinkTreatments = await page.evaluate(() => Object.fromEntries([
+    ["outbound-link", "light"],
+    ["outbound-text-link", "dark"],
+    ["inline-text-link", "dark"],
+  ].map(([id, expectedTone]) => {
+    const card = document.querySelector(`#${id}`);
+    const scope = card?.querySelector(".library-gallery-preview > .library-canvas-scope");
+    const link = card?.querySelector("a[data-outbound-link]");
+    link?.focus();
+    const linkStyle = link ? getComputedStyle(link) : null;
+    const scopeStyle = scope ? getComputedStyle(scope) : null;
+    return [id, {
+      expectedTone,
+      tone: link?.getAttribute("data-outbound-tone"),
+      linkColor: linkStyle?.color,
+      decoration: linkStyle?.textDecorationColor,
+      surfaceColor: scopeStyle?.backgroundColor,
+      onSurfaceColor: scopeStyle?.color,
+      decorationToken: scopeStyle?.getPropertyValue("--component-link-decoration").trim(),
+      ringOffset: scopeStyle?.getPropertyValue("--component-ring-offset").trim(),
+    }];
+  })));
+  assert(Object.values(nativeLinkTreatments).every(({ expectedTone, tone, linkColor, decoration, onSurfaceColor, surfaceColor, decorationToken, ringOffset }) => tone === expectedTone && linkColor === onSurfaceColor && decoration !== "rgba(0, 0, 0, 0)" && decorationToken?.startsWith("color-mix") && ringOffset && surfaceColor), `Native link contrast is not semantic: ${JSON.stringify(nativeLinkTreatments)}.`);
 
   for (const [id, arrowCount] of [["outbound-text-link", 1], ["inline-text-link", 0]]) {
     await page.goto(`${componentUrl}#component/${id}`, { waitUntil: "networkidle" });
@@ -198,7 +283,29 @@ try {
     if (id === "inline-text-link") assert((await context.textContent()).includes("crystal@fractalnyc.com"), "Inline lead preview did not use the production Campus Crystal example.");
     await page.screenshot({ path: `/tmp/frac124-${id}-lead-1440x900.png` });
     await page.getByLabel("Example text context").selectOption("body");
-    await page.screenshot({ path: `/tmp/frac124-${id}-body-1440x900.png` });
+    await page.screenshot({ path: `/tmp/frac130-detail-${id}-1440x900.png` });
+  }
+
+  for (const id of ["outbound-link", "outbound-text-link", "inline-text-link"]) {
+    await page.goto(`${componentUrl}#component/${id}`, { waitUntil: "networkidle" });
+    const scope = page.locator(".library-detail-preview > .library-canvas-scope");
+    const link = page.locator(".library-detail-preview a[data-outbound-link]");
+    await page.getByLabel("Site color").selectOption("neutral");
+    await page.getByLabel("Background").selectOption("paper");
+    await page.waitForTimeout(200);
+    const alternate = await page.evaluate(() => {
+      const canvas = document.querySelector(".library-detail-preview > .library-canvas-scope");
+      const anchor = document.querySelector(".library-detail-preview a[data-outbound-link]");
+      return canvas && anchor ? {
+        colorway: canvas.getAttribute("data-component-colorway"),
+        surface: canvas.getAttribute("data-component-surface"),
+        tone: anchor.getAttribute("data-outbound-tone"),
+        canvasColor: getComputedStyle(canvas).color,
+        linkColor: getComputedStyle(anchor).color,
+      } : null;
+    });
+    assert(alternate && alternate.colorway === "neutral" && alternate.surface === "paper" && alternate.tone === "light" && alternate.canvasColor === alternate.linkColor, `${id} did not adapt safely after changing its approved pairing: ${JSON.stringify(alternate)}.`);
+    assert(await scope.count() === 1 && await link.count() === 1, `${id} stopped using its production preview after changing theme.`);
   }
 
   for (const legacyView of ["component", "preview"]) {
@@ -210,6 +317,7 @@ try {
 
   await page.goto(`${componentUrl}#component/note-callout`, { waitUntil: "networkidle" });
   await page.reload({ waitUntil: "networkidle" });
+  await page.screenshot({ path: "/tmp/frac130-detail-note-1440x900.png" });
   assert(await page.getByLabel("Actions").count() === 0 && await page.locator(".library-detail-preview button").count() === 0, "Note Box still exposes an action slot.");
   assert(await page.locator(".library-detail-preview p a[data-outbound-link]").count() === 1 && await page.locator(".library-detail-preview [data-outbound-arrow]").count() === 0, "Note Box does not use an inline prose link.");
   await page.getByLabel("Site color").selectOption("campus");
@@ -225,7 +333,7 @@ try {
   const articleBylineStyle = await page.locator(".library-detail-preview [data-document-byline]").evaluate((element) => ({ style: getComputedStyle(element).fontStyle, classes: element.className }));
   assert(articleBylineStyle.style === "normal" && articleBylineStyle.classes.includes("text-body") && !articleBylineStyle.classes.includes("text-aside"), `Article Card byline is not upright body Inter: ${JSON.stringify(articleBylineStyle)}.`);
   assert(await page.locator(".library-detail-preview [data-category-icon-label] [data-category-icon] svg[aria-hidden='true']").count() === 1, "Article Card lost its decorative shared category icon.");
-  await page.screenshot({ path: "/tmp/frac124-component-article-1440x900.png" });
+  await page.screenshot({ path: "/tmp/frac130-detail-article-1440x900.png" });
 
   await page.goto(`${componentUrl}#component/course-card`, { waitUntil: "networkidle" });
   await page.reload({ waitUntil: "networkidle" });
@@ -266,7 +374,7 @@ try {
     };
   });
   assert(restingPreviewState.cardHeight < 700 && restingPreviewState.descriptionPosition === "absolute" && restingPreviewState.descriptionVisibility === "hidden" && restingPreviewState.biographyPosition === "absolute" && restingPreviewState.biographyVisibility === "hidden", `Desktop Course Card is not compact at rest: ${JSON.stringify(restingPreviewState)}.`);
-  await page.screenshot({ path: "/tmp/frac129-course-card-rest-1440x900.png" });
+  await page.screenshot({ path: "/tmp/frac130-detail-course-1440x900.png" });
 
   await galleryCourseCard.hover();
   await page.waitForTimeout(220);
@@ -452,7 +560,7 @@ try {
       assert(compactLayout && compactLayout.titleBottom <= compactLayout.searchTop && compactLayout.searchBottom <= compactLayout.toolsTop && compactLayout.toolsBottom <= compactLayout.categoriesTop, `${width}px browse controls are out of logical order: ${JSON.stringify(compactLayout)}.`);
       assert(compactLayout.toolButtons.length === 2 && compactLayout.toolButtons.every(({ width: buttonWidth, height }) => buttonWidth >= 44 && height >= 44), `${width}px tool choices are not both usable: ${JSON.stringify(compactLayout.toolButtons)}.`);
     }
-    if (width === 375) await matrixPage.screenshot({ path: "/tmp/frac128-common-375x812.png" });
+    if (width === 375) await matrixPage.screenshot({ path: "/tmp/frac130-common-375x812.png" });
     await matrixPage.close();
   }
   for (const category of ["actions", "forms", "cards", "media"]) {
@@ -460,7 +568,7 @@ try {
     await mobile.setViewportSize({ width: 375, height: 812 });
     await mobile.goto(`${componentUrl}#browse/${category}`, { waitUntil: "networkidle" });
     assert(await overflow(mobile) <= 1, `${category} overflows at 375px.`);
-    await mobile.screenshot({ path: `/tmp/frac128-${category}-375x812.png` });
+    await mobile.screenshot({ path: `/tmp/frac130-${category}-375x812.png` });
     await mobile.close();
   }
   for (const id of ["outbound-text-link", "inline-text-link"]) {
@@ -470,7 +578,7 @@ try {
     const link = mobile.locator(".library-detail-preview a[data-outbound-link]");
     assert(await link.evaluate((element) => Number.parseFloat(getComputedStyle(element).fontSize)) === 16, `${id} mobile body context is not 16px.`);
     assert(await overflow(mobile) <= 1, `${id} body context overflows at 375px.`);
-    await mobile.screenshot({ path: `/tmp/frac124-${id}-body-375x812.png` });
+    await mobile.screenshot({ path: `/tmp/frac130-detail-${id}-375x812.png` });
     if (id === "inline-text-link") await mobile.getByLabel("Linked words").fill("crystal@fractalnyc.com");
     await mobile.getByLabel("Example text context").selectOption("lead");
     assert(await link.evaluate((element) => Number.parseFloat(getComputedStyle(element).fontSize)) === 18, `${id} mobile lead context is not 18px.`);
@@ -486,8 +594,15 @@ try {
   assert(await overflow(articleMobile) <= 1, "Article Card detail overflows at 375px.");
   const mobileBylineStyle = await articleMobile.locator(".library-detail-preview [data-document-byline]").evaluate((element) => getComputedStyle(element).fontStyle);
   assert(mobileBylineStyle === "normal", `Mobile Article Card byline is italic: ${mobileBylineStyle}.`);
-  await articleMobile.screenshot({ path: "/tmp/frac124-component-article-375x812.png" });
+  await articleMobile.screenshot({ path: "/tmp/frac130-detail-article-375x812.png" });
   await articleMobile.close();
+
+  const noteMobile = await context.newPage();
+  await noteMobile.setViewportSize({ width: 375, height: 812 });
+  await noteMobile.goto(`${componentUrl}#component/note-callout`, { waitUntil: "networkidle" });
+  assert(await overflow(noteMobile) <= 1, "Note Box detail overflows at 375px.");
+  await noteMobile.screenshot({ path: "/tmp/frac130-detail-note-375x812.png" });
+  await noteMobile.close();
 
   for (const [width, suffix] of [[320, "320x812"], [375, "375x812"]]) {
     const courseMobile = await context.newPage();
@@ -517,7 +632,7 @@ try {
     }), `${width}px course description is not inline and visible.`);
     assert(await mobileBiography.evaluate((element) => getComputedStyle(element).display) === "none", `${width}px compact biography policy changed.`);
     assert(await overflow(courseMobile) <= 1, `Course Card long subject overflows at ${width}px.`);
-    await courseMobile.screenshot({ path: `/tmp/frac129-component-course-${suffix}.png` });
+    await courseMobile.screenshot({ path: `/tmp/frac130-detail-course-${suffix}.png` });
     await courseMobile.close();
   }
   for (const [id, modes] of [["search-bar", [["Search behavior", "site", "search-site"], ["Search behavior", "collection", "search-collection"]]], ["filter-bar", [["Selection behavior", "single", "filter-single"], ["Selection behavior", "multiple", "filter-multiple"]]]]) {
@@ -806,7 +921,7 @@ try {
   assert(productionErrors.length === 0, `Production page errors: ${productionErrors.join(" | ")}`);
 
   await browser.close();
-  console.log("Component-library and production browser checks passed; Course Card evidence includes /tmp/frac129-*.png.");
+  console.log("Component-library and production browser checks passed; native-color evidence is in /tmp/frac130-*.png.");
 } finally {
   catalogServer.kill("SIGTERM");
   productionServer.kill("SIGTERM");

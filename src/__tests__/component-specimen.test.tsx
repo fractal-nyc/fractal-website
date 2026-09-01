@@ -330,6 +330,67 @@ describe("interactive component specimens", () => {
     expect(within(carouselView.container).getByRole("button", { name: "Copy prompt for Photo Carousel" })).toBeInTheDocument();
   });
 
+  it("keeps browse and focused previews in the same registry-owned native context", () => {
+    for (const entry of COMPONENT_REGISTRY.filter(({ presentation }) => presentation === "gallery")) {
+      const browse = render(<VisualSpecimenCard entry={entry} onOpen={() => undefined} />);
+      const browseScope = browse.container.querySelector(".library-gallery-preview > .library-canvas-scope");
+      expect(browseScope, entry.id).toHaveAttribute("data-component-colorway", entry.defaultColorway);
+      expect(browseScope, entry.id).toHaveAttribute("data-component-surface", entry.defaultSurface);
+      browse.unmount();
+
+      const detail = render(<ComponentDetail entry={entry} onBack={() => undefined} onOpenLive={() => undefined} />);
+      const detailScope = detail.container.querySelector(".library-detail-preview > .library-canvas-scope");
+      expect(detailScope, entry.id).toHaveAttribute("data-component-colorway", entry.defaultColorway);
+      expect(detailScope, entry.id).toHaveAttribute("data-component-surface", entry.defaultSurface);
+      detail.unmount();
+      cleanup();
+    }
+  });
+
+  it("places production paper cards on their native house fields without recoloring the cards", () => {
+    for (const [id, colorway, surface, selector] of [
+      ["library-article-card", "library", "light", "[data-document-byline]"],
+      ["course-card", "education", "deep", ".fractalu-course-card"],
+      ["club-card", "education", "deep", ".fractalu-club-card"],
+    ] as const) {
+      const entry = COMPONENT_REGISTRY.find((candidate) => candidate.id === id)!;
+      const view = render(<ComponentDetail entry={entry} onBack={() => undefined} onOpenLive={() => undefined} />);
+      const outer = view.container.querySelector(".library-detail-preview > .library-canvas-scope")!;
+      expect(outer).toHaveAttribute("data-component-colorway", colorway);
+      expect(outer).toHaveAttribute("data-component-surface", surface);
+      const productionContent = view.container.querySelector(selector)!;
+      const paperScope = productionContent.closest("[data-component-surface='paper']");
+      expect(paperScope, id).toBeInTheDocument();
+      expect(paperScope, id).not.toBe(outer);
+      expect((paperScope as HTMLElement).style.backgroundColor).toBe("transparent");
+      view.unmount();
+      cleanup();
+    }
+  });
+
+  it("derives public link tone from the selected canvas surface", () => {
+    for (const [id, initialTone] of [
+      ["outbound-link", "light"],
+      ["outbound-text-link", "dark"],
+      ["inline-text-link", "dark"],
+    ] as const) {
+      const entry = COMPONENT_REGISTRY.find((candidate) => candidate.id === id)!;
+      const view = render(<ComponentDetail entry={entry} onBack={() => undefined} onOpenLive={() => undefined} />);
+      const link = () => view.container.querySelector(".library-detail-preview a[data-outbound-link]")!;
+      expect(link()).toHaveAttribute("data-outbound-tone", initialTone);
+      expect(link()).toHaveClass(initialTone === "dark" ? "text-background" : "text-foreground");
+
+      fireEvent.change(within(view.container).getByLabelText("Site color"), { target: { value: "education" } });
+      fireEvent.change(within(view.container).getByLabelText("Background"), { target: { value: "deep" } });
+      fireEvent.change(within(view.container).getByLabelText("Destination type"), { target: { value: "external" } });
+      expect(link()).toHaveAttribute("data-outbound-tone", "dark");
+      expect(link()).toHaveAttribute("target", "_blank");
+      expect(link()).toHaveAttribute("rel", "noopener noreferrer");
+      view.unmount();
+      cleanup();
+    }
+  });
+
   it("defaults Filter Bar to the complete live Education capsule treatment", () => {
     const entry = COMPONENT_REGISTRY.find(({ id }) => id === "filter-bar")!;
     const { container } = render(<ComponentDetail entry={entry} onBack={() => undefined} onOpenLive={() => undefined} />);

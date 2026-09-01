@@ -42,6 +42,7 @@ export function OutboundLink({
       rel={opensNewTab ? "noopener noreferrer" : undefined}
       aria-label={opensNewTab && normalizedName ? `${normalizedName} (opens in a new tab)` : normalizedName}
       data-outbound-link=""
+      data-outbound-tone={tone}
       className={[
         "min-w-0 max-w-full [overflow-wrap:anywhere] underline decoration-1 underline-offset-4 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2",
         tone === "dark"

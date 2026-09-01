@@ -2,7 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
 import { COMPONENT_REGISTRY, GALLERY_CATEGORIES, galleryEntries, searchableEntryText } from "../../components/catalog/registry";
-import { COMPONENT_COLORWAYS } from "@/components/content/ComponentColorScope";
+import { COMPONENT_COLORWAYS, getAllowedComponentSurfaces } from "@/components/content/ComponentColorScope";
 import { HOUSES, SECTIONS } from "@/data/houses";
 import { readRoute } from "../../components/ComponentLibraryApp";
 
@@ -73,6 +73,35 @@ describe("team component registry", () => {
     expect(COMPONENT_COLORWAYS.find(({ id }) => id === "education")?.accent).toBe(HOUSES.find(({ id }) => id === "school")?.palette.light);
     expect(COMPONENT_COLORWAYS.find(({ id }) => id === "story")?.accent).toBe(SECTIONS.story.accent);
     expect(COMPONENT_COLORWAYS.find(({ id }) => id === "story")?.allowedSurfaces).toEqual(["paper"]);
+  });
+
+  it("declares one approved representative native context for every public specimen", () => {
+    const expected = {
+      "action-buttons": ["events", "light"],
+      "outbound-link": ["events", "light"],
+      "outbound-text-link": ["education", "deep"],
+      "inline-text-link": ["campus", "light"],
+      "search-bar": ["neutral", "paper"],
+      "filter-bar": ["education", "deep"],
+      "library-article-card": ["library", "light"],
+      "note-callout": ["co-living", "light"],
+      "course-card": ["education", "deep"],
+      "club-card": ["education", "deep"],
+      "campus-audience-highlight": ["campus", "light"],
+      "editorial-quote": ["campus", "light"],
+      "meet-space-carousel": ["neutral", "paper"],
+      "photo-gallery": ["neutral", "paper"],
+      "campus-banner": ["neutral", "paper"],
+    } as const;
+
+    expect(Object.keys(expected)).toHaveLength(15);
+    for (const [id, [colorway, surface]] of Object.entries(expected)) {
+      const entry = galleryEntries.find((candidate) => candidate.id === id)!;
+      expect(entry, id).toBeTruthy();
+      expect([entry.defaultColorway, entry.defaultSurface], id).toEqual([colorway, surface]);
+      expect(entry.surfaceModes, id).toContain(surface);
+      expect(getAllowedComponentSurfaces(colorway), id).toContain(surface);
+    }
   });
 
   it("declares truthful component-specific controls for the reviewed specimens", () => {

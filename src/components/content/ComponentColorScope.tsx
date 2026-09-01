@@ -14,6 +14,7 @@ export type ComponentColorwayId =
   | "people";
 
 export type ComponentSurfaceMode = "paper" | "light" | "deep";
+export type ComponentSurfaceTone = "light" | "dark";
 
 export interface ComponentColorway {
   id: ComponentColorwayId;
@@ -25,6 +26,7 @@ export interface ComponentColorway {
   accent: string;
   accentSoft: string;
   onAccent: string;
+  surfaceTones: Readonly<Record<ComponentSurfaceMode, ComponentSurfaceTone>>;
   allowedSurfaces: readonly ComponentSurfaceMode[];
   notes: string;
 }
@@ -43,15 +45,15 @@ const library = house("lab");
 const politicalClub = house("forum");
 
 export const COMPONENT_COLORWAYS: readonly ComponentColorway[] = [
-  { id: "neutral", name: "Neutral", light: PAPER, deep: INK, onLight: INK, onDeep: PAPER, accent: INK, accentSoft: PAPER, onAccent: PAPER, allowedSurfaces: allSurfaces, notes: "Cream and charcoal foundation." },
-  { id: "co-living", name: "Co-Living pair", ...neighborhood, onLight: INK, onDeep: PAPER, accent: neighborhood.deep, accentSoft: neighborhood.light, onAccent: PAPER, allowedSurfaces: allSurfaces, notes: "Olive house pairing." },
-  { id: "events", name: "Events pair", ...events, onLight: INK, onDeep: INK, accent: events.deep, accentSoft: events.light, onAccent: INK, allowedSurfaces: allSurfaces, notes: "Essential text remains charcoal on both event surfaces." },
-  { id: "campus", name: "Campus pair", ...campus, onLight: PAPER, onDeep: PAPER, accent: campus.deep, accentSoft: campus.light, onAccent: PAPER, allowedSurfaces: allSurfaces, notes: "Campus is the approved light-surface cream-text exception." },
-  { id: "education", name: "Education pair", ...education, onLight: PAPER, onDeep: PAPER, accent: education.light, accentSoft: education.deep, onAccent: PAPER, allowedSurfaces: allSurfaces, notes: "Education inverts the pair: light red is the accent and deep red is the field." },
-  { id: "library", name: "Library pair", ...library, onLight: INK, onDeep: PAPER, accent: library.deep, accentSoft: library.light, onAccent: PAPER, allowedSurfaces: allSurfaces, notes: "Pink library pairing." },
-  { id: "political-club", name: "Political Club pair", ...politicalClub, onLight: INK, onDeep: PAPER, accent: politicalClub.light, accentSoft: politicalClub.deep, onAccent: INK, allowedSurfaces: allSurfaces, notes: "Political Club inverts the pair: light teal is the accent and deep teal is the field." },
-  { id: "story", name: "Story accent on cream", light: PAPER, deep: PAPER, onLight: INK, onDeep: INK, accent: SECTIONS.story.accent, accentSoft: SECTIONS.story.accent, onAccent: INK, allowedSurfaces: paperOnly, notes: "Story stays on cream; gold is decorative only." },
-  { id: "people", name: "People accent on cream", light: PAPER, deep: PAPER, onLight: INK, onDeep: INK, accent: SECTIONS.people.accent, accentSoft: SECTIONS.people.accent, onAccent: INK, allowedSurfaces: paperOnly, notes: "People stays on cream; gold is decorative only." },
+  { id: "neutral", name: "Neutral", light: PAPER, deep: INK, onLight: INK, onDeep: PAPER, accent: INK, accentSoft: PAPER, onAccent: PAPER, surfaceTones: { paper: "light", light: "light", deep: "dark" }, allowedSurfaces: allSurfaces, notes: "Cream and charcoal foundation." },
+  { id: "co-living", name: "Co-Living pair", ...neighborhood, onLight: INK, onDeep: PAPER, accent: neighborhood.deep, accentSoft: neighborhood.light, onAccent: PAPER, surfaceTones: { paper: "light", light: "light", deep: "dark" }, allowedSurfaces: allSurfaces, notes: "Olive house pairing." },
+  { id: "events", name: "Events pair", ...events, onLight: INK, onDeep: INK, accent: events.deep, accentSoft: events.light, onAccent: INK, surfaceTones: { paper: "light", light: "light", deep: "light" }, allowedSurfaces: allSurfaces, notes: "Essential text remains charcoal on both event surfaces." },
+  { id: "campus", name: "Campus pair", ...campus, onLight: PAPER, onDeep: PAPER, accent: campus.deep, accentSoft: campus.light, onAccent: PAPER, surfaceTones: { paper: "light", light: "dark", deep: "dark" }, allowedSurfaces: allSurfaces, notes: "Campus is the approved light-surface cream-text exception." },
+  { id: "education", name: "Education pair", ...education, onLight: PAPER, onDeep: PAPER, accent: education.light, accentSoft: education.deep, onAccent: PAPER, surfaceTones: { paper: "light", light: "dark", deep: "dark" }, allowedSurfaces: allSurfaces, notes: "Education inverts the pair: light red is the accent and deep red is the field." },
+  { id: "library", name: "Library pair", ...library, onLight: INK, onDeep: PAPER, accent: library.deep, accentSoft: library.light, onAccent: PAPER, surfaceTones: { paper: "light", light: "light", deep: "dark" }, allowedSurfaces: allSurfaces, notes: "Pink library pairing." },
+  { id: "political-club", name: "Political Club pair", ...politicalClub, onLight: INK, onDeep: PAPER, accent: politicalClub.light, accentSoft: politicalClub.deep, onAccent: INK, surfaceTones: { paper: "light", light: "light", deep: "dark" }, allowedSurfaces: allSurfaces, notes: "Political Club inverts the pair: light teal is the accent and deep teal is the field." },
+  { id: "story", name: "Story accent on cream", light: PAPER, deep: PAPER, onLight: INK, onDeep: INK, accent: SECTIONS.story.accent, accentSoft: SECTIONS.story.accent, onAccent: INK, surfaceTones: { paper: "light", light: "light", deep: "light" }, allowedSurfaces: paperOnly, notes: "Story stays on cream; gold is decorative only." },
+  { id: "people", name: "People accent on cream", light: PAPER, deep: PAPER, onLight: INK, onDeep: INK, accent: SECTIONS.people.accent, accentSoft: SECTIONS.people.accent, onAccent: INK, surfaceTones: { paper: "light", light: "light", deep: "light" }, allowedSurfaces: paperOnly, notes: "People stays on cream; gold is decorative only." },
 ] as const;
 
 export function getComponentColorway(id: ComponentColorwayId) {
@@ -60,6 +62,12 @@ export function getComponentColorway(id: ComponentColorwayId) {
 
 export function getAllowedComponentSurfaces(id: ComponentColorwayId) {
   return getComponentColorway(id).allowedSurfaces;
+}
+
+export function getComponentSurfaceTone(id: ComponentColorwayId, surface: ComponentSurfaceMode): ComponentSurfaceTone {
+  const palette = getComponentColorway(id);
+  const safeSurface = palette.allowedSurfaces.includes(surface) ? surface : palette.allowedSurfaces[0];
+  return palette.surfaceTones[safeSurface];
 }
 
 export const DEFAULT_COMPONENT_COLORWAYS = {
@@ -95,6 +103,8 @@ export function ComponentColorScope({
     "--component-on-accent": palette.onAccent,
     "--component-border": `color-mix(in srgb, ${onSurface} 22%, transparent)`,
     "--component-focus": palette.accent,
+    "--component-link-decoration": `color-mix(in srgb, ${onSurface} 40%, transparent)`,
+    "--component-ring-offset": surfaceColor,
     "--accent": palette.accent,
     "--btn-text": palette.accent,
     backgroundColor: surfaceColor,

@@ -1,6 +1,6 @@
 import { render } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
-import { COMPONENT_COLORWAYS, ComponentColorScope } from "@/components/content/ComponentColorScope";
+import { COMPONENT_COLORWAYS, ComponentColorScope, getComponentSurfaceTone } from "@/components/content/ComponentColorScope";
 import { HOUSES } from "@/data/houses";
 
 describe("ComponentColorScope", () => {
@@ -28,5 +28,14 @@ describe("ComponentColorScope", () => {
 
     const { container: storyContainer } = render(<ComponentColorScope colorway="story" surface="deep">Story</ComponentColorScope>);
     expect(storyContainer.firstElementChild).toHaveAttribute("data-component-surface", "paper");
+  });
+
+  it("derives link tone from the actual approved surface semantics", () => {
+    expect(getComponentSurfaceTone("events", "light")).toBe("light");
+    expect(getComponentSurfaceTone("events", "deep")).toBe("light");
+    expect(getComponentSurfaceTone("campus", "light")).toBe("dark");
+    expect(getComponentSurfaceTone("education", "deep")).toBe("dark");
+    expect(getComponentSurfaceTone("library", "light")).toBe("light");
+    expect(getComponentSurfaceTone("story", "deep")).toBe("light");
   });
 });

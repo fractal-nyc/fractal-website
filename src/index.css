@@ -118,6 +118,19 @@
   }
 }
 
+/* Links inside a token-backed component scope follow the actual surface,
+   including house surfaces whose light/deep suffix does not predict contrast. */
+.component-color-scope a[data-outbound-link] {
+  color: var(--component-on-surface) !important;
+  text-decoration-color: var(--component-link-decoration) !important;
+  --tw-ring-color: var(--component-on-surface);
+  --tw-ring-offset-color: var(--component-ring-offset);
+}
+
+.component-color-scope a[data-outbound-link]:is(:hover, :focus-visible) {
+  text-decoration-color: var(--component-on-surface) !important;
+}
+
 /* Custom Utilities for Editorial Look */
 @layer utilities {
   .text-balance {
