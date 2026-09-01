@@ -18,7 +18,7 @@ export function CalloutCard({ label, children, cornerSize = "sm", surface = "pap
       className={[
         "rounded-md border p-7 text-left md:px-10 md:py-8",
         "text-foreground border-[var(--component-accent,var(--accent,currentColor))]",
-        surface === "tint" ? "bg-[color-mix(in_srgb,var(--component-accent,var(--accent,currentColor))_8%,transparent)]" : "bg-background",
+        surface === "tint" ? "bg-[color-mix(in_srgb,var(--component-accent,var(--accent,currentColor))_8%,transparent)]" : "component-paper-surface bg-background",
         className,
       ].filter(Boolean).join(" ")}
     >

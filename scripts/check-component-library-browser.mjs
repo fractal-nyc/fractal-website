@@ -134,14 +134,30 @@ try {
     const productionContent = card?.querySelector(selector);
     const outer = card?.querySelector(".library-gallery-preview > .library-canvas-scope");
     const paper = productionContent?.closest("[data-component-surface='paper']");
+    const paintedCard = productionContent?.closest(".rounded-lg") ?? productionContent;
+    const nestedLink = paintedCard?.querySelector("a[data-outbound-link]");
+    const root = getComputedStyle(document.documentElement);
+    const resolve = (value) => {
+      const probe = document.createElement("span");
+      probe.style.color = value;
+      document.body.append(probe);
+      const result = getComputedStyle(probe).color;
+      probe.remove();
+      return result;
+    };
     return [id, {
       hasPaperScope: Boolean(paper),
       paperTransparent: paper ? getComputedStyle(paper).backgroundColor === "rgba(0, 0, 0, 0)" : false,
-      contentBackground: productionContent ? getComputedStyle(productionContent.closest(".rounded-lg") ?? productionContent).backgroundColor : "",
+      contentBackground: paintedCard ? getComputedStyle(paintedCard).backgroundColor : "",
+      contentColor: paintedCard ? getComputedStyle(paintedCard).color : "",
+      linkColor: nestedLink ? getComputedStyle(nestedLink).color : "",
+      paperColor: resolve(root.getPropertyValue("--color-background")),
+      inkColor: resolve(root.getPropertyValue("--color-foreground")),
       outerBackground: outer ? getComputedStyle(outer).backgroundColor : "",
     }];
   })));
   assert(Object.values(paperCardContexts).every(({ hasPaperScope, paperTransparent }) => hasPaperScope && paperTransparent), `Native cards lost their transparent paper token scope: ${JSON.stringify(paperCardContexts)}.`);
+  assert(Object.values(paperCardContexts).every(({ contentBackground, contentColor, linkColor, paperColor, inkColor }) => contentBackground === paperColor && contentColor === inkColor && (!linkColor || linkColor === inkColor)), `Nested Article/Course/Club content stopped owning paper contrast: ${JSON.stringify(paperCardContexts)}.`);
 
   await page.goto(`${componentUrl}#browse/common`, { waitUntil: "networkidle" });
   assert((await page.locator('.library-gallery-shell > [role="status"]').innerText()).trim() === "9 components shown", "Common count announcement is wrong.");
@@ -323,8 +339,46 @@ try {
   await page.getByLabel("Site color").selectOption("campus");
   const themedAccent = await page.locator(".library-detail-preview .library-canvas-scope").evaluate((element) => getComputedStyle(element).getPropertyValue("--component-accent"));
   await page.getByLabel("Site color").selectOption("education");
+  await page.getByLabel("Background").selectOption("deep");
+  await page.waitForTimeout(200);
   const secondAccent = await page.locator(".library-detail-preview .library-canvas-scope").evaluate((element) => getComputedStyle(element).getPropertyValue("--component-accent"));
   assert(themedAccent && secondAccent && themedAccent !== secondAccent, "Themed specimens no longer change token pairings.");
+  const notePaperContrast = await page.evaluate(() => {
+    const canvas = document.querySelector(".library-detail-preview > .library-canvas-scope");
+    const card = document.querySelector(".library-detail-preview .component-paper-surface");
+    const link = document.querySelector(".library-detail-preview .component-paper-surface a[data-outbound-link]");
+    link?.focus();
+    const root = getComputedStyle(document.documentElement);
+    const resolve = (value) => {
+      const probe = document.createElement("span");
+      probe.style.color = value;
+      document.body.append(probe);
+      const result = getComputedStyle(probe).color;
+      probe.remove();
+      return result;
+    };
+    const canvasStyle = canvas ? getComputedStyle(canvas) : null;
+    const cardStyle = card ? getComputedStyle(card) : null;
+    const linkStyle = link ? getComputedStyle(link) : null;
+    return {
+      colorway: canvas?.getAttribute("data-component-colorway"),
+      surface: canvas?.getAttribute("data-component-surface"),
+      canvasBackground: canvasStyle?.backgroundColor,
+      canvasText: canvasStyle?.color,
+      expectedCanvas: resolve(root.getPropertyValue("--color-house-education-deep")),
+      cardBackground: cardStyle?.backgroundColor,
+      cardText: cardStyle?.color,
+      expectedPaper: resolve(root.getPropertyValue("--color-background")),
+      expectedInk: resolve(root.getPropertyValue("--color-foreground")),
+      linkColor: linkStyle?.color,
+      decoration: linkStyle?.textDecorationColor,
+      ringOffset: linkStyle?.getPropertyValue("--tw-ring-offset-color").trim(),
+    };
+  });
+  assert(notePaperContrast.colorway === "education" && notePaperContrast.surface === "deep" && notePaperContrast.canvasBackground === notePaperContrast.expectedCanvas, `Note Box reproduction did not reach Education/deep: ${JSON.stringify(notePaperContrast)}.`);
+  assert(notePaperContrast.cardBackground === notePaperContrast.expectedPaper && notePaperContrast.cardText === notePaperContrast.expectedInk && notePaperContrast.linkColor === notePaperContrast.expectedInk && notePaperContrast.linkColor !== notePaperContrast.canvasText, `Paper Note Box lost nearest-surface contrast: ${JSON.stringify(notePaperContrast)}.`);
+  assert(notePaperContrast.decoration && notePaperContrast.decoration !== "rgba(0, 0, 0, 0)" && notePaperContrast.ringOffset, `Paper Note Box lost decoration or ring offset: ${JSON.stringify(notePaperContrast)}.`);
+  await page.screenshot({ path: "/tmp/frac130-rework-note-education-deep-paper-1440x900.png" });
 
   await page.goto(`${componentUrl}#component/library-article-card`, { waitUntil: "networkidle" });
   await page.reload({ waitUntil: "networkidle" });

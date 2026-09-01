@@ -379,6 +379,8 @@ describe("interactive component specimens", () => {
       const link = () => view.container.querySelector(".library-detail-preview a[data-outbound-link]")!;
       expect(link()).toHaveAttribute("data-outbound-tone", initialTone);
       expect(link()).toHaveClass(initialTone === "dark" ? "text-background" : "text-foreground");
+      expect(link()).toHaveClass("component-surface-link");
+      expect(link()).toHaveAttribute("data-outbound-surface-adaptive", "");
 
       fireEvent.change(within(view.container).getByLabelText("Site color"), { target: { value: "education" } });
       fireEvent.change(within(view.container).getByLabelText("Background"), { target: { value: "deep" } });
@@ -386,6 +388,43 @@ describe("interactive component specimens", () => {
       expect(link()).toHaveAttribute("data-outbound-tone", "dark");
       expect(link()).toHaveAttribute("target", "_blank");
       expect(link()).toHaveAttribute("rel", "noopener noreferrer");
+      view.unmount();
+      cleanup();
+    }
+  });
+
+  it("keeps nested paper surfaces readable when the outer canvas changes to Education deep", () => {
+    const note = COMPONENT_REGISTRY.find(({ id }) => id === "note-callout")!;
+    const noteView = render(<ComponentDetail entry={note} onBack={() => undefined} onOpenLive={() => undefined} />);
+    fireEvent.change(within(noteView.container).getByLabelText("Card treatment"), { target: { value: "paper" } });
+    fireEvent.change(within(noteView.container).getByLabelText("Site color"), { target: { value: "education" } });
+    fireEvent.change(within(noteView.container).getByLabelText("Background"), { target: { value: "deep" } });
+    const noteOuter = noteView.container.querySelector(".library-detail-preview > .library-canvas-scope")!;
+    const notePaper = noteView.container.querySelector(".library-detail-preview .component-paper-surface")!;
+    const noteLink = noteView.container.querySelector(".library-detail-preview a[data-outbound-link]")! as HTMLElement;
+    expect(noteOuter).toHaveAttribute("data-component-colorway", "education");
+    expect(noteOuter).toHaveAttribute("data-component-surface", "deep");
+    expect(notePaper).toHaveClass("bg-background", "text-foreground");
+    expect(noteLink).toHaveAttribute("data-outbound-tone", "light");
+    expect(noteLink).not.toHaveClass("component-surface-link");
+    noteView.unmount();
+    cleanup();
+
+    for (const [id, selector] of [
+      ["library-article-card", "[data-document-byline]"],
+      ["course-card", ".fractalu-course-card a[data-outbound-link]"],
+      ["club-card", ".fractalu-club-card a[data-outbound-link]"],
+    ] as const) {
+      const entry = COMPONENT_REGISTRY.find((candidate) => candidate.id === id)!;
+      const view = render(<ComponentDetail entry={entry} onBack={() => undefined} onOpenLive={() => undefined} />);
+      const content = view.container.querySelector(selector)!;
+      const paperScope = content.closest("[data-component-surface='paper']");
+      expect(paperScope, id).toBeInTheDocument();
+      expect(paperScope, id).not.toBe(view.container.querySelector(".library-detail-preview > .library-canvas-scope"));
+      if (content.matches("a[data-outbound-link]")) {
+        expect(content).toHaveClass("text-foreground");
+        expect(content).not.toHaveClass("component-surface-link");
+      }
       view.unmount();
       cleanup();
     }

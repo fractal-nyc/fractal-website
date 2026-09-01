@@ -14,6 +14,7 @@ export interface OutboundLinkProps extends Omit<AnchorHTMLAttributes<HTMLAnchorE
   variant?: OutboundLinkVariant;
   arrow?: OutboundLinkArrow;
   arrowClassName?: string;
+  surfaceAdaptive?: boolean;
 }
 
 const withoutStraightArrow = (value: string) => value.replace(/\s*→\s*/gu, " ").trim();
@@ -27,6 +28,7 @@ export function OutboundLink({
   arrow,
   className,
   arrowClassName,
+  surfaceAdaptive = false,
   ...props
 }: OutboundLinkProps) {
   const opensNewTab = /^https?:\/\//.test(href);
@@ -43,11 +45,13 @@ export function OutboundLink({
       aria-label={opensNewTab && normalizedName ? `${normalizedName} (opens in a new tab)` : normalizedName}
       data-outbound-link=""
       data-outbound-tone={tone}
+      data-outbound-surface-adaptive={surfaceAdaptive ? "" : undefined}
       className={[
         "min-w-0 max-w-full [overflow-wrap:anywhere] underline decoration-1 underline-offset-4 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2",
         tone === "dark"
           ? "text-background decoration-background/40 hover:decoration-background focus-visible:decoration-background focus-visible:ring-background focus-visible:ring-offset-house-education-deep"
           : "text-foreground decoration-foreground/40 hover:decoration-foreground focus-visible:decoration-foreground focus-visible:ring-[var(--component-focus,var(--color-house-education-light))] focus-visible:ring-offset-background",
+        surfaceAdaptive && "component-surface-link",
         (variant === "standalone" || variant === "outbound") && "inline-flex min-h-11 flex-wrap items-center gap-x-1.5 rounded-md",
         variant === "linked-title" && "fractalu-course-title-link inline-flex items-start gap-2 rounded-sm",
         variant === "inline" && "rounded-sm",

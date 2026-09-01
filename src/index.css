@@ -118,17 +118,28 @@
   }
 }
 
-/* Links inside a token-backed component scope follow the actual surface,
-   including house surfaces whose light/deep suffix does not predict contrast. */
-.component-color-scope a[data-outbound-link] {
-  color: var(--component-on-surface) !important;
-  text-decoration-color: var(--component-link-decoration) !important;
+/* A paper card owns its text contrast even when it sits inside a colored page
+   scope. Descendants consume the nearest surface variables without global
+   descendant selectors or specificity overrides. */
+.component-paper-surface {
+  --component-on-surface: var(--color-foreground);
+  --component-muted: var(--color-foreground-muted);
+  --component-link-decoration: color-mix(in srgb, var(--color-foreground) 40%, transparent);
+  --component-ring-offset: var(--color-background);
+}
+
+/* Only links that explicitly represent the surrounding scoped surface adapt
+   to its palette. Nested production cards retain their own component-owned
+   paper contrast instead of being overridden by an outer page field. */
+.component-surface-link {
+  color: var(--component-on-surface);
+  text-decoration-color: var(--component-link-decoration);
   --tw-ring-color: var(--component-on-surface);
   --tw-ring-offset-color: var(--component-ring-offset);
 }
 
-.component-color-scope a[data-outbound-link]:is(:hover, :focus-visible) {
-  text-decoration-color: var(--component-on-surface) !important;
+.component-surface-link:is(:hover, :focus-visible) {
+  text-decoration-color: var(--component-on-surface);
 }
 
 /* Custom Utilities for Editorial Look */
