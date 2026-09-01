@@ -29,6 +29,8 @@ import { useMediaQuery } from "@/hooks/useMediaQuery";
 
 const FINE_POINTER_PREVIEW_QUERY =
   "(min-width: 64rem) and (hover: hover) and (pointer: fine)";
+const COMPONENT_LIBRARY_PREVIEW_QUERY =
+  "(min-width: 48rem) and (hover: hover) and (pointer: fine)";
 
 const COURSE_REVEAL_STEP = 0.06;
 const COURSE_REVEAL_MAX = 0.3;
@@ -308,15 +310,21 @@ export function CourseFactGrid({ course }: { course: FractalUCourse }) {
 export interface CourseCardCollectionProps {
   courses: FractalUCourse[];
   animateInitialCards?: boolean;
+  presentationContext?: "site" | "component-library";
 }
 
 export function CourseCardCollection({
   courses,
   animateInitialCards = true,
+  presentationContext = "site",
 }: CourseCardCollectionProps) {
   const usesLargeText = useLargeTextScale();
+  const previewQuery =
+    presentationContext === "component-library"
+      ? COMPONENT_LIBRARY_PREVIEW_QUERY
+      : FINE_POINTER_PREVIEW_QUERY;
   const isFinePointer =
-    useMediaQuery(FINE_POINTER_PREVIEW_QUERY) && !usesLargeText;
+    useMediaQuery(previewQuery) && !usesLargeText;
   const [pinnedInstructorId, setPinnedInstructorId] = useState<string | null>(null);
   const [suppressedInstructorId, setSuppressedInstructorId] = useState<string | null>(null);
 
@@ -347,6 +355,9 @@ export function CourseCardCollection({
       data-testid="fractalu-course-catalog"
       data-course-collection
       data-preview-mode={isFinePointer ? "enhanced" : "inline"}
+      {...(presentationContext === "component-library"
+        ? { "data-course-presentation-context": "component-library" }
+        : {})}
     >
       {courses.length === 0 && <EmptyResultsMessage title="No courses match this subject." guidance="Choose another subject to continue browsing." />}
       {courses.map((course, index) => (

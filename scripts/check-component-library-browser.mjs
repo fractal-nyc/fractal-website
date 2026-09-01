@@ -549,6 +549,15 @@ try {
   await productionParity.goto(`${productionOrigin}/education`, { waitUntil: "networkidle" });
   await productionParity.waitForTimeout(700);
   const productionCourseCard = productionParity.locator("[data-course-id]").first();
+  const productionRestingShell = await productionCourseCard.evaluate((card) => {
+    const style = getComputedStyle(card);
+    return { borderRadius: style.borderRadius, background: style.backgroundColor, overflow: style.overflow };
+  });
+  const galleryRestingShell = await galleryCourseCard.evaluate((card) => {
+    const style = getComputedStyle(card);
+    return { borderRadius: style.borderRadius, background: style.backgroundColor, overflow: style.overflow };
+  });
+  assert(JSON.stringify(galleryRestingShell) === JSON.stringify(productionRestingShell), `Gallery and production Course Card shells differ: ${JSON.stringify({ galleryRestingShell, productionRestingShell })}.`);
   await productionCourseCard.hover();
   await productionParity.waitForTimeout(220);
   const productionHoverState = await productionCourseCard.evaluate((card) => {
@@ -556,6 +565,7 @@ try {
     return { border: style.borderColor, shadow: style.boxShadow, transform: style.transform };
   });
   assert(JSON.stringify(galleryHoverState) === JSON.stringify(productionHoverState), `Gallery and production Course Card hover responses differ: ${JSON.stringify({ galleryHoverState, productionHoverState })}.`);
+  await productionParity.screenshot({ path: "/tmp/frac133-course-card-production-parity-1440x900.png" });
   await productionParity.close();
 
   const galleryCourseTitle = galleryCourseCard.locator(".fractalu-course-title-link");
@@ -604,6 +614,146 @@ try {
   assert(await galleryTileDescription.evaluate((element) => getComputedStyle(element).visibility) === "visible", "Browse-tile Course Card title hover did not reveal its description.");
   assert(await page.locator("#course-card .library-canvas").evaluate((element) => getComputedStyle(element).overflow) === "visible" && await page.locator("#course-card").evaluate((element) => getComputedStyle(element).overflow) === "visible", "Browse-tile Course Card preview is clipped by gallery-only overflow.");
   await page.screenshot({ path: "/tmp/frac129-course-card-gallery-title-preview-1440x900.png" });
+
+  const reportedCourseContext = await browser.newContext({
+    viewport: { width: 873, height: 863 },
+    deviceScaleFactor: 2,
+  });
+  const reportedCoursePage = await reportedCourseContext.newPage();
+  await reportedCoursePage.goto(`${componentUrl}#browse/all`, { waitUntil: "networkidle" });
+  assert(
+    await reportedCoursePage.evaluate(() => matchMedia("(hover: hover) and (pointer: fine)").matches),
+    "The exact 873px reproduction is not running with a fine pointer.",
+  );
+  const reportedTile = reportedCoursePage.locator("#course-card");
+  await reportedTile.scrollIntoViewIfNeeded();
+  const reportedCollection = reportedTile.locator("[data-course-collection]");
+  const reportedCard = reportedCollection.locator(".fractalu-course-card");
+  const reportedDescription = reportedCard.locator("[data-course-description]");
+  const reportedBiography = reportedCard.locator("[data-instructor-bio]");
+  const reportedInstructor = reportedCard.locator("[data-instructor-name]");
+  assert(await reportedCollection.getAttribute("data-course-presentation-context") === "component-library", "873px browse specimen did not request the internal component-library presentation context.");
+  assert(await reportedCollection.getAttribute("data-preview-mode") === "enhanced", "873px browse specimen did not resolve to the real enhanced Course Card mode.");
+  assert(await reportedCollection.locator('[data-fractalu-reveal-mode="static"]').count() === 1, "873px browse specimen changed the static gallery entrance policy.");
+  assert(await reportedCollection.locator(".fractalu-course-card").count() === 1 && await reportedCollection.locator("[data-course-id]").count() === 1, "873px browse specimen cloned or replaced the real Course Card DOM.");
+  assert(await reportedCard.locator('[data-category-icon-key="book-open"] [data-category-icon]').count() === 1, "873px browse specimen lost the derived Literature icon.");
+  const reportedRest = await reportedCard.evaluate((card) => {
+    const tile = card.closest(".library-visual-card");
+    const description = card.querySelector("[data-course-description]");
+    const biography = card.querySelector("[data-instructor-bio]");
+    const cardBox = card.getBoundingClientRect();
+    const tileBox = tile?.getBoundingClientRect();
+    const style = getComputedStyle(card);
+    return {
+      cardBox: { top: cardBox.top, right: cardBox.right, bottom: cardBox.bottom, left: cardBox.left, width: cardBox.width, height: cardBox.height },
+      tileBox: tileBox ? { top: tileBox.top, right: tileBox.right, bottom: tileBox.bottom, left: tileBox.left } : null,
+      borderRadius: style.borderRadius,
+      background: style.backgroundColor,
+      border: style.borderColor,
+      shadow: style.boxShadow,
+      transform: style.transform,
+      overflow: style.overflow,
+      descriptionPosition: description ? getComputedStyle(description).position : null,
+      descriptionVisibility: description ? getComputedStyle(description).visibility : null,
+      biographyPosition: biography ? getComputedStyle(biography).position : null,
+      biographyVisibility: biography ? getComputedStyle(biography).visibility : null,
+    };
+  });
+  assert(reportedRest.cardBox.height < 700 && reportedRest.descriptionPosition === "absolute" && reportedRest.descriptionVisibility === "hidden" && reportedRest.biographyPosition === "absolute" && reportedRest.biographyVisibility === "hidden", `873px browse Course Card is not compact at rest: ${JSON.stringify(reportedRest)}.`);
+  assert(reportedRest.borderRadius === "12px" && reportedRest.overflow === "visible", `873px browse Course Card lost its shared rounded-lg shell or overflow policy: ${JSON.stringify(reportedRest)}.`);
+  assert(reportedRest.tileBox && reportedRest.cardBox.top >= reportedRest.tileBox.top && reportedRest.cardBox.left >= reportedRest.tileBox.left && reportedRest.cardBox.right <= reportedRest.tileBox.right && reportedRest.cardBox.bottom <= reportedRest.tileBox.bottom, `873px browse Course Card does not fit completely inside its tile: ${JSON.stringify(reportedRest)}.`);
+  await reportedTile.screenshot({ path: "/tmp/frac133-course-card-browse-873x863@2x.png" });
+
+  await reportedCard.hover();
+  await reportedCoursePage.waitForTimeout(220);
+  const reportedHover = await reportedCard.evaluate((card) => {
+    const style = getComputedStyle(card);
+    return { border: style.borderColor, shadow: style.boxShadow, transform: style.transform };
+  });
+  assert(reportedHover.border !== reportedRest.border && reportedHover.shadow !== reportedRest.shadow && reportedHover.transform !== reportedRest.transform, `873px browse Course Card lost the production hover response: ${JSON.stringify({ reportedRest, reportedHover })}.`);
+  const reportedTitle = reportedCard.locator(".fractalu-course-title-link");
+  await reportedTitle.hover();
+  await reportedCoursePage.waitForTimeout(180);
+  assert(await reportedDescription.evaluate((element) => getComputedStyle(element).visibility) === "visible", "873px title hover did not reveal the real description preview.");
+  assert(await reportedBiography.evaluate((element) => getComputedStyle(element).visibility) === "hidden", "873px title hover incorrectly revealed the biography.");
+  assert(await reportedTile.evaluate((tile) => [tile, tile.querySelector(".library-canvas")].every((element) => element && getComputedStyle(element).overflow === "visible")), "873px temporary Course Card preview is clipped by the gallery tile or canvas.");
+  await reportedCoursePage.screenshot({ path: "/tmp/frac133-course-card-title-preview-873x863@2x.png" });
+
+  await reportedInstructor.hover();
+  await reportedCoursePage.waitForTimeout(180);
+  assert(await reportedBiography.evaluate((element) => getComputedStyle(element).visibility) === "visible", "873px instructor hover did not reveal the real biography preview.");
+  assert(await reportedDescription.evaluate((element) => getComputedStyle(element).visibility) === "hidden", "873px instructor hover incorrectly revealed the description.");
+  await reportedInstructor.focus();
+  await reportedInstructor.click();
+  assert(await reportedInstructor.getAttribute("aria-expanded") === "true", "873px instructor click did not pin the biography.");
+  await reportedCoursePage.mouse.move(0, 0);
+  assert(await reportedBiography.evaluate((element) => getComputedStyle(element).visibility) === "visible", "873px pinned biography closed on pointer exit.");
+  await reportedCoursePage.keyboard.press("Escape");
+  assert(await reportedInstructor.getAttribute("aria-expanded") === "false" && await reportedInstructor.evaluate((element) => document.activeElement === element), "873px Escape did not close the biography and restore focus.");
+  assert(await reportedInstructor.locator("..").getAttribute("data-suppressed") === "true", "873px Escape did not mark the focus-within biography as suppressed.");
+  await reportedCoursePage.waitForTimeout(180);
+  assert(await reportedBiography.evaluate((element) => getComputedStyle(element).visibility) === "hidden", "873px Escape left the suppressed focus-within biography visible.");
+  await reportedTitle.focus();
+  assert(await reportedInstructor.locator("..").getAttribute("data-suppressed") === "false", "873px biography suppression did not reset after focus left.");
+
+  await reportedCoursePage.goto(`${componentUrl}#component/course-card`, { waitUntil: "networkidle" });
+  const reportedDetail = reportedCoursePage.locator(".library-detail-preview [data-course-collection]");
+  const reportedDetailCard = reportedDetail.locator(".fractalu-course-card");
+  assert(await reportedDetail.getAttribute("data-course-presentation-context") === "component-library" && await reportedDetail.getAttribute("data-preview-mode") === "enhanced", "873px Course Card detail did not use the same internal catalog context.");
+  const detailGeometry = await reportedDetailCard.evaluate((card) => {
+    const style = getComputedStyle(card);
+    const box = card.getBoundingClientRect();
+    return { height: box.height, borderRadius: style.borderRadius, overflow: style.overflow, descriptionPosition: getComputedStyle(card.querySelector("[data-course-description]")).position, descriptionVisibility: getComputedStyle(card.querySelector("[data-course-description]")).visibility };
+  });
+  assert(detailGeometry.height < 700 && detailGeometry.borderRadius === "12px" && detailGeometry.overflow === "visible" && detailGeometry.descriptionPosition === "absolute" && detailGeometry.descriptionVisibility === "hidden", `873px Course Card detail does not match the compact rounded specimen: ${JSON.stringify(detailGeometry)}.`);
+  await reportedCoursePage.locator(".library-detail-preview").screenshot({ path: "/tmp/frac133-course-card-detail-873x863@2x.png" });
+
+  await reportedCoursePage.goto(`${productionOrigin}/education`, { waitUntil: "networkidle" });
+  const productionAt873 = reportedCoursePage.locator("[data-course-collection]");
+  assert(await productionAt873.getAttribute("data-preview-mode") === "inline", "Production Education incorrectly adopted the gallery's 873px enhancement policy.");
+  assert(await productionAt873.getAttribute("data-course-presentation-context") === null, "Production Education leaked the component-library presentation marker.");
+  assert(await productionAt873.getByRole("button", { name: "Elena Navarrete" }).count() === 0 && await productionAt873.locator("[data-instructor-name]").first().evaluate((element) => element.tagName === "P"), "Production Education changed its approved 873px inline instructor behavior.");
+  assert(await productionAt873.locator("[data-course-description]").first().evaluate((element) => getComputedStyle(element).position === "static" && getComputedStyle(element).visibility === "visible"), "Production Education changed its approved 873px inline description behavior.");
+  await reportedCoursePage.screenshot({ path: "/tmp/frac133-production-education-873x863@2x.png" });
+  await reportedCourseContext.close();
+
+  const productionThresholdContext = await browser.newContext({ viewport: { width: 1024, height: 900 } });
+  const productionThresholdPage = await productionThresholdContext.newPage();
+  await productionThresholdPage.goto(`${productionOrigin}/education`, { waitUntil: "networkidle" });
+  assert(await productionThresholdPage.locator("[data-course-collection]").getAttribute("data-preview-mode") === "enhanced", "Production Education no longer enhances at its unchanged 64rem threshold.");
+  assert(await productionThresholdPage.locator("[data-course-collection]").getAttribute("data-course-presentation-context") === null, "Production Education leaked the component-library marker at 1024px.");
+  await productionThresholdContext.close();
+
+  const touchCourseContext = await browser.newContext({ viewport: { width: 873, height: 863 }, hasTouch: true });
+  const touchCoursePage = await touchCourseContext.newPage();
+  await touchCoursePage.goto(`${componentUrl}#component/course-card`, { waitUntil: "networkidle" });
+  const touchCourseCollection = touchCoursePage.locator("[data-course-collection]");
+  assert(await touchCourseCollection.getAttribute("data-course-presentation-context") === "component-library" && await touchCourseCollection.getAttribute("data-preview-mode") === "inline", "873px touch Course Card was forced into a hover-only catalog demonstration.");
+  assert(await touchCourseCollection.getByRole("button", { name: "Elena Navarrete" }).count() === 0, "873px touch Course Card kept a hover-preview instructor control.");
+  await touchCourseContext.close();
+
+  const largeTextCourseContext = await browser.newContext({ viewport: { width: 873, height: 863 } });
+  const largeTextCoursePage = await largeTextCourseContext.newPage();
+  await largeTextCoursePage.goto(`${componentUrl}#component/course-card`, { waitUntil: "networkidle" });
+  await largeTextCoursePage.evaluate(() => { document.documentElement.style.fontSize = "24px"; });
+  await largeTextCoursePage.waitForFunction(() => document.querySelector("[data-course-collection]")?.getAttribute("data-preview-mode") === "inline");
+  const largeTextCourseCollection = largeTextCoursePage.locator("[data-course-collection]");
+  assert(await largeTextCourseCollection.getByRole("button", { name: "Elena Navarrete" }).count() === 0 && await largeTextCourseCollection.locator("[data-course-description]").evaluate((element) => getComputedStyle(element).position === "static"), "873px large-text Course Card did not retain its accessible inline fallback.");
+  assert(await overflow(largeTextCoursePage) <= 1, "873px large-text Course Card overflows horizontally.");
+  await largeTextCourseContext.close();
+
+  const reducedCourseContext = await browser.newContext({ viewport: { width: 873, height: 863 }, reducedMotion: "reduce" });
+  const reducedCoursePage = await reducedCourseContext.newPage();
+  await reducedCoursePage.goto(`${componentUrl}#component/course-card`, { waitUntil: "networkidle" });
+  const reportedReducedCourseCard = reducedCoursePage.locator(".fractalu-course-card");
+  const reportedReducedDescription = reportedReducedCourseCard.locator("[data-course-description]");
+  const reportedReducedRest = await reportedReducedCourseCard.evaluate((card) => ({ border: getComputedStyle(card).borderColor, shadow: getComputedStyle(card).boxShadow }));
+  await reportedReducedCourseCard.hover();
+  const reportedReducedHover = await reportedReducedCourseCard.evaluate((card) => ({ border: getComputedStyle(card).borderColor, shadow: getComputedStyle(card).boxShadow, transform: getComputedStyle(card).transform, transitionDuration: getComputedStyle(card).transitionDuration }));
+  assert(reportedReducedHover.transform === "none" && reportedReducedHover.transitionDuration.split(",").every((duration) => duration.trim() === "0s") && (reportedReducedHover.border !== reportedReducedRest.border || reportedReducedHover.shadow !== reportedReducedRest.shadow), `873px reduced-motion Course Card retained motion or lost non-motion feedback: ${JSON.stringify({ reportedReducedRest, reportedReducedHover })}.`);
+  await reportedReducedCourseCard.locator(".fractalu-course-title-link").hover();
+  assert(await reportedReducedDescription.evaluate((element) => getComputedStyle(element).visibility) === "visible", "873px reduced-motion Course Card cannot reveal its description.");
+  await reducedCourseContext.close();
 
   await page.goto(`${componentUrl}#component/search-bar`, { waitUntil: "networkidle" });
   await page.reload({ waitUntil: "networkidle" });

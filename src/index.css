@@ -526,8 +526,9 @@
 
 /* Compact cards keep the instructor name in the reading order while removing
    the long biography from both layout and the accessibility tree. Medium
-   layouts restore the complete source biography; fine-pointer desktops then
-   progressively enhance descriptions and biographies into previews. */
+   layouts restore the complete source biography. CourseCardCollection owns
+   when fine-pointer previews are appropriate for its presentation context;
+   CSS renders that already-resolved mode. */
 .fractalu-instructor-bio {
   display: none;
 }
@@ -538,7 +539,7 @@
   }
 }
 
-@media (min-width: 64rem) and (hover: hover) and (pointer: fine) {
+@media (hover: hover) and (pointer: fine) {
   .fractalu-course-grid[data-preview-mode="enhanced"]
     .fractalu-title-preview
     > .fractalu-course-preview,

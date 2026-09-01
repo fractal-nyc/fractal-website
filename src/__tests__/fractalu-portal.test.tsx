@@ -24,6 +24,8 @@ const OLD_ACCELERATOR_PARAPHRASE =
   "Andrew Rose, Founder of Fractal, Fractal University, and Fractal Bootcamp, has trained 100 engineers in the last two years following his career as a software engineer and educator. Liam Duffy is a senior software engineer at Seso Inc. with over a decade of engineering experience; he leads the adoption of AI engineering practices at Seso and brings that real-world expertise to Fractal Accelerator students.";
 const FINE_POINTER_QUERY =
   "(min-width: 64rem) and (hover: hover) and (pointer: fine)";
+const COMPONENT_LIBRARY_PREVIEW_QUERY =
+  "(min-width: 48rem) and (hover: hover) and (pointer: fine)";
 
 function expectedPortalOutboundHrefs() {
   return [
@@ -44,11 +46,22 @@ function expectedPortalOutboundHrefs() {
 
 const originalMatchMedia = window.matchMedia;
 
-function mockFinePointer(matches: boolean) {
+function mockPreviewQueries({
+  site = false,
+  componentLibrary = false,
+}: {
+  site?: boolean;
+  componentLibrary?: boolean;
+}) {
   Object.defineProperty(window, "matchMedia", {
     configurable: true,
     value: vi.fn().mockImplementation((query: string) => ({
-      matches: query === FINE_POINTER_QUERY ? matches : false,
+      matches:
+        query === FINE_POINTER_QUERY
+          ? site
+          : query === COMPONENT_LIBRARY_PREVIEW_QUERY
+            ? componentLibrary
+            : false,
       media: query,
       onchange: null,
       addEventListener: vi.fn(),
@@ -58,6 +71,10 @@ function mockFinePointer(matches: boolean) {
       dispatchEvent: vi.fn(),
     })),
   });
+}
+
+function mockFinePointer(matches: boolean) {
+  mockPreviewQueries({ site: matches });
 }
 
 function mockFinePointerController(initialMatches: boolean) {
@@ -116,15 +133,23 @@ afterEach(() => {
 });
 
 describe("FractalUniversityPortal", () => {
-  it("owns enhanced Course Card interaction when reused as a collection", () => {
-    mockFinePointer(true);
+  it("lets the component library demonstrate the real enhanced Course Card at its Medium width", () => {
+    mockPreviewQueries({ componentLibrary: true });
     const course = FRACTALU_CATALOG.courses[0];
     render(
-      <CourseCardCollection courses={[course]} animateInitialCards={false} />,
+      <CourseCardCollection
+        courses={[course]}
+        animateInitialCards={false}
+        presentationContext="component-library"
+      />,
     );
 
     const catalog = screen.getByTestId("fractalu-course-catalog");
     expect(catalog).toHaveAttribute("data-course-collection");
+    expect(catalog).toHaveAttribute(
+      "data-course-presentation-context",
+      "component-library",
+    );
     expect(catalog).toHaveAttribute("data-preview-mode", "enhanced");
     expect(catalog.querySelector('[data-fractalu-reveal-slot="course"]')).toHaveAttribute(
       "data-fractalu-reveal-mode",
@@ -157,6 +182,33 @@ describe("FractalUniversityPortal", () => {
     expect(preview).toHaveAttribute("data-suppressed", "false");
   });
 
+  it("keeps the site collection inline when only the library Medium query matches", () => {
+    mockPreviewQueries({ componentLibrary: true });
+    const course = FRACTALU_CATALOG.courses[0];
+    render(
+      <CourseCardCollection courses={[course]} animateInitialCards={false} />,
+    );
+
+    const catalog = screen.getByTestId("fractalu-course-catalog");
+    expect(catalog).toHaveAttribute("data-preview-mode", "inline");
+    expect(catalog).not.toHaveAttribute("data-course-presentation-context");
+    expect(within(catalog).queryByRole("button", { name: course.instructor })).toBeNull();
+    expect(catalog.querySelector("[data-instructor-name]")?.tagName).toBe("P");
+  });
+
+  it("keeps the unchanged 64rem site query as the production enhancement owner", () => {
+    mockPreviewQueries({ site: true });
+    const course = FRACTALU_CATALOG.courses[0];
+    render(
+      <CourseCardCollection courses={[course]} animateInitialCards={false} />,
+    );
+
+    const catalog = screen.getByTestId("fractalu-course-catalog");
+    expect(catalog).toHaveAttribute("data-preview-mode", "enhanced");
+    expect(catalog).not.toHaveAttribute("data-course-presentation-context");
+    expect(within(catalog).getByRole("button", { name: course.instructor })).toBeTruthy();
+  });
+
   it("keeps reusable Course Cards inline and in reading order without a fine pointer", () => {
     mockFinePointer(false);
     const course = FRACTALU_CATALOG.courses[0];
@@ -166,6 +218,7 @@ describe("FractalUniversityPortal", () => {
 
     const catalog = screen.getByTestId("fractalu-course-catalog");
     expect(catalog).toHaveAttribute("data-preview-mode", "inline");
+    expect(catalog).not.toHaveAttribute("data-course-presentation-context");
     expect(within(catalog).queryByRole("button", { name: course.instructor })).toBeNull();
     const instructor = catalog.querySelector("[data-instructor-name]")!;
     const description = catalog.querySelector("[data-course-description]")!;

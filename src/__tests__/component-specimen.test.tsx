@@ -8,13 +8,26 @@ import { ComponentLibraryApp } from "../../components/ComponentLibraryApp";
 
 const FINE_POINTER_QUERY =
   "(min-width: 64rem) and (hover: hover) and (pointer: fine)";
+const COMPONENT_LIBRARY_PREVIEW_QUERY =
+  "(min-width: 48rem) and (hover: hover) and (pointer: fine)";
 const originalMatchMedia = window.matchMedia;
 
-function mockFinePointer(matches: boolean) {
+function mockPreviewQueries({
+  site = false,
+  componentLibrary = false,
+}: {
+  site?: boolean;
+  componentLibrary?: boolean;
+}) {
   Object.defineProperty(window, "matchMedia", {
     configurable: true,
     value: vi.fn().mockImplementation((query: string) => ({
-      matches: query === FINE_POINTER_QUERY ? matches : false,
+      matches:
+        query === FINE_POINTER_QUERY
+          ? site
+          : query === COMPONENT_LIBRARY_PREVIEW_QUERY
+            ? componentLibrary
+            : false,
       media: query,
       onchange: null,
       addEventListener: vi.fn(),
@@ -283,7 +296,7 @@ describe("interactive component specimens", () => {
     expect(articleView.container.querySelector("[data-category-icon-label]")).toBeInTheDocument();
     articleView.unmount();
 
-    mockFinePointer(true);
+    mockPreviewQueries({ componentLibrary: true });
     const course = COMPONENT_REGISTRY.find(({ id }) => id === "course-card")!;
     const courseView = render(
       <ComponentDetail entry={course} onBack={() => undefined} onOpenLive={() => undefined} />,
@@ -291,6 +304,10 @@ describe("interactive component specimens", () => {
     const instructor = courseView.container.querySelector("[data-instructor-name]");
     const collection = courseView.container.querySelector("[data-course-collection]");
     expect(collection).toHaveAttribute("data-preview-mode", "enhanced");
+    expect(collection).toHaveAttribute(
+      "data-course-presentation-context",
+      "component-library",
+    );
     expect(collection?.querySelector('[data-fractalu-reveal-slot="course"]')).toHaveAttribute(
       "data-fractalu-reveal-mode",
       "static",
@@ -306,6 +323,9 @@ describe("interactive component specimens", () => {
       "book-open",
     );
     expect(within(courseView.container).queryByLabelText(/icon name/i)).not.toBeInTheDocument();
+    expect(
+      within(courseView.container).queryByLabelText(/presentation context/i),
+    ).not.toBeInTheDocument();
 
     fireEvent.change(within(courseView.container).getByLabelText("Subject and icon"), {
       target: { value: "Technology" },

@@ -108,6 +108,7 @@ describe("team component registry", () => {
     const controlsFor = (id: string) => COMPONENT_REGISTRY.find((entry) => entry.id === id)!.controls.map(({ label }) => label);
     expect(controlsFor("course-card")).toContain("Content variant");
     expect(controlsFor("course-card")).toContain("Subject and icon");
+    expect(controlsFor("course-card")).not.toContain("Presentation context");
     expect(controlsFor("filter-bar")).toContain("Selection behavior");
     expect(COMPONENT_REGISTRY.find(({ id }) => id === "filter-bar")).toMatchObject({
       defaultColorway: "education",
