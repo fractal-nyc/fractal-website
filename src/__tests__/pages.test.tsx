@@ -125,6 +125,29 @@ describe("FRAC-161 visibility filters", () => {
     ).toEqual(["Events", "Library", "Story"]);
     expect(container.querySelector("main #story")).toBeTruthy();
   });
+
+  it("keeps the Home Note Box token scope transparent and its tinted card intact", () => {
+    const { container } = renderPage(Home, "/");
+    const label = screen.getByText("Curious about Fractal?");
+    const callout = label.closest<HTMLElement>(".rounded-md")!;
+    const scope = callout.closest<HTMLElement>("[data-component-colorway]")!;
+
+    expect(scope).toHaveAttribute("data-component-colorway", "story");
+    expect(scope).toHaveAttribute("data-component-surface", "paper");
+    expect(scope.style.backgroundColor).toBe("transparent");
+    expect(scope).not.toHaveClass("bg-transparent");
+    expect(callout).toHaveClass(
+      "rounded-md",
+      "border",
+      "bg-[color-mix(in_srgb,var(--component-accent,var(--accent,currentColor))_8%,transparent)]",
+    );
+    expect(callout.querySelectorAll('svg[width="30"][height="30"]')).toHaveLength(4);
+    expect(container.querySelectorAll("a[data-outbound-link] svg")).toHaveLength(0);
+    expect(screen.getByRole("link", { name: "Discord" })).toHaveAttribute(
+      "href",
+      "https://discord.gg/Er974gPTXe",
+    );
+  });
 });
 
 describe("Route paths match expected URLs", () => {

@@ -394,7 +394,7 @@ try {
   production.on("pageerror", (error) => productionErrors.push(error.message));
   for (const width of [375, 1440]) {
     await production.setViewportSize({ width, height: width === 375 ? 812 : 900 });
-    for (const route of ["/", "/library", "/education", "/campus"]) {
+    for (const route of ["/", "/co-living", "/library", "/education", "/campus"]) {
       await production.goto(`${productionOrigin}${route}`, { waitUntil: "networkidle" });
       assert(await overflow(production) <= 1, `${route} overflows at ${width}px.`);
       const affected = route === "/library" ? production.locator("[data-document-byline]").first() : route === "/education" ? production.locator("[data-course-id]").first() : route === "/campus" ? production.locator("[data-highlight-box]").first() : null;
@@ -403,11 +403,86 @@ try {
         await production.waitForTimeout(700);
       }
       if (route === "/library") {
-        const bylineFont = await production.locator("[data-document-byline]").first().evaluate((element) => getComputedStyle(element).fontFamily);
-        const bylineStyle = await production.locator("[data-document-byline]").first().evaluate((element) => getComputedStyle(element).fontStyle);
+        const articleBylines = production.locator("[data-document-byline]");
+        const fullArticleCount = await articleBylines.count();
+        assert(fullArticleCount > 1, `Production Library did not render its full archive at ${width}px.`);
+        const articleSurfaces = await articleBylines.evaluateAll((bylines) => bylines.map((byline) => {
+          const scope = byline.closest("[data-component-colorway]");
+          const card = byline.closest(".bg-background");
+          const slot = scope?.parentElement;
+          return {
+            colorway: scope?.getAttribute("data-component-colorway"),
+            surface: scope?.getAttribute("data-component-surface"),
+            inlineBackground: scope?.style.backgroundColor,
+            scopeBackground: scope ? getComputedStyle(scope).backgroundColor : null,
+            slotBackground: slot ? getComputedStyle(slot).backgroundColor : null,
+            cardBackground: card ? getComputedStyle(card).backgroundColor : null,
+            hasTransparentClass: scope?.classList.contains("bg-transparent"),
+            icons: card?.querySelectorAll("[data-category-icon-label] [data-category-icon] svg[aria-hidden='true']").length ?? 0,
+            corners: scope?.querySelectorAll(":scope > .relative > span.absolute.pointer-events-none svg").length ?? 0,
+          };
+        }));
+        assert(articleSurfaces.every(({ colorway, surface, inlineBackground, scopeBackground, slotBackground, cardBackground, hasTransparentClass, icons, corners }) => colorway === "library" && surface === "paper" && inlineBackground === "transparent" && scopeBackground === "rgba(0, 0, 0, 0)" && slotBackground === "rgba(0, 0, 0, 0)" && cardBackground === "rgb(247, 246, 242)" && !hasTransparentClass && icons === 1 && corners === 4), `Production Library scope/card surfaces diverged at ${width}px: ${JSON.stringify(articleSurfaces)}.`);
+        const archiveGrid = articleBylines.first().locator("xpath=ancestor::div[contains(@class, 'grid')][1]");
+        assert(await archiveGrid.evaluate((element) => getComputedStyle(element).backgroundColor) === "rgba(0, 0, 0, 0)", `Production Library grid has a background at ${width}px.`);
+        const bylineFont = await articleBylines.first().evaluate((element) => getComputedStyle(element).fontFamily);
+        const bylineStyle = await articleBylines.first().evaluate((element) => getComputedStyle(element).fontStyle);
         assert(bylineFont.includes("Inter"), `Production Library byline is not Inter at ${width}px: ${bylineFont}.`);
         assert(bylineStyle === "normal", `Production Library byline is italic at ${width}px: ${bylineStyle}.`);
         assert(await production.locator("[data-category-icon-label] [data-category-icon] svg[aria-hidden='true']").count() > 0, "Production Library lost decorative category icons.");
+        await articleBylines.first().scrollIntoViewIfNeeded();
+        await production.screenshot({ path: `/tmp/frac127-library-${width === 375 ? "375x812" : "1440x900"}.png` });
+
+        const archiveSearchForState = production.getByRole("searchbox", { name: "Search the archive" });
+        await archiveSearchForState.fill("Reversing the Centrifuge of Modernity");
+        await production.waitForFunction(() => document.querySelectorAll("[data-document-byline]").length === 1);
+        assert(await production.getByText(/Showing\s+1\s+of/).count() === 1, `Production Library partial count is wrong at ${width}px.`);
+        const partialSurface = await production.locator("[data-document-byline]").evaluate((byline) => {
+          const scope = byline.closest("[data-component-colorway]");
+          const card = byline.closest(".bg-background");
+          return { scope: scope ? getComputedStyle(scope).backgroundColor : null, card: card ? getComputedStyle(card).backgroundColor : null };
+        });
+        assert(partialSurface.scope === "rgba(0, 0, 0, 0)" && partialSurface.card === "rgb(247, 246, 242)", `Production Library partial row surfaces diverged at ${width}px: ${JSON.stringify(partialSurface)}.`);
+        await production.locator("[data-document-byline]").scrollIntoViewIfNeeded();
+        await production.waitForTimeout(800);
+        await production.screenshot({ path: `/tmp/frac127-library-filtered-${width === 375 ? "375x812" : "1440x900"}.png` });
+
+        await archiveSearchForState.fill("no matching fractal archive record zzz");
+        const emptyMessage = production.getByText("No documents match your filters.");
+        await emptyMessage.waitFor();
+        assert(await production.locator("[data-document-byline]").count() === 0 && await production.locator("[data-component-colorway='library']").count() === 0, `Production Library empty state retained Article Card scopes at ${width}px.`);
+        assert(await emptyMessage.locator("..").evaluate((element) => getComputedStyle(element).backgroundColor) === "rgba(0, 0, 0, 0)", `Production Library empty state has a background at ${width}px.`);
+        await production.screenshot({ path: `/tmp/frac127-library-empty-${width === 375 ? "375x812" : "1440x900"}.png` });
+
+        const stateClear = production.getByRole("button", { name: "Clear search" });
+        assert(await stateClear.count() === 1, `Production Library empty state has duplicate clear controls at ${width}px.`);
+        await stateClear.click();
+        await production.waitForFunction((expected) => document.querySelectorAll("[data-document-byline]").length === expected, fullArticleCount);
+        assert(await archiveSearchForState.inputValue() === "" && await production.locator("[data-component-colorway='library']").count() === fullArticleCount, `Production Library clear did not recover its full transparent grid at ${width}px.`);
+      }
+      if (route === "/" || route === "/co-living") {
+        const label = route === "/" ? "Curious about Fractal?" : "Visiting NYC?";
+        const noteLabel = production.getByText(label, { exact: true });
+        await noteLabel.scrollIntoViewIfNeeded();
+        await production.waitForTimeout(300);
+        const noteSurface = await noteLabel.evaluate((element) => {
+          const card = element.closest(".rounded-md");
+          const scope = card?.closest("[data-component-colorway]");
+          return {
+            colorway: scope?.getAttribute("data-component-colorway"),
+            surface: scope?.getAttribute("data-component-surface"),
+            inlineBackground: scope?.style.backgroundColor,
+            scopeBackground: scope ? getComputedStyle(scope).backgroundColor : null,
+            cardBackground: card ? getComputedStyle(card).backgroundColor : null,
+            hasTransparentClass: scope?.classList.contains("bg-transparent"),
+            corners: card?.querySelectorAll("span.absolute.pointer-events-none svg").length ?? 0,
+            arrows: card?.querySelectorAll("a[data-outbound-link] [data-outbound-arrow]").length ?? 0,
+          };
+        });
+        const expectedColorway = route === "/" ? "story" : "co-living";
+        assert(noteSurface.colorway === expectedColorway && noteSurface.surface === "paper" && noteSurface.inlineBackground === "transparent" && noteSurface.scopeBackground === "rgba(0, 0, 0, 0)" && noteSurface.cardBackground !== "rgba(0, 0, 0, 0)" && !noteSurface.hasTransparentClass && noteSurface.corners === 4 && noteSurface.arrows === 0, `Production ${label} Note Box surfaces diverged at ${width}px: ${JSON.stringify(noteSurface)}.`);
+        const screenshotName = route === "/" ? "home-note" : "co-living-note";
+        await production.screenshot({ path: `/tmp/frac127-${screenshotName}-${width === 375 ? "375x812" : "1440x900"}.png` });
       }
       if (route === "/education") {
         const instructorFont = await production.locator("[data-instructor-name]").first().evaluate((element) => getComputedStyle(element).fontFamily);
@@ -430,6 +505,17 @@ try {
         assert(await courseScope.getAttribute("data-component-surface") === "paper", `Production Education course scope lost paper tokens at ${width}px.`);
         assert(await courseScope.evaluate((element) => getComputedStyle(element).backgroundColor) === "rgba(0, 0, 0, 0)", `Production Education course collection has a background at ${width}px.`);
         assert(await production.locator("[data-course-id]").first().evaluate((element) => getComputedStyle(element).backgroundColor) === "rgb(247, 246, 242)", `Production Education Course Card lost its paper surface at ${width}px.`);
+        const teachingLabel = production.getByText("Want to teach?", { exact: true });
+        const teachingSurface = await teachingLabel.evaluate((element) => {
+          const card = element.closest(".rounded-md");
+          return {
+            background: card ? getComputedStyle(card).backgroundColor : null,
+            redundantScope: card?.closest("[data-component-colorway]") !== null,
+            corners: card?.querySelectorAll("span.absolute.pointer-events-none svg").length ?? 0,
+            arrows: card?.querySelectorAll("a[data-outbound-link] [data-outbound-arrow]").length ?? 0,
+          };
+        });
+        assert(teachingSurface.background === "rgb(247, 246, 242)" && !teachingSurface.redundantScope && teachingSurface.corners === 4 && teachingSurface.arrows === 0, `Production Education Note Box changed at ${width}px: ${JSON.stringify(teachingSurface)}.`);
         const clubCards = production.locator("[data-club-id]");
         assert(await clubCards.count() === 4, `Production Education club inventory changed at ${width}px.`);
         assert(await clubCards.evaluateAll((cards) => cards.every((card) => {
@@ -488,7 +574,7 @@ try {
   assert(productionErrors.length === 0, `Production page errors: ${productionErrors.join(" | ")}`);
 
   await browser.close();
-  console.log("FRAC-125 component-library browser checks passed; affected screenshots are in /tmp/frac125-*.png.");
+  console.log("FRAC-127 component-library and production browser checks passed; evidence is in /tmp/frac127-*.png.");
 } finally {
   catalogServer.kill("SIGTERM");
   productionServer.kill("SIGTERM");

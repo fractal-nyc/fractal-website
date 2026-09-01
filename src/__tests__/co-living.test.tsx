@@ -73,8 +73,22 @@ describe("Co-Living page — content", () => {
   });
 
   it("should render the 'Visiting NYC?' callout", () => {
-    renderCoLiving();
-    expect(screen.getByText("Visiting NYC?")).toBeTruthy();
+    const { container } = renderCoLiving();
+    const label = screen.getByText("Visiting NYC?");
+    const callout = label.closest<HTMLElement>(".rounded-md")!;
+    const scope = callout.closest<HTMLElement>("[data-component-colorway]")!;
+
+    expect(scope).toHaveAttribute("data-component-colorway", "co-living");
+    expect(scope).toHaveAttribute("data-component-surface", "paper");
+    expect(scope.style.backgroundColor).toBe("transparent");
+    expect(scope).not.toHaveClass("bg-transparent");
+    expect(callout).toHaveClass("bg-background", "rounded-md", "border");
+    expect(callout.querySelectorAll('svg[width="30"][height="30"]')).toHaveLength(4);
+    expect(container.querySelectorAll("a[data-outbound-link] svg")).toHaveLength(0);
+    expect(screen.getByRole("link", { name: "housing interest form" })).toHaveAttribute(
+      "href",
+      "https://airtable.com/appDkSh1TsmjHzacK/shrbrfFHeMTcSJ9dd",
+    );
   });
 
   it("links the Chinatown map marker to Commonwell", () => {

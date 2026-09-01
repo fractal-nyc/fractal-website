@@ -47,7 +47,12 @@ export function DocumentCard({ document, className = "", colorway = "library" }:
     CATEGORY_META[document.category];
 
   return (
-    <ComponentColorScope colorway={colorway} surface="paper" className="h-full bg-transparent">
+    <ComponentColorScope
+      colorway={colorway}
+      surface="paper"
+      className="h-full"
+      style={{ backgroundColor: "transparent" }}
+    >
     <MandelbrotCorners size="xs" opacity={0.12} className="h-full">
     <a
       href={document.url}

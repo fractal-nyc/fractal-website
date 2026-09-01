@@ -126,7 +126,11 @@ export function CoLivingPage() {
         <section className="w-full mt-16 md:mt-24">
           <div className="page-gutter max-w-xl mx-auto">
             <FadeIn delay={0.1}>
-              <ComponentColorScope colorway="co-living" surface="paper" className="bg-transparent">
+              <ComponentColorScope
+                colorway="co-living"
+                surface="paper"
+                style={{ backgroundColor: "transparent" }}
+              >
               <CalloutCard label="Visiting NYC?">
                   <p>
                     Community members regularly offer sublets and short stays.

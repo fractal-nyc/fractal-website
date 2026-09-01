@@ -657,6 +657,7 @@ describe("FractalUniversityPortal", () => {
     const teachingLabel = screen.getByText("Want to teach?");
     const callout = teachingLabel.closest(".p-9")!;
     expect(callout).toHaveClass("bg-background", "text-foreground", "p-9");
+    expect(callout.closest("[data-component-colorway]")).toBeNull();
     expect(callout.querySelectorAll('svg[width="30"][height="30"]')).toHaveLength(4);
     const teachingEmail = within(callout as HTMLElement).getByRole("link", {
       name: "fractalu@fractalnyc.com",

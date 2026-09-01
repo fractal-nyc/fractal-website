@@ -80,7 +80,11 @@ export function Home() {
       <section className="pb-24 md:pb-32">
         <div className="max-w-2xl mx-auto page-gutter">
           <FadeIn>
-            <ComponentColorScope colorway="story" surface="paper" className="bg-transparent">
+            <ComponentColorScope
+              colorway="story"
+              surface="paper"
+              style={{ backgroundColor: "transparent" }}
+            >
             <CalloutCard
               label={<span style={{ color: PEOPLE_COLOR }}>Curious about Fractal?</span>}
               surface="tint"
