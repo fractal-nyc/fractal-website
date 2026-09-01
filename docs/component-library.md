@@ -15,6 +15,8 @@ Each tile is deliberately minimal: a live preview, a **View options** link, and 
 
 Cards and house-context specimens open in representative native site contexts so the gallery shows how Fractal's real palette is used rather than flattening every example to monochrome. **Primary Button** likewise begins in its native Events treatment. The three link-role comparison specimens intentionally begin on neutral Paper so their typography and arrows are easy to compare. The focused view begins in the same per-component context, keeps the large live preview first, and then shows only the options that component truly supports. Open **Usage details** for boundaries, current site usage, accessibility notes, technical source, and the same agent prompt. **Site color** and **Background** can still preview other approved token-backed combinations.
 
+On the browse screen, action stages hug their live button or link with one even inset on every side; this compact presentation does not change the production component or its focused preview.
+
 Choose **Edit Education courses** for semester work. It opens as a separate tool and never appears below the browse gallery. Browse, category, focused component, and workshop URLs are reload-safe and shareable. The gallery imports real production components and `src/index.css`; it does not maintain a duplicate mock component set or token file.
 
 Build and verify it independently with:

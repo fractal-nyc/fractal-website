@@ -23,18 +23,58 @@ const actionStageGeometry = (page) => page.evaluate(() => Object.fromEntries([
   if (!(preview instanceof HTMLElement) || !(scope instanceof HTMLElement) || !(example instanceof HTMLElement)) return [id, null];
   const scopeBox = scope.getBoundingClientRect();
   const exampleBox = example.getBoundingClientRect();
+  const previewBox = preview.getBoundingClientRect();
+  const scopeStyle = getComputedStyle(scope);
+  const padding = {
+    top: Number.parseFloat(scopeStyle.paddingTop),
+    right: Number.parseFloat(scopeStyle.paddingRight),
+    bottom: Number.parseFloat(scopeStyle.paddingBottom),
+    left: Number.parseFloat(scopeStyle.paddingLeft),
+  };
+  const insets = {
+    top: exampleBox.top - scopeBox.top,
+    right: scopeBox.right - exampleBox.right,
+    bottom: scopeBox.bottom - exampleBox.bottom,
+    left: exampleBox.left - scopeBox.left,
+  };
   return [id, {
     compact: preview.classList.contains("library-gallery-preview--compact-actions"),
-    previewHeight: preview.getBoundingClientRect().height,
+    previewBox: { x: previewBox.x, y: previewBox.y, width: previewBox.width, height: previewBox.height },
+    scopeBox: { x: scopeBox.x, y: scopeBox.y, width: scopeBox.width, height: scopeBox.height },
+    exampleBox: { x: exampleBox.x, y: exampleBox.y, width: exampleBox.width, height: exampleBox.height },
+    padding,
+    insets,
+    previewHeight: previewBox.height,
     scopeHeight: scopeBox.height,
     exampleHeight: exampleBox.height,
-    centerXDelta: Math.abs((scopeBox.left + scopeBox.width / 2) - (exampleBox.left + exampleBox.width / 2)),
-    centerYDelta: Math.abs((scopeBox.top + scopeBox.height / 2) - (exampleBox.top + exampleBox.height / 2)),
+    centerXDelta: Math.abs((scopeBox.left + scopeBox.width / 2) - (previewBox.left + previewBox.width / 2)),
+    centerYDelta: Math.abs((scopeBox.top + scopeBox.height / 2) - (previewBox.top + previewBox.height / 2)),
+    exampleCenterXDelta: Math.abs((scopeBox.left + scopeBox.width / 2) - (exampleBox.left + exampleBox.width / 2)),
+    exampleCenterYDelta: Math.abs((scopeBox.top + scopeBox.height / 2) - (exampleBox.top + exampleBox.height / 2)),
     clipped: scope.scrollHeight > scope.clientHeight + 1 || scope.scrollWidth > scope.clientWidth + 1,
     inlineHeight: scope.style.height,
     inlineMaxHeight: scope.style.maxHeight,
   }];
 })));
+const assertUniformActionStages = (geometry, label, { requireShortDesktopStages = false } = {}) => {
+  const tolerance = 2;
+  for (const [id, value] of Object.entries(geometry)) {
+    assert(value?.compact, `${label} ${id} is missing the compact action stage: ${JSON.stringify(value)}.`);
+    assert(value.centerXDelta <= tolerance && value.centerYDelta <= tolerance, `${label} ${id} scope is not centered in its preview: ${JSON.stringify(value)}.`);
+    assert(value.exampleCenterXDelta <= tolerance && value.exampleCenterYDelta <= tolerance, `${label} ${id} specimen is not centered in its scope: ${JSON.stringify(value)}.`);
+    assert(!value.clipped && value.scopeBox.width <= value.previewBox.width + 1 && value.scopeBox.height <= value.previewBox.height + 1, `${label} ${id} scope clips or exceeds its preview: ${JSON.stringify(value)}.`);
+    for (const side of ["top", "right", "bottom", "left"]) {
+      assert(Math.abs(value.insets[side] - value.padding[side]) <= tolerance, `${label} ${id} ${side} inset does not match computed padding: ${JSON.stringify(value)}.`);
+    }
+    assert(Math.abs(value.insets.top - value.insets.bottom) <= tolerance && Math.abs(value.insets.left - value.insets.right) <= tolerance, `${label} ${id} has uneven opposite insets: ${JSON.stringify(value)}.`);
+  }
+  if (requireShortDesktopStages) {
+    for (const id of ["action-buttons", "outbound-link", "outbound-text-link"]) {
+      const value = geometry[id];
+      assert(value.scopeBox.width < value.previewBox.width - tolerance, `${label} ${id} did not shrink below its preview track: ${JSON.stringify(value)}.`);
+    }
+  }
+};
 const loadedImages = async (locator, label) => {
   const images = await locator.evaluateAll((nodes) => nodes.map((node) => ({ src: node.currentSrc || node.src, width: node.naturalWidth, height: node.naturalHeight })));
   assert(images.length > 0, `${label} rendered no images.`);
@@ -102,7 +142,7 @@ try {
       copies: card.querySelectorAll(".library-copy-prompt").length,
     })));
     assert(cards.every(({ children, preview, names: nameCount, opens, cues, copies }) => children === 2 && preview && nameCount === 1 && opens === 1 && cues === 1 && copies === 1), `${category} has a non-minimal or undiscoverable tile.`);
-    await page.screenshot({ path: category === "actions" ? "/tmp/frac131-actions-1440x900.png" : `/tmp/frac130-${category}-1440x900.png` });
+    await page.screenshot({ path: category === "actions" ? "/tmp/frac132-actions-1440x900.png" : `/tmp/frac130-${category}-1440x900.png` });
   }
 
   await page.goto(`${componentUrl}#browse/all`, { waitUntil: "networkidle" });
@@ -151,8 +191,7 @@ try {
   }
   const desktopActionGeometry = await actionStageGeometry(page);
   const standardCardStageHeight = await page.locator("#library-article-card .library-gallery-preview > .library-canvas-scope").evaluate((scope) => scope.getBoundingClientRect().height);
-  assert(Object.values(desktopActionGeometry).every((value) => value?.compact), `Only action stages should carry the compact modifier: ${JSON.stringify(desktopActionGeometry)}.`);
-  assert(Object.values(desktopActionGeometry).every((value) => value && value.centerXDelta <= 2 && value.centerYDelta <= 2), `Desktop action examples are not centered: ${JSON.stringify(desktopActionGeometry)}.`);
+  assertUniformActionStages(desktopActionGeometry, "1440px", { requireShortDesktopStages: true });
   assert(Object.values(desktopActionGeometry).every((value) => value && value.scopeHeight < standardCardStageHeight * .75), `Desktop action stages are not materially shorter than the Article Card stage (${standardCardStageHeight}px): ${JSON.stringify(desktopActionGeometry)}.`);
   assert(Object.values(desktopActionGeometry).every((value) => value && !value.clipped && value.inlineHeight === "" && value.inlineMaxHeight === ""), `Desktop action stages are fixed or clipped: ${JSON.stringify(desktopActionGeometry)}.`);
   const paperCardContexts = await page.evaluate(() => Object.fromEntries([
@@ -692,14 +731,14 @@ try {
     await mobile.screenshot({ path: `/tmp/frac130-${category}-375x812.png` });
     await mobile.close();
   }
-  for (const [width, screenshot] of [[320, "/tmp/frac131-actions-320x812.png"], [375, "/tmp/frac131-actions-375x812.png"]]) {
+  for (const [width, screenshot] of [[320, "/tmp/frac132-actions-320x812.png"], [375, "/tmp/frac132-actions-375x812.png"]]) {
     const actionsMobile = await context.newPage();
     await actionsMobile.setViewportSize({ width, height: 812 });
     await actionsMobile.goto(`${componentUrl}#browse/actions`, { waitUntil: "networkidle" });
     assert(await columns(actionsMobile) === 1, `${width}px action gallery is not one column.`);
     assert(await overflow(actionsMobile) <= 1, `Action gallery overflows at ${width}px.`);
     const geometry = await actionStageGeometry(actionsMobile);
-    assert(Object.values(geometry).every((value) => value?.compact && value.centerXDelta <= 2 && value.centerYDelta <= 2 && !value.clipped), `${width}px action stages are not naturally centered: ${JSON.stringify(geometry)}.`);
+    assertUniformActionStages(geometry, `${width}px`);
     const controlTargets = await actionsMobile.evaluate(() => Object.fromEntries([
       ["action-buttons", "button"],
       ["outbound-link", "a[data-outbound-link]"],
@@ -840,10 +879,11 @@ try {
     }).filter(Boolean).slice(0, 12),
   }));
   assert(largeActionOverflow.amount <= 1, `Action gallery overflows at 200% root text: ${JSON.stringify(largeActionOverflow)}.`);
-  assert(Object.entries(actionHeightsAfterLargeText).every(([id, value]) => value && !value.clipped && value.scopeHeight >= actionHeightsBeforeLargeText[id].scopeHeight && value.centerXDelta <= 2 && value.centerYDelta <= 2), `Action stages did not grow naturally at 200% text: ${JSON.stringify({ actionHeightsBeforeLargeText, actionHeightsAfterLargeText })}.`);
+  assertUniformActionStages(actionHeightsAfterLargeText, "200% text");
+  assert(Object.entries(actionHeightsAfterLargeText).every(([id, value]) => value && value.scopeHeight >= actionHeightsBeforeLargeText[id].scopeHeight), `Action stages did not grow naturally at 200% text: ${JSON.stringify({ actionHeightsBeforeLargeText, actionHeightsAfterLargeText })}.`);
   assert(await largeActionText.locator(".library-gallery-preview [data-outbound-arrow]").count() === 2, "Action arrows disappeared at 200% text.");
   assert(await largeActionText.locator(".library-card-actions .library-copy-prompt").count() === 4 && await largeActionText.locator(".library-card-actions .library-open-component").count() === 4, "Action tile controls became unreachable at 200% text.");
-  await largeActionText.screenshot({ path: "/tmp/frac131-actions-large-text-2560x1440.png", fullPage: true });
+  await largeActionText.screenshot({ path: "/tmp/frac132-actions-large-text-2560x1440.png", fullPage: true });
   await largeActionText.close();
 
   for (const id of ["outbound-text-link", "inline-text-link"]) {
@@ -1086,7 +1126,7 @@ try {
   assert(productionErrors.length === 0, `Production page errors: ${productionErrors.join(" | ")}`);
 
   await browser.close();
-  console.log("Component-library and production browser checks passed; compact-action evidence is in /tmp/frac131-*.png.");
+  console.log("Component-library and production browser checks passed; uniform-action-inset evidence is in /tmp/frac132-*.png.");
 } finally {
   catalogServer.kill("SIGTERM");
   productionServer.kill("SIGTERM");

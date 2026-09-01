@@ -156,11 +156,17 @@
 .library-gallery-preview--compact-actions .library-canvas-scope {
   min-height: 0;
 }
-.library-gallery-preview--compact-actions .library-canvas-scope {
-  width: 100%;
+.library-gallery-preview.library-gallery-preview--compact-actions {
+  display: grid;
   place-items: center;
-  padding-block: clamp(1.25rem, 6cqi, 2rem);
-  padding-inline: 1rem;
+}
+.library-gallery-preview--compact-actions .library-canvas-scope {
+  box-sizing: border-box;
+  inline-size: fit-content;
+  max-inline-size: 100%;
+  margin-inline: auto;
+  place-items: center;
+  padding: 1rem;
   text-align: center;
 }
 @media (prefers-reduced-motion: reduce) {
