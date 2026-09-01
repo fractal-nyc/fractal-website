@@ -182,6 +182,14 @@ test("Education portal keeps one wide accessible catalog across input modes", as
   const catalog = page.getByTestId("fractalu-course-catalog");
   await expect(catalog).toBeVisible();
   await expect(catalog.locator("article")).toHaveCount(20);
+  const catalogScope = catalog.locator("..");
+  await expect(catalogScope).toHaveAttribute("data-component-colorway", "education");
+  await expect(catalogScope).toHaveAttribute("data-component-surface", "paper");
+  await expect(catalogScope).toHaveCSS("background-color", "rgba(0, 0, 0, 0)");
+  await expect(catalog.locator("article").first()).toHaveCSS(
+    "background-color",
+    "rgb(247, 246, 242)",
+  );
   const initialCourseRevealSlots = catalog.locator('[data-fractalu-reveal-slot="course"]');
   await expect(initialCourseRevealSlots).toHaveCount(20);
   await expect(initialCourseRevealSlots.first()).toHaveAttribute(
@@ -233,6 +241,12 @@ test("Education portal keeps one wide accessible catalog across input modes", as
   const clubs = page.getByTestId("fractalu-clubs");
   const clubCards = clubs.locator("article[data-club-id]");
   await expect(clubCards).toHaveCount(4);
+  const clubScopes = clubs.locator("[data-component-colorway='education'][data-component-surface='paper']");
+  await expect(clubScopes).toHaveCount(4);
+  for (let index = 0; index < 4; index += 1) {
+    await expect(clubScopes.nth(index)).toHaveCSS("background-color", "rgba(0, 0, 0, 0)");
+    await expect(clubCards.nth(index)).toHaveCSS("background-color", "rgb(247, 246, 242)");
+  }
   await expect(clubs.getByText("Open group", { exact: true })).toHaveCount(0);
   await expect(page.getByRole("heading", { name: "Clubs & open groups" })).toBeVisible();
 

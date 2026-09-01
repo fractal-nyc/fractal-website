@@ -631,7 +631,11 @@ export function FractalUCatalogView({
           </div>
         </FadeIn>
 
-        <ComponentColorScope colorway={colorway} surface="paper" className="bg-transparent">
+        <ComponentColorScope
+          colorway={colorway}
+          surface="paper"
+          style={{ backgroundColor: "transparent" }}
+        >
           <CourseCatalog courses={courses} isFinePointer={isFinePointer} animateInitialCards={animate && !hasFiltered} />
         </ComponentColorScope>
 
@@ -653,7 +657,12 @@ export function FractalUCatalogView({
                 delay={index * COURSE_REVEAL_STEP}
                 animate={animate}
               >
-                <ComponentColorScope colorway={colorway} surface="paper" className="h-full bg-transparent">
+                <ComponentColorScope
+                  colorway={colorway}
+                  surface="paper"
+                  className="h-full"
+                  style={{ backgroundColor: "transparent" }}
+                >
                   <ClubCard club={club} />
                 </ComponentColorScope>
               </RevealSlot>

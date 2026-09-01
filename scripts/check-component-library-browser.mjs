@@ -425,9 +425,21 @@ try {
         const educationButtons = educationFilter.getByRole("button");
         assert(JSON.stringify(await educationButtons.allTextContents()) === JSON.stringify(["All", "Literature", "Writing", "Movement", "Music", "Technology", "Craft", "Nature", "Mind & Body"]), `Production Education categories differ at ${width}px.`);
         assert(await production.locator(".fractalu-filter-row").evaluate((element) => getComputedStyle(element).backgroundColor) === "rgba(0, 0, 0, 0)", `Production Education filter has a row-wide background at ${width}px.`);
+        const courseCatalog = production.locator("[data-course-collection]");
+        const courseScope = courseCatalog.locator("..");
+        assert(await courseScope.getAttribute("data-component-surface") === "paper", `Production Education course scope lost paper tokens at ${width}px.`);
+        assert(await courseScope.evaluate((element) => getComputedStyle(element).backgroundColor) === "rgba(0, 0, 0, 0)", `Production Education course collection has a background at ${width}px.`);
+        assert(await production.locator("[data-course-id]").first().evaluate((element) => getComputedStyle(element).backgroundColor) === "rgb(247, 246, 242)", `Production Education Course Card lost its paper surface at ${width}px.`);
+        const clubCards = production.locator("[data-club-id]");
+        assert(await clubCards.count() === 4, `Production Education club inventory changed at ${width}px.`);
+        assert(await clubCards.evaluateAll((cards) => cards.every((card) => {
+          const scope = card.closest("[data-component-colorway]");
+          return scope !== null && getComputedStyle(scope).backgroundColor === "rgba(0, 0, 0, 0)" && getComputedStyle(card).backgroundColor === "rgb(247, 246, 242)";
+        })), `Production Education club scope/card backgrounds diverged at ${width}px.`);
         assert(await educationButtons.evaluateAll((buttons) => buttons.every((button) => button.getBoundingClientRect().height >= 44 && button.getBoundingClientRect().width >= 44)), `Production Education chips are undersized at ${width}px.`);
         await production.getByRole("button", { name: "Technology", exact: true }).click();
         assert(await production.locator("[data-course-id]").count() === 3 && await production.locator("[data-filter-bar] button[aria-pressed='true']").count() === 1, `Production Education filtering failed at ${width}px.`);
+        assert(await courseScope.evaluate((element) => getComputedStyle(element).backgroundColor) === "rgba(0, 0, 0, 0)", `Production Education filtering repainted the course collection at ${width}px.`);
         await production.getByRole("button", { name: "All", exact: true }).click();
         assert(await production.locator("[data-course-id]").count() === 20, `Production Education All recovery failed at ${width}px.`);
         await educationFilter.scrollIntoViewIfNeeded();

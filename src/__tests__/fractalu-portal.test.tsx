@@ -155,6 +155,42 @@ describe("FractalUniversityPortal", () => {
     );
   });
 
+  it("keeps collection token scopes transparent while individual cards remain paper", () => {
+    render(<FractalUniversityPortal />);
+
+    const catalog = screen.getByTestId("fractalu-course-catalog");
+    const catalogScope = catalog.parentElement!;
+    expect(catalogScope).toHaveAttribute("data-component-colorway", "education");
+    expect(catalogScope).toHaveAttribute("data-component-surface", "paper");
+    expect(catalogScope.style.backgroundColor).toBe("transparent");
+    expect(catalogScope).not.toHaveClass("bg-transparent");
+    expect(within(catalog).getAllByRole("article")[0]).toHaveClass(
+      "fractalu-course-card",
+      "bg-[var(--component-surface,var(--color-background))]",
+    );
+
+    const clubs = screen.getByTestId("fractalu-clubs");
+    const clubCards = within(clubs).getAllByRole("article");
+    expect(clubCards).toHaveLength(FRACTALU_CATALOG.clubs.length);
+    for (const card of clubCards) {
+      const scope = card.closest<HTMLElement>("[data-component-colorway]")!;
+      expect(scope).toHaveAttribute("data-component-colorway", "education");
+      expect(scope).toHaveAttribute("data-component-surface", "paper");
+      expect(scope.style.backgroundColor).toBe("transparent");
+      expect(scope).not.toHaveClass("bg-transparent");
+      expect(card).toHaveClass(
+        "fractalu-club-card",
+        "bg-[var(--component-surface,var(--color-background))]",
+      );
+    }
+
+    const filterScope = screen
+      .getByRole("group", { name: "Filter classes by subject" })
+      .closest<HTMLElement>("[data-component-colorway]")!;
+    expect(filterScope).toHaveAttribute("data-component-surface", "deep");
+    expect(filterScope.style.backgroundColor).toBe("transparent");
+  });
+
   it("maps the Library reveal cadence and does not replay cards after filtering", () => {
     render(<FractalUniversityPortal />);
 
