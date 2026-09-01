@@ -15,7 +15,7 @@ export function FilterChip({ label, count, selected, onSelect }: FilterChipProps
     aria-pressed={selected}
     aria-label={count === undefined ? label : `${label}, ${count} ${count === 1 ? "result" : "results"}`}
     onClick={onSelect}
-    className={`inline-flex min-h-11 min-w-11 shrink-0 items-center gap-2 rounded-full border px-4 py-2 font-mono text-xs transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--component-focus,var(--color-foreground))] focus-visible:ring-offset-2 ${selected ? "border-[var(--component-accent,var(--color-foreground))] bg-[var(--component-accent,var(--color-foreground))] text-[var(--component-on-accent,var(--color-background))]" : "border-foreground-faint bg-background text-foreground-muted hover:border-[var(--component-accent,var(--color-foreground))] hover:text-foreground"}`}
+    className={`inline-flex min-h-11 min-w-11 shrink-0 items-center gap-2 rounded-full border px-4 py-2 font-mono text-xs transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--component-focus,var(--color-foreground))] focus-visible:ring-offset-2 ${selected ? "border-[var(--component-accent,var(--color-foreground))] bg-[var(--component-accent,var(--color-foreground))] text-[var(--component-on-accent,var(--color-background))]" : "border-foreground-faint bg-background text-foreground-muted hover:border-[var(--component-accent,var(--color-foreground))] hover:text-foreground focus-visible:border-[var(--component-accent,var(--color-foreground))] focus-visible:text-foreground"}`}
   >
     <span>{label}</span>
     {count !== undefined && <span className="text-xs opacity-70" aria-hidden="true">{count}</span>}

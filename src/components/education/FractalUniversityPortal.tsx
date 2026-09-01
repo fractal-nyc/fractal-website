@@ -11,12 +11,12 @@ import { OutboundLink } from "@/components/content/OutboundLink";
 import { MandelbrotCorners } from "@/components/ui/MandelbrotCorners";
 import { FadeIn } from "@/components/ui/FadeIn";
 import { CalloutCard } from "@/components/content/CalloutCard";
-import { ComponentColorScope, type ComponentColorwayId } from "@/components/content/ComponentColorScope";
+import { ComponentColorScope, type ComponentColorwayId, type ComponentSurfaceMode } from "@/components/content/ComponentColorScope";
 import { ContentCard } from "@/components/content/ContentCard";
 import { CategoryIconLabel } from "@/components/content/CategoryIconLabel";
 import { resolveCourseSubjectIcon } from "@/components/education/courseSubjectIcons";
 import { FactGrid } from "@/components/content/FactGrid";
-import { FilterGroup } from "@/components/content/FilterGroup";
+import { FilterBar } from "@/components/content/FilterGroup";
 import { EmptyResultsMessage } from "@/components/content/EmptyResultsMessage";
 import {
   FRACTALU_CATALOG,
@@ -618,21 +618,16 @@ export function FractalUCatalogView({
             data-fractalu-reveal-group="filters"
             data-fractalu-reveal-delay="0.40"
           >
-            <ComponentColorScope colorway={colorway} surface="paper" className="fractalu-filter-row bg-transparent text-background/85">
-              <FilterGroup
-                id="fractalu-filter-label"
-                labelClassName="text-background/85"
-                label="Filter classes by subject"
-                options={categories}
-                selected={activeCategory}
-                onChange={(category) => {
-                  setHasFiltered(true);
-                  setActiveCategory(category);
-                }}
-                resultCount={courses.length}
-                resultNoun="course"
-              />
-            </ComponentColorScope>
+            <CourseSubjectFilter
+              colorway={colorway}
+              categories={categories}
+              selected={activeCategory}
+              onChange={(category) => {
+                setHasFiltered(true);
+                setActiveCategory(category);
+              }}
+              resultCount={courses.length}
+            />
           </div>
         </FadeIn>
 
@@ -672,8 +667,38 @@ export function FractalUCatalogView({
   );
 }
 
-export function CourseSubjectFilter({ categories, selected, onChange, resultCount }: { categories: readonly string[]; selected: string; onChange: (value: string) => void; resultCount?: number }) {
-  return <FilterGroup label="Filter classes by subject" options={categories} selected={selected} onChange={onChange} resultCount={resultCount} resultNoun="course" />;
+export function CourseSubjectFilter({
+  categories,
+  selected,
+  onChange,
+  resultCount,
+  colorway = "education",
+  surface = "deep",
+}: {
+  categories: readonly string[];
+  selected: string;
+  onChange: (value: string) => void;
+  resultCount?: number;
+  colorway?: ComponentColorwayId;
+  surface?: ComponentSurfaceMode;
+}) {
+  return <ComponentColorScope
+    colorway={colorway}
+    surface={surface}
+    className="fractalu-filter-row"
+    style={{ backgroundColor: "transparent" }}
+  >
+    <FilterBar
+      id="fractalu-filter-label"
+      label="Filter classes by subject"
+      labelClassName={surface === "paper" ? "" : "text-[var(--component-on-surface)]"}
+      options={categories.map((value) => ({ value, label: value }))}
+      selected={selected}
+      onChange={(value) => onChange(value as string)}
+      resultCount={resultCount}
+      resultNoun="course"
+    />
+  </ComponentColorScope>;
 }
 
 export function FractalUniversityPortal() {

@@ -59,7 +59,7 @@ export const SearchBar = forwardRef<HTMLInputElement, SearchBarProps>(function S
       type="button"
       onClick={() => { onClear(); requestAnimationFrame(() => inputRef.current?.focus()); }}
       aria-label="Clear search"
-      className="absolute right-0 top-0 grid h-11 w-11 place-items-center rounded-lg text-foreground-muted transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--component-focus,var(--color-foreground))]"
-    ><X aria-hidden="true" className="h-4 w-4" strokeWidth={1.5} /></button> : endAdornment ? <span aria-hidden="true" className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-foreground-muted">{endAdornment}</span> : null}
+      className="group absolute right-0 top-0 grid h-11 w-11 place-items-center rounded-lg text-foreground-muted transition-colors duration-150 hover:bg-foreground/10 hover:text-foreground active:bg-foreground/15 focus-visible:bg-foreground/10 focus-visible:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--component-focus,var(--color-foreground))]"
+    ><X aria-hidden="true" className="h-4 w-4 transition-transform duration-150 motion-safe:group-hover:scale-110 motion-safe:group-focus-visible:scale-110 motion-safe:group-active:scale-95 motion-reduce:transform-none motion-reduce:transition-none" strokeWidth={1.5} /></button> : endAdornment ? <span aria-hidden="true" className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-foreground-muted">{endAdornment}</span> : null}
   </div>;
 });

@@ -236,4 +236,32 @@ describe("interactive component specimens", () => {
     expect(within(carouselView.container).getByText("01 / 03")).toBeInTheDocument();
     expect(within(carouselView.container).getByRole("button", { name: "Copy prompt for Photo Carousel" })).toBeInTheDocument();
   });
+
+  it("defaults Filter Bar to the complete live Education capsule treatment", () => {
+    const entry = COMPONENT_REGISTRY.find(({ id }) => id === "filter-bar")!;
+    const { container } = render(<ComponentDetail entry={entry} onBack={() => undefined} onOpenLive={() => undefined} />);
+    const outerScope = container.querySelector(".library-detail-preview .library-canvas-scope");
+    expect(outerScope).toHaveAttribute("data-component-colorway", "education");
+    expect(outerScope).toHaveAttribute("data-component-surface", "deep");
+    const group = within(container).getByRole("group", { name: "Filter classes by subject" });
+    expect(within(group).getAllByRole("button").map((button) => button.textContent)).toEqual([
+      "All",
+      "Literature",
+      "Writing",
+      "Movement",
+      "Music",
+      "Technology",
+      "Craft",
+      "Nature",
+      "Mind & Body",
+    ]);
+    expect(within(container).getByText("20 courses shown.")).toHaveAttribute("aria-live", "polite");
+    fireEvent.click(within(group).getByRole("button", { name: "Technology" }));
+    expect(within(group).getByRole("button", { name: "Technology" })).toHaveAttribute("aria-pressed", "true");
+    expect(within(container).getByText("3 courses shown.")).toBeInTheDocument();
+
+    fireEvent.change(within(container).getByLabelText("Selection behavior"), { target: { value: "multiple" } });
+    expect(within(container).getByRole("group", { name: "Filter by tag" })).toBeInTheDocument();
+    expect(within(container).getByRole("button", { name: /Community, \d+ results/ })).toHaveAttribute("aria-pressed", "true");
+  });
 });

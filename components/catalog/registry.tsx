@@ -5,7 +5,7 @@ import { CalloutCard } from "@/components/content/CalloutCard";
 import { ContentCard } from "@/components/content/ContentCard";
 import { OutboundLink } from "@/components/content/OutboundLink";
 import { FactGrid } from "@/components/content/FactGrid";
-import { FilterBar, FilterGroup } from "@/components/content/FilterGroup";
+import { FilterGroup } from "@/components/content/FilterGroup";
 import { HighlightBox } from "@/components/content/HighlightBox";
 import { SearchBar } from "@/components/content/SearchBar";
 import { EmbedFrame } from "@/components/content/EmbedFrame";
@@ -82,6 +82,8 @@ export interface ComponentRegistryEntry {
   usedOn?: string;
   keywords: string[];
   controls: readonly ComponentSpecimenControl[];
+  defaultColorway?: ComponentColorwayId;
+  defaultSurface?: ComponentSurfaceMode;
   render?: (context: ComponentSpecimenContext) => ReactNode;
   presentation?: ComponentPresentation;
   previewMode?: ComponentPreviewMode;
@@ -166,12 +168,35 @@ function SearchBarSpecimen({ mode }: { mode: "site" | "collection" }) {
   return <SearchBar value={query} label="Search this collection" role="searchbox" placeholder="Search this collection…" onChange={(event) => setQuery(event.target.value)} onClear={() => setQuery("")} />;
 }
 
-function FilterBarSpecimen({ mode }: { mode: "single" | "multiple" }) {
-  const [selected, setSelected] = useState<string | string[]>(mode === "single" ? "Writing" : ["community"]);
-  const options = mode === "single"
-    ? ["All", "Literature", "Writing"].map((value) => ({ value, label: value }))
-    : [{ value: "community", label: "Community", count: 8 }, { value: "education", label: "Education", count: 3 }, { value: "events", label: "Events", count: 5 }];
-  return <FilterBar label={mode === "single" ? "Filter classes by subject" : "Filter by tag"} options={options} mode={mode} selected={selected} onChange={setSelected} resultCount={mode === "single" ? 3 : 16} resultNoun={mode === "single" ? "course" : "document"} />;
+function FilterBarSpecimen({ mode, colorway, surface }: { mode: "single" | "multiple"; colorway: ComponentColorwayId; surface: ComponentSurfaceMode }) {
+  const [selectedSubject, setSelectedSubject] = useState("All");
+  const [activeTags, setActiveTags] = useState(() => new Set(["community"]));
+  if (mode === "single") {
+    const categories = getFractalUCategories(FRACTALU_CATALOG);
+    const resultCount = selectedSubject === "All"
+      ? FRACTALU_CATALOG.courses.length
+      : FRACTALU_CATALOG.courses.filter(({ category }) => category === selectedSubject).length;
+    return <CourseSubjectFilter
+      categories={categories}
+      selected={selectedSubject}
+      onChange={setSelectedSubject}
+      resultCount={resultCount}
+      colorway={colorway}
+      surface={surface}
+    />;
+  }
+  const tags = ["community", "education", "events"];
+  const tagCounts = new Map(tags.map((tag) => [tag, PUBLICATION_DOCUMENTS.filter((document) => document.tags.includes(tag)).length]));
+  return <TagFilter
+    tags={tags}
+    tagCounts={tagCounts}
+    activeTags={activeTags}
+    onToggle={(tag) => setActiveTags((current) => {
+      const next = new Set(current);
+      if (next.has(tag)) next.delete(tag); else next.add(tag);
+      return next;
+    })}
+  />;
 }
 
 const COMPONENT_REGISTRY_BASE: ComponentRegistryEntry[] = [
@@ -214,7 +239,7 @@ const COMPONENT_REGISTRY_BASE: ComponentRegistryEntry[] = [
   }),
   defineSpecimen({ id: "search-bar", name: "Search Bar", componentName: "SearchBar", category: "Actions & controls", sourcePath: "src/components/content/SearchBar.tsx", purpose: "One shared search field for navigating the whole site or filtering a collection.", useWhen: "Use when someone needs to find a destination or narrow a visible collection.", doNotUseWhen: "Do not use a collection searchbox as a site-navigation combobox, or vice versa.", contentFields: ["what is searched", "mode", "selection behavior"], variants: ["Search the whole site", "Filter this collection", "Focused", "Clearable"], themeable: true, surfaceModes: ["paper", "light", "deep"], accessibility: "The site mode preserves combobox/listbox keyboard behavior; collection mode is a labelled searchbox with one working Clear button.", responsive: "Fills its container with a 44px target and keeps its caret clear of end controls.", agentPhrase: "Use the **Search Bar** component.", promptNeeds: "search scope and whether choosing a result navigates or filters", usedOn: "Home site search and Library collection search.", keywords: ["search", "home search bar", "homepage search", "archive search field", "hero search", "combobox", "collection filter"], aliases: ["Home Search Bar", "Homepage Search", "Archive Search Field", "Hero Search / Combobox", "Global Search"], controls: [selectControl("mode", "Search behavior", "site", "collection", [{ value: "site", label: "Search the whole site" }, { value: "collection", label: "Filter this collection" }]), PREVIEW_WIDTH_CONTROL, COLORWAY_CONTROL, SURFACE_CONTROL], render: ({ values }) => <SearchBarSpecimen key={values.mode} mode={values.mode} /> }),
   defineSpecimen({ id: "archive-search", name: "Archive Search Field", componentName: "ArchiveSearch", category: "Actions & controls", sourcePath: "src/components/publications/ArchiveSearch.tsx", purpose: "Searches titles, authors, and topics in the Library archive.", useWhen: "Use for archive keyword filtering.", doNotUseWhen: "Do not use as a general site search.", contentFields: ["value", "onChange"], variants: ["Empty", "Filled", "Focused", "Clearable"], themeable: false, surfaceModes: ["paper"], accessibility: "Native search field with an accessible clear control.", responsive: "Fills its available width.", agentPhrase: "Use the **Archive Search Field** component.", keywords: ["input", "find"], aliases: ["Search Bar collection mode"], controls: [textControl("query", "Search value", "community", "collective intelligence")], render: ({ values }) => <ArchiveSearch value={values.query} onChange={() => undefined} /> }),
-  defineSpecimen({ id: "filter-bar", name: "Filter Bar", componentName: "FilterBar / FilterChip", category: "Actions & controls", sourcePath: "src/components/content/FilterGroup.tsx", purpose: "A configurable group of filter chips for one or many selections.", useWhen: "Use above a visible collection that can be narrowed by subject, tag, or another derived category.", doNotUseWhen: "Do not use for navigation or maintain a second hard-coded option list.", contentFields: ["label", "derived options", "selection mode", "optional counts", "result count"], variants: ["Single select", "Multi-select with counts"], themeable: true, surfaceModes: ["paper", "light", "deep"], accessibility: "A labelled group exposes pressed state and politely announces the current result count.", responsive: "44px chips wrap in source order at narrow widths.", agentPhrase: "Use the **Filter Bar** component.", promptNeeds: "filter labels, data source, and single- or multi-select behavior", usedOn: "Education course subjects and optional Library article tags.", keywords: ["filter chip", "library tag filter", "course subject filter", "filter classes by subject", "tags"], aliases: ["Filter Chip", "Library Tag Filter", "Course Subject Filter"], controls: [selectControl("mode", "Selection behavior", "single", "multiple", [{ value: "single", label: "Single select" }, { value: "multiple", label: "Multi-select with counts" }]), PREVIEW_WIDTH_CONTROL, COLORWAY_CONTROL, SURFACE_CONTROL], render: ({ values }) => <FilterBarSpecimen key={values.mode} mode={values.mode} /> }),
+  defineSpecimen({ id: "filter-bar", name: "Filter Bar", componentName: "CourseSubjectFilter / FilterBar / FilterChip", category: "Actions & controls", sourcePath: "src/components/content/FilterGroup.tsx", purpose: "The live Education subject capsules, with the same shared source available for optional multi-select Library tags.", useWhen: "Use above a visible collection that can be narrowed by subject, tag, or another category derived from its data.", doNotUseWhen: "Do not use for navigation or maintain a second hard-coded option list.", contentFields: ["label", "derived options", "selection mode", "optional counts", "result count"], variants: ["Education subjects (visible on the site)", "Optional Library tags (currently hidden)"], themeable: true, surfaceModes: ["paper", "light", "deep"], defaultColorway: "education", defaultSurface: "deep", accessibility: "A labelled group exposes pressed state and politely announces the current Education result count.", responsive: "44px capsules wrap in source order at narrow widths and large text.", agentPhrase: "Use the **Filter Bar** component.", promptNeeds: "filter labels, data source, and single- or multi-select behavior", usedOn: "Education course subjects. The shared multi-select behavior is available for Library article tags, but tags are currently hidden on the public Library page.", keywords: ["filter chip", "library tag filter", "course subject filter", "filter classes by subject", "tags"], aliases: ["Filter Chip", "Library Tag Filter", "Course Subject Filter"], controls: [selectControl("mode", "Selection behavior", "single", "multiple", [{ value: "single", label: "Education subjects (single select)" }, { value: "multiple", label: "Optional Library tags (multi-select)" }]), PREVIEW_WIDTH_CONTROL, COLORWAY_CONTROL, SURFACE_CONTROL], render: ({ colorway, surface, values }) => <FilterBarSpecimen key={values.mode} mode={values.mode} colorway={colorway} surface={surface} /> }),
   defineSpecimen({ id: "filter-chip", name: "Filter Chip", componentName: "FilterGroup / FilterChip", category: "Actions & controls", sourcePath: "src/components/content/FilterGroup.tsx", purpose: "Shows a labeled set of mutually selectable content filters.", useWhen: "Use to filter a visible collection by one category.", doNotUseWhen: "Do not use for navigation or multi-step forms.", contentFields: ["label", "options", "selected", "resultCount"], variants: ["Selected", "Unselected", "Empty results"], themeable: true, surfaceModes: ["paper"], accessibility: "Grouped buttons expose aria-pressed and announce result counts.", responsive: "Wraps without changing source order.", agentPhrase: "Use the **Filter Chip** and **Filter Group** components.", keywords: ["tag", "category", "subject", "results summary"], controls: [selectControl("selection", "Selected filter", "Writing", "All", [{ value: "All", label: "All" }, { value: "Writing", label: "Writing" }, { value: "Movement", label: "Movement" }, { value: "No results", label: "Empty results" }]), COLORWAY_CONTROL], render: ({ values }) => <FilterGroup label="Filter examples" options={["All", "Writing", "Movement"]} selected={values.selection} onChange={() => undefined} resultCount={values.selection === "No results" ? 0 : 3} /> }),
   reference("filter-results-summary", "Filter Results Summary", "FilterGroup live region", "Actions & controls", "src/components/content/FilterGroup.tsx", "Announces the current filtered result count without adding visual clutter."),
   defineSpecimen({ id: "empty-results-message", name: "Empty Results Message", componentName: "EmptyResultsMessage", category: "Actions & controls", sourcePath: "src/components/content/EmptyResultsMessage.tsx", purpose: "Explains that a filtered collection is empty and gives a recovery step.", useWhen: "Use when a search or filter produces no visible items.", doNotUseWhen: "Do not leave an empty collection unexplained.", contentFields: ["title", "recovery guidance"], variants: ["Search", "Subject filter"], themeable: true, surfaceModes: ["paper"], accessibility: "Place near the collection and pair dynamic changes with a live result summary.", responsive: "Centered copy wraps naturally.", agentPhrase: "Use the **Empty Results Message** component.", keywords: ["empty state", "zero results"], controls: [textControl("title", "Empty-state title", "No results match your filters.", "No courses match this subject."), selectControl("context", "Recovery guidance", "search", "subject", [{ value: "search", label: "Search or tag filter" }, { value: "subject", label: "Course subject filter" }]), COLORWAY_CONTROL], render: ({ values }) => <EmptyResultsMessage title={values.title} guidance={values.context === "subject" ? "Choose another subject to continue browsing." : "Try another filter or clear your selection."} /> }),

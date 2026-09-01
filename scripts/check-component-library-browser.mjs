@@ -180,6 +180,15 @@ try {
   const catalogHash = new URL(page.url()).hash;
   const siteSearch = page.getByRole("combobox", { name: "Search Fractal" });
   await siteSearch.fill("Campus");
+  const siteClear = page.getByRole("button", { name: "Clear search" });
+  const siteClearRest = await siteClear.evaluate((button) => getComputedStyle(button).backgroundColor);
+  await siteClear.hover();
+  await page.waitForTimeout(200);
+  const siteClearHover = await siteClear.evaluate((button) => ({ background: getComputedStyle(button).backgroundColor, iconScale: getComputedStyle(button.querySelector("svg")).scale }));
+  assert(siteClearHover.background !== siteClearRest && !["none", "1"].includes(siteClearHover.iconScale), `Home-mode clear hover is not reactive: ${JSON.stringify(siteClearHover)}.`);
+  await siteClear.click();
+  await page.waitForFunction((input) => input.value === "" && document.activeElement === input, await siteSearch.elementHandle());
+  await siteSearch.fill("Campus");
   await siteSearch.press("ArrowDown");
   assert(Boolean(await siteSearch.getAttribute("aria-activedescendant")), "Catalog site search lost keyboard result focus.");
   await siteSearch.press("Enter");
@@ -188,30 +197,50 @@ try {
   const collectionSearch = page.getByRole("searchbox", { name: "Search this collection" });
   assert(await collectionSearch.getAttribute("type") === "text", "Collection search reintroduced a native cancel control.");
   await collectionSearch.fill("community");
-  assert(await page.getByRole("button", { name: "Clear search" }).count() === 1, "Collection Search Bar does not have exactly one clear control.");
-  await page.getByRole("button", { name: "Clear search" }).click();
-  assert(await collectionSearch.inputValue() === "" && await collectionSearch.evaluate((input) => document.activeElement === input), "Collection clear did not clear and restore focus.");
-  await page.screenshot({ path: "/tmp/frac124-search-collection-1440x900.png" });
+  const collectionClear = page.getByRole("button", { name: "Clear search" });
+  assert(await collectionClear.count() === 1, "Collection Search Bar does not have exactly one clear control.");
+  const collectionRest = await collectionClear.evaluate((button) => getComputedStyle(button).backgroundColor);
+  await collectionClear.hover();
+  await page.waitForTimeout(200);
+  const collectionHover = await collectionClear.evaluate((button) => ({ background: getComputedStyle(button).backgroundColor, color: getComputedStyle(button).color, iconScale: getComputedStyle(button.querySelector("svg")).scale }));
+  assert(collectionHover.background !== collectionRest && !["none", "1"].includes(collectionHover.iconScale), `Collection clear hover is not reactive: ${JSON.stringify(collectionHover)}.`);
+  await page.screenshot({ path: "/tmp/frac125-catalog-search-hover-1440x900.png" });
+  await collectionClear.focus();
+  await page.waitForTimeout(200);
+  assert(await collectionClear.evaluate((button) => getComputedStyle(button).backgroundColor) !== collectionRest, "Collection clear keyboard focus has no surface response.");
+  await collectionClear.click();
+  await page.waitForFunction((input) => input.value === "" && document.activeElement === input, await collectionSearch.elementHandle());
 
   await page.goto(`${componentUrl}#component/filter-bar`, { waitUntil: "networkidle" });
   await page.reload({ waitUntil: "networkidle" });
   await page.locator("[data-filter-mode='single']").waitFor();
   assert(await page.locator("[data-filter-mode='single']").count() === 1, "Filter Bar did not start in single-select mode.");
+  assert(await page.getByLabel("Site color").inputValue() === "education" && await page.getByLabel("Background").inputValue() === "deep", "Filter Bar does not default to Education/deep context.");
+  const expectedEducationCategories = ["All", "Literature", "Writing", "Movement", "Music", "Technology", "Craft", "Nature", "Mind & Body"];
   const singleChips = page.locator("[data-filter-bar] button");
+  assert(JSON.stringify(await singleChips.allTextContents()) === JSON.stringify(expectedEducationCategories), `Filter Bar does not show the live Education categories: ${(await singleChips.allTextContents()).join(", ")}.`);
   assert(await singleChips.evaluateAll((buttons) => buttons.every((button) => button.getBoundingClientRect().height >= 44 && button.getBoundingClientRect().width >= 44)), "Filter chips are smaller than 44px.");
-  await singleChips.nth(1).click();
-  assert(await singleChips.nth(1).getAttribute("aria-pressed") === "true", "Single-select chip did not select.");
-  await page.screenshot({ path: "/tmp/frac124-filter-single-1440x900.png" });
+  assert((await page.locator("[data-filter-bar]").textContent()).includes("20 courses shown."), "Education specimen has the wrong initial result count.");
+  const catalogTechnology = page.getByRole("button", { name: "Technology", exact: true });
+  await catalogTechnology.click();
+  await page.waitForTimeout(250);
+  assert(await catalogTechnology.getAttribute("aria-pressed") === "true" && await page.locator("[data-filter-bar] button[aria-pressed='true']").count() === 1, "Education specimen is not single-select.");
+  assert((await page.locator("[data-filter-bar]").textContent()).includes("3 courses shown."), "Education specimen has the wrong Technology count.");
+  await page.screenshot({ path: "/tmp/frac125-catalog-filter-1440x900.png" });
   await page.getByLabel("Selection behavior").selectOption("multiple");
   const multiChips = page.locator("[data-filter-bar] button");
   await multiChips.nth(1).click();
   assert(await page.locator("[data-filter-bar] button[aria-pressed='true']").count() === 2, "Multi-select Filter Bar did not retain two selections.");
   assert((await multiChips.nth(1).getAttribute("aria-label"))?.includes("results"), "Multi-select chips lost counts.");
-  await page.screenshot({ path: "/tmp/frac124-filter-multiple-1440x900.png" });
+  assert((await page.getByLabel("Selection behavior").locator("option:checked").textContent()).includes("Optional Library"), "Multi-select behavior is not identified as optional Library behavior.");
 
   await page.goto(`${componentUrl}#browse/media`, { waitUntil: "networkidle" });
+  await page.locator("#photo-gallery").scrollIntoViewIfNeeded();
+  await page.waitForFunction(() => [...document.querySelectorAll("#photo-gallery img")].every((image) => image.complete && image.naturalWidth > 0));
   await loadedImages(page.locator("#photo-gallery img"), "Photo Gallery");
   assert(await page.locator("#photo-gallery .library-photo-gallery-stage").count() === 1, "Photo Gallery is not the real bounded component.");
+  await page.locator("#campus-banner").scrollIntoViewIfNeeded();
+  await page.waitForFunction(() => [...document.querySelectorAll("#campus-banner img.painted-relic-banner__art")].every((image) => image.complete && image.naturalWidth > 0));
   await loadedImages(page.locator("#campus-banner img.painted-relic-banner__art"), "House Pennants");
   assert(await page.locator("#campus-banner [data-banner-material='painted-relic']").count() === 6, "House Pennants lost a house.");
   const carousel = page.locator("#meet-space-carousel");
@@ -299,10 +328,26 @@ try {
       await mobile.goto(`${componentUrl}#component/${id}`, { waitUntil: "networkidle" });
       await mobile.getByLabel(label).selectOption(value);
       assert(await overflow(mobile) <= 1, `${filename} detail overflows at 375px.`);
-      await mobile.screenshot({ path: `/tmp/frac124-${filename}-375x812.png` });
+      if (id === "filter-bar" && value === "single") {
+        const filterButtons = mobile.locator("[data-filter-bar] button");
+        assert(JSON.stringify(await filterButtons.allTextContents()) === JSON.stringify(["All", "Literature", "Writing", "Movement", "Music", "Technology", "Craft", "Nature", "Mind & Body"]), "Mobile Filter Bar lost live Education categories.");
+        assert(new Set((await filterButtons.evaluateAll((buttons) => buttons.map((button) => Math.round(button.getBoundingClientRect().y))))).size > 1, "Mobile Filter Bar did not wrap.");
+        await mobile.screenshot({ path: "/tmp/frac125-catalog-filter-375x812.png" });
+      }
       await mobile.close();
     }
   }
+
+  const reducedSearch = await context.newPage();
+  await reducedSearch.emulateMedia({ reducedMotion: "reduce" });
+  await reducedSearch.goto(`${componentUrl}#component/search-bar`, { waitUntil: "networkidle" });
+  await reducedSearch.getByLabel("Search behavior").selectOption("collection");
+  await reducedSearch.getByRole("searchbox", { name: "Search this collection" }).fill("community");
+  const reducedClear = reducedSearch.getByRole("button", { name: "Clear search" });
+  await reducedClear.hover();
+  assert(["none", "1"].includes(await reducedClear.locator("svg").evaluate((icon) => getComputedStyle(icon).scale)), "Reduced-motion clear icon still transforms.");
+  assert(await reducedClear.evaluate((button) => getComputedStyle(button).backgroundColor) !== "rgba(0, 0, 0, 0)", "Reduced-motion clear lost color/surface feedback.");
+  await reducedSearch.close();
 
   const largeText = await context.newPage();
   await largeText.setViewportSize({ width: 375, height: 812 });
@@ -376,6 +421,17 @@ try {
         }
         assert(await future.locator(".lucide-arrow-up-right").count() === 1 && await future.getAttribute("target") === "_blank" && await future.getAttribute("rel") === "noopener noreferrer", "Education future-semester link semantics changed.");
         assert(await jump.locator(".lucide-arrow-down").count() === 1 && await jump.getAttribute("target") === null, "Education information jump semantics changed.");
+        const educationFilter = production.getByRole("group", { name: "Filter classes by subject" });
+        const educationButtons = educationFilter.getByRole("button");
+        assert(JSON.stringify(await educationButtons.allTextContents()) === JSON.stringify(["All", "Literature", "Writing", "Movement", "Music", "Technology", "Craft", "Nature", "Mind & Body"]), `Production Education categories differ at ${width}px.`);
+        assert(await production.locator(".fractalu-filter-row").evaluate((element) => getComputedStyle(element).backgroundColor) === "rgba(0, 0, 0, 0)", `Production Education filter has a row-wide background at ${width}px.`);
+        assert(await educationButtons.evaluateAll((buttons) => buttons.every((button) => button.getBoundingClientRect().height >= 44 && button.getBoundingClientRect().width >= 44)), `Production Education chips are undersized at ${width}px.`);
+        await production.getByRole("button", { name: "Technology", exact: true }).click();
+        assert(await production.locator("[data-course-id]").count() === 3 && await production.locator("[data-filter-bar] button[aria-pressed='true']").count() === 1, `Production Education filtering failed at ${width}px.`);
+        await production.getByRole("button", { name: "All", exact: true }).click();
+        assert(await production.locator("[data-course-id]").count() === 20, `Production Education All recovery failed at ${width}px.`);
+        await educationFilter.scrollIntoViewIfNeeded();
+        await production.screenshot({ path: `/tmp/frac125-production-education-filter-${width === 375 ? "375x812" : "1440x900"}.png` });
       }
       if (route === "/campus") {
         const crystal = production.getByRole("link", { name: "crystal@fractalnyc.com" });
@@ -399,10 +455,18 @@ try {
   await production.waitForURL(`${productionOrigin}/campus`);
   await production.goto(`${productionOrigin}/library`, { waitUntil: "networkidle" });
   const archiveSearch = production.getByRole("searchbox", { name: "Search the archive" });
+  await archiveSearch.evaluate((input) => input.scrollIntoView({ block: "center" }));
+  await production.waitForTimeout(800);
   await archiveSearch.fill("community");
   assert(await production.getByRole("button", { name: "Clear search" }).count() === 1, "Library has duplicate clear controls.");
-  await production.getByRole("button", { name: "Clear search" }).click();
-  assert(await archiveSearch.inputValue() === "" && await archiveSearch.evaluate((input) => document.activeElement === input), "Library clear is not functional.");
+  const libraryClear = production.getByRole("button", { name: "Clear search" });
+  const libraryClearRest = await libraryClear.evaluate((button) => getComputedStyle(button).backgroundColor);
+  await libraryClear.hover();
+  await production.waitForTimeout(200);
+  assert(await libraryClear.evaluate((button, resting) => getComputedStyle(button).backgroundColor !== resting, libraryClearRest), "Library clear hover is not reactive.");
+  await production.locator("[data-search-bar]").screenshot({ path: "/tmp/frac125-production-library-clear-hover-1440x900.png" });
+  await libraryClear.click();
+  await production.waitForFunction((input) => input.value === "" && document.activeElement === input, await archiveSearch.elementHandle());
   await production.goto(`${productionOrigin}/education`, { waitUntil: "networkidle" });
   assert(await production.locator("[data-filter-mode='single']").count() >= 1, "Education is not using the shared single-select Filter Bar.");
   await production.goto(`${productionOrigin}/campus`, { waitUntil: "networkidle" });
@@ -412,7 +476,7 @@ try {
   assert(productionErrors.length === 0, `Production page errors: ${productionErrors.join(" | ")}`);
 
   await browser.close();
-  console.log("FRAC-124 component-library browser checks passed; screenshots are in /tmp/frac124-*.png.");
+  console.log("FRAC-125 component-library browser checks passed; affected screenshots are in /tmp/frac125-*.png.");
 } finally {
   catalogServer.kill("SIGTERM");
   productionServer.kill("SIGTERM");

@@ -2,6 +2,7 @@ import { act, fireEvent, render, screen, within } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import {
   CourseCard,
+  FractalUCatalogView,
   FractalUniversityPortal,
 } from "@/components/education/FractalUniversityPortal";
 import {
@@ -143,7 +144,7 @@ describe("FractalUniversityPortal", () => {
       selector: "[data-fractalu-filter-eyebrow]",
     });
     const filterGroup = screen.getByRole("group", { name: "Filter classes by subject" });
-    expect(filterEyebrow).toHaveClass("text-label", "text-background/85");
+    expect(filterEyebrow).toHaveClass("text-label", "text-[var(--component-on-surface)]");
     expect(filterEyebrow).not.toHaveClass("sr-only");
     expect(filterEyebrow).toHaveAttribute("id", "fractalu-filter-label");
     expect(filterGroup).toHaveAttribute("aria-labelledby", "fractalu-filter-label");
@@ -269,6 +270,10 @@ describe("FractalUniversityPortal", () => {
     const filterBlock = document.querySelector("[data-fractalu-filter-block]")!;
     expect(filterBlock).not.toHaveClass("border-b");
     const group = screen.getByRole("group", { name: "Filter classes by subject" });
+    const filterScope = group.closest("[data-component-colorway]");
+    expect(filterScope).toHaveAttribute("data-component-colorway", "education");
+    expect(filterScope).toHaveAttribute("data-component-surface", "deep");
+    expect((filterScope as HTMLElement).style.backgroundColor).toBe("transparent");
     const filters = within(group).getAllByRole("button");
     expect(group).toHaveClass("flex-wrap", "gap-2", "overflow-visible");
     expect(group).not.toHaveClass("overflow-x-auto");
@@ -291,7 +296,7 @@ describe("FractalUniversityPortal", () => {
     expect(all).toHaveAttribute("aria-pressed", "true");
     expect(all.className).toContain("bg-[var(--component-accent");
     const technology = screen.getByRole("button", { name: "Technology" });
-    expect(technology).toHaveClass("border-foreground-faint", "focus-visible:ring-offset-2");
+    expect(technology).toHaveClass("border-foreground-faint", "focus-visible:ring-offset-2", "focus-visible:border-[var(--component-accent,var(--color-foreground))]");
     expect(technology.className).toContain("hover:border-[var(--component-accent");
 
     fireEvent.click(technology);
@@ -306,6 +311,24 @@ describe("FractalUniversityPortal", () => {
     fireEvent.click(screen.getByRole("button", { name: "All" }));
     expect(within(screen.getByTestId("fractalu-course-catalog")).getAllByRole("article")).toHaveLength(20);
     expect(screen.getByText("20 courses shown.")).toHaveAttribute("aria-live", "polite");
+  });
+
+  it("resets a removed semester category to All while keeping source-derived chips", () => {
+    const { rerender } = render(<FractalUCatalogView catalog={FRACTALU_CATALOG} animate={false} />);
+    fireEvent.click(screen.getByRole("button", { name: "Technology" }));
+    expect(screen.getByRole("button", { name: "Technology" })).toHaveAttribute("aria-pressed", "true");
+
+    const refreshedCatalog = {
+      ...FRACTALU_CATALOG,
+      semester: "Autumn 2026",
+      courses: FRACTALU_CATALOG.courses.filter(({ category }) => category !== "Technology"),
+    };
+    rerender(<FractalUCatalogView catalog={refreshedCatalog} animate={false} />);
+
+    expect(screen.queryByRole("button", { name: "Technology" })).toBeNull();
+    expect(screen.getByRole("button", { name: "All" })).toHaveAttribute("aria-pressed", "true");
+    expect(within(screen.getByTestId("fractalu-course-catalog")).getAllByRole("article")).toHaveLength(refreshedCatalog.courses.length);
+    expect(screen.getByText(`${refreshedCatalog.courses.length} courses shown.`)).toHaveAttribute("aria-live", "polite");
   });
 
   it("uses Library-style category-first hierarchy and source-case course titles", () => {

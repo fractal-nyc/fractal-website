@@ -80,6 +80,12 @@ describe("team component registry", () => {
     expect(controlsFor("course-card")).toContain("Content variant");
     expect(controlsFor("course-card")).toContain("Subject and icon");
     expect(controlsFor("filter-bar")).toContain("Selection behavior");
+    expect(COMPONENT_REGISTRY.find(({ id }) => id === "filter-bar")).toMatchObject({
+      defaultColorway: "education",
+      defaultSurface: "deep",
+      componentName: "CourseSubjectFilter / FilterBar / FilterChip",
+    });
+    expect(COMPONENT_REGISTRY.find(({ id }) => id === "filter-bar")?.usedOn).toMatch(/currently hidden on the public Library page/i);
     expect(controlsFor("editorial-quote")).toContain("Citation");
     expect(controlsFor("note-callout")).not.toContain("Actions");
     expect(controlsFor("outbound-text-link")).toEqual(expect.arrayContaining(["Example text context", "Destination type"]));

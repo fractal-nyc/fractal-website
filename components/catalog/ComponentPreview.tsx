@@ -13,16 +13,18 @@ export function defaultValuesFor(entry: ComponentRegistryEntry): SpecimenControl
   return Object.fromEntries(entry.controls.map((control) => [control.id, control.defaultValue]));
 }
 
-export function compatibleTheme(entry: ComponentRegistryEntry, requestedColorway: ComponentColorwayId = "neutral", requestedSurface: ComponentSurfaceMode = "paper") {
-  const colorway = COMPONENT_COLORWAYS.some((item) => item.id === requestedColorway && entry.surfaceModes.some((surface) => item.allowedSurfaces.includes(surface)))
-    ? requestedColorway
+export function compatibleTheme(entry: ComponentRegistryEntry, requestedColorway?: ComponentColorwayId, requestedSurface?: ComponentSurfaceMode) {
+  const preferredColorway = requestedColorway ?? entry.defaultColorway ?? "neutral";
+  const preferredSurface = requestedSurface ?? entry.defaultSurface ?? "paper";
+  const colorway = COMPONENT_COLORWAYS.some((item) => item.id === preferredColorway && entry.surfaceModes.some((surface) => item.allowedSurfaces.includes(surface)))
+    ? preferredColorway
     : COMPONENT_COLORWAYS.find((item) => entry.surfaceModes.some((surface) => item.allowedSurfaces.includes(surface)))?.id ?? "neutral";
   const allowed = entry.surfaceModes.filter((surface) => getAllowedComponentSurfaces(colorway).includes(surface));
-  const surface = allowed.includes(requestedSurface) ? requestedSurface : allowed[0] ?? "paper";
+  const surface = allowed.includes(preferredSurface) ? preferredSurface : allowed[0] ?? "paper";
   return { colorway, surface, allowedSurfaces: allowed.length ? allowed : ["paper" as const] };
 }
 
-export function ComponentPreview({ entry, colorway = "neutral", surface = "paper", values, width = "full", className = "" }: {
+export function ComponentPreview({ entry, colorway, surface, values, width = "full", className = "" }: {
   entry: ComponentRegistryEntry;
   colorway?: ComponentColorwayId;
   surface?: ComponentSurfaceMode;

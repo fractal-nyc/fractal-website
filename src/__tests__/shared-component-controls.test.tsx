@@ -20,6 +20,22 @@ describe("shared component controls", () => {
 
     const clear = screen.getByRole("button", { name: "Clear search" });
     expect(within(container).getAllByRole("button", { name: "Clear search" })).toHaveLength(1);
+    expect(clear).toHaveClass(
+      "h-11",
+      "w-11",
+      "hover:bg-foreground/10",
+      "hover:text-foreground",
+      "active:bg-foreground/15",
+      "focus-visible:bg-foreground/10",
+      "focus-visible:ring-2",
+    );
+    expect(clear.querySelector("svg")).toHaveClass(
+      "motion-safe:group-hover:scale-110",
+      "motion-safe:group-focus-visible:scale-110",
+      "motion-safe:group-active:scale-95",
+      "motion-reduce:transform-none",
+      "motion-reduce:transition-none",
+    );
     fireEvent.click(clear);
     expect(input).toHaveValue("");
     await waitFor(() => expect(input).toHaveFocus());
