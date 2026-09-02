@@ -133,7 +133,7 @@ const pennantBoardGeometry = (page) => page.locator("#campus-banner .library-pen
   const items = [...board.children];
   const itemBoxes = items.map((item) => item.getBoundingClientRect());
   const artworkBoxes = items.map((item) => item.querySelector(".painted-relic-banner")?.getBoundingClientRect());
-  const labels = items.map((item) => item.querySelector("span"));
+  const labels = items.map((item) => item.querySelector(":scope > span"));
   const labelBoxes = labels.map((label) => label?.getBoundingClientRect());
   return {
     columns: getComputedStyle(board).gridTemplateColumns.split(" ").length,
