@@ -1,7 +1,10 @@
 import fs from "node:fs";
 import path from "node:path";
+import { createElement } from "react";
+import { render } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 import { COMPONENT_REGISTRY, GALLERY_CATEGORIES, galleryEntries, searchableEntryText } from "../../components/catalog/registry";
+import { VisualBoard } from "../../components/catalog/VisualBoards";
 import { COMPONENT_COLORWAYS, getAllowedComponentSurfaces } from "@/components/content/ComponentColorScope";
 import { HOUSES, SECTIONS } from "@/data/houses";
 import { readRoute } from "../../components/ComponentLibraryApp";
@@ -140,6 +143,40 @@ describe("team component registry", () => {
     }
     expect(galleryEntries.filter(({ galleryCategory }) => galleryCategory === "forms").map(({ name }) => name)).toEqual(["Search Bar", "Filter Bar"]);
     expect(galleryEntries.filter(({ galleryCategory }) => galleryCategory === "media").map(({ name }) => name).sort()).toEqual(["House Pennants", "Photo Carousel", "Photo Gallery"]);
+  });
+
+  it("shows only the five pennants mounted on surfaced production pages", () => {
+    const housePennants = COMPONENT_REGISTRY.find(({ id }) => id === "campus-banner")!;
+    const dormantPoliticalClubPennant = COMPONENT_REGISTRY.find(({ id }) => id === "political-club-banner")!;
+    const { container } = render(createElement(VisualBoard, { entry: housePennants }));
+    const board = container.querySelector(".library-pennant-board")!;
+
+    expect([...board.querySelectorAll(":scope > div > span")].map(({ textContent }) => textContent)).toEqual([
+      "Co-Living",
+      "Events",
+      "Campus",
+      "Education",
+      "Library",
+    ]);
+    expect([...board.querySelectorAll("[data-banner-house]")].map((pennant) => pennant.getAttribute("data-banner-house"))).toEqual([
+      "co-living",
+      "events",
+      "campus",
+      "education",
+      "library",
+    ]);
+    expect(board.querySelector("[data-banner-house='political-club']")).toBeNull();
+    expect(housePennants).toMatchObject({
+      name: "House Pennants",
+      purpose: "The five painted pennants currently mounted on Fractal's surfaced house pages.",
+      presentation: "gallery",
+      previewMode: "asset-family",
+    });
+    expect(dormantPoliticalClubPennant).toMatchObject({
+      presentation: "supporting",
+      previewMode: "invisible",
+    });
+    expect(dormantPoliticalClubPennant.internalReason).toMatch(/future pennant remains unmounted/i);
   });
 
   it("keeps editor-only actions and transient states out of the public chooser", () => {

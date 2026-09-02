@@ -279,7 +279,10 @@ const COMPONENT_REGISTRY_BASE: ComponentRegistryEntry[] = [
   reference("education-banner", "Education House Pennant", "EducationBannerSVG", "Brand & complex composites", "src/components/house/EducationBannerSVG.tsx", "Renders the Education identity through Painted Relic Banner."),
   reference("events-banner", "Events House Pennant", "EventsBannerSVG", "Brand & complex composites", "src/components/house/EventsBannerSVG.tsx", "Renders the Events identity through Painted Relic Banner."),
   reference("library-banner", "Library House Pennant", "LibraryBannerSVG", "Brand & complex composites", "src/components/house/LibraryBannerSVG.tsx", "Renders the Library identity through Painted Relic Banner."),
-  reference("political-club-banner", "Political Club House Pennant", "PoliticalClubBannerSVG", "Brand & complex composites", "src/components/house/PoliticalClubBannerSVG.tsx", "Renders the Political Club identity through Painted Relic Banner."),
+  {
+    ...reference("political-club-banner", "Political Club House Pennant", "PoliticalClubBannerSVG", "Brand & complex composites", "src/components/house/PoliticalClubBannerSVG.tsx", "Prepared artwork for a future Political Club pennant slot; it is not mounted on the current site."),
+    internalReason: "This prepared future pennant remains unmounted and is not part of the public House Pennants gallery until Political Club is surfaced.",
+  },
   reference("painted-relic-banner", "House Pennant Renderer", "PaintedRelicBanner", "Brand & complex composites", "src/components/house/PaintedRelicBanner.tsx", "Shared renderer for all six painted house pennants."),
   reference("campus-section", "Campus Section", "Campus", "Brand & complex composites", "src/components/sections/Campus.tsx", "Composes the full Campus story, actions, audience highlights, quote, amenities, and carousel."),
   defineSpecimen({
@@ -319,7 +322,7 @@ const GALLERY_IDS = new Set([
   "meet-space-carousel", "photo-gallery", "campus-banner",
 ]);
 
-const names: Record<string, { name: string; purpose: string; aliases?: string[] }> = {
+const names: Record<string, { name: string; purpose: string; useWhen?: string; aliases?: string[] }> = {
   "outbound-link": { name: "Standalone Link", purpose: "A prominent link that stands on its own and carries the diagonal outbound arrow.", aliases: ["External Link", "Outbound Link", "outsource link"] },
   "library-article-card": { name: "Article Card", purpose: "A complete Library article preview with its title, author, description, and link.", aliases: ["Library Article Card"] },
   "note-callout": { name: "Note Box", purpose: "A bordered note for short, important context with an optional inline text link.", aliases: ["Note / Callout Card", "note container"] },
@@ -335,7 +338,11 @@ const names: Record<string, { name: string; purpose: string; aliases?: string[] 
   "standard-section-frame": { name: "Section Spacing", purpose: "The standard breathing room above, below, and beside a page section." },
   "wide-card-grid": { name: "Card Grid", purpose: "A responsive arrangement for a repeatable collection of cards." },
   "section-header": { name: "Section Header", purpose: "The large letter and label that identify a Fractal section." },
-  "campus-banner": { name: "House Pennants", purpose: "The six painted pennants that identify Fractal's houses." },
+  "campus-banner": {
+    name: "House Pennants",
+    purpose: "The five painted pennants currently mounted on Fractal's surfaced house pages.",
+    useWhen: "Use House Pennants only for the five surfaced house identities shown here: Co-Living, Events, Campus, Education, and Library.",
+  },
 };
 
 function galleryCategoryFor(entry: ComponentRegistryEntry): Exclude<GalleryCategoryId, "common" | "all"> {

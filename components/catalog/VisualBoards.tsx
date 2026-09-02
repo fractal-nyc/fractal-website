@@ -5,12 +5,11 @@ import { CoLivingBannerSVG } from "@/components/house/CoLivingBannerSVG";
 import { EducationBannerSVG } from "@/components/house/EducationBannerSVG";
 import { EventsBannerSVG } from "@/components/house/EventsBannerSVG";
 import { LibraryBannerSVG } from "@/components/house/LibraryBannerSVG";
-import { PoliticalClubBannerSVG } from "@/components/house/PoliticalClubBannerSVG";
 import type { ComponentRegistryEntry } from "./registry";
 
 const pennants = [
   ["Co-Living", CoLivingBannerSVG], ["Events", EventsBannerSVG], ["Campus", CampusBannerSVG],
-  ["Education", EducationBannerSVG], ["Library", LibraryBannerSVG], ["Political Club", PoliticalClubBannerSVG],
+  ["Education", EducationBannerSVG], ["Library", LibraryBannerSVG],
 ] as const;
 
 function PhotoBoard({ family = false }: { family?: boolean }) {

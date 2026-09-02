@@ -893,7 +893,21 @@ try {
   await page.locator("#campus-banner").scrollIntoViewIfNeeded();
   await page.waitForFunction(() => [...document.querySelectorAll("#campus-banner img.painted-relic-banner__art")].every((image) => image.complete && image.naturalWidth > 0));
   await loadedImages(page.locator("#campus-banner img.painted-relic-banner__art"), "House Pennants");
-  assert(await page.locator("#campus-banner [data-banner-material='painted-relic']").count() === 6, "House Pennants lost a house.");
+  const pennantHouses = await page.locator("#campus-banner [data-banner-material='painted-relic']").evaluateAll((pennants) => pennants.map((pennant) => pennant.getAttribute("data-banner-house")));
+  const pennantLabels = await page.locator("#campus-banner .library-pennant-board > div > span").allTextContents();
+  assert(JSON.stringify(pennantHouses) === JSON.stringify(["co-living", "events", "campus", "education", "library"]), `House Pennants do not match the five production-mounted pennants: ${JSON.stringify(pennantHouses)}.`);
+  assert(JSON.stringify(pennantLabels) === JSON.stringify(["Co-Living", "Events", "Campus", "Education", "Library"]), `House Pennant labels do not match production order: ${JSON.stringify(pennantLabels)}.`);
+  assert(await page.locator("#campus-banner [data-banner-house='political-club']").count() === 0 && !pennantLabels.includes("Political Club"), "The dormant Political Club pennant is public in House Pennants.");
+  const pennantRowGeometry = await page.locator("#campus-banner .library-pennant-board").evaluate((board) => {
+    const boardBox = board.getBoundingClientRect();
+    const itemBoxes = [...board.children].map((item) => item.getBoundingClientRect());
+    const secondRow = itemBoxes.slice(3);
+    return {
+      boardCenter: boardBox.left + boardBox.width / 2,
+      secondRowCenter: secondRow.length === 2 ? (secondRow[0].left + secondRow[1].right) / 2 : null,
+    };
+  });
+  assert(pennantRowGeometry.secondRowCenter !== null && Math.abs(pennantRowGeometry.boardCenter - pennantRowGeometry.secondRowCenter) <= 2, `House Pennants leave an unbalanced empty sixth slot: ${JSON.stringify(pennantRowGeometry)}.`);
   const carousel = page.locator("#meet-space-carousel");
   await carousel.scrollIntoViewIfNeeded();
   await page.waitForFunction(() => [...document.querySelectorAll("#meet-space-carousel img")].some((image) => image.complete && image.naturalWidth > 0));
