@@ -68,7 +68,8 @@
 .library-photo-board-family > :first-child { grid-row: 1 / span 2; }
 .library-board-image { width: 100%; height: 100%; min-height: 5.5rem; }
 .library-pennant-board { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); align-items: end; gap: .45rem; }
-.library-pennant-board > div { min-width: 0; text-align: center; font-family: var(--font-mono); font-size: .5rem; }
+.library-pennant-board > div { min-width: 0; display: grid; grid-template-rows: auto 2.4em; align-content: end; text-align: center; font-family: var(--font-mono); font-size: .5rem; }
+.library-pennant-board > div > span { min-width: 0; display: flex; align-items: flex-start; justify-content: center; line-height: 1.2; overflow-wrap: anywhere; }
 .library-pennant-board .painted-relic-banner { width: 100%; height: auto; }
 .library-home-search-stage { min-height: 13rem; display: flex; align-items: flex-end; padding: 1rem; }
 .library-home-search-stage > [data-home-search-bar] { width: 100%; }

@@ -129,6 +129,32 @@ const loadedImages = async (locator, label) => {
   assert(images.length > 0, `${label} rendered no images.`);
   assert(images.every(({ width, height }) => width > 0 && height > 0), `${label} has unloaded images: ${JSON.stringify(images)}.`);
 };
+const pennantBoardGeometry = (page) => page.locator("#campus-banner .library-pennant-board").evaluate((board) => {
+  const items = [...board.children];
+  const itemBoxes = items.map((item) => item.getBoundingClientRect());
+  const artworkBoxes = items.map((item) => item.querySelector(".painted-relic-banner")?.getBoundingClientRect());
+  const labels = items.map((item) => item.querySelector("span"));
+  const labelBoxes = labels.map((label) => label?.getBoundingClientRect());
+  return {
+    columns: getComputedStyle(board).gridTemplateColumns.split(" ").length,
+    rows: getComputedStyle(board).gridTemplateRows.split(" ").length,
+    items: itemBoxes.length,
+    itemWidths: itemBoxes.map(({ width }) => width),
+    artworkTopsByRow: [artworkBoxes.slice(0, 3), artworkBoxes.slice(3, 6)].map((row) => row.map((box) => box?.top ?? null)),
+    labelHeights: labelBoxes.map((box) => box?.height ?? null),
+    clipped: board.scrollWidth > board.clientWidth + 1
+      || board.scrollHeight > board.clientHeight + 1
+      || labels.some((label) => label && (label.scrollWidth > label.clientWidth + 1 || label.scrollHeight > label.clientHeight + 1)),
+  };
+});
+const assertPennantBoardGeometry = (geometry, label) => {
+  assert(geometry.columns === 3 && geometry.rows === 2 && geometry.items === 6 && !geometry.clipped, `${label} House Pennants are not a balanced, unclipped 3x2 family: ${JSON.stringify(geometry)}.`);
+  assert(Math.max(...geometry.itemWidths) - Math.min(...geometry.itemWidths) <= 2, `${label} House Pennants have uneven item widths: ${JSON.stringify(geometry)}.`);
+  assert(Math.max(...geometry.labelHeights) - Math.min(...geometry.labelHeights) <= 1, `${label} House Pennants do not reserve a uniform label track: ${JSON.stringify(geometry)}.`);
+  for (const [index, row] of geometry.artworkTopsByRow.entries()) {
+    assert(row.every((top) => top !== null) && Math.max(...row) - Math.min(...row) <= 1, `${label} House Pennant artwork is misaligned in row ${index + 1}: ${JSON.stringify(geometry)}.`);
+  }
+};
 const waitForServer = async (url, label) => {
   for (let attempt = 0; attempt < 50; attempt += 1) {
     try { if ((await fetch(url)).ok) return; } catch { /* preview is starting */ }
@@ -910,18 +936,8 @@ try {
   assert(politicalClubEvidence.foundation === "var(--color-house-political-club-deep)", `Political Club does not use the deep Painted Relic foundation: ${JSON.stringify(politicalClubEvidence)}.`);
   assert(/^\/components\/assets\/political-club-banner(?:-[^/]+)?\.svg$/.test(politicalClubPathname), `Political Club does not load the gallery-owned deep SVG: ${JSON.stringify(politicalClubEvidence)}.`);
   assert(!politicalClubPathname.includes("/images/banners/"), `Political Club regressed to the production-prepared light SVG: ${JSON.stringify(politicalClubEvidence)}.`);
-  const pennantRowGeometry = await page.locator("#campus-banner .library-pennant-board").evaluate((board) => {
-    const itemBoxes = [...board.children].map((item) => item.getBoundingClientRect());
-    return {
-      columns: getComputedStyle(board).gridTemplateColumns.split(" ").length,
-      rows: getComputedStyle(board).gridTemplateRows.split(" ").length,
-      items: itemBoxes.length,
-      itemWidths: itemBoxes.map(({ width }) => width),
-      clipped: board.scrollWidth > board.clientWidth + 1 || board.scrollHeight > board.clientHeight + 1,
-    };
-  });
-  assert(pennantRowGeometry.columns === 3 && pennantRowGeometry.rows === 2 && pennantRowGeometry.items === 6 && !pennantRowGeometry.clipped, `House Pennants are not a balanced, unclipped 3x2 family: ${JSON.stringify(pennantRowGeometry)}.`);
-  assert(Math.max(...pennantRowGeometry.itemWidths) - Math.min(...pennantRowGeometry.itemWidths) <= 2, `House Pennants have uneven item widths: ${JSON.stringify(pennantRowGeometry)}.`);
+  const pennantRowGeometry = await pennantBoardGeometry(page);
+  assertPennantBoardGeometry(pennantRowGeometry, "1440px");
   await page.screenshot({ path: "/tmp/frac135-house-pennants-1440x900.png" });
   const carousel = page.locator("#meet-space-carousel");
   await carousel.scrollIntoViewIfNeeded();
@@ -959,6 +975,17 @@ try {
     }
     if (width === 375) await matrixPage.screenshot({ path: "/tmp/frac130-common-375x812.png" });
     await matrixPage.close();
+  }
+  for (const width of [320, 375, 873]) {
+    const pennantPage = await context.newPage();
+    await pennantPage.setViewportSize({ width, height: width <= 375 ? 812 : 900 });
+    await pennantPage.goto(`${componentUrl}#browse/media`, { waitUntil: "networkidle" });
+    await pennantPage.locator("#campus-banner").scrollIntoViewIfNeeded();
+    await pennantPage.waitForFunction(() => [...document.querySelectorAll("#campus-banner img.painted-relic-banner__art")].every((image) => image.complete && image.naturalWidth > 0));
+    assert(await overflow(pennantPage) <= 1, `House Pennants overflow at ${width}px.`);
+    assertPennantBoardGeometry(await pennantBoardGeometry(pennantPage), `${width}px`);
+    await pennantPage.screenshot({ path: `/tmp/frac135-house-pennants-${width}x${width <= 375 ? 812 : 900}.png` });
+    await pennantPage.close();
   }
   for (const category of ["actions", "forms", "cards", "media"]) {
     const mobile = await context.newPage();
