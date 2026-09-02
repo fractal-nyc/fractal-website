@@ -38,6 +38,8 @@
 .library-canvas:has(.fractalu-course-grid),
 .library-visual-card:has(.fractalu-course-grid) { overflow: visible; }
 .library-canvas-scope { min-height: 13.75rem; display: grid; align-content: center; padding: 1rem; margin-inline: auto; }
+.library-canvas:has([data-course-presentation-context="component-library"]) > .library-canvas-scope { border-radius: var(--radius-md); }
+.library-canvas [data-course-presentation-context="component-library"] { margin-block-start: 0; }
 .library-gallery-preview { min-height: 13.75rem; }
 .library-gallery-preview .library-canvas-scope { min-height: 13.75rem; }
 .library-card-actions { min-width: 0; display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: stretch; gap: .5rem; }

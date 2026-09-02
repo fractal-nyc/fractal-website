@@ -75,6 +75,55 @@ const assertUniformActionStages = (geometry, label, { requireShortDesktopStages 
     }
   }
 };
+const courseStageGeometry = (page, rootSelector) => page.locator(rootSelector).evaluate((root) => {
+  const canvas = root.matches(".library-canvas") ? root : root.querySelector(".library-canvas");
+  const scope = canvas?.querySelector(":scope > .library-canvas-scope");
+  const collection = scope?.querySelector('[data-course-presentation-context="component-library"]');
+  const card = collection?.querySelector(".fractalu-course-card");
+  const tile = canvas?.closest(".library-visual-card");
+  if (!(canvas instanceof HTMLElement) || !(scope instanceof HTMLElement) || !(collection instanceof HTMLElement) || !(card instanceof HTMLElement)) return null;
+  const scopeBox = scope.getBoundingClientRect();
+  const cardBox = card.getBoundingClientRect();
+  const scopeStyle = getComputedStyle(scope);
+  const collectionStyle = getComputedStyle(collection);
+  const cardStyle = getComputedStyle(card);
+  return {
+    context: collection.dataset.coursePresentationContext,
+    previewMode: collection.dataset.previewMode,
+    collectionMarginTop: Number.parseFloat(collectionStyle.marginTop),
+    stageRadius: scopeStyle.borderRadius,
+    cardRadius: cardStyle.borderRadius,
+    canvasOverflow: getComputedStyle(canvas).overflow,
+    tileOverflow: tile ? getComputedStyle(tile).overflow : null,
+    padding: {
+      top: Number.parseFloat(scopeStyle.paddingTop),
+      right: Number.parseFloat(scopeStyle.paddingRight),
+      bottom: Number.parseFloat(scopeStyle.paddingBottom),
+      left: Number.parseFloat(scopeStyle.paddingLeft),
+    },
+    insets: {
+      top: cardBox.top - scopeBox.top,
+      right: scopeBox.right - cardBox.right,
+      bottom: scopeBox.bottom - cardBox.bottom,
+      left: cardBox.left - scopeBox.left,
+    },
+    scopeBox: { width: scopeBox.width, height: scopeBox.height },
+    cardBox: { width: cardBox.width, height: cardBox.height },
+    pageOverflow: document.documentElement.scrollWidth - document.documentElement.clientWidth,
+  };
+});
+const assertCourseStageGeometry = (geometry, label) => {
+  const tolerance = 2;
+  assert(geometry?.context === "component-library", `${label} is not the internal Course Card specimen: ${JSON.stringify(geometry)}.`);
+  assert(geometry.collectionMarginTop === 0, `${label} retained the production catalog top margin: ${JSON.stringify(geometry)}.`);
+  assert(geometry.stageRadius === "8px", `${label} Education-deep stage is not rounded-md: ${JSON.stringify(geometry)}.`);
+  assert(geometry.cardRadius === "12px", `${label} real Course Card lost its rounded-lg shell: ${JSON.stringify(geometry)}.`);
+  assert(geometry.canvasOverflow === "visible" && [null, "visible"].includes(geometry.tileOverflow), `${label} clips the real Course Card preview: ${JSON.stringify(geometry)}.`);
+  for (const side of ["top", "right", "bottom", "left"]) {
+    assert(Math.abs(geometry.insets[side] - geometry.padding[side]) <= tolerance, `${label} ${side} inset is not the stage padding: ${JSON.stringify(geometry)}.`);
+  }
+  assert(Math.max(...Object.values(geometry.insets)) - Math.min(...Object.values(geometry.insets)) <= tolerance, `${label} has uneven stage insets: ${JSON.stringify(geometry)}.`);
+};
 const loadedImages = async (locator, label) => {
   const images = await locator.evaluateAll((nodes) => nodes.map((node) => ({ src: node.currentSrc || node.src, width: node.naturalWidth, height: node.naturalHeight })));
   assert(images.length > 0, `${label} rendered no images.`);
@@ -534,6 +583,8 @@ try {
     };
   });
   assert(restingPreviewState.cardHeight < 700 && restingPreviewState.descriptionPosition === "absolute" && restingPreviewState.descriptionVisibility === "hidden" && restingPreviewState.biographyPosition === "absolute" && restingPreviewState.biographyVisibility === "hidden", `Desktop Course Card is not compact at rest: ${JSON.stringify(restingPreviewState)}.`);
+  const galleryDetailStage = await courseStageGeometry(page, ".library-detail-preview");
+  assertCourseStageGeometry(galleryDetailStage, "1440px Course Card detail stage");
   await page.screenshot({ path: "/tmp/frac130-detail-course-1440x900.png" });
 
   await galleryCourseCard.hover();
@@ -608,6 +659,9 @@ try {
   assert(await galleryTileCollection.getAttribute("data-preview-mode") === "enhanced", "Browse-tile Course Card is not using the production enhanced collection mode.");
   assert(await galleryTileDescription.evaluate((element) => getComputedStyle(element).visibility) === "hidden", "Browse-tile Course Card is not compact at rest.");
   await page.locator("#course-card").scrollIntoViewIfNeeded();
+  const galleryTileStage = await courseStageGeometry(page, "#course-card");
+  assertCourseStageGeometry(galleryTileStage, "1440px Course Card browse stage");
+  await page.locator("#course-card").screenshot({ path: "/tmp/frac134-course-card-browse-1440x900.png" });
   await page.screenshot({ path: "/tmp/frac129-course-card-gallery-rest-1440x900.png" });
   await galleryTileCollection.locator(".fractalu-course-title-link").hover();
   await page.waitForTimeout(180);
@@ -662,7 +716,9 @@ try {
   assert(reportedRest.cardBox.height < 700 && reportedRest.descriptionPosition === "absolute" && reportedRest.descriptionVisibility === "hidden" && reportedRest.biographyPosition === "absolute" && reportedRest.biographyVisibility === "hidden", `873px browse Course Card is not compact at rest: ${JSON.stringify(reportedRest)}.`);
   assert(reportedRest.borderRadius === "12px" && reportedRest.overflow === "visible", `873px browse Course Card lost its shared rounded-lg shell or overflow policy: ${JSON.stringify(reportedRest)}.`);
   assert(reportedRest.tileBox && reportedRest.cardBox.top >= reportedRest.tileBox.top && reportedRest.cardBox.left >= reportedRest.tileBox.left && reportedRest.cardBox.right <= reportedRest.tileBox.right && reportedRest.cardBox.bottom <= reportedRest.tileBox.bottom, `873px browse Course Card does not fit completely inside its tile: ${JSON.stringify(reportedRest)}.`);
-  await reportedTile.screenshot({ path: "/tmp/frac133-course-card-browse-873x863@2x.png" });
+  const reportedStage = await courseStageGeometry(reportedCoursePage, "#course-card");
+  assertCourseStageGeometry(reportedStage, "873px Course Card browse stage");
+  await reportedTile.screenshot({ path: "/tmp/frac134-course-card-browse-873x863@2x.png" });
 
   await reportedCard.hover();
   await reportedCoursePage.waitForTimeout(220);
@@ -706,7 +762,9 @@ try {
     return { height: box.height, borderRadius: style.borderRadius, overflow: style.overflow, descriptionPosition: getComputedStyle(card.querySelector("[data-course-description]")).position, descriptionVisibility: getComputedStyle(card.querySelector("[data-course-description]")).visibility };
   });
   assert(detailGeometry.height < 700 && detailGeometry.borderRadius === "12px" && detailGeometry.overflow === "visible" && detailGeometry.descriptionPosition === "absolute" && detailGeometry.descriptionVisibility === "hidden", `873px Course Card detail does not match the compact rounded specimen: ${JSON.stringify(detailGeometry)}.`);
-  await reportedCoursePage.locator(".library-detail-preview").screenshot({ path: "/tmp/frac133-course-card-detail-873x863@2x.png" });
+  const reportedDetailStage = await courseStageGeometry(reportedCoursePage, ".library-detail-preview");
+  assertCourseStageGeometry(reportedDetailStage, "873px Course Card detail stage");
+  await reportedCoursePage.locator(".library-detail-preview").screenshot({ path: "/tmp/frac134-course-card-detail-873x863@2x.png" });
 
   await reportedCoursePage.goto(`${productionOrigin}/education`, { waitUntil: "networkidle" });
   const productionAt873 = reportedCoursePage.locator("[data-course-collection]");
@@ -962,8 +1020,11 @@ try {
       return style.position === "static" && style.visibility === "visible";
     }), `${width}px course description is not inline and visible.`);
     assert(await mobileBiography.evaluate((element) => getComputedStyle(element).display) === "none", `${width}px compact biography policy changed.`);
+    const mobileStage = await courseStageGeometry(courseMobile, ".library-detail-preview");
+    assertCourseStageGeometry(mobileStage, `${width}px Course Card detail stage`);
+    assert(mobileStage.pageOverflow <= 1, `${width}px Course Card stage overflows horizontally: ${JSON.stringify(mobileStage)}.`);
     assert(await overflow(courseMobile) <= 1, `Course Card long subject overflows at ${width}px.`);
-    await courseMobile.screenshot({ path: `/tmp/frac130-detail-course-${suffix}.png` });
+    await courseMobile.screenshot({ path: `/tmp/frac134-detail-course-${suffix}.png` });
     await courseMobile.close();
   }
   for (const [id, modes] of [["search-bar", [["Search behavior", "site", "search-site"], ["Search behavior", "collection", "search-collection"]]], ["filter-bar", [["Selection behavior", "single", "filter-single"], ["Selection behavior", "multiple", "filter-multiple"]]]]) {
