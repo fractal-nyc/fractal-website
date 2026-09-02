@@ -280,8 +280,8 @@ const COMPONENT_REGISTRY_BASE: ComponentRegistryEntry[] = [
   reference("events-banner", "Events House Pennant", "EventsBannerSVG", "Brand & complex composites", "src/components/house/EventsBannerSVG.tsx", "Renders the Events identity through Painted Relic Banner."),
   reference("library-banner", "Library House Pennant", "LibraryBannerSVG", "Brand & complex composites", "src/components/house/LibraryBannerSVG.tsx", "Renders the Library identity through Painted Relic Banner."),
   {
-    ...reference("political-club-banner", "Political Club House Pennant", "PoliticalClubBannerSVG", "Brand & complex composites", "src/components/house/PoliticalClubBannerSVG.tsx", "Prepared artwork for a future Political Club pennant slot; it is not mounted on the current site."),
-    internalReason: "This prepared future pennant remains unmounted and is not part of the public House Pennants gallery until Political Club is surfaced.",
+    ...reference("political-club-banner", "Political Club House Pennant", "PoliticalClubBannerSVG", "Brand & complex composites", "src/components/house/PoliticalClubBannerSVG.tsx", "Prepared production wrapper for the Political Club pennant; the public House Pennants family uses its gallery-owned deep variant."),
+    internalReason: "The production-prepared light wrapper remains an internal reference; the grouped gallery preview deliberately renders the existing deep Political Club asset.",
   },
   reference("painted-relic-banner", "House Pennant Renderer", "PaintedRelicBanner", "Brand & complex composites", "src/components/house/PaintedRelicBanner.tsx", "Shared renderer for all six painted house pennants."),
   reference("campus-section", "Campus Section", "Campus", "Brand & complex composites", "src/components/sections/Campus.tsx", "Composes the full Campus story, actions, audience highlights, quote, amenities, and carousel."),
@@ -340,8 +340,8 @@ const names: Record<string, { name: string; purpose: string; useWhen?: string; a
   "section-header": { name: "Section Header", purpose: "The large letter and label that identify a Fractal section." },
   "campus-banner": {
     name: "House Pennants",
-    purpose: "The five painted pennants currently mounted on Fractal's surfaced house pages.",
-    useWhen: "Use House Pennants only for the five surfaced house identities shown here: Co-Living, Events, Campus, Education, and Library.",
+    purpose: "The six painted pennants that identify Fractal's houses.",
+    useWhen: "Use the pennant that matches the Fractal house being represented: Co-Living, Events, Campus, Education, Library, or Political Club.",
   },
 };
 

@@ -5,11 +5,23 @@ import { CoLivingBannerSVG } from "@/components/house/CoLivingBannerSVG";
 import { EducationBannerSVG } from "@/components/house/EducationBannerSVG";
 import { EventsBannerSVG } from "@/components/house/EventsBannerSVG";
 import { LibraryBannerSVG } from "@/components/house/LibraryBannerSVG";
+import { PaintedRelicBanner } from "@/components/house/PaintedRelicBanner";
+import politicalClubBannerSrc from "../assets/political-club-banner.svg";
 import type { ComponentRegistryEntry } from "./registry";
+
+function PoliticalClubGalleryPennant() {
+  return (
+    <PaintedRelicBanner
+      src={politicalClubBannerSrc}
+      foundationColor="var(--color-house-political-club-deep)"
+      house="political-club"
+    />
+  );
+}
 
 const pennants = [
   ["Co-Living", CoLivingBannerSVG], ["Events", EventsBannerSVG], ["Campus", CampusBannerSVG],
-  ["Education", EducationBannerSVG], ["Library", LibraryBannerSVG],
+  ["Education", EducationBannerSVG], ["Library", LibraryBannerSVG], ["Political Club", PoliticalClubGalleryPennant],
 ] as const;
 
 function PhotoBoard({ family = false }: { family?: boolean }) {

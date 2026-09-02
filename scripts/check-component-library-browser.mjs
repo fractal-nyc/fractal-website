@@ -895,19 +895,34 @@ try {
   await loadedImages(page.locator("#campus-banner img.painted-relic-banner__art"), "House Pennants");
   const pennantHouses = await page.locator("#campus-banner [data-banner-material='painted-relic']").evaluateAll((pennants) => pennants.map((pennant) => pennant.getAttribute("data-banner-house")));
   const pennantLabels = await page.locator("#campus-banner .library-pennant-board > div > span").allTextContents();
-  assert(JSON.stringify(pennantHouses) === JSON.stringify(["co-living", "events", "campus", "education", "library"]), `House Pennants do not match the five production-mounted pennants: ${JSON.stringify(pennantHouses)}.`);
-  assert(JSON.stringify(pennantLabels) === JSON.stringify(["Co-Living", "Events", "Campus", "Education", "Library"]), `House Pennant labels do not match production order: ${JSON.stringify(pennantLabels)}.`);
-  assert(await page.locator("#campus-banner [data-banner-house='political-club']").count() === 0 && !pennantLabels.includes("Political Club"), "The dormant Political Club pennant is public in House Pennants.");
-  const pennantRowGeometry = await page.locator("#campus-banner .library-pennant-board").evaluate((board) => {
-    const boardBox = board.getBoundingClientRect();
-    const itemBoxes = [...board.children].map((item) => item.getBoundingClientRect());
-    const secondRow = itemBoxes.slice(3);
+  assert(JSON.stringify(pennantHouses) === JSON.stringify(["co-living", "events", "campus", "education", "library", "political-club"]), `House Pennants do not show all six houses in their canonical order: ${JSON.stringify(pennantHouses)}.`);
+  assert(JSON.stringify(pennantLabels) === JSON.stringify(["Co-Living", "Events", "Campus", "Education", "Library", "Political Club"]), `House Pennant labels do not show all six houses in their canonical order: ${JSON.stringify(pennantLabels)}.`);
+  const politicalClubPennant = page.locator("#campus-banner [data-banner-house='political-club']");
+  const politicalClubEvidence = await politicalClubPennant.evaluate((pennant) => {
+    const image = pennant.querySelector("img.painted-relic-banner__art");
     return {
-      boardCenter: boardBox.left + boardBox.width / 2,
-      secondRowCenter: secondRow.length === 2 ? (secondRow[0].left + secondRow[1].right) / 2 : null,
+      foundation: pennant.style.getPropertyValue("--painted-relic-foundation").trim(),
+      source: image?.getAttribute("src") ?? "",
+      currentSource: image?.currentSrc ?? "",
     };
   });
-  assert(pennantRowGeometry.secondRowCenter !== null && Math.abs(pennantRowGeometry.boardCenter - pennantRowGeometry.secondRowCenter) <= 2, `House Pennants leave an unbalanced empty sixth slot: ${JSON.stringify(pennantRowGeometry)}.`);
+  const politicalClubPathname = new URL(politicalClubEvidence.currentSource || politicalClubEvidence.source, componentUrl).pathname;
+  assert(politicalClubEvidence.foundation === "var(--color-house-political-club-deep)", `Political Club does not use the deep Painted Relic foundation: ${JSON.stringify(politicalClubEvidence)}.`);
+  assert(/^\/components\/assets\/political-club-banner(?:-[^/]+)?\.svg$/.test(politicalClubPathname), `Political Club does not load the gallery-owned deep SVG: ${JSON.stringify(politicalClubEvidence)}.`);
+  assert(!politicalClubPathname.includes("/images/banners/"), `Political Club regressed to the production-prepared light SVG: ${JSON.stringify(politicalClubEvidence)}.`);
+  const pennantRowGeometry = await page.locator("#campus-banner .library-pennant-board").evaluate((board) => {
+    const itemBoxes = [...board.children].map((item) => item.getBoundingClientRect());
+    return {
+      columns: getComputedStyle(board).gridTemplateColumns.split(" ").length,
+      rows: getComputedStyle(board).gridTemplateRows.split(" ").length,
+      items: itemBoxes.length,
+      itemWidths: itemBoxes.map(({ width }) => width),
+      clipped: board.scrollWidth > board.clientWidth + 1 || board.scrollHeight > board.clientHeight + 1,
+    };
+  });
+  assert(pennantRowGeometry.columns === 3 && pennantRowGeometry.rows === 2 && pennantRowGeometry.items === 6 && !pennantRowGeometry.clipped, `House Pennants are not a balanced, unclipped 3x2 family: ${JSON.stringify(pennantRowGeometry)}.`);
+  assert(Math.max(...pennantRowGeometry.itemWidths) - Math.min(...pennantRowGeometry.itemWidths) <= 2, `House Pennants have uneven item widths: ${JSON.stringify(pennantRowGeometry)}.`);
+  await page.screenshot({ path: "/tmp/frac135-house-pennants-1440x900.png" });
   const carousel = page.locator("#meet-space-carousel");
   await carousel.scrollIntoViewIfNeeded();
   await page.waitForFunction(() => [...document.querySelectorAll("#meet-space-carousel img")].some((image) => image.complete && image.naturalWidth > 0));

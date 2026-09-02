@@ -1,5 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
+import { createHash } from "node:crypto";
 import { createElement } from "react";
 import { render } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
@@ -145,7 +146,7 @@ describe("team component registry", () => {
     expect(galleryEntries.filter(({ galleryCategory }) => galleryCategory === "media").map(({ name }) => name).sort()).toEqual(["House Pennants", "Photo Carousel", "Photo Gallery"]);
   });
 
-  it("shows only the five pennants mounted on surfaced production pages", () => {
+  it("shows all six house pennants with the gallery-owned Political Club asset", () => {
     const housePennants = COMPONENT_REGISTRY.find(({ id }) => id === "campus-banner")!;
     const dormantPoliticalClubPennant = COMPONENT_REGISTRY.find(({ id }) => id === "political-club-banner")!;
     const { container } = render(createElement(VisualBoard, { entry: housePennants }));
@@ -157,6 +158,7 @@ describe("team component registry", () => {
       "Campus",
       "Education",
       "Library",
+      "Political Club",
     ]);
     expect([...board.querySelectorAll("[data-banner-house]")].map((pennant) => pennant.getAttribute("data-banner-house"))).toEqual([
       "co-living",
@@ -164,11 +166,22 @@ describe("team component registry", () => {
       "campus",
       "education",
       "library",
+      "political-club",
     ]);
-    expect(board.querySelector("[data-banner-house='political-club']")).toBeNull();
+    const politicalClubPennant = board.querySelector<HTMLElement>("[data-banner-house='political-club']")!;
+    const politicalClubImage = politicalClubPennant.querySelector("img")!;
+    expect(politicalClubPennant.getAttribute("style")).toContain(
+      "--painted-relic-foundation: var(--color-house-political-club-deep)",
+    );
+    expect(politicalClubImage.getAttribute("src")).toMatch(
+      /components\/assets\/political-club-banner\.svg$/,
+    );
+    expect(politicalClubImage.getAttribute("src")).not.toBe(
+      "/images/banners/political-club-banner.svg",
+    );
     expect(housePennants).toMatchObject({
       name: "House Pennants",
-      purpose: "The five painted pennants currently mounted on Fractal's surfaced house pages.",
+      purpose: "The six painted pennants that identify Fractal's houses.",
       presentation: "gallery",
       previewMode: "asset-family",
     });
@@ -176,7 +189,35 @@ describe("team component registry", () => {
       presentation: "supporting",
       previewMode: "invisible",
     });
-    expect(dormantPoliticalClubPennant.internalReason).toMatch(/future pennant remains unmounted/i);
+    expect(dormantPoliticalClubPennant.internalReason).toMatch(/grouped gallery preview deliberately renders the existing deep/i);
+  });
+
+  it("locks the recovered Political Club gallery pennant to the reviewed deep artwork", () => {
+    const assetPath = path.resolve(process.cwd(), "components/assets/political-club-banner.svg");
+    const source = fs.readFileSync(assetPath);
+    const document = new DOMParser().parseFromString(source.toString("utf8"), "image/svg+xml");
+    const foundation = document.querySelector('[data-role="foundation"]');
+    const motif = document.querySelector('[data-role="house-motif"]');
+    const inset = document.querySelector('[data-role="inset-outline"]');
+    const label = document.querySelector('[data-role="banner-label"]');
+    const monogram = document.querySelector('[data-role="monogram"]');
+
+    expect(source).toHaveLength(23_186);
+    expect(createHash("sha256").update(source).digest("hex")).toBe(
+      "07c59c0cc66119c33c936517d3d09354c58e6a43c0c7ec3cd49d959e9400a1ca",
+    );
+    expect(document.documentElement.getAttribute("viewBox")).toBe("0 0 122.72 368.16");
+    expect(foundation?.getAttribute("fill")).toBe("#084247");
+    expect(motif?.getAttribute("stroke")).toBe("#82AFA2");
+    expect(inset?.getAttribute("stroke")).toBe("#D4BA58");
+    expect(inset?.getAttribute("d")).toContain("L61.36 323.70");
+    expect(label?.getAttribute("fill")).toBe("#82AFA2");
+    expect(label?.textContent).toBe("political club");
+    expect(monogram?.getAttribute("fill")).toBe("#82AFA2");
+    expect(monogram?.textContent).toBe("PC");
+    expect(source.toString("utf8")).toMatch(
+      /src:url\(data:font\/ttf;base64,[A-Za-z0-9+/]+={0,2}\) format\('truetype'\)/,
+    );
   });
 
   it("keeps editor-only actions and transient states out of the public chooser", () => {
