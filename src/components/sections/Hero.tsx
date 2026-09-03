@@ -1,13 +1,8 @@
-import { Suspense, lazy, useCallback, useState, useRef, useEffect, useLayoutEffect, useId } from "react";
+import { Suspense, lazy, useCallback } from "react";
 import { useLocation } from "wouter";
-import { useGlobalSearch, type SearchResult } from "@/hooks/use-global-search";
-import { Search, User, FileText, MapPin, Hash, ArrowUpRight, LayoutGrid, ArrowDown, CornerDownLeft } from "lucide-react";
-
-// FRAC-13: single, static placeholder — cleared on focus so the empty,
-// caret-ready field visibly invites typing. Thin-space-separated dots (instead
-// of a single "…" glyph) give the trailing ellipsis a little breathing room
-// before the caret without a full space between each.
-const SEARCH_PLACEHOLDER = "Explore Fractal . . .";
+import type { SearchResult } from "@/hooks/use-global-search";
+import { ArrowDown } from "lucide-react";
+import { HomeSearchBar } from "@/components/sections/HomeSearchBar";
 // FRAC-33: keyboard skip-nav fallback — the 3D nav nodes inside
 // FractalCityScene are pointer-only, so we render a parallel
 // sr-only-focusable list of the same routes here. Tabbing into the
@@ -23,14 +18,6 @@ const FractalCityScene = lazy(() =>
     default: m.FractalCityScene,
   }))
 );
-
-const TYPE_ICONS: Record<string, typeof Search> = {
-  page: LayoutGrid,
-  person: User,
-  document: FileText,
-  house: MapPin,
-  topic: Hash,
-};
 
 export function Hero() {
   const [, setLocation] = useLocation();
@@ -48,116 +35,13 @@ export function Hero() {
     [setLocation]
   );
 
-  const { query, setQuery, groups, flatResults, clear } = useGlobalSearch();
-  const [isOpen, setIsOpen] = useState(false);
-  // FRAC-33: -1 = no option focused. ArrowDown moves toward the last index;
-  // ArrowUp can move back to -1 (input regains focus visually). Pointer
-  // hover also drives this so keyboard and mouse stay in sync.
-  const [focusedIndex, setFocusedIndex] = useState(-1);
-  // FRAC-43: thick blinking cursor overlay state. isFocused gates render so
-  // the decorative caret only shows while typing; caretLeft is the measured
-  // text-width offset from the mirror span below.
-  const [isFocused, setIsFocused] = useState(false);
-  const [caretLeft, setCaretLeft] = useState(0);
-  const containerRef = useRef<HTMLDivElement>(null);
-  const inputRef = useRef<HTMLInputElement>(null);
-  const mirrorRef = useRef<HTMLSpanElement>(null);
-
-  // FRAC-13: the placeholder shown — cleared on focus so the empty, caret-ready
-  // field visibly invites typing.
-  const placeholder = isFocused ? "" : SEARCH_PLACEHOLDER;
-
-  // FRAC-13: "/" focuses the search from anywhere (a familiar search shortcut),
-  // unless the user is already typing in a field or holding a modifier.
-  useEffect(() => {
-    function onKey(e: KeyboardEvent) {
-      if (e.key !== "/" || e.metaKey || e.ctrlKey || e.altKey) return;
-      const t = e.target as HTMLElement | null;
-      if (
-        t &&
-        (t.tagName === "INPUT" ||
-          t.tagName === "TEXTAREA" ||
-          t.isContentEditable)
-      ) {
-        return;
-      }
-      e.preventDefault();
-      inputRef.current?.focus();
-    }
-    document.addEventListener("keydown", onKey);
-    return () => document.removeEventListener("keydown", onKey);
-  }, []);
-
-  // FRAC-43: measure rendered text width same-frame so the caret sits flush
-  // at end-of-text. Keyed on [query, isFocused] — focus toggling matters
-  // because the placeholder string is what's measured when query is empty.
-  useLayoutEffect(() => {
-    if (!mirrorRef.current) return;
-    setCaretLeft(mirrorRef.current.offsetWidth);
-  }, [query, isFocused]);
-
-  // FRAC-33: stable IDs for combobox/listbox/option ARIA wiring.
-  const listboxId = useId();
-  const optionId = (i: number) => `${listboxId}-opt-${i}`;
-
-  // Reset focused index when results change or the dropdown closes.
-  useEffect(() => {
-    setFocusedIndex(-1);
-  }, [flatResults.length, isOpen, query]);
-
-  // Close on outside click
-  useEffect(() => {
-    function handleClickOutside(e: MouseEvent) {
-      if (
-        containerRef.current &&
-        !containerRef.current.contains(e.target as Node)
-      ) {
-        setIsOpen(false);
-      }
-    }
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
-
-  function navigateTo(result: SearchResult) {
-    setIsOpen(false);
-    clear();
+  const handleSearchResult = useCallback((result: SearchResult) => {
     if (result.external) {
       window.open(result.href, "_blank", "noopener");
     } else {
       handleNavigate(result.href);
     }
-  }
-
-  function handleKeyDown(e: React.KeyboardEvent) {
-    if (e.key === "Escape") {
-      setIsOpen(false);
-      setFocusedIndex(-1);
-      inputRef.current?.blur();
-      return;
-    }
-    if (!isOpen || flatResults.length === 0) return;
-    if (e.key === "ArrowDown") {
-      e.preventDefault();
-      // FRAC-33: clamp at last index instead of wrapping. -1 -> 0 on first
-      // press; further presses advance until the end of the list.
-      setFocusedIndex((i) => Math.min(i + 1, flatResults.length - 1));
-    } else if (e.key === "ArrowUp") {
-      e.preventDefault();
-      // FRAC-33: clamp at -1 (no option focused) instead of wrapping.
-      setFocusedIndex((i) => Math.max(i - 1, -1));
-    } else if (e.key === "Enter") {
-      e.preventDefault();
-      if (focusedIndex >= 0 && flatResults[focusedIndex]) {
-        navigateTo(flatResults[focusedIndex]);
-      }
-    }
-  }
-
-  // Build the grouped dropdown
-  let globalIdx = 0;
-  const hasResults = query.trim().length > 0 && flatResults.length > 0;
-  const noResults = query.trim().length > 1 && flatResults.length === 0;
+  }, [handleNavigate]);
 
   return (
     <section
@@ -259,173 +143,11 @@ export function Hero() {
           above replaces it. */}
       <div
         className="hidden lg:block absolute bottom-12 left-1/2 -translate-x-1/2 z-10 w-[calc(100%-2rem)] max-w-sm"
-        ref={containerRef}
       >
-        <div className="relative">
-          <div className="relative">
-            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-foreground/40" />
-            <input
-              ref={inputRef}
-              type="text"
-              value={query}
-              onChange={(e) => {
-                setQuery(e.target.value);
-                setIsOpen(true);
-              }}
-              onFocus={() => {
-                setIsOpen(true);
-                setIsFocused(true);
-              }}
-              onBlur={() => setIsFocused(false)}
-              onKeyDown={handleKeyDown}
-              placeholder={placeholder}
-              // FRAC-33: combobox semantics — input owns the listbox via
-              // aria-controls and reports the currently focused option via
-              // aria-activedescendant. aria-autocomplete=list because we
-              // suggest matches but the input's text is the user's query.
-              role="combobox"
-              aria-autocomplete="list"
-              aria-expanded={isOpen && (hasResults || noResults)}
-              aria-controls={listboxId}
-              aria-activedescendant={
-                focusedIndex >= 0 ? optionId(focusedIndex) : undefined
-              }
-              aria-label="Search Fractal"
-              // FRAC-43: native caret suppressed — overlay span below renders
-              // the thick blinking cursor restored from commit 1ba8aa2.
-              style={{ caretColor: "transparent" }}
-              // FRAC-13: stronger focus emphasis — border darkens and a soft,
-              // house-neutral foreground ring appears so the active state is
-              // unmistakable. pr-9 reserves room for the shortcut/enter badge.
-              className="w-full text-input text-foreground/60 border border-foreground/20 rounded-md bg-background/90 backdrop-blur-sm placeholder:text-foreground/60 outline-none transition-all duration-200 focus:border-foreground/50 focus:text-foreground/80 focus:ring-2 focus:ring-foreground/15 h-[30px] pl-8 pr-9"
-            />
-            {/* FRAC-43: hidden mirror — its offsetWidth drives the caret's
-                left offset. Same typography class as the input so width
-                measurement matches actual rendered width. */}
-            <span
-              ref={mirrorRef}
-              aria-hidden="true"
-              className="text-input"
-              style={{
-                position: "absolute",
-                visibility: "hidden",
-                whiteSpace: "pre",
-                pointerEvents: "none",
-                top: 0,
-                left: 0,
-              }}
-            >
-              {query || placeholder}
-            </span>
-            {/* FRAC-43 + FRAC-13: thick blinking cursor overlay. 9px × 18px
-                charcoal block at end-of-text, restored from commit 1ba8aa2.
-                Always on — it blinks in the base (unfocused) state at the end of
-                the "Explore Fractal…" placeholder, and on focus the placeholder
-                clears so the caret jumps to the start of the empty field. Reuses
-                the .animate-blink utility (FRAC-28 reduced-motion guard);
-                decorative. */}
-            <span
-              aria-hidden="true"
-              className="absolute inline-block w-[9px] h-[18px] bg-foreground/70 animate-blink pointer-events-none"
-              style={{
-                left: 32 + caretLeft,
-                top: "50%",
-                transform: "translateY(-50%)",
-              }}
-            />
-
-            {/* FRAC-13: right-aligned affordance badge. At rest it shows a "/"
-                key hint (press "/" anywhere to focus); once the user is typing
-                and results exist it becomes an enter cue signalling the bar
-                navigates. Decorative — the input keeps its own combobox a11y. */}
-            {hasResults ? (
-              <span
-                aria-hidden="true"
-                className="absolute right-2.5 top-1/2 -translate-y-1/2 inline-flex items-center gap-1 text-[10px] leading-none text-foreground/45 pointer-events-none"
-              >
-                <CornerDownLeft className="h-3 w-3" />
-              </span>
-            ) : (
-              !isFocused &&
-              !query && (
-                <kbd
-                  aria-hidden="true"
-                  className="absolute right-2.5 top-1/2 -translate-y-1/2 inline-flex items-center justify-center h-[18px] min-w-[18px] px-1 rounded border border-foreground/20 bg-foreground/5 text-[11px] leading-none font-mono text-foreground/45 pointer-events-none"
-                >
-                  /
-                </kbd>
-              )
-            )}
-          </div>
-
-          {/* Dropdown */}
-          {isOpen && (hasResults || noResults) && (
-            // FRAC-33: the outer container is the listbox the combobox
-            // owns via aria-controls. Group headings are stamped with
-            // role=presentation so AT focus stays on options only.
-            <div
-              id={listboxId}
-              role="listbox"
-              aria-label="Search results"
-              className="absolute bottom-full left-0 mb-1 w-full bg-background/95 text-foreground backdrop-blur-sm border border-foreground/20 rounded-md overflow-hidden shadow-lg max-h-[60vh] overflow-y-auto"
-            >
-              {noResults && (
-                <div className="text-label text-foreground/60 text-center px-3 py-3">
-                  No results
-                </div>
-              )}
-
-              {groups.map((group) => {
-                const items = group.results.map((result) => {
-                  const idx = globalIdx++;
-                  const Icon = TYPE_ICONS[result.type] ?? Search;
-                  const isFocused = idx === focusedIndex;
-                  return (
-                    <li
-                      key={`${result.type}-${result.href}-${result.title}`}
-                      id={optionId(idx)}
-                      role="option"
-                      aria-selected={isFocused}
-                      className={`flex items-start gap-2.5 cursor-pointer px-3 py-2 transition-colors ${
-                        isFocused
-                          ? "bg-foreground/10 text-foreground"
-                          : "text-foreground/60 hover:bg-foreground/5"
-                      }`}
-                      onMouseEnter={() => setFocusedIndex(idx)}
-                      onMouseDown={(e) => {
-                        e.preventDefault();
-                        navigateTo(result);
-                      }}
-                    >
-                      <Icon className="h-3.5 w-3.5 mt-0.5 shrink-0 opacity-60" />
-                      <div className="min-w-0 flex-1">
-                        <div className="text-label truncate flex items-center gap-1">
-                          {result.title}
-                          {result.external && (
-                            <ArrowUpRight className="h-3 w-3 opacity-40 shrink-0" />
-                          )}
-                        </div>
-                        <div className="text-label text-xs text-foreground/60 truncate mt-0.5">
-                          {result.subtitle}
-                        </div>
-                      </div>
-                    </li>
-                  );
-                });
-
-                return (
-                  <div key={group.type} role="presentation">
-                    {/* text-[10px] density override for compact search dropdown */}
-                    <div className="text-label text-[10px] text-foreground/40 px-3 pt-2 pb-1">
-                      {group.label}
-                    </div>
-                    <ul role="presentation">{items}</ul>
-                  </div>
-                );
-              })}
-            </div>
-          )}
-        </div>
+        <HomeSearchBar
+          onSelectResult={handleSearchResult}
+          enableGlobalShortcut
+        />
       </div>
 
       {/* Hero background — responsive variants from FRAC-177 */}

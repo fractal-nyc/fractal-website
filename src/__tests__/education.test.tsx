@@ -44,7 +44,7 @@ describe("EducationPage", () => {
       "#what-is-fractalu",
     );
     expect(futureSemesters).toHaveClass(
-      "text-body-lead",
+      "font-sans",
       "text-background/70",
       "min-h-11",
       "decoration-background/40",
@@ -52,12 +52,16 @@ describe("EducationPage", () => {
       "focus-visible:decoration-background",
     );
     expect(informationJump).toHaveClass(
-      "text-body-lead",
+      "font-sans",
       "text-background/70",
       "min-h-11",
       "decoration-background/40",
       "hover:decoration-background",
     );
+    expect(futureSemesters).not.toHaveClass("text-body", "text-body-lead", "text-label");
+    expect(informationJump).not.toHaveClass("text-body", "text-body-lead", "text-label");
+    expect(futureSemesters.parentElement).toHaveClass("text-body-lead");
+    expect(informationJump.parentElement).toHaveClass("text-body-lead");
     const heroArrow = futureSemesters.querySelector("[data-education-outbound-arrow]")!;
     expect(heroArrow.tagName).toBe("svg");
     expect(heroArrow).toHaveClass("lucide-arrow-up-right");
@@ -88,7 +92,7 @@ describe("EducationPage", () => {
     }
   });
 
-  it("covers the complete 53-link outbound inventory without changing destinations", () => {
+  it("covers the complete standalone outbound inventory without changing destinations", () => {
     const { container } = renderEducationPage();
     const expectedHrefs = [
       "https://fractaluniversity.substack.com",
@@ -101,7 +105,6 @@ describe("EducationPage", () => {
         ...(club.detailsUrl ? [club.detailsUrl] : []),
         club.actionUrl,
       ]),
-      "mailto:fractalu@fractalnyc.com",
       "https://ajr.fyi/files/fractal-canon.pdf",
       "https://fractaluniversity.substack.com",
       "mailto:fractalu@fractalnyc.com",
@@ -110,7 +113,7 @@ describe("EducationPage", () => {
       container.querySelectorAll<HTMLAnchorElement>("[data-education-outbound-link]"),
     );
 
-    expect(expectedHrefs).toHaveLength(53);
+    expect(expectedHrefs).toHaveLength(52);
     expect(outboundLinks).toHaveLength(expectedHrefs.length);
     expect(outboundLinks.map((link) => link.getAttribute("href")).sort()).toEqual(
       [...expectedHrefs].sort(),

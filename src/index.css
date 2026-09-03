@@ -5,7 +5,7 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
 
-@theme inline {
+@theme static inline {
   --font-sans: 'Inter', system-ui, sans-serif;
   --font-serif: 'Fraunces', serif;
   --font-mono: 'JetBrains Mono', monospace;
@@ -116,6 +116,30 @@
     text-transform: none;
     font-style: normal;
   }
+}
+
+/* A paper card owns its text contrast even when it sits inside a colored page
+   scope. Descendants consume the nearest surface variables without global
+   descendant selectors or specificity overrides. */
+.component-paper-surface {
+  --component-on-surface: var(--color-foreground);
+  --component-muted: var(--color-foreground-muted);
+  --component-link-decoration: color-mix(in srgb, var(--color-foreground) 40%, transparent);
+  --component-ring-offset: var(--color-background);
+}
+
+/* Only links that explicitly represent the surrounding scoped surface adapt
+   to its palette. Nested production cards retain their own component-owned
+   paper contrast instead of being overridden by an outer page field. */
+.component-surface-link {
+  color: var(--component-on-surface);
+  text-decoration-color: var(--component-link-decoration);
+  --tw-ring-color: var(--component-on-surface);
+  --tw-ring-offset-color: var(--component-ring-offset);
+}
+
+.component-surface-link:is(:hover, :focus-visible) {
+  text-decoration-color: var(--component-on-surface);
 }
 
 /* Custom Utilities for Editorial Look */
@@ -502,8 +526,9 @@
 
 /* Compact cards keep the instructor name in the reading order while removing
    the long biography from both layout and the accessibility tree. Medium
-   layouts restore the complete source biography; fine-pointer desktops then
-   progressively enhance descriptions and biographies into previews. */
+   layouts restore the complete source biography. CourseCardCollection owns
+   when fine-pointer previews are appropriate for its presentation context;
+   CSS renders that already-resolved mode. */
 .fractalu-instructor-bio {
   display: none;
 }
@@ -514,7 +539,7 @@
   }
 }
 
-@media (min-width: 64rem) and (hover: hover) and (pointer: fine) {
+@media (hover: hover) and (pointer: fine) {
   .fractalu-course-grid[data-preview-mode="enhanced"]
     .fractalu-title-preview
     > .fractalu-course-preview,

@@ -10,6 +10,7 @@ Community site for Fractal NYC — a network of coliving houses, a campus, event
 - **Working in the code (developer or AI agent)?** → [`AGENTS.md`](./AGENTS.md) — **start here.** The universal, tool-agnostic rulebook: repo structure, tech stack, commands, house rules, `DESIGN.md` conformance, safety rules, and the **Lattice** work-tracking protocol (every change gets a tracked task, branch, and PR).
 - **Testing or checking responsive behavior?** → [`TESTING.md`](./TESTING.md). Labeled test catalog, exact commands, viewport/native-device coverage, evidence locations, and guidance for adding regressions.
 - **Looking up tokens / type / colors / components?** → [`DESIGN.md`](./DESIGN.md). The canonical design system.
+- **Choosing or previewing a reusable component?** → [`docs/component-library.md`](./docs/component-library.md). Teammates can use the protected Vercel Preview linked from its PR; technical users can also run the catalog locally.
 - **Using Claude Code?** → [`CLAUDE.md`](./CLAUDE.md) is a thin entry point that `@import`s `AGENTS.md` (Claude doesn't auto-load `AGENTS.md`). All real rules live in `AGENTS.md`.
 
 ## Run locally
@@ -17,6 +18,7 @@ Community site for Fractal NYC — a network of coliving houses, a campus, event
 ```sh
 pnpm install
 pnpm dev        # dev server at http://localhost:5173
+pnpm components # team-only visual component gallery and Education editor at http://localhost:5173/components/
 ```
 
 Other commands:
@@ -26,6 +28,9 @@ pnpm build      # production build to dist/
 pnpm serve      # preview the production build
 pnpm typecheck  # TypeScript check
 pnpm test       # vitest suite
+pnpm typecheck:components # type-check the separate catalog
+pnpm build:components     # build only the catalog to dist-components/
+pnpm check:components-browser # verify catalog interactions, colorways, and migrated pages
 ```
 
 Responsive and native-mobile verification:
@@ -44,6 +49,7 @@ See [`TESTING.md`](./TESTING.md) before choosing a lane: it explains the fidelit
 
 ```
 .
+├── components/             Team-only interactive component catalog and Education workshop
 ├── TESTING.md              Test layers, file catalog, commands, and evidence
 ├── index.html               Entry HTML: title, font loading, image preloads
 ├── src/
@@ -51,6 +57,7 @@ See [`TESTING.md`](./TESTING.md) before choosing a lane: it explains the fidelit
 │   ├── index.css            Design tokens, global type rules, semantic utilities
 │   ├── pages/               One file per route
 │   ├── components/
+│   │   ├── content/         Shared cards, callouts, filters, links, color scope
 │   │   ├── sections/        Page sections (Hero, Campus, Education, …)
 │   │   ├── house/           House banners, pennants, Mandelbrot icon
 │   │   ├── three/           OctahedronHero 3D scene
@@ -66,7 +73,7 @@ See [`TESTING.md`](./TESTING.md) before choosing a lane: it explains the fidelit
 ├── scripts/
 │   ├── mobile-simulators/   Appium/WebdriverIO Android and Apple harness
 │   └── *.mjs                Conformance and asset pipelines
-└── netlify.toml             Build + SPA redirect config
+└── vercel.json              Vercel build + SPA rewrite config
 ```
 
 ## Brand system

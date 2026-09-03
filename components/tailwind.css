@@ -1,0 +1,5 @@
+/* The standalone app has a different Vite root from the public site. Import
+   the canonical design system and explicitly scan every production component
+   that the visual catalog renders. */
+@import "../src/index.css";
+@source "../src";

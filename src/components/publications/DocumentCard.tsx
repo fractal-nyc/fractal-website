@@ -1,7 +1,9 @@
 import { type PublicationDocument, type DocumentCategory } from "@/data/publications-documents";
 import type { LucideIcon } from "lucide-react";
 import { MandelbrotCorners } from "@/components/ui/MandelbrotCorners";
-import { HOUSES } from "@/data/houses";
+import { ComponentColorScope, type ComponentColorwayId } from "@/components/content/ComponentColorScope";
+import { ContentCard } from "@/components/content/ContentCard";
+import { CategoryIconLabel } from "@/components/content/CategoryIconLabel";
 import {
   ArrowUpRight,
   BookOpen,
@@ -30,9 +32,6 @@ const CATEGORY_META: Record<
   project: { icon: Boxes, label: "Project" },
 };
 
-// Lab house accent — canonical deep pink from the houses palette
-const LAB_DEEP = HOUSES.find((h) => h.id === "lab")!.palette.deep;
-
 // ---------------------------------------------------------------------------
 // DocumentCard
 // ---------------------------------------------------------------------------
@@ -40,51 +39,46 @@ const LAB_DEEP = HOUSES.find((h) => h.id === "lab")!.palette.deep;
 interface DocumentCardProps {
   document: PublicationDocument;
   className?: string;
+  colorway?: ComponentColorwayId;
 }
 
-export function DocumentCard({ document, className = "" }: DocumentCardProps) {
+export function DocumentCard({ document, className = "", colorway = "library" }: DocumentCardProps) {
   const { icon: CategoryIcon, label: categoryLabel } =
     CATEGORY_META[document.category];
 
   return (
+    <ComponentColorScope
+      colorway={colorway}
+      surface="paper"
+      className="h-full"
+      style={{ backgroundColor: "transparent" }}
+    >
     <MandelbrotCorners size="xs" opacity={0.12} className="h-full">
     <a
       href={document.url}
       target="_blank"
       rel="noopener noreferrer"
       className={`
-        group flex flex-col h-full rounded-lg border border-foreground-faint bg-background text-foreground
-        transition-all duration-200 ease-out
-        hover:scale-[1.02] hover:shadow-lg hover:[border-color:var(--accent,currentColor)]
+        group flex h-full flex-col rounded-lg text-foreground
+        transition-transform duration-200 ease-out
+        hover:scale-[1.02] hover:shadow-lg motion-reduce:transition-none motion-reduce:hover:scale-100
         focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground
-        p-6
         ${className}
       `}
     >
+      <ContentCard as="div" className="flex h-full w-full flex-col transition-colors group-hover:border-[var(--component-accent)]">
       {/* Top row: category + external link icon */}
       <div className="flex items-center justify-between mb-3">
-        <div className="flex items-center gap-2">
-          <div
-            className="flex items-center justify-center w-7 h-7 rounded-md"
-            style={{ backgroundColor: `${LAB_DEEP}20` }}
-          >
-            <CategoryIcon
-              size={14}
-              strokeWidth={1.5}
-              style={{ color: LAB_DEEP }}
-            />
-          </div>
-          <span
-            className="text-label"
-            style={{ color: LAB_DEEP }}
-          >
-            {categoryLabel}
-          </span>
-        </div>
+        <CategoryIconLabel
+          icon={CategoryIcon}
+          iconKey={document.category}
+          label={categoryLabel}
+        />
         <ArrowUpRight
           size={16}
           strokeWidth={1.5}
-          className="text-foreground-muted opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+          className="text-foreground-muted opacity-0 transition-opacity duration-200 group-hover:opacity-100 motion-reduce:transition-none"
+          aria-hidden="true"
         />
       </div>
 
@@ -94,7 +88,7 @@ export function DocumentCard({ document, className = "" }: DocumentCardProps) {
       </h3>
 
       {/* Author */}
-      <p className="text-label text-foreground-muted mt-1">{document.byline}</p>
+      <p className="text-body text-foreground-muted mt-1" data-document-byline>{document.byline}</p>
 
       {/* Description */}
       {document.description && (
@@ -104,11 +98,10 @@ export function DocumentCard({ document, className = "" }: DocumentCardProps) {
       )}
 
       {/* Accent bar at bottom */}
-      <div
-        className="mt-auto h-0.5 w-8 rounded-full opacity-40 group-hover:w-12 group-hover:opacity-70 transition-all duration-300"
-        style={{ backgroundColor: LAB_DEEP }}
-      />
+      <div className="mt-auto h-0.5 w-12 origin-left scale-x-2/3 rounded-full bg-[var(--component-accent)] opacity-40 transition-[transform,opacity] duration-300 group-hover:scale-x-100 group-hover:opacity-70 motion-reduce:transition-none" aria-hidden="true" />
+      </ContentCard>
     </a>
     </MandelbrotCorners>
+    </ComponentColorScope>
   );
 }

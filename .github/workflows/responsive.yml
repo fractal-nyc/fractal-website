@@ -31,6 +31,11 @@ jobs:
       - run: pnpm typecheck
       - run: pnpm test
       - run: pnpm build
+      - run: pnpm test:vercel-build
+      - run: pnpm typecheck:components
+      - run: pnpm build:components
+      - run: pnpm check:production-leakage
+      - run: pnpm check:components-browser
       - run: pnpm conformance
       - name: Responsive route matrix
         run: |

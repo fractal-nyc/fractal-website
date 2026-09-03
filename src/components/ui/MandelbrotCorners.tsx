@@ -2,7 +2,8 @@ import * as React from "react";
 import { MandelbrotIcon } from "@/components/house/MandelbrotIcon";
 import { cn } from "@/lib/utils";
 
-type CornerSize = "xs" | "sm" | "md" | "lg";
+export type MandelbrotCornerSize = "xs" | "sm" | "md" | "lg";
+type CornerSize = MandelbrotCornerSize;
 
 interface MandelbrotCornersProps {
   children: React.ReactNode;

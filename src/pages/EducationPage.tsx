@@ -1,7 +1,7 @@
 import type { CSSProperties, MouseEvent } from "react";
 import { useRef } from "react";
-import { ArrowDown } from "lucide-react";
 import { EducationOutboundLink } from "@/components/education/EducationOutboundLink";
+import { OutboundLink } from "@/components/content/OutboundLink";
 import { FractalUniversityPortal } from "@/components/education/FractalUniversityPortal";
 import { EducationBannerSVG } from "@/components/house/EducationBannerSVG";
 import { Footer } from "@/components/layout/Footer";
@@ -75,12 +75,12 @@ export function EducationPage() {
                   <p className="text-subtitle mt-4 text-background/80 normal-case">
                     An improvised college in New York City.
                   </p>
-                  <div className="mt-4 flex flex-col items-center justify-center gap-x-3 gap-y-0 sm:flex-row sm:flex-wrap">
+                  <div className="text-body-lead mt-4 flex flex-col items-center justify-center gap-x-3 gap-y-0 sm:flex-row sm:flex-wrap">
                     <EducationOutboundLink
                       href="https://fractaluniversity.substack.com"
                       accessibleName="Stay tuned for future semesters"
                       tone="dark"
-                      typography="body-lead"
+                      variant="outbound"
                       className="justify-center text-center text-background/70 ![text-underline-offset:auto]"
                     >
                       <span
@@ -90,10 +90,13 @@ export function EducationPage() {
                         Stay tuned for future semesters
                       </span>
                     </EducationOutboundLink>
-                    <a
+                    <OutboundLink
                       href="#what-is-fractalu"
                       onClick={jumpToInformation}
-                      className="text-body-lead inline-flex min-h-11 min-w-0 max-w-full items-center justify-center gap-x-1.5 rounded-md text-center text-background/70 underline decoration-background/40 transition-colors [overflow-wrap:anywhere] hover:decoration-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-background focus-visible:ring-offset-2 focus-visible:ring-offset-house-education-deep"
+                      tone="dark"
+                      variant="outbound"
+                      arrow="down"
+                      className="justify-center text-center text-background/70 ![text-underline-offset:auto]"
                     >
                       <span
                         className="min-w-0 [overflow-wrap:anywhere]"
@@ -101,14 +104,7 @@ export function EducationPage() {
                       >
                         What is FractalU?
                       </span>
-                      <ArrowDown
-                        size={15}
-                        strokeWidth={1.5}
-                        className="shrink-0"
-                        aria-hidden="true"
-                        data-education-internal-arrow
-                      />
-                    </a>
+                    </OutboundLink>
                   </div>
                 </div>
               </FadeIn>
