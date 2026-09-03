@@ -2,10 +2,16 @@
 
 This is the durable guide for the separate, team-only visual component gallery. It is not a public route, is not linked from the site, and is excluded from the normal production build.
 
+## Team access
+
+While the component-library PR is open, use the successful **Vercel Preview** link on the PR and open `/components/#browse/common`. Sign in with a Vercel account that has access to the Fractal NYC project. If Vercel shows **Request Access**, submit it and ask a project owner to approve you by name; do not enable an anonymous “Anyone with the link” bypass for this team-only document.
+
+The protected PR preview is the hosted review snapshot. The production deployment—including `fractal.nyc/components`—does not contain the catalog. After merge, technical teammates can always open the current version from `master` locally. A permanent, always-current nontechnical URL would require a separately approved protected branch or project workflow.
+
 ## Open the interactive document
 
 ```sh
-pnpm install
+pnpm install --frozen-lockfile
 pnpm components
 ```
 
