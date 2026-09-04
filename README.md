@@ -7,11 +7,11 @@ Community site for Fractal NYC — a network of coliving houses, a campus, event
 ## Where to start
 
 - **Editing copy, data, or images?** → [`EDITING.md`](./EDITING.md). Sitemap of every page → section → file, plus prompt patterns for common edits.
-- **Editing the optional FractalU catalog in Studio?** → [`docs/sanity-cms.md`](./docs/sanity-cms.md). Focused local setup, fallback behavior, TypeGen, and deterministic seed workflow.
+- **Editing the FractalU Course Catalog?** → [`docs/sanity-cms.md`](./docs/sanity-cms.md). Focused local setup, fallback behavior, TypeGen, and deterministic seed workflow.
 - **Working in the code (developer or AI agent)?** → [`AGENTS.md`](./AGENTS.md) — **start here.** The universal, tool-agnostic rulebook: repo structure, tech stack, commands, house rules, `DESIGN.md` conformance, safety rules, and the **Lattice** work-tracking protocol (every change gets a tracked task, branch, and PR).
 - **Testing or checking responsive behavior?** → [`TESTING.md`](./TESTING.md). Labeled test catalog, exact commands, viewport/native-device coverage, evidence locations, and guidance for adding regressions.
 - **Looking up tokens / type / colors / components?** → [`DESIGN.md`](./DESIGN.md). The canonical design system.
-- **Choosing or previewing a reusable component?** → [`docs/component-library.md`](./docs/component-library.md). Teammates can use the protected Vercel Preview linked from its PR; technical users can also run the catalog locally.
+- **Want to pick or preview a reusable component?** → [`docs/component-library.md`](./docs/component-library.md). Teammates can use the protected Vercel Preview linked from its PR; technical users can also run the catalog locally.
 - **Using Claude Code?** → [`CLAUDE.md`](./CLAUDE.md) is a thin entry point that `@import`s `AGENTS.md` (Claude doesn't auto-load `AGENTS.md`). All real rules live in `AGENTS.md`.
 
 ## Run locally
