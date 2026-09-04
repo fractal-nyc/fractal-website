@@ -4,6 +4,8 @@ The sitemap and recipe reference for content edits. Use this when you need to fi
 
 For developers and AI agents working in the repo, see [`AGENTS.md`](./AGENTS.md) and [`DESIGN.md`](./DESIGN.md).
 
+FractalU semester, course-card, and club-card data has an optional local-first Sanity editing path. All other content remains edited in the code/data sources listed here. See [`docs/sanity-cms.md`](./docs/sanity-cms.md) for Studio setup, fallback refreshes, TypeGen, and deterministic seed generation.
+
 ---
 
 ## What this doc covers
@@ -45,6 +47,7 @@ If step 5 fails, tell Claude what's wrong — one round of correction is usually
   - `PEOPLE`: every person's name, role, houses, and social links.
 - **`src/data/publications-documents.ts`** — every entry in the Publications archive (`/publications`): title, authors, description, URL, category, tags, `featured` flag.
 - **`src/data/storyPhotos.ts`** — the Story page photo gallery: image paths, alt text, and gallery layout.
+- **`src/data/fractalu-catalog.json`** — reviewed FractalU fallback snapshot. Update it alongside approved published catalog changes so first-paint/offline behavior stays aligned; see [`docs/sanity-cms.md`](./docs/sanity-cms.md).
 
 ### Site-wide (every page)
 

@@ -19,13 +19,13 @@ import { FactGrid } from "@/components/content/FactGrid";
 import { FilterBar } from "@/components/content/FilterGroup";
 import { EmptyResultsMessage } from "@/components/content/EmptyResultsMessage";
 import {
-  FRACTALU_CATALOG,
   getFractalUCategories,
   type FractalUCatalog,
   type FractalUClub,
   type FractalUCourse,
 } from "@/data/fractalu";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
+import { useFractalUContent } from "@/content/FractalUContentProvider";
 
 const FINE_POINTER_PREVIEW_QUERY =
   "(min-width: 64rem) and (hover: hover) and (pointer: fine)";
@@ -725,5 +725,6 @@ export function CourseSubjectFilter({
 }
 
 export function FractalUniversityPortal() {
-  return <FractalUCatalogView catalog={FRACTALU_CATALOG} showInformation />;
+  const catalog = useFractalUContent();
+  return <FractalUCatalogView catalog={catalog} showInformation />;
 }

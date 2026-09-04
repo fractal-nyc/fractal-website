@@ -7,6 +7,7 @@ Community site for Fractal NYC — a network of coliving houses, a campus, event
 ## Where to start
 
 - **Editing copy, data, or images?** → [`EDITING.md`](./EDITING.md). Sitemap of every page → section → file, plus prompt patterns for common edits.
+- **Editing the optional FractalU catalog in Studio?** → [`docs/sanity-cms.md`](./docs/sanity-cms.md). Focused local setup, fallback behavior, TypeGen, and deterministic seed workflow.
 - **Working in the code (developer or AI agent)?** → [`AGENTS.md`](./AGENTS.md) — **start here.** The universal, tool-agnostic rulebook: repo structure, tech stack, commands, house rules, `DESIGN.md` conformance, safety rules, and the **Lattice** work-tracking protocol (every change gets a tracked task, branch, and PR).
 - **Testing or checking responsive behavior?** → [`TESTING.md`](./TESTING.md). Labeled test catalog, exact commands, viewport/native-device coverage, evidence locations, and guidance for adding regressions.
 - **Looking up tokens / type / colors / components?** → [`DESIGN.md`](./DESIGN.md). The canonical design system.
@@ -28,6 +29,8 @@ pnpm build      # production build to dist/
 pnpm serve      # preview the production build
 pnpm typecheck  # TypeScript check
 pnpm test       # vitest suite
+pnpm sanity:seed      # validate + generate local NDJSON (no remote mutation)
+pnpm sanity:studio    # local Studio; requires SANITY_STUDIO_* values
 pnpm typecheck:components # type-check the separate catalog
 pnpm build:components     # build only the catalog to dist-components/
 pnpm check:components-browser # verify catalog interactions, colorways, and migrated pages
@@ -64,6 +67,8 @@ See [`TESTING.md`](./TESTING.md) before choosing a lane: it explains the fidelit
 │   │   ├── layout/          Navbar, Footer, SectorHeader
 │   │   ├── publications/    Publications archive (search, grid, badges)
 │   │   └── ui/              shadcn primitives + brand components
+│   ├── content/             Focused FractalU provider and atomic normalization
+│   ├── sanity/              Tokenless FractalU query/client and checked-in types
 │   └── data/
 │       ├── houses.ts        Houses + people — names, taglines, descriptions, palettes
 │       ├── publications-documents.ts Publications archive entries
@@ -72,7 +77,10 @@ See [`TESTING.md`](./TESTING.md) before choosing a lane: it explains the fidelit
 ├── tests/e2e/               Playwright responsive, Hero, and visual suites
 ├── scripts/
 │   ├── mobile-simulators/   Appium/WebdriverIO Android and Apple harness
+│   ├── sanity/              Deterministic local seed builder/writer
 │   └── *.mjs                Conformance and asset pipelines
+├── sanity/                  FractalU-only local Studio schemas
+├── sanity.config.ts         Focused Studio configuration and structure
 └── vercel.json              Vercel build + SPA rewrite config
 ```
 
