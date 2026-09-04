@@ -6,7 +6,8 @@ import { Footer } from "@/components/layout/Footer";
 import { SectorHeader } from "@/components/layout/SectorHeader";
 import { FadeIn } from "@/components/ui/FadeIn";
 import { FractalPattern } from "@/components/ui/FractalPattern";
-import { CornerDecorations } from "@/components/ui/MandelbrotCorners";
+import { EmbedFrame } from "@/components/content/EmbedFrame";
+import { OutboundLink } from "@/components/content/OutboundLink";
 import { Button } from "@/components/ui/button";
 import { EventsBannerSVG } from "@/components/house/EventsBannerSVG";
 import { HOUSES } from "@/data/houses";
@@ -56,26 +57,15 @@ export function EventsPage() {
                 Luma embed: calendar-ID URL from luma.com/nyc-tech > Manage > Embed.
                 Uses the stable `cal-` calendar ID rather than the `nyc-tech` slug.
               */}
-              <div className="relative w-full rounded-md overflow-hidden border [border-color:var(--accent,currentColor)] bg-foreground/[0.03] h-[80vh] min-h-[600px] md:h-[850px] mb-6">
-                <CornerDecorations size="xs" />
-                <iframe
+              <EmbedFrame
                   src="https://luma.com/embed/calendar/cal-RHI1LJC6K8JRBLI/events"
                   title="Fractal Tech NYC Events Calendar"
-                  className="w-full h-full"
-                  style={{ border: "none" }}
+                  className="mb-6 h-[80vh] min-h-[600px] md:h-[850px]"
                   allowFullScreen
                   loading="lazy"
                   referrerPolicy="no-referrer-when-downgrade"
-                />
-              </div>
-              <a
-                href={LUMA_EVENTS_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="block mb-12 text-label text-foreground/90 text-center underline decoration-foreground/40 hover:decoration-foreground transition-colors"
-              >
-                Luma →
-              </a>
+              />
+              <div className="mb-12 flex justify-center"><OutboundLink href={LUMA_EVENTS_URL} accessibleName="Luma">Luma</OutboundLink></div>
             </FadeIn>
 
             <FadeIn delay={0.25}>

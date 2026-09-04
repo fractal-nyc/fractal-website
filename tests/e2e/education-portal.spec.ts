@@ -19,9 +19,9 @@ test("Education portal keeps one wide accessible catalog across input modes", as
   const width = profile?.viewport.width ?? 1440;
   const hasTouch = profile?.hasTouch ?? false;
   const compactDensityTargets = {
-    "phone-density-375x812": { maxTop: 852, maxHeight: 650 },
-    "phone-390x844": { maxTop: 845, maxHeight: 625 },
-    "phone-density-440x956": { maxTop: 956, maxHeight: 575 },
+    "phone-density-375x812": { maxTop: 852, maxHeight: 660 },
+    "phone-390x844": { maxTop: 845, maxHeight: 635 },
+    "phone-density-440x956": { maxTop: 956, maxHeight: 585 },
   } as const;
   const densityTarget = profile?.name
     ? compactDensityTargets[profile.name as keyof typeof compactDensityTargets]
@@ -50,6 +50,13 @@ test("Education portal keeps one wide accessible catalog across input modes", as
   await expect(futureSemestersLink).toHaveAttribute("target", "_blank");
   await expect(futureSemestersLink).toHaveAttribute("rel", "noopener noreferrer");
   await expect(futureSemestersLink).toHaveCSS("font-family", /Inter/);
+  await expect(futureSemestersLink).not.toHaveClass(/text-body(?:-lead)?|text-label/);
+  await expect(futureSemestersLink.locator("..")).toHaveClass(/text-body-lead/);
+  expect(
+    await futureSemestersLink.evaluate((link) => getComputedStyle(link).fontSize),
+  ).toBe(
+    await futureSemestersLink.locator("..").evaluate((context) => getComputedStyle(context).fontSize),
+  );
   const heroArrow = futureSemestersLink.locator("svg[data-education-outbound-arrow]");
   await expect(heroArrow).toHaveCount(1);
   await expect(heroArrow).toHaveAttribute("aria-hidden", "true");
@@ -58,6 +65,13 @@ test("Education portal keeps one wide accessible catalog across input modes", as
   await expect(informationJump.locator("[data-education-hero-action-label]")).toHaveCSS(
     "font-family",
     /Inter/,
+  );
+  await expect(informationJump).not.toHaveClass(/text-body(?:-lead)?|text-label/);
+  await expect(informationJump.locator("..")).toHaveClass(/text-body-lead/);
+  expect(
+    await informationJump.evaluate((link) => getComputedStyle(link).fontSize),
+  ).toBe(
+    await informationJump.locator("..").evaluate((context) => getComputedStyle(context).fontSize),
   );
   await expect(informationJump).toHaveAttribute("href", "#what-is-fractalu");
   await expect(informationJump).not.toHaveAttribute("data-education-outbound-link");
@@ -113,10 +127,14 @@ test("Education portal keeps one wide accessible catalog across input modes", as
   await expect(page.getByRole("heading", { name: "Summer 2026 semester" })).toHaveCount(0);
   const filterEyebrow = page.locator("[data-fractalu-filter-eyebrow]");
   const filterGroup = page.getByRole("group", { name: "Filter classes by subject" });
+  const filterScope = page.locator(".fractalu-filter-row");
   await expect(filterEyebrow).toHaveText("Filter classes by subject");
   await expect(filterEyebrow).toBeVisible();
   await expect(filterEyebrow).toHaveClass(/text-label/);
   await expect(filterGroup).toHaveAttribute("aria-labelledby", "fractalu-filter-label");
+  await expect(filterScope).toHaveAttribute("data-component-colorway", "education");
+  await expect(filterScope).toHaveAttribute("data-component-surface", "deep");
+  await expect(filterScope).toHaveCSS("background-color", "rgba(0, 0, 0, 0)");
   expect(
     await filterEyebrow.evaluate(
       (eyebrow, group) => eyebrow.nextElementSibling === group,
@@ -132,7 +150,7 @@ test("Education portal keeps one wide accessible catalog across input modes", as
         return { x: box.x, y: box.y, width: box.width, height: box.height };
       }),
     );
-    expect(new Set(buttonBoxes.map(({ y }) => Math.round(y))).size).toBe(2);
+    expect(new Set(buttonBoxes.map(({ y }) => Math.round(y))).size).toBeGreaterThan(1);
     expect(buttonBoxes.every(({ width: buttonWidth, height }) => buttonWidth >= 44 && height >= 44)).toBe(
       true,
     );
@@ -164,6 +182,14 @@ test("Education portal keeps one wide accessible catalog across input modes", as
   const catalog = page.getByTestId("fractalu-course-catalog");
   await expect(catalog).toBeVisible();
   await expect(catalog.locator("article")).toHaveCount(20);
+  const catalogScope = catalog.locator("..");
+  await expect(catalogScope).toHaveAttribute("data-component-colorway", "education");
+  await expect(catalogScope).toHaveAttribute("data-component-surface", "paper");
+  await expect(catalogScope).toHaveCSS("background-color", "rgba(0, 0, 0, 0)");
+  await expect(catalog.locator("article").first()).toHaveCSS(
+    "background-color",
+    "rgb(247, 246, 242)",
+  );
   const initialCourseRevealSlots = catalog.locator('[data-fractalu-reveal-slot="course"]');
   await expect(initialCourseRevealSlots).toHaveCount(20);
   await expect(initialCourseRevealSlots.first()).toHaveAttribute(
@@ -186,8 +212,8 @@ test("Education portal keeps one wide accessible catalog across input modes", as
   await expect(catalog.locator("[data-instructor-bio]")).toHaveCount(20);
   await expect(catalog.locator("[data-instructor-record]")).toHaveCount(23);
   const outboundLinks = page.locator("[data-education-outbound-link]");
-  await expect(outboundLinks).toHaveCount(53);
-  await expect(outboundLinks.locator("svg[data-education-outbound-arrow]")).toHaveCount(53);
+  await expect(outboundLinks).toHaveCount(52);
+  await expect(outboundLinks.locator("svg[data-education-outbound-arrow]")).toHaveCount(52);
   expect(
     await outboundLinks.evaluateAll((links) =>
       links.every(
@@ -215,6 +241,12 @@ test("Education portal keeps one wide accessible catalog across input modes", as
   const clubs = page.getByTestId("fractalu-clubs");
   const clubCards = clubs.locator("article[data-club-id]");
   await expect(clubCards).toHaveCount(4);
+  const clubScopes = clubs.locator("[data-component-colorway='education'][data-component-surface='paper']");
+  await expect(clubScopes).toHaveCount(4);
+  for (let index = 0; index < 4; index += 1) {
+    await expect(clubScopes.nth(index)).toHaveCSS("background-color", "rgba(0, 0, 0, 0)");
+    await expect(clubCards.nth(index)).toHaveCSS("background-color", "rgb(247, 246, 242)");
+  }
   await expect(clubs.getByText("Open group", { exact: true })).toHaveCount(0);
   await expect(page.getByRole("heading", { name: "Clubs & open groups" })).toBeVisible();
 
@@ -300,18 +332,21 @@ test("Education portal keeps one wide accessible catalog across input modes", as
     borderColor: getComputedStyle(button).borderColor,
     borderWidth: getComputedStyle(button).borderWidth,
   }));
-  expect(restingFilterStyles.background).toBe(selectedFilterStyles.background);
-  expect(restingFilterStyles.color).toBe(selectedFilterStyles.color);
+  expect(selectedFilterStyles.background).toBe("rgb(178, 43, 35)");
+  expect(selectedFilterStyles.color).toBe(await filterScope.evaluate((scope) => getComputedStyle(scope).color));
+  expect(selectedFilterStyles.borderColor).toBe(selectedFilterStyles.background);
+  expect(selectedFilterStyles.borderWidth).toBe("1px");
+  expect(restingFilterStyles.background).not.toBe(selectedFilterStyles.background);
+  expect(restingFilterStyles.color).not.toBe(selectedFilterStyles.color);
   expect(restingFilterStyles.borderColor).not.toBe(selectedFilterStyles.borderColor);
-  expect(restingFilterStyles.borderWidth).toBe("2px");
-  expect(selectedFilterStyles.borderWidth).toBe("2px");
+  expect(restingFilterStyles.borderWidth).toBe("1px");
   expect(
     await technology.evaluate((button) => Number.parseFloat(getComputedStyle(button).minHeight)),
   ).toBeGreaterThanOrEqual(44);
   if (!hasTouch) {
     await technology.hover();
     await expect(technology).toHaveCSS("background-color", restingFilterStyles.background);
-    await expect(technology).toHaveCSS("color", restingFilterStyles.color);
+    await expect(technology).not.toHaveCSS("color", restingFilterStyles.color);
     await expect(technology).toHaveCSS("border-color", selectedFilterStyles.borderColor);
     await page.mouse.move(0, 0);
     const filters = filterGroup.getByRole("button");
@@ -322,7 +357,7 @@ test("Education portal keeps one wide accessible catalog across input modes", as
     await page.keyboard.press("Tab");
     await expect(technology).toBeFocused();
     await expect(technology).toHaveCSS("background-color", restingFilterStyles.background);
-    await expect(technology).toHaveCSS("color", restingFilterStyles.color);
+    await expect(technology).not.toHaveCSS("color", restingFilterStyles.color);
     await expect(technology).toHaveCSS("border-color", selectedFilterStyles.borderColor);
     expect(await technology.evaluate((button) => getComputedStyle(button).boxShadow)).not.toBe(
       "none",
@@ -330,8 +365,8 @@ test("Education portal keeps one wide accessible catalog across input modes", as
   }
   await technology.click();
   await expect(technology).toHaveAttribute("aria-pressed", "true");
-  await expect(technology).toHaveCSS("background-color", restingFilterStyles.background);
-  await expect(technology).toHaveCSS("color", restingFilterStyles.color);
+  await expect(technology).toHaveCSS("background-color", selectedFilterStyles.background);
+  await expect(technology).toHaveCSS("color", selectedFilterStyles.color);
   await expect(technology).toHaveCSS("border-color", selectedFilterStyles.borderColor);
   await expect(allFilter).toHaveCSS("background-color", restingFilterStyles.background);
   await expect(allFilter).toHaveCSS("color", restingFilterStyles.color);

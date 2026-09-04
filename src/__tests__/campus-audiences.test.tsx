@@ -29,6 +29,18 @@ function renderCampus() {
 // ═══════════════════════════════════════════════════════════════════════════
 
 describe("Campus — audience cards", () => {
+  it("keeps Crystal's contact as an arrowless lead-size inline email link", () => {
+    renderCampus();
+    const link = screen.getByRole("link", { name: "crystal@fractalnyc.com" });
+    expect(link).toHaveAttribute("href", "mailto:crystal@fractalnyc.com");
+    expect(link).not.toHaveAttribute("target");
+    expect(link).not.toHaveAttribute("rel");
+    expect(link).toHaveClass("font-sans", "text-background");
+    expect(link).not.toHaveClass("text-body", "text-body-lead", "text-label");
+    expect(link.closest("p")).toHaveClass("text-body-lead");
+    expect(link.querySelector("[data-outbound-arrow]")).not.toBeInTheDocument();
+  });
+
   it("links the Members card to the full-time membership onboarding", () => {
     renderCampus();
     const members = screen.getByText("Members").closest("a");
