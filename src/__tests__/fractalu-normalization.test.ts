@@ -48,6 +48,16 @@ describe("FractalU catalog normalization", () => {
     expect(normalizeFractalUCatalog({ ...validProjection(), clubs: [] }, FRACTALU_CATALOG)?.clubs).toEqual([]);
   });
 
+  it("accepts arbitrary custom locations and trims them without preset branching", () => {
+    const value = validProjection();
+    value.courses[0].location = "  A temporary custom venue  ";
+    value.clubs[0].location = "  Somewhere announced weekly  ";
+
+    const result = normalizeFractalUCatalog(value, FRACTALU_CATALOG);
+    expect(result?.courses[0].location).toBe("A temporary custom venue");
+    expect(result?.clubs[0].location).toBe("Somewhere announced weekly");
+  });
+
   it.each([
     { name: "missing required text", mutate: (value: ReturnType<typeof validProjection>) => { value.courses[0].title = ""; } },
     { name: "unsafe URL", mutate: (value: ReturnType<typeof validProjection>) => { value.courses[0].applicationUrl = "javascript:alert(1)"; } },

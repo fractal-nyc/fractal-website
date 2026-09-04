@@ -29,6 +29,10 @@ pnpm exec sanity build  # validate a production Studio build locally
 
 Studio exposes only three document lists: semesters, courses, and clubs. Create one visible semester, associate each course and club with it, and use `displayOrder` plus `visible` to control the catalog. Categories are editorial text and automatically populate the existing course filter. Course instructor records remain ordered so the site can derive the combined instructor label while preserving separate biographies.
 
+Course and club Location fields share one code-reviewed preset list. Choose a preset to store its exact display text, or choose **Other** to reveal a free-form text input. Existing location strings that do not match a preset automatically open as Other with their complete value preserved. Adding or renaming a canonical preset is a reviewed schema-code change, not a content migration.
+
+The stored and published location remains a plain string at the existing `location` field. There is no location document type, reference, object, companion field, or persisted Other marker, and this authoring control does not change GROQ, frontend normalization, card markup, or rendered location text. Existing drafts and published records require no migration or republish.
+
 ## Runtime and fallback behavior
 
 The Education page renders the local catalog immediately. With valid public configuration it then fetches the first visible semester by display order and that semester's visible courses and clubs. Returned cards are ordered by `displayOrder` and stable key.

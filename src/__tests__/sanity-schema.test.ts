@@ -1,6 +1,11 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { schemaTypes } from "../../sanity/schemaTypes";
+import {
+  FRACTALU_LOCATION_PRESETS,
+  FractalULocationInput,
+} from "../../sanity/components/FractalULocationInput";
+import { FRACTALU_CATALOG } from "@/data/fractalu";
 import packageJson from "../../package.json";
 
 type SchemaType = (typeof schemaTypes)[number] & {
@@ -9,6 +14,7 @@ type SchemaType = (typeof schemaTypes)[number] & {
     type: string;
     initialValue?: unknown;
     validation?: unknown;
+    components?: { input?: unknown };
     to?: Array<{ type: string }>;
   }>;
 };
@@ -24,6 +30,29 @@ describe("focused FractalU Sanity schema", () => {
       "fractalUClub",
       "instructor",
     ]);
+  });
+
+  it("keeps both locations as required strings with one shared preset input", () => {
+    for (const name of ["fractalUCourse", "fractalUClub"]) {
+      const location = schema(name).fields?.find((field) => field.name === "location");
+      expect(location).toMatchObject({
+        name: "location",
+        type: "string",
+        components: { input: FractalULocationInput },
+      });
+      expect(location?.validation).toBeTypeOf("function");
+    }
+
+    const values = FRACTALU_LOCATION_PRESETS.map(({ value }) => value);
+    const catalogValues = [
+      ...FRACTALU_CATALOG.courses.map(({ location }) => location),
+      ...FRACTALU_CATALOG.clubs.map(({ location }) => location),
+    ];
+    expect(values.every((value) => value.trim().length > 0)).toBe(true);
+    expect(new Set(values).size).toBe(values.length);
+    expect(new Set(values)).toEqual(new Set(catalogValues));
+    expect(schemaTypes).toHaveLength(4);
+    expect(schemaTypes.map(({ name }) => name)).not.toContain("fractalULocation");
   });
 
   it("associates every card with a semester and exposes editable order and visibility", () => {

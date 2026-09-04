@@ -9,6 +9,7 @@
     "sanity.config.ts",
     "sanity.cli.ts",
     "sanity/**/*.ts",
+    "sanity/**/*.tsx",
     "scripts/sanity/**/*.ts",
     "src/content/**/*.ts",
     "src/data/fractalu.ts"

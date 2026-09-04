@@ -1,4 +1,5 @@
 import { defineField, defineType } from "sanity";
+import { FractalULocationInput } from "../../components/FractalULocationInput";
 
 export const fractalUClub = defineType({
   name: "fractalUClub",
@@ -10,7 +11,14 @@ export const fractalUClub = defineType({
     defineField({ name: "name", title: "Name", type: "string", validation: (rule) => rule.required() }),
     defineField({ name: "description", title: "Description", type: "text", rows: 5, validation: (rule) => rule.required() }),
     defineField({ name: "schedule", title: "Schedule", type: "string", validation: (rule) => rule.required() }),
-    defineField({ name: "location", title: "Location", type: "string", validation: (rule) => rule.required() }),
+    defineField({
+      name: "location",
+      title: "Location",
+      type: "string",
+      description: "Choose a shared location preset, or choose Other to enter a custom location.",
+      components: { input: FractalULocationInput },
+      validation: (rule) => rule.required(),
+    }),
     defineField({ name: "detailsUrl", title: "Optional details URL", type: "url", validation: (rule) => rule.uri({ scheme: ["http", "https"] }) }),
     defineField({
       name: "detailsLabel",

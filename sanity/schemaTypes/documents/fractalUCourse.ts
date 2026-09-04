@@ -1,4 +1,5 @@
 import { defineArrayMember, defineField, defineType } from "sanity";
+import { FractalULocationInput } from "../../components/FractalULocationInput";
 
 export const fractalUCourse = defineType({
   name: "fractalUCourse",
@@ -12,7 +13,14 @@ export const fractalUCourse = defineType({
     defineField({ name: "instructors", title: "Ordered instructors", type: "array", of: [defineArrayMember({ type: "instructor" })], validation: (rule) => rule.required().min(1).unique() }),
     defineField({ name: "schedule", title: "Schedule", type: "string", validation: (rule) => rule.required() }),
     defineField({ name: "dates", title: "Dates", type: "string", validation: (rule) => rule.required() }),
-    defineField({ name: "location", title: "Location", type: "string", validation: (rule) => rule.required() }),
+    defineField({
+      name: "location",
+      title: "Location",
+      type: "string",
+      description: "Choose a shared location preset, or choose Other to enter a custom location.",
+      components: { input: FractalULocationInput },
+      validation: (rule) => rule.required(),
+    }),
     defineField({ name: "price", title: "Price", type: "string", validation: (rule) => rule.required() }),
     defineField({ name: "description", title: "Exact description", type: "text", rows: 6, validation: (rule) => rule.required() }),
     defineField({ name: "detailsUrl", title: "Optional details URL", type: "url", validation: (rule) => rule.uri({ scheme: ["http", "https"] }) }),

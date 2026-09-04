@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { buildSeed } from "../../scripts/sanity/build-seed";
 import { FRACTALU_CATALOG } from "@/data/fractalu";
+import { FRACTALU_LOCATION_OTHER_VALUE } from "../../sanity/components/FractalULocationInput";
 
 describe("deterministic FractalU Sanity seed", () => {
   it("is byte-identical across runs and contains exactly the local catalog", () => {
@@ -46,6 +47,25 @@ describe("deterministic FractalU Sanity seed", () => {
       expect(course).toMatchObject({ detailsUrl: localCourse.detailsUrl, detailsLabel: localCourse.detailsLabel });
     }
     if (localCourse.videoUrl) expect(course.videoUrl).toBe(localCourse.videoUrl);
+  });
+
+  it("preserves exact scalar locations without location documents or UI sentinels", () => {
+    const seed = buildSeed();
+    const courses = seed.documents.filter(({ _type }) => _type === "fractalUCourse");
+    const clubs = seed.documents.filter(({ _type }) => _type === "fractalUClub");
+
+    expect(courses.map(({ location }) => location)).toEqual(
+      FRACTALU_CATALOG.courses.map(({ location }) => location),
+    );
+    expect(clubs.map(({ location }) => location)).toEqual(
+      FRACTALU_CATALOG.clubs.map(({ location }) => location),
+    );
+    for (const document of [...courses, ...clubs]) {
+      expect(document.location).toBeTypeOf("string");
+      expect(document.location).not.toBe(FRACTALU_LOCATION_OTHER_VALUE);
+    }
+    expect(seed.documents.map(({ _type }) => _type)).not.toContain("fractalULocation");
+    expect(seed.ndjson).not.toContain(FRACTALU_LOCATION_OTHER_VALUE);
   });
 
   it("contains no unrelated documents, media directives, or snapshot provenance", () => {
