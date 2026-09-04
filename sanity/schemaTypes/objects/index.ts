@@ -1,0 +1,1 @@
+export { instructor } from "./instructor";

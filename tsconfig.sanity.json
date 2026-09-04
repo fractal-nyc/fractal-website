@@ -1,0 +1,16 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "allowImportingTsExtensions": false,
+    "types": ["node", "vite/client"]
+  },
+  "include": [
+    "sanity.config.ts",
+    "sanity.cli.ts",
+    "sanity/**/*.ts",
+    "scripts/sanity/**/*.ts",
+    "src/content/**/*.ts",
+    "src/data/fractalu.ts"
+  ]
+}

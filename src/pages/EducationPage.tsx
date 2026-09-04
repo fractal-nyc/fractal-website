@@ -3,6 +3,7 @@ import { useRef } from "react";
 import { ArrowDown } from "lucide-react";
 import { EducationOutboundLink } from "@/components/education/EducationOutboundLink";
 import { FractalUniversityPortal } from "@/components/education/FractalUniversityPortal";
+import { FractalUContentProvider } from "@/content/FractalUContentProvider";
 import { EducationBannerSVG } from "@/components/house/EducationBannerSVG";
 import { Footer } from "@/components/layout/Footer";
 import { Navbar } from "@/components/layout/Navbar";
@@ -115,7 +116,9 @@ export function EducationPage() {
             </div>
           </section>
 
-          <FractalUniversityPortal />
+          <FractalUContentProvider>
+            <FractalUniversityPortal />
+          </FractalUContentProvider>
         </div>
 
         <div

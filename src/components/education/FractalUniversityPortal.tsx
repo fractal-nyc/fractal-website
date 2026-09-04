@@ -9,13 +9,9 @@ import {
 import { EducationOutboundLink } from "@/components/education/EducationOutboundLink";
 import { MandelbrotCorners } from "@/components/ui/MandelbrotCorners";
 import { FadeIn } from "@/components/ui/FadeIn";
-import {
-  FRACTALU_CATALOG,
-  FRACTALU_CATEGORIES,
-  type FractalUClub,
-  type FractalUCourse,
-} from "@/data/fractalu";
+import { type FractalUClub, type FractalUCourse } from "@/data/fractalu";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
+import { useFractalUContent } from "@/content/FractalUContentProvider";
 
 const FINE_POINTER_PREVIEW_QUERY =
   "(min-width: 64rem) and (hover: hover) and (pointer: fine)";
@@ -551,17 +547,25 @@ function FractalUInformation() {
 }
 
 export function FractalUniversityPortal() {
+  const fractalU = useFractalUContent();
   const [activeCategory, setActiveCategory] = useState("All");
   const [hasFiltered, setHasFiltered] = useState(false);
   const usesLargeText = useLargeTextScale();
   const isFinePointer =
     useMediaQuery(FINE_POINTER_PREVIEW_QUERY) && !usesLargeText;
+  const categories = useMemo(
+    () => ["All", ...Array.from(new Set(fractalU.courses.map(({ category }) => category)))],
+    [fractalU.courses],
+  );
+  useEffect(() => {
+    if (!categories.includes(activeCategory)) setActiveCategory("All");
+  }, [activeCategory, categories]);
   const courses = useMemo(
     () =>
       activeCategory === "All"
-        ? FRACTALU_CATALOG.courses
-        : FRACTALU_CATALOG.courses.filter(({ category }) => category === activeCategory),
-    [activeCategory],
+        ? fractalU.courses
+        : fractalU.courses.filter(({ category }) => category === activeCategory),
+    [activeCategory, fractalU.courses],
   );
 
   return (
@@ -578,7 +582,7 @@ export function FractalUniversityPortal() {
             data-fractalu-reveal-delay="0.30"
           >
             <p className="text-label text-background/85" data-fractalu-semester-eyebrow>
-              {FRACTALU_CATALOG.semester}
+              {fractalU.semester}
             </p>
             <h2 id="fractalu-catalog-title" className="text-title mt-3 normal-case text-background">
               Course Catalog
@@ -608,7 +612,7 @@ export function FractalUniversityPortal() {
               aria-labelledby="fractalu-filter-label"
               className="fractalu-filter-row flex flex-wrap gap-1 overflow-visible pb-0 md:gap-2"
             >
-              {FRACTALU_CATEGORIES.map((category) => {
+              {categories.map((category) => {
                 const selected = category === activeCategory;
                 return (
                   <button
@@ -653,7 +657,7 @@ export function FractalUniversityPortal() {
             </h2>
           </FadeIn>
           <div className="mt-6 grid min-w-0 gap-4 md:grid-cols-2 md:gap-6" data-testid="fractalu-clubs">
-            {FRACTALU_CATALOG.clubs.map((club, index) => (
+            {fractalU.clubs.map((club, index) => (
               <RevealSlot
                 key={club.id}
                 kind="club"
