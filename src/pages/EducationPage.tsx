@@ -2,6 +2,7 @@ import type { CSSProperties, MouseEvent } from "react";
 import { useRef } from "react";
 import { EducationOutboundLink } from "@/components/education/EducationOutboundLink";
 import { OutboundLink } from "@/components/content/OutboundLink";
+import { EducationEventCallout } from "@/components/education/EducationEventCallout";
 import { FractalUniversityPortal } from "@/components/education/FractalUniversityPortal";
 import { FractalUContentProvider } from "@/content/FractalUContentProvider";
 import { EducationBannerSVG } from "@/components/house/EducationBannerSVG";
@@ -111,6 +112,8 @@ export function EducationPage() {
               </FadeIn>
             </div>
           </section>
+
+          <EducationEventCallout />
 
           <FractalUContentProvider>
             <FractalUniversityPortal />
