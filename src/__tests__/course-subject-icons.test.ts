@@ -3,8 +3,10 @@ import {
   BookOpen,
   Brain,
   Cpu,
+  Dices,
   Footprints,
   Hammer,
+  Landmark,
   Music2,
   PenLine,
   Shapes,
@@ -18,7 +20,9 @@ import { FRACTALU_CATALOG, getFractalUCategories } from "@/data/fractalu";
 
 describe("Education course subject icons", () => {
   it.each([
+    ["Civics", "landmark", Landmark],
     ["Craft", "hammer", Hammer],
+    ["Games", "dices", Dices],
     ["Literature", "book-open", BookOpen],
     ["Mind & Body", "brain", Brain],
     ["Movement", "footprints", Footprints],

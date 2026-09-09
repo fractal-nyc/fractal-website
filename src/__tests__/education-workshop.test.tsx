@@ -31,7 +31,7 @@ describe("Education Content Workshop", () => {
     expect(screen.getByLabelText("Semester")).toHaveValue("");
 
     fireEvent.click(screen.getByRole("button", { name: "Reset snapshot" }));
-    expect(screen.getByLabelText("Semester")).toHaveValue("Summer 2026");
+    expect(screen.getByLabelText("Semester")).toHaveValue("Fall 2026");
     expect(screen.getByRole("button", { name: "Copy normalized JSON" })).toBeEnabled();
   }, 30_000);
 

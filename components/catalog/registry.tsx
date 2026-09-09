@@ -140,7 +140,13 @@ const reference = (
 });
 
 const sampleCourse = FRACTALU_CATALOG.courses[0];
-const sampleClub = FRACTALU_CATALOG.clubs[0];
+// Demo fixture: the club specimen must exercise its "with details" variant, so it always
+// carries a details link even when the live catalog's first club has none.
+const sampleClub = {
+  ...FRACTALU_CATALOG.clubs[0],
+  detailsUrl: FRACTALU_CATALOG.clubs[0].detailsUrl ?? "https://www.fractalu.nyc/",
+  detailsLabel: FRACTALU_CATALOG.clubs[0].detailsLabel ?? "Club details",
+};
 const courseSubjectOptions = [
   ...getFractalUCategories(FRACTALU_CATALOG)
     .filter((category) => category !== "All")

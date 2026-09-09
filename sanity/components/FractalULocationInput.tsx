@@ -3,32 +3,26 @@ import { useEffect, useState } from "react";
 import { set, unset, type StringInputProps } from "sanity";
 
 export const FRACTALU_LOCATION_PRESETS = [
-  { title: "NoHo, Manhattan", value: "NoHo, Manhattan" },
-  {
-    title: "Brooklyn (address sent to accepted students)",
-    value: "Brooklyn (address sent to accepted students)",
-  },
-  {
-    title: "Fractal Campus, 111 Conselyea St",
-    value: "Fractal Campus, 111 Conselyea St",
-  },
-  { title: "Lower East Side", value: "Lower East Side" },
-  { title: "Outdoor parks, Manhattan", value: "Outdoor parks, Manhattan" },
-  { title: "Gowanus, Brooklyn", value: "Gowanus, Brooklyn" },
-  { title: "Bushwick", value: "Bushwick" },
   { title: "Merlin's Place, Bushwick", value: "Merlin's Place, Bushwick" },
-  { title: "Homebrew", value: "Homebrew" },
-  {
-    title: "Jersey City (remote for Aug sessions)",
-    value: "Jersey City (remote for Aug sessions)",
-  },
+  { title: "280 East Houston, Manhattan", value: "280 East Houston, Manhattan" },
+  { title: "Bushwick", value: "Bushwick" },
+  { title: "203 Harrison Place, Bushwick", value: "203 Harrison Place, Bushwick" },
   {
     title: "TBD (address emailed to enrolled students)",
     value: "TBD (address emailed to enrolled students)",
   },
+  { title: "Herbert Von King Park, Bed-Stuy", value: "Herbert Von King Park, Bed-Stuy" },
+  { title: "309 Elizabeth St, Manhattan", value: "309 Elizabeth St, Manhattan" },
   {
-    title: "Fractal Campus rooftop, 111 Conselyea St",
-    value: "Fractal Campus rooftop, 111 Conselyea St",
+    title: "Dance studio, Manhattan (announced closer to start)",
+    value: "Dance studio, Manhattan (announced closer to start)",
+  },
+  { title: "Lower East Side, Manhattan", value: "Lower East Side, Manhattan" },
+  { title: "Clinton Hill, Brooklyn", value: "Clinton Hill, Brooklyn" },
+  { title: "Fractal Campus, 111 Conselyea St", value: "Fractal Campus, 111 Conselyea St" },
+  {
+    title: "Fractal Campus Lounge, 111 Conselyea St",
+    value: "Fractal Campus Lounge, 111 Conselyea St",
   },
   { title: "Vital Williamsburg", value: "Vital Williamsburg" },
 ] as const;

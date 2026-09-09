@@ -1,233 +1,52 @@
 {
-  "semester": "Summer 2026",
+  "semester": "Fall 2026",
   "sourceProvenance": {
-    "url": "https://www.fractalu.nyc/",
-    "verifiedAt": "2026-08-25T21:24:12Z",
-    "lastModified": "Sat, 22 Aug 2026 14:48:29 GMT",
-    "etag": "\"2cc1fc19d0554d960a08ada91c6063a8\"",
-    "byteLength": 103678,
-    "sha256": "99194ce63e46c93f17763dbcddac0015b29a8fe70a2df812d55696b9f0c7b1d7"
+    "url": "mailto:fractalu@fractalnyc.com",
+    "verifiedAt": "2026-09-09T15:44:54Z",
+    "lastModified": "2026-09-09T15:44:54Z",
+    "etag": "fall-2026-authored",
+    "byteLength": 28060,
+    "sha256": "a92912a4c5d97be74ac76a1043291633408bb15ffbfb2a2f7045c42a03183ec9"
   },
   "courses": [
     {
-      "id": "lost-generation-close-reading",
-      "title": "The Lost Generation Close Reading",
-      "category": "Literature",
+      "id": "days-into-gold",
+      "title": "Days into Gold: Become Creatively Multilingual",
+      "category": "Craft",
       "instructors": [
         {
-          "name": "Elena Navarrete",
-          "bio": "Elena studied Comparative Literature and Information Science at Columbia University. For the past two years, she has been leading literary discussion groups. This will be her ninth group, following deep dives into works like East of Eden, Anna Karenina, One Hundred Years of Solitude, The House of Mirth, The Great Gatsby, and The Brothers Karamazov."
+          "name": "Ulysses Chuang",
+          "bio": "Ulysses Chuang is an artist, teacher, and lifelong journal keeper. He has studied printmaking in Paris and oil painting in Hong Kong, and his artwork has been exhibited and sold in Hong Kong, Taipei, and Paris. Days into Gold distills what he learned from teaching four Fractal U courses in creative practice: two terms of The Illustrated Journal, as well as Storytelling and Bardic Arts."
         }
       ],
-      "schedule": "Wednesdays, 7–8:30pm",
-      "dates": "Jun 17 – Jul 8",
-      "location": "NoHo, Manhattan",
-      "price": "$160 / $200",
-      "description": "In this series, we'll use the writers of the Lost Generation (Hemingway, Fitzgerald, Stein) as a master class in close reading. You'll learn to slow down on the page, notice what the prose is doing beneath the surface, and build the kind of literary attention that transforms how you read any book.",
-      "detailsUrl": "https://closereadingnyc.notion.site/The-Lost-Generation-Close-Reading-359c580377d680b0b8fefba14aaef8a0",
+      "schedule": "Thursdays, 6:30–9pm",
+      "dates": "Oct 1 – Nov 12",
+      "location": "Merlin's Place, Bushwick",
+      "price": "$180 – $650 sliding scale",
+      "description": "In Days into Gold, we'll learn to move fluently between writing, drawing, and painting as ways of recording and exploring our lives. Through prompts, timed co-creation, visual storytelling exercises, and a daily illustrated journal practice, we'll cultivate a creative habit that can bring greater depth and savor to the rest of our lives. No previous drawing experience is necessary.",
+      "detailsUrl": "https://ulyart.notion.site/Days-into-Gold-3cd29d498c838007b6f8df5d4ab4ff38",
       "detailsLabel": "Course details",
-      "applicationUrl": "https://docs.google.com/forms/d/e/1FAIpQLScN2WK-GnfwEyao0x_vv25yp0bbABa7j3d9z1wdfyjrV6VHvA/viewform",
+      "applicationUrl": "https://forms.gle/o7AX89h3Eoke7SqB8",
       "applicationLabel": "Apply"
     },
     {
-      "id": "the-odyssey-close-reading",
-      "title": "The Odyssey Close Reading",
-      "category": "Literature",
+      "id": "mission-driven-money",
+      "title": "Mission-Driven Money: A Practical Fundraising Workshop",
+      "category": "Civics",
       "instructors": [
         {
-          "name": "Elena Navarrete",
-          "bio": "Elena is the founder of Close Reading NYC, a literary community offering in-person reading groups and workshops in Manhattan. She holds a double major in Comparative Literature and Computer Science from Columbia University and has led close readings with Fractal for two years. She has guided readers through classics such as Moby-Dick, Middlemarch, The Brothers Karamazov, and Anna Karenina, among others."
-        }
-      ],
-      "schedule": "Mon 7–8:30pm + Wed 11am–12:30pm",
-      "dates": "Jul 6 – Aug 12",
-      "location": "NoHo, Manhattan",
-      "price": "$240 / $300",
-      "description": "This course will explore the art of deep engagement through the practice of close reading. Using The Odyssey as our guide, we will move deliberately through key episodes of the epic, returning to specific passages, tracing patterns, and asking what Homer reveals about topics such as wandering, homecoming, desire, restraint, and recognition. Each session includes guided close reading, structured discussion, and selected supplementary materials to deepen our understanding of the poem's historical context, oral tradition, and enduring philosophical force.",
-      "detailsUrl": "https://closereadingnyc.notion.site/The-Odyssey-Close-Reading-30bc580377d680b9a8b4d6bda6337dd3",
-      "detailsLabel": "Course details",
-      "applicationUrl": "https://docs.google.com/forms/d/e/1FAIpQLSf69oSW3jDeVtyGW_NGTkQNLfmU_A6hVe9i5m3vSIyeBjbfBA/viewform",
-      "applicationLabel": "Apply"
-    },
-    {
-      "id": "writing-as-a-quick-bite",
-      "title": "Writing as a Quick Bite: Intro to Flash Fiction",
-      "category": "Writing",
-      "instructors": [
-        {
-          "name": "Sara Cunningham",
-          "bio": "Sara earned her MFA in poetry from the University of Houston. Her writing appears or is forthcoming in several literary journals including Indiana Review, Washington Square Review, Dialogist, trampset, and others (read more at sarakaplancunningham.com). Full time, she is a high school teacher in Bed Stuy, and has taught first year writing at the University of Houston, as well as creative writing."
-        }
-      ],
-      "schedule": "Thursdays, 6–8pm",
-      "dates": "Jul 9 – Jul 30",
-      "location": "Brooklyn (address sent to accepted students)",
-      "price": "$170 – $350",
-      "description": "In this class, we'll be writing flash fiction. We will also be practicing how to see the world in a way that will carry over to your writing. In this class, you'll encounter: generative prompts, homework reading and writing assignments, discussions of writers' \"strategies,\" and new uses for those scraps of conversation you hear on the subway.",
-      "detailsUrl": "https://docs.google.com/document/d/1LhcWKmkrOCngAKJ3YqywS6Lgbs2ZvZ7IJEnfCVtDtCk/edit",
-      "detailsLabel": "Course details",
-      "applicationUrl": "https://docs.google.com/forms/d/e/1FAIpQLSfQbyr5tplCqwF4R8bgLFWHMnSBIZPdjXZ6dGTRof_Ej8un1g/viewform",
-      "applicationLabel": "Apply"
-    },
-    {
-      "id": "improv-writing-lab",
-      "title": "Improv Writing Lab",
-      "category": "Writing",
-      "instructors": [
-        {
-          "name": "Crystal Duan",
-          "bio": "Crystal Duan combines her background in fast-paced journalism (where she had to write 1,200+ words daily on deadline) with expertise in Jungian psychology to create a unique approach to writing unblocking. With bylines in the Washington Post, Minneapolis Star Tribune, and more, she understands both the craft and the psychology of effective writing. What sets Crystal's approach apart is her focus on the emotional and somatic aspects of writing - not just what you write, but how it feels to write it. Her coaching identifies specific patterns of self-criticism and helps you develop a more productive relationship with your creative self."
-        }
-      ],
-      "schedule": "Wednesdays, 6:30–8pm",
-      "dates": "Jul 29 – Sep 2",
-      "location": "Fractal Campus, 111 Conselyea St",
-      "price": "$175 – $500",
-      "description": "Lab to help writers overcome writer's block and develop spontaneity and authenticity through timed writing exercises and coaching.",
-      "detailsUrl": "https://docs.google.com/document/d/1OQ8BYnmxxIv-XkXx-qMYH9R1QDP7xEQDGumid9S6XsQ/edit",
-      "detailsLabel": "Course details",
-      "applicationUrl": "https://docs.google.com/forms/d/e/1FAIpQLSfcZWGwIFbNxM72Z6znuB8fg6AL06ZMAiPxyV_Y8pUlDzeYGA/viewform",
-      "applicationLabel": "Apply"
-    },
-    {
-      "id": "worldbuilding-for-storytellers",
-      "title": "Worldbuilding for Storytellers and Narrative Designers",
-      "category": "Writing",
-      "instructors": [
-        {
-          "name": "Sarah Guan",
-          "bio": "Sarah is an editor and publisher of award-winning speculative fiction. She studied history and literature at Stanford, and she thinks about worldbuilding through an interdisciplinary lens."
-        }
-      ],
-      "schedule": "Wednesdays, 6:30–8:30pm",
-      "dates": "Jul 15 – Aug 26",
-      "location": "Fractal Campus, 111 Conselyea St",
-      "price": "$250 – $500",
-      "description": "This interdisciplinary seminar explores how fictional worlds operate as structured models of society, drawing on speculative fiction, history, anthropology, and political theory. Students analyze how environments, institutions, culture, memory, and technology shape social order, while building a single evolving fictional world across the semester. The course culminates in a cohesive \"world dossier\" integrating these elements into a fully realized speculative society that can be used as a platform for creative projects.",
-      "detailsUrl": "https://docs.google.com/document/d/1kYPr0jSea7lCCHd7CawkH36A_JkkJxIyHthymQ-u6e8",
-      "detailsLabel": "Course details",
-      "applicationUrl": "https://docs.google.com/forms/d/e/1FAIpQLScKNp23_727J-oLSENRWdoU7PLNXCeKLckglV6ye9itu5Nt2g/viewform",
-      "applicationLabel": "Apply"
-    },
-    {
-      "id": "intuitive-movement",
-      "title": "Intuitive Movement",
-      "category": "Movement",
-      "instructors": [
-        {
-          "name": "Clara Wiest",
-          "bio": "Clara Wiest is a swiss artist, based in NY for almost 10 years. They are a stage, movement and intimacy director as well as a performance artist. Their whole life has been movement focused; They grew up going to circus school for 12 years, ballet, capoeira, contemporary and modern dance, they have extensive training in Feldenkrais, Alexander Technique, Clown and Mime, Lucid body, Qi Gong, somatic practices, Hypnotherapy and Energy Healing, as well as trauma-informed body work."
-        }
-      ],
-      "schedule": "Wednesdays, 6–7:15pm",
-      "dates": "Jun 17 – Aug 19",
-      "location": "Lower East Side",
-      "price": "$250 – $750",
-      "description": "Movement is a tool for us to feel more connected, aligned and alive. In this course you will be given the space and tools to start creating and/or deepening your relationship to your body. The goal of this course is that you leave feeling more in tune with yourself, find a sense of play, that you leave with tools to keep deepening in your relationship with yourself on your own.",
-      "detailsUrl": "https://docs.google.com/document/d/1l6wRG6skgLChD5SOGCk0WvixUIs2ekMlfQQzRcmqn0s/edit",
-      "detailsLabel": "Course details",
-      "applicationUrl": "https://forms.gle/RQYnu3rLsjvmC6kV7",
-      "applicationLabel": "Apply",
-      "videoUrl": "https://drive.google.com/file/d/1CRyiyfLxGQjWpEs4HW4q3z6ym6cZ1vfI/view?usp=sharing"
-    },
-    {
-      "id": "parkour-for-everyone",
-      "title": "Parkour for Everyone",
-      "category": "Movement",
-      "instructors": [
-        {
-          "name": "Jianing Zhao",
-          "bio": "Jianing Zhao is an interdisciplinary movement and theater artist with backgrounds in contact improv, contemporary dance, dabke, ballroom, Kpop, pole and aerial dance, hair hanging, martial arts, parkour, and freestyle skiing. Her movement practice explores the multiplicity and dynamism of connective points and dimensions between one's own body and other physical and sociocultural bodies and spaces. She has been practicing parkour since 2022 and sees it as a form of movement research that bridges physical exercise, creative exploration, and embodied engagement with public space."
+          "name": "Regan Ferrell",
+          "bio": "I've worked in the DC think tank world for the last 5 years in various fundraising roles. During this time, I've helped organizations raise over $4.5 million through diverse fundraising strategies. As Development and Operations Manager at Old Pro Productions, I raised $250,000 in one single month during the pandemic to provide emergency support for sex workers facing financial hardship."
         }
       ],
       "schedule": "Mondays, 6:30–8:30pm",
-      "dates": "Jul 6 – Aug 17",
-      "location": "Outdoor parks, Manhattan",
-      "price": "$230 – $450",
-      "description": "This course invites students of all backgrounds to explore efficient and expressive ways of moving through urban space that feel playful and accessible in their own bodies. Through guided individual and group exercises, we'll interact with everyday features like walls, railings, stairs, benches, and trees, and see familiar parts of this city in a fresh light.",
-      "detailsUrl": "https://docs.google.com/document/d/14ey-TRq2IjIu3xG0DS5_HcjHWt7Fc52ohM5JNPb6xrQ/edit",
+      "dates": "Oct 5 – Oct 26",
+      "location": "280 East Houston, Manhattan",
+      "price": "$300 – $500 (scholarship available)",
+      "description": "This hands-on course will equip you with practical skills to fund your social cause, advocacy organization, or policy project. If you've always wondered how to get people excited about and motivated to build a project from the ground up with financial backing, come learn how to do that! We will discover the type of donors that you should pursue, and how you can get them bought into your vision. Over four weeks, you'll learn to: define the right funding sources for your project, develop compelling pitches and proposals, build and leverage your network effectively, and ask for money with confidence.",
+      "detailsUrl": "https://docs.google.com/document/d/1sscRpBjz3VW521UeOySd8H2GgYi-u4PbSW_TDTLDww0/edit",
       "detailsLabel": "Course details",
-      "applicationUrl": "https://docs.google.com/forms/d/e/1FAIpQLSfl0LoI9w44Xsk4SU9i91zY6bG9u0Bx1oO7c8mSlMs3Vjx9PQ/viewform",
-      "applicationLabel": "Apply",
-      "videoUrl": "https://drive.google.com/file/d/1iiL4iaGHyG_PMkVA9iI2-avCarbYHcWM/view?usp=drivesdk"
-    },
-    {
-      "id": "butoh-into-the-depth",
-      "title": "Butoh: Into the Depth",
-      "category": "Movement",
-      "instructors": [
-        {
-          "name": "Vangeline",
-          "bio": "I am the director of the New York Butoh Institute with 25 years of experience teaching and performing butoh. www.vangeline.com"
-        }
-      ],
-      "schedule": "Wednesdays, 6–9pm",
-      "dates": "Jul 8 – Jul 31",
-      "location": "Gowanus, Brooklyn",
-      "price": "$150 – $500",
-      "description": "Learn to meditate through movement, tapping into subtle body systems and the unconscious. Butoh, the dance of darkness, is a transformative practice from Japan being taught in Brooklyn by renowned teacher Vangeline. Open to dancers and non-dancers alike.",
-      "applicationUrl": "https://www.vangeline.com/calendar",
-      "applicationLabel": "Apply"
-    },
-    {
-      "id": "applied-taijiquan",
-      "title": "Applied Taijiquan",
-      "category": "Movement",
-      "instructors": [
-        {
-          "name": "Michael Weston",
-          "bio": "I've been teaching self-defense community workshops with a wide range of students over the past 7 years, refining my ability to convey movement concepts to people of all skill levels. In my 20 years practicing martial arts, including Taijiquan, Baguazhang and Xingyiquan, my focus has been on developing all of the benefits Internal Martial Arts (IMAs) have to offer, from the meditative and therapeutic to the more active body skills."
-        }
-      ],
-      "schedule": "Sundays, 6–8pm",
-      "dates": "Jul 5 – Aug 30",
-      "location": "Fractal Campus, 111 Conselyea St",
-      "price": "$20 / session",
-      "description": "Delving into the concepts and practices needed to build practical skill in the martial art of Taijiquan, this class focuses on learning in layers to examine the form's nuanced meaning, and training ways to bridge that meaning into detailed body awareness, dynamic problem-solving, and powerful movement literacy.",
-      "detailsUrl": "https://docs.google.com/document/d/1nSug4vsh7TfT69P8cqDZFIMAisb4c8nTb0izQeFY4Us/edit",
-      "detailsLabel": "Course details",
-      "applicationUrl": "https://forms.gle/keaRwaMGc83FhGrY6",
-      "applicationLabel": "Apply"
-    },
-    {
-      "id": "dhamma-dance-club",
-      "title": "Dhamma Dance Club",
-      "category": "Movement",
-      "instructors": [
-        {
-          "name": "Michael Tong",
-          "bio": "Michael is an avid facilitator of authentic relating, acucircles, and authentic movement containers, and is curious how they integrate into the moment-to-moment. Most nights in the week, you may see him at the club."
-        }
-      ],
-      "schedule": "Tuesdays 7–9pm + Thursdays 10pm",
-      "dates": "6 weeks open RSVP, then 6 weeks closed cohort",
-      "location": "Bushwick",
-      "price": "$26/session",
-      "description": "Attendees will deepen easeful concentration, sensory clarity, and equanimity and integrate them in social contexts. They will also build confidence to move authentically in and out of the club while exploring nightlife in NYC.",
-      "detailsUrl": "https://michael.gift/dhammadanceclub/",
-      "detailsLabel": "Course details",
-      "applicationUrl": "https://forms.gle/6jZrcd1Zx93H92yr6",
-      "applicationLabel": "Apply",
-      "videoUrl": "https://drive.google.com/file/d/1qgPqJhNpJBD4wR5nIHx_anoxcKFl5xdw/view?usp=sharing"
-    },
-    {
-      "id": "hidden-power-of-groove",
-      "title": "The Hidden Power of Groove: Intro to Street Dance",
-      "category": "Movement",
-      "instructors": [
-        {
-          "name": "Jessica Wang",
-          "bio": "I'm a dancer, dance teacher and former software engineer with training in street & club dance styles including hip hop, house, vogue femme, waacking, kpop, choreography, and freestyle. Having started dance as an adult who often felt confused and overwhelmed in traditional beginner classes, I've become passionate about making movement more accessible, intuitive, and enjoyable for non-dancers. I currently teach beginner-focused dance classes and design learning experiences that help people grow confidence, expression, rhythm, and freedom through movement."
-        }
-      ],
-      "schedule": "Tuesdays, 7–8:30pm",
-      "dates": "Jul 14 – Aug 25",
-      "location": "Merlin's Place, Bushwick",
-      "price": "$200 – $500",
-      "description": "Imagine hearing your favorite song come on and feeling excited to jump in instead of wondering what to do. Drawing from street dance styles born on dance floors and at parties (Hip Hop, House, Waacking, and Vogue), this structured beginner class teaches the foundational skills that make dance feel more natural, expressive, and fun. No pressure to \"get it right.\" Just a clear path to building confidence in your body and discovering your own style. Whether you're an absolute beginner, a dancer exploring a new style, or someone simply looking to feel more at home in your body, this class is for you.",
-      "detailsUrl": "https://www.notion.so/Intro-to-Street-Dance-af8185726d808271bb9981a748352291",
-      "detailsLabel": "Course details",
-      "applicationUrl": "https://jwangdance.fillout.com/intro-street-dance",
+      "applicationUrl": "https://forms.gle/dJgmg5HwaNwhT6qQ8",
       "applicationLabel": "Apply"
     },
     {
@@ -237,101 +56,41 @@
       "instructors": [
         {
           "name": "Christian Mortensen",
-          "bio": "Hi, my name is Christian and I have loved drumming for as long as I can remember! I have studied and performed in many different styles over the years, including symphonic percussion, marching band, drum set, West African, Afro Latin, Brazilian, and Celtic. Most recently I have had the opportunity to perform with Mambembe Brazilian drum group and The Empire Marching Elite marching band at parades, events, Brooklyn Cyclones games, and even at Radio City Music Hall! I believe that rhythm is something universally human, as natural as our heartbeat. Something that each of us has within us, ready to unlock and tap into. I enjoy teaching others the art of drumming, and I am looking forward to sharing my knowledge and experience with you."
+          "bio": "Hi, my name is Christian and I have loved drumming for as long as I can remember! I have studied and performed in many different styles over the years, including symphonic percussion, marching band, drum set, West African, Afro Latin, Brazilian, and Celtic. Most recently I have had the opportunity to perform with Mambembe Brazilian drum group and The Empire Marching Elite marching band at parades, events, Brooklyn Cyclones games, and even at Radio City Music Hall!"
         }
       ],
       "schedule": "Mondays, 6–7:30pm",
-      "dates": "Jul 13 – Aug 24",
+      "dates": "Oct 5 – Nov 16",
       "location": "Merlin's Place, Bushwick",
-      "price": "$200 – $500",
-      "description": "Do you want a deeper understanding of rhythm that makes singing, dancing, drumming, and even walking more fun, groovy, and natural? In this 7 week rhythmic journey we will explore drumming and percussion in ways that can be applied anywhere – your body, voice, the kitchen table, drums, shakers, pots and pans… your imagination is the limit!",
+      "price": "$300 – $700 sliding scale",
+      "description": "Do you want a deeper understanding of rhythm that makes singing, dancing, drumming, and even walking more fun, groovy, and natural? I have just the course for you! In this 7 week rhythmic journey we will explore drumming and percussion in ways that can be applied anywhere – your body, voice, the kitchen table, drums, shakers, pots and pans… your imagination is the limit!",
       "detailsUrl": "https://theactualizedalien.com/drum-circle-101",
       "detailsLabel": "Course details",
-      "applicationUrl": "https://forms.gle/gQVcDT4yBRLAiVtp6",
+      "applicationUrl": "https://forms.gle/8gjQordczWZUoxuR8",
       "applicationLabel": "Apply"
     },
     {
-      "id": "structure-of-sound",
-      "title": "The Structure of Sound: Mathematics of Music",
-      "category": "Music",
+      "id": "dating-dojo",
+      "title": "Dating Dojo",
+      "category": "Mind & Body",
       "instructors": [
         {
-          "name": "Surya Raghavendran",
-          "bio": "Surya Raghavendran is a researcher in mathematical physics and a Gibbs Assistant Professor in the math department at Yale, with broad interests in how mathematics shapes the world around us. The mathematics of music is a favorite instance, and this course is his attempt to share it."
-        }
-      ],
-      "schedule": "Wednesdays, 6:30–8:30pm",
-      "dates": "Jul 8 – Aug 12",
-      "location": "Homebrew",
-      "price": "$250 – $500",
-      "description": "Much of what you're taught about music looks arbitrary - twelve notes to an octave, some intervals consonant and others not, every instrument tuned slightly wrong - but almost none of it is. Over five weeks we work out the mathematics behind it, from how the ear hears a pure tone to the symmetry of the chromatic scale, picking up Fourier analysis, a little number theory, and some group theory on the way.",
-      "detailsUrl": "https://www.dropbox.com/scl/fi/zm3va45r60gb3d70z8gx7/syllabus.pdf?rlkey=w1aswuiy1bucwwzblpknwmgsn&dl=0",
-      "detailsLabel": "Course details",
-      "applicationUrl": "https://docs.google.com/forms/d/e/1FAIpQLSd-zueqU1w3IyN0pRjAJ5YKb6_2fFl2jBXI7hUE5lL3hRDnPg/viewform",
-      "applicationLabel": "Apply"
-    },
-    {
-      "id": "build-a-poker-ai-bot",
-      "title": "Build a Poker AI Bot",
-      "category": "Technology",
-      "instructors": [
-        {
-          "name": "Arnav Sood",
-          "bio": "I'm finishing up my Economics PhD at Carnegie Mellon, and a Data Science/Modeling Intern at Revelio Labs. This class is based on the Poker AI Challenge at CMU, in which I participated."
-        }
-      ],
-      "schedule": "Sundays, 2–4pm",
-      "dates": "Jul 5 – Aug 9",
-      "location": "Jersey City (remote for Aug sessions)",
-      "price": "$140 – $320",
-      "description": "Over 6 weeks, we're going to build a bot to play a variant of poker. By the end, you'll have learned the underlying theory and have a functioning bot. After the class I'll test the bots against each other and give a prize to the top bots.",
-      "detailsUrl": "https://github.com/arnavs/FractalU-Poker",
-      "detailsLabel": "Course details",
-      "applicationUrl": "https://forms.gle/saMpGXnQSkuWNqjG7",
-      "applicationLabel": "Apply"
-    },
-    {
-      "id": "fractal-accelerator",
-      "title": "Fractal Accelerator",
-      "category": "Technology",
-      "instructors": [
-        {
-          "name": "Andrew Rose",
-          "bio": "Andrew Rose, Founder of Fractal, Fractal University, and Fractal Bootcamp — Andrew has trained 100 engineers in the last 2 years, following his career as a software engineer and educator."
+          "name": "Samson Zhilyaev",
+          "bio": "I arrived into the maelstrom that is the NYC dating scene with nothing but the shirt on my back and a dream in 2021. That dream was to have meaningful and fulfilling relationships! From simple—and perhaps initially awkward—origins I built a vibrant and spiritually fulfilling dating life that continues to flourish. This embodied and hard fought knowledge is paired with my training in group facilitation and chaplaincy to offer thoughtful support to those interested in transforming their dating life."
         },
         {
-          "name": "Liam Duffy",
-          "bio": "Liam Duffy, senior software engineer at Seso Inc. — Liam has been a senior software engineer for over 5 years and has been engineering for over a decade. At Seso, he is leading the adoption of AI engineering practices, and now he's bringing that real-world expertise to Fractal Accelerator students."
+          "name": "Joanna Koren",
+          "bio": "I've come to realize that the most important relationship to build is with myself. I've spent years exploring my own internal wiring—diving into attachment theory and early childhood conditioning—to figure out why my system panics at the slightest hint of a real connection. I'm here to offer an honest, pressure-free space for exploring those internal reactions—the anxiety, the urge to retreat, and what it might take to navigate them."
         }
       ],
-      "schedule": "Saturdays, 10am–1pm",
-      "dates": "Jul 11 – Aug 15",
-      "location": "Fractal Campus, 111 Conselyea St",
-      "price": "$2,500",
-      "description": "The inventors of computers imagined machines that could extend thought, creativity, and agency — \"instruments whose music is ideas.\" That hasn't quite happened yet, but it's starting to. In this 6-week Saturday course, you'll learn to make your computer truly yours: building custom tools, automating busywork, connecting AI agents to your apps and data, and shipping real software starting from nothing but a plain-language description of what you want. No programming experience required. You'll leave with a personal AI agent that knows who you are, runs in the background, and keeps working when you walk away.",
-      "detailsUrl": "https://www.fractalaccelerator.com/syllabus",
+      "schedule": "Tuesdays, 7–8:30pm",
+      "dates": "Oct 6 – Nov 10",
+      "location": "Merlin's Place, Bushwick",
+      "price": "$200 – $700 sliding scale",
+      "description": "Through the practice of embodied relational exercises, large and small group discussions, and 1-on-1 coaching participants will be able to identify key hurdles in their dating life to become more confident and competent in their romantic pursuits. Leading to more fulfilling and meaningful relationships.",
+      "detailsUrl": "https://app.notion.com/p/Dating-Dojo-3ca8cf824a118006ac6bf31fe3ffef85",
       "detailsLabel": "Course details",
-      "applicationUrl": "https://cal.com/shanthis/intro",
-      "applicationLabel": "Schedule a call →"
-    },
-    {
-      "id": "basics-of-computational-biology",
-      "title": "Basics of Computational Biology",
-      "category": "Technology",
-      "instructors": [
-        {
-          "name": "Mike Saint-Antoine",
-          "bio": "I've been working in the bioinformatics field for about 9 years. I currently work at a biotech startup, and before that I worked in academia and completed a PhD in this field. I've also taught the class 6 times already and I think people have mostly enjoyed it."
-        }
-      ],
-      "schedule": "Sat + Sun, 10am–5pm",
-      "dates": "Jul 25 – 26 (weekend seminar)",
-      "location": "TBD (address emailed to enrolled students)",
-      "price": "$20",
-      "description": "This course is a basic introduction to computational biology / bioinformatics, meant for programmers who already know a bit of Python. No prior biology knowledge required!",
-      "detailsUrl": "https://docs.google.com/document/d/1CxEezdWtVl1zuJlvBKT14XRWtNPmrs2yprKxvSWF0b8/edit",
-      "detailsLabel": "Course details",
-      "applicationUrl": "https://docs.google.com/forms/d/1nytUn2sf6J0LOi5LeeLsL4bkDH996xFCyYf6ATPWtUo/viewform",
+      "applicationUrl": "https://forms.gle/rcNY5CppHUSzmd9KA",
       "applicationLabel": "Apply"
     },
     {
@@ -349,13 +108,13 @@
         }
       ],
       "schedule": "Tuesdays, 6:30–8:30pm",
-      "dates": "Jun 30 – Aug 18",
+      "dates": "Oct 6 – Nov 17 (no class Nov 3)",
       "location": "Bushwick",
-      "price": "$300 – $550",
-      "description": "In 6 weeks, learn how to build a 3D model and design by making a lamp. No experience necessary, this will be an introductory course. We will discuss 3D modeling best practices for 3D printing, as well as making methods such as sewing and soldering.",
-      "detailsUrl": "https://docs.google.com/document/d/1sVdWCfVD2uBgoipPrgrhzq814RJ7rBofzoUDJ5ye_ec/edit",
+      "price": "$300 – $550 sliding scale",
+      "description": "In 6 weeks, learn how to 3D model and design by making a lamp. No experience necessary, this will be an introductory course. We will discuss 3D modeling best practices for 3D printing, as well as making methods.",
+      "detailsUrl": "https://docs.google.com/document/d/e/2PACX-1vQ5nuiUOxb_XBlx6DBHjWo81eZGVW7UuO4-ihY1bXOI9YFZ0aOasZsye_ht0mmw3BGxb7VL8iFqQJUz/pub",
       "detailsLabel": "Course details",
-      "applicationUrl": "https://docs.google.com/forms/d/e/1FAIpQLSfNW2Du4L1RWNC_4QTeG69E23p1AgKFvgIPD1gANqvvaDpm5A/viewform",
+      "applicationUrl": "https://docs.google.com/forms/d/e/1FAIpQLSeQpcP6p0NVs_llkdYSE_1dOyQTGOPwz3hEJMFDx6tWkrQIEA/viewform",
       "applicationLabel": "Apply"
     },
     {
@@ -372,89 +131,262 @@
           "bio": "Julianne Lefelhocz is a multidisciplinary creative technologist and designer merging fashion, design, math, and technology. With over 10 years of experience 3D modeling, two degrees in Computer Science and Footwear and Accessories Design, she is a teacher at the Brooklyn Shoe Space for 3D modeling footwear and a software engineer building CAD tools for jewelry design. She leverages tools such as 3D printing, laser cutting, electronics, kinetics and parametric code to create unique designs for accessories, home goods and fashion. Inspired by the natural world and the mathematical formulas that underpin it, her work often reflects themes of recursion, geometry, and dichotomy."
         }
       ],
-      "schedule": "Sunday, 10:30am–5:30pm",
-      "dates": "Jul 12 (one day)",
-      "location": "Bushwick",
-      "price": "$250 – $350",
-      "description": "Make your own 3D printed planter and become an emerging 3D modeler from no previous experience!",
+      "schedule": "Saturday, 10:30am–5:30pm (one day)",
+      "dates": "Oct 3",
+      "location": "203 Harrison Place, Bushwick",
+      "price": "$250 – $350 sliding scale",
+      "description": "Become an emerging 3D modeler from no previous experience and make your own 3D printed planter!",
       "detailsUrl": "https://docs.google.com/document/d/1maPBwQ2e0vulXgrJcj_fWGUVG5Yo0MXovCQax1B8yPQ/edit",
       "detailsLabel": "Course details",
-      "applicationUrl": "https://docs.google.com/forms/d/e/1FAIpQLSd3_tVBoARnaoVxY1a-g2DIx3fIVBFNrtsTRjUpKSiqAy6Zog/viewform",
+      "applicationUrl": "https://forms.gle/ngokdQF6eEUrBkJ67",
       "applicationLabel": "Apply"
     },
     {
-      "id": "urban-gardening-practicum",
-      "title": "Urban Gardening Practicum",
-      "category": "Nature",
+      "id": "sketchbook-basics",
+      "title": "Sketchbook Basics: How To Start (and Keep) A Sketchbook Practice",
+      "category": "Craft",
       "instructors": [
         {
-          "name": "James Hunt",
-          "bio": "James Hunt has worked to develop and sell agtech software, helped create companies that store carbon in grasslands and forests, and moonlights as a guerrilla gardener around New York City."
+          "name": "Layla Al Ammari",
+          "bio": "Layla Al Ammari (@laylalammari) is an illustrator and artist currently making and learning in NYC. From Bahrain, she is interested in interior and exterior places, and the connection between self and public life. She started with urban sketching, and collage and public life is a big part of her interests and practice. She is currently pursuing her Masters of Fine Arts in Studio Art at Pratt Institute. Guest lecturer Montaysia Yuneek (@byuneek) is an artist and children's book illustrator interested in African American folklore and imaginative space-making. She received her Bachelor of Fine Arts in painting with a minor in African American Studies from the University of Nevada, Las Vegas in 2025, and is currently pursuing her Masters of Fine Arts in Studio Art at Pratt Institute."
         }
       ],
-      "schedule": "Sundays, 4–6:30pm",
-      "dates": "Jul 19 – Aug 30",
-      "location": "Fractal Campus rooftop, 111 Conselyea St",
-      "price": "$40 – $199",
-      "description": "Learn from a regenerative agriculture expert how to think about space, soil, sprouting, and planting in the unique environment Brooklyn affords us. Every student will have the opportunity to start their own seeds from a wide selection and take home a customized mini urban garden for continued practice.",
-      "detailsUrl": "https://docs.google.com/document/d/1SE6ddHSI7yEqncJsUl7XAY4Mwj1rP6V2LV0toHpKWd8/edit",
+      "schedule": "Saturdays, 1–4:30pm",
+      "dates": "Oct 3 – Nov 14 (no class Oct 31 or Nov 7)",
+      "location": "TBD (address emailed to enrolled students)",
+      "price": "$275 – $500 sliding scale",
+      "description": "Sketchbook Basics is a course for anyone interested in starting to engage more with the visual world around them. Part sketchbook, part journal, and part scrapbook, this course carves a space for you to be introduced to different ways of documenting your world, led by two artists. This course is as much about how to draw as it is how to see — what interests you in the world around you?",
+      "detailsUrl": "https://docs.google.com/document/d/1oOG7EXO1ZLZg3q8RN1MhQVYNE0JjHQljKA-lTqxPq7w/edit",
       "detailsLabel": "Course details",
-      "applicationUrl": "https://docs.google.com/forms/d/e/1FAIpQLSebF4PhUSaUpv4PP-jRw2O_6_QuD4o_zcBChQiJU5lZ8gmEqQ/viewform",
+      "applicationUrl": "https://docs.google.com/forms/d/e/1FAIpQLSeLdxhB5ROMnRXGypxD-VLYZf36QrqQOTmR8GtneSObUvARNg/viewform",
       "applicationLabel": "Apply"
     },
     {
-      "id": "unconscious-mind-journey-group",
-      "title": "Unconscious Mind Journey Group",
+      "id": "applied-taijiquan",
+      "title": "Applied Taijiquan",
+      "category": "Movement",
+      "instructors": [
+        {
+          "name": "Michael Weston",
+          "bio": "In my 20 years practicing martial arts, including 14 studying Taijiquan, Baguazhang and Xingyiquan, my focus has been on developing all of the benefits Internal Martial Arts (IMAs) have to offer, from the meditative and therapeutic to the more active body skills. This focused pursuit is what I aim to convey through my classes."
+        }
+      ],
+      "schedule": "Sundays, 6–8pm",
+      "dates": "Oct 4 – Nov 1",
+      "location": "Herbert Von King Park, Bed-Stuy",
+      "price": "$20 per class (sliding scale available)",
+      "description": "This class delves into the concepts and practices needed to build practical skill in the martial art of Taijiquan (or Tai Chi Chuan). It focuses on learning in layers to examine the form's nuanced meaning, and training ways to bridge that meaning into detailed body awareness, dynamic problem-solving, and powerful movement literacy.",
+      "detailsUrl": "https://docs.google.com/document/d/1nSug4vsh7TfT69P8cqDZFIMAisb4c8nTb0izQeFY4Us/edit",
+      "detailsLabel": "Course details",
+      "applicationUrl": "https://forms.gle/keaRwaMGc83FhGrY6",
+      "applicationLabel": "Apply"
+    },
+    {
+      "id": "social-climbers",
+      "title": "Social Climbers: A Close Reading Series",
+      "category": "Literature",
+      "instructors": [
+        {
+          "name": "Elena Navarrete",
+          "bio": "Elena studied Comparative Literature and Information Science at Columbia University. For the past two years, she has been leading literary discussion groups in NYC, including a previous group on Anna Karenina. This is her tenth group, following deep dives into East of Eden, One Hundred Years of Solitude, The House of Mirth, The Odyssey, The Brothers Karamazov, and others. She is passionate about incorporating literature into everyday life and building practices that are thoughtful, creative, and alive."
+        },
+        {
+          "name": "Stephen Thomas",
+          "bio": "Stephen Thomas is the author of the story collection The Jokes (2016). He grew up in Canada and has lived all around the world. He co-created Double Double Land, a performance and art space in Kensington Market. He did his MFA at the University of Alabama, taught literature and creative writing there and later at George Brown College, and now lives in New York, where he writes about AI for NYU's Center for Data Science. His fiction has appeared in Joyland, Hobart, Wigleaf, The Puritan, DIAGRAM, and Canadian Art, and his work has been supported by the Edward F. Albee Foundation, the Truman Capote Scholarship Fund, and the Canada Council for the Arts."
+        }
+      ],
+      "schedule": "Wednesdays, 7–8:30pm",
+      "dates": "Oct 14 – Nov 18",
+      "location": "309 Elizabeth St, Manhattan",
+      "price": "$240 / $300",
+      "description": "Over six sessions you will read two novels of social ambition side by side: Balzac's Père Goriot (1835) and Naomi Kanakia's The Default World (2024), following the same figure across two centuries, a poor and clever outsider trying to break into a glittering world. Each week pairs heads-down close reading with discussion, so you leave able to see how a sentence is built, how a scene builds pressure, and what the two books reveal about class, desire, and what it costs to get in.",
+      "detailsUrl": "https://app.notion.com/p/closereadingnyc/Social-Climbers-A-Close-Reading-Series-3d0c580377d6801ba833ff5053aeea13",
+      "detailsLabel": "Course details",
+      "applicationUrl": "https://docs.google.com/forms/d/e/1FAIpQLSfeoDPEsdK0HSlUm4MzaMlkHkdMDtNpfJPYbecSy8ant5cMMg/viewform",
+      "applicationLabel": "Apply"
+    },
+    {
+      "id": "hidden-power-of-groove",
+      "title": "The Hidden Power of Groove: an Intro to Street Dance",
+      "category": "Movement",
+      "instructors": [
+        {
+          "name": "Jessica Wang",
+          "bio": "Jess Wang is a dancer, movement educator, and former software engineer interested in the relationship between movement, rhythm, embodiment, and self-expression. Drawing from street/club dance styles & choreography including hip hop, house, vogue, waacking, freestyle & kpop, her work explores how expanding one's movement vocabulary can create greater freedom, confidence, connection, and aliveness in everyday life."
+        }
+      ],
+      "schedule": "Wednesdays, 7:30–9pm",
+      "dates": "Oct 14 – Dec 2 (no class Nov 25)",
+      "location": "Dance studio, Manhattan (announced closer to start)",
+      "price": "$250 – $500 sliding scale",
+      "description": "Imagine hearing your favorite song come on and feeling excited to jump in instead of wondering what to do. Drawing from street dance styles born on dance floors and at parties (Hip Hop, House, Waacking, and Vogue), this structured beginner class teaches the foundational skills that make dance feel more natural, expressive, and fun. No pressure to \"get it right.\" Just a clear path to building confidence in your body and discovering your own style. Whether you're an absolute beginner, a dancer exploring a new style, or someone simply looking to feel more at home in your body, this class is for you.",
+      "detailsUrl": "https://app.notion.com/p/The-Hidden-Power-of-Groove-an-Intro-to-Street-Dance-af8185726d808271bb9981a748352291",
+      "detailsLabel": "Course details",
+      "applicationUrl": "https://jwangdance.fillout.com/intro-street-dance",
+      "applicationLabel": "Apply"
+    },
+    {
+      "id": "intuitive-movement-foundations",
+      "title": "Intuitive Movement Foundations",
+      "category": "Movement",
+      "instructors": [
+        {
+          "name": "Clara Wiest",
+          "bio": "Clara Wiest is a Swiss artist, based in NY for 11 years. They are a stage, movement and intimacy director as well as a performance artist. Their whole life has been movement focused; they grew up going to circus school for 12 years, ballet, capoeira, contemporary and modern dance, and they have extensive training in Feldenkrais, Alexander Technique, Clown and Mime, Lucid Body, Qi Gong, somatic practices, hypnotherapy and energy healing, as well as trauma-informed body work."
+        }
+      ],
+      "schedule": "Wednesdays, 6–7:15pm",
+      "dates": "Sept 23 – Nov 11",
+      "location": "Lower East Side, Manhattan",
+      "price": "$25 – $75 per class, sliding scale",
+      "description": "In this course you will be given the space and tools to start creating and/or deepening your relationship to your body. Through somatic exercises, experimental physical theater exercises, Feldenkrais, Alexander technique, Qi Gong practices, parasympathetic nervous system regulation, and breathing, you will learn to take care of your body intuitively. Writing is a part of this practice as well. The goal of this course is that you leave feeling more in tune with yourself, find a sense of play, and leave with tools to keep deepening your relationship with yourself on your own.",
+      "detailsUrl": "https://docs.google.com/document/d/1l6wRG6skgLChD5SOGCk0WvixUIs2ekMlfQQzRcmqn0s/edit",
+      "detailsLabel": "Course details",
+      "applicationUrl": "https://forms.gle/CJfvywvqy7cJz6LM8",
+      "applicationLabel": "Apply"
+    },
+    {
+      "id": "exploring-bodywork",
+      "title": "Exploring Bodywork",
       "category": "Mind & Body",
       "instructors": [
         {
-          "name": "Christian Mortensen",
-          "bio": "Christian's mission is to make the world a better place by helping people reach their true potential – people who feel good in their mind and body, make healthy decisions, form strong secure relationships, create positive change in their communities, and make their dreams reality. He specializes in breakthrough coaching with individuals and groups using cutting-edge symbolic and metaphorical landscape methods. Christian is credentialed with the International Coaching Federation, the Hypnosis Training Academy, Lumia Coaching, and the Wim Hof Method Academy."
+          "name": "Ulysses Chuang",
+          "bio": "Ulysses is a certified teacher of the Alexander Technique (ETAPP, Paris, 2014) and has taught it to private students, at ETAPP, in workshops for singers, and in semester-long courses at Fractal University. His musical background includes over a decade of chamber music study with Stéphane Leclerc, a student of Sergiu Celibidache's, as well as voice training with Marc Mauillon, Germana Giannini, and Marine Fribourg. In movement, he has studied Taichi with Aijun Zhang and Yves Blanc, and Kinomichi with Takeharu Noro."
+        }
+      ],
+      "schedule": "Wednesdays, 7–9pm",
+      "dates": "Oct 7 – Dec 2 (no class Nov 25)",
+      "location": "Merlin's Place, Bushwick",
+      "price": "$200 – $700 sliding scale",
+      "description": "Learn to give a session of bodywork to a friend or family member. Taught by Ulysses Chuang in collaboration with Samson Zhilyaev. The optional graduation party takes place in a private Bushwick sauna.",
+      "detailsUrl": "https://app.notion.com/p/Exploring-Bodywork-2da8cf824a1181348011e3cbeaed2840",
+      "detailsLabel": "Course details",
+      "applicationUrl": "https://forms.gle/1Bahb4qfYjSH4Dzq7",
+      "applicationLabel": "Apply"
+    },
+    {
+      "id": "relational-repair",
+      "title": "Relational Repair",
+      "category": "Mind & Body",
+      "instructors": [
+        {
+          "name": "Kez Knopp",
+          "bio": "Kez is a trained intimacy coach, focusing on somatic practices and alternative relationships. They have created and facilitated virtual and in-person workshops in New York, San Francisco, and Black Rock City, guiding participants toward honest, embodied ways of relating. By day, Kez works in corporate fintech sales; they understand what it takes to stay grounded and connected when life pulls you toward performance and productivity."
+        }
+      ],
+      "schedule": "Tuesdays, 7–8:30pm",
+      "dates": "Oct 6 – Dec 1",
+      "location": "Clinton Hill, Brooklyn",
+      "price": "$160 – $320 sliding scale",
+      "description": "Learn to navigate conflict while staying in connection and without compromising yourself or losing the other.",
+      "detailsUrl": "https://docs.google.com/document/d/11aw6NHtNuyxZ85nxgSc4qtlRA4q52nusgh5m5gLIhAs/edit",
+      "detailsLabel": "Course details",
+      "applicationUrl": "https://forms.gle/HfVgzT53wE8nryrU6",
+      "applicationLabel": "Apply"
+    },
+    {
+      "id": "speculative-worldbuilding",
+      "title": "Worldbuilding for Storytellers and Narrative Designers",
+      "category": "Writing",
+      "instructors": [
+        {
+          "name": "Sarah Guan",
+          "bio": "Sarah is an editor and publisher of award-winning speculative fiction. Her authors' work has been nominated for and won many awards, including the Nebula, the Locus, the World Fantasy Award, and the Arthur C. Clarke Award. She has herself been a finalist for the Hugo Award for Best Editor twice. She studied history and literature at Stanford, and thinks about worldbuilding through an interdisciplinary lens."
+        }
+      ],
+      "schedule": "Wednesdays, 6:30–8:30pm",
+      "dates": "Oct 7 – Nov 18 (no class Oct 28)",
+      "location": "Fractal Campus, 111 Conselyea St",
+      "price": "$250 – $500 sliding scale",
+      "description": "This interdisciplinary seminar explores how fictional worlds operate as structured models of society, drawing on speculative fiction, history, anthropology, and political theory. Students analyze how environments, institutions, culture, memory, and technology shape social order, while building a single evolving fictional world across the semester. The course culminates in a cohesive \"world dossier\" integrating these elements into a fully realized speculative society that can be used as a platform for creative projects.",
+      "detailsUrl": "https://docs.google.com/document/d/1iHGmhvwyPXSOQBynfXzdyS-pstKg59owHAEpbVn-sXU/",
+      "detailsLabel": "Course details",
+      "applicationUrl": "https://forms.gle/hpWm4oLkyWa93tmKA",
+      "applicationLabel": "Apply"
+    },
+    {
+      "id": "poker-strategy",
+      "title": "Poker Strategy",
+      "category": "Games",
+      "instructors": [
+        {
+          "name": "Alex Pinheiro",
+          "bio": "Alex Pinheiro is a professional high-stakes online no-limit hold'em player and poker coach based in NYC. In 2023 he completed his bachelor's degree in philosophy at the University of Michigan, specializing in decision theory and Bayesian epistemology. During that time, he studied poker strategy and has played professionally since his graduation."
         }
       ],
       "schedule": "Thursdays, 7–9pm",
-      "dates": "Jul 9 – Aug 20",
-      "location": "Merlin's Place, Bushwick",
-      "price": "$300 – $700",
-      "description": "Join us for a journey into the unconscious mind, where limiting beliefs, identity, habits, and blocks live. In this 7 week course we will update your inner landscape to be healthy, supportive, positive, and optimized for you to live the life you want to live!",
-      "detailsUrl": "https://theactualizedalien.com/journey-group",
+      "dates": "Oct 1 – Nov 19",
+      "location": "Fractal Campus, 111 Conselyea St",
+      "price": "$100 – $500 sliding scale",
+      "description": "Learn poker strategy from scratch in a rigorous, academic format. Students will have time to play poker and socialize with classmates during each session. No strategy background is assumed, but students must know the rules.",
+      "detailsUrl": "https://app.notion.com/p/Poker-Strategy-for-Beginners-1383db5c228982f2bfc701cd3e99ce7f",
       "detailsLabel": "Course details",
-      "applicationUrl": "https://forms.gle/SbqqYtK4Y52t29Nx9",
+      "applicationUrl": "https://docs.google.com/forms/d/e/1FAIpQLScOcxEdkOHLCUHZxvaWjjY8JiPPmdWJIr2Ik_THIz6UUH10pw/viewform",
+      "applicationLabel": "Apply"
+    },
+    {
+      "id": "vajrayana-an-introduction",
+      "title": "Vajrayana: An Introduction",
+      "category": "Mind & Body",
+      "instructors": [
+        {
+          "name": "Andrew Blevins",
+          "bio": "Andrew Blevins is a writer, coach, and teacher who has practiced contemporary Vajrayana for eight years and meditation more broadly for fifteen. Since 2020, he has been an apprentice in Evolving Ground, a community of Vajrayana practitioners, and since 2023 has hosted the Plant Room Sits, a weekly meditation group in Brooklyn. He has taught courses on approaching Vajrayana, working with emotions, Dzogchen movement, embodied play, creative writing, and loving New York. He writes about human development and other topics on his blog, Immediacy."
+        }
+      ],
+      "schedule": "Wednesdays, 7–9pm",
+      "dates": "Oct 7 – Nov 11",
+      "location": "Fractal Campus Lounge, 111 Conselyea St",
+      "price": "$350 flat",
+      "description": "A six-week experiential introduction to Vajrayana, a Buddhist tradition that emphasizes creativity & transformation in ordinary life. You'll establish a daily meditation practice while exploring Vajrayana approaches to perception, emotion, mantra, ritual, and yidam, with special attention to Tantra and Dzogchen. By the end, you'll have a basic map of the tradition, direct experience with several of its methods, and a sense of whether/how you'd like to pursue it further.",
+      "detailsUrl": "https://andrewshadeblevins.com/vajrayana-course/",
+      "detailsLabel": "Course details",
+      "applicationUrl": "https://forms.gle/1UXWkZrMPdTMGNBv6",
+      "applicationLabel": "Apply"
+    },
+    {
+      "id": "intelligent-partner-training",
+      "title": "Intelligent Partner Training",
+      "category": "Movement",
+      "instructors": [
+        {
+          "name": "Zachary Stephens",
+          "bio": "Yoga teacher and personal mobility coach with a background in dance, calisthenics, and team sports. Check out MoveInTune.com for more info."
+        }
+      ],
+      "schedule": "Saturdays, 6–8pm",
+      "dates": "Oct 3 – Nov 7",
+      "location": "Merlin's Place, Bushwick",
+      "price": "$0 – $800 sliding scale",
+      "description": "Learn how to move with a partner and engage with yourself in ways that improve intimacy, consent, strength, mobility, balance, and coordination. Classes will include a mix of dance, yoga, and calisthenics, with the assistance of props such as bands, sticks, and lacrosse balls, that allow you to move with your partner in ways that are challenging, fun, and safe.",
+      "detailsUrl": "https://moveintune.com/partner-training",
+      "detailsLabel": "Course details",
+      "applicationUrl": "https://docs.google.com/forms/d/e/1FAIpQLSdhtMjl-Cvl3Qb2OLQCv5nTlHqubhTRPn30fyXcirSKg40wUg/viewform",
+      "applicationLabel": "Apply"
+    },
+    {
+      "id": "land-is-a-big-deal",
+      "title": "Land Is a Big Deal: Georgism and Its Critics",
+      "category": "Civics",
+      "instructors": [
+        {
+          "name": "Anthony Rusignuolo",
+          "bio": "Tony Rusignuolo grew up in New Jersey and studied civil engineering and computer science. He is a software engineer. He plays volleyball, skates, and snowboards, and he likes ideas."
+        }
+      ],
+      "schedule": "Tuesdays, evening — time to be confirmed",
+      "dates": "Oct 20 – Dec 8 (meets Thanksgiving week)",
+      "location": "Fractal Campus, 111 Conselyea St",
+      "price": "$50 suggested donation",
+      "description": "Eight weeks on whether Henry George was right that land should carry the whole tax burden. We read Lars Doucet's Land is a Big Deal against its strongest critics from both the libertarian right and the Marxist left, argue about how much land rent actually exists, and get into the practical question of whether you can even separate the value of a lot from the building on it.",
+      "detailsUrl": "https://docs.google.com/document/d/1ZsrWqOz2IUdqMEoDC2jkhV1gEUhhFslIUX_Wevo0wBg/edit",
+      "detailsLabel": "Course details",
+      "applicationUrl": "https://docs.google.com/forms/d/e/1FAIpQLSe6rGTXfRwkQcNszrUO88MQFgql_hsvQpsDF60P3Hh_HJXayg/viewform",
       "applicationLabel": "Apply"
     }
   ],
   "clubs": [
-    {
-      "id": "controversial-politics-salon",
-      "name": "Controversial Politics Salon",
-      "description": "Have you ever wished you could just be honest with your peers about your political thoughts, especially your uncertainties and confusions, without making it into an argument? Or wanted a community of curious people who were trying to make serious political progress, especially on ideas outside the overton window, instead of merely having the right opinions on all the popular issues?",
-      "schedule": "Saturday afternoons",
-      "location": "Fractal Campus, 111 Conselyea St",
-      "detailsUrl": "https://docs.google.com/document/d/1RJbgMfcj5-YJ-B1H969VuRBr0lR4mp7KBQvlvK_UcIU/edit",
-      "detailsLabel": "Group details",
-      "actionUrl": "https://luma.com/nyc-qchi?tk=iaNcM8",
-      "actionLabel": "RSVP first session"
-    },
-    {
-      "id": "last-summer-lecture-series",
-      "name": "The Last Summer Lecture Series",
-      "description": "Suppose that this was the last time we could steer the world before radical change. Where should we go together? Should we imagine a world with AI from scratch, or build on the great conversation of history? Do we return to stories of old, or to ourselves, or each other? Xiq invites some of his favorite people to answer these questions.",
-      "schedule": "Saturdays, time varies — join the WhatsApp for details",
-      "location": "Fractal Campus, 111 Conselyea St",
-      "actionUrl": "https://chat.whatsapp.com/EDtmAWqbQvXF65mfcoGESr?s=cl&p=i&ilr=0",
-      "actionLabel": "Join WhatsApp"
-    },
-    {
-      "id": "founding-debate-reading-group",
-      "name": "The Founding Debate Reading Group",
-      "description": "In 2026, the United States turns 250. To mark the anniversary, we're reading the arguments the founders had with each other — particularly the Federalists and Anti-Federalists — about the system of government they were building. We'll spend eight weeks in primary sources and a little scholarship, trying to understand how they were thinking and what they were afraid of. 30–50 pages a week.",
-      "schedule": "Tuesdays, 6:30pm",
-      "location": "Fractal Campus, 111 Conselyea St",
-      "detailsUrl": "https://docs.google.com/document/d/1qbSy0pqk5AnBWmiVbsZ1Q1fiEm7_Vvu6v0dkJaT8e3I/edit",
-      "detailsLabel": "Group details",
-      "actionUrl": "https://chat.whatsapp.com/BTKnv0VPu2w8Zd92Syg5kX?s=cl&p=i&ilr=0",
-      "actionLabel": "Join WhatsApp"
-    },
     {
       "id": "claude-squad",
       "name": "Claude Squad",
