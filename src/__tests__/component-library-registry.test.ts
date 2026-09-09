@@ -246,13 +246,13 @@ describe("team component registry", () => {
     const subject = course.controls.find(({ id }) => id === "subject");
     expect(subject).toMatchObject({ label: "Subject and icon", testValue: "Experimental category" });
     expect(subject && "options" in subject ? subject.options.map(({ value }) => value) : []).toEqual([
+      "Civics",
       "Craft",
+      "Games",
       "Literature",
       "Mind & Body",
       "Movement",
       "Music",
-      "Nature",
-      "Technology",
       "Writing",
       "Experimental category",
     ]);

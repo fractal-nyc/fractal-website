@@ -312,15 +312,16 @@ describe("interactive component specimens", () => {
       "data-fractalu-reveal-mode",
       "static",
     );
-    expect(within(collection as HTMLElement).getByRole("button", { name: "Elena Navarrete" })).toHaveAttribute(
+    const firstCourseCard = collection?.querySelector<HTMLElement>("[data-course-id]")!;
+    expect(firstCourseCard.querySelector("button[data-instructor-name]")).toHaveAttribute(
       "aria-controls",
-      `${collection?.querySelector("[data-course-id]")?.getAttribute("data-course-id")}-instructor-bio`,
+      `${firstCourseCard.getAttribute("data-course-id")}-instructor-bio`,
     );
     expect(instructor).toHaveClass("text-body");
     expect(instructor).not.toHaveClass("text-label");
     expect(courseView.container.querySelector("[data-category-icon-label]")).toHaveAttribute(
       "data-category-icon-key",
-      "book-open",
+      "hammer",
     );
     expect(within(courseView.container).queryByLabelText(/icon name/i)).not.toBeInTheDocument();
     expect(
@@ -328,13 +329,13 @@ describe("interactive component specimens", () => {
     ).not.toBeInTheDocument();
 
     fireEvent.change(within(courseView.container).getByLabelText("Subject and icon"), {
-      target: { value: "Technology" },
+      target: { value: "Literature" },
     });
     expect(courseView.container.querySelector("[data-category-icon-label]")).toHaveAttribute(
       "data-category-icon-key",
-      "cpu",
+      "book-open",
     );
-    expect(within(courseView.container.querySelector("[data-category-icon-label]")!).getByText("Technology")).toBeInTheDocument();
+    expect(within(courseView.container.querySelector("[data-category-icon-label]")!).getByText("Literature")).toBeInTheDocument();
 
     fireEvent.change(within(courseView.container).getByLabelText("Subject and icon"), {
       target: { value: "Experimental category" },
@@ -482,19 +483,19 @@ describe("interactive component specimens", () => {
     const group = within(container).getByRole("group", { name: "Filter classes by subject" });
     expect(within(group).getAllByRole("button").map((button) => button.textContent)).toEqual([
       "All",
+      "Craft",
+      "Civics",
+      "Music",
+      "Mind & Body",
+      "Movement",
       "Literature",
       "Writing",
-      "Movement",
-      "Music",
-      "Technology",
-      "Craft",
-      "Nature",
-      "Mind & Body",
+      "Games",
     ]);
-    expect(within(container).getByText("20 courses shown.")).toHaveAttribute("aria-live", "polite");
-    fireEvent.click(within(group).getByRole("button", { name: "Technology" }));
-    expect(within(group).getByRole("button", { name: "Technology" })).toHaveAttribute("aria-pressed", "true");
-    expect(within(container).getByText("3 courses shown.")).toBeInTheDocument();
+    expect(within(container).getByText("15 courses shown.")).toHaveAttribute("aria-live", "polite");
+    fireEvent.click(within(group).getByRole("button", { name: "Craft" }));
+    expect(within(group).getByRole("button", { name: "Craft" })).toHaveAttribute("aria-pressed", "true");
+    expect(within(container).getByText("4 courses shown.")).toBeInTheDocument();
 
     fireEvent.change(within(container).getByLabelText("Selection behavior"), { target: { value: "multiple" } });
     expect(within(container).getByRole("group", { name: "Filter by tag" })).toBeInTheDocument();

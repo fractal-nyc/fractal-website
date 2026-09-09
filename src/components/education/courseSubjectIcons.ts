@@ -2,8 +2,10 @@ import {
   BookOpen,
   Brain,
   Cpu,
+  Dices,
   Footprints,
   Hammer,
+  Landmark,
   Music2,
   PenLine,
   Shapes,
@@ -13,6 +15,8 @@ import {
 
 export type CourseSubjectIconKey =
   | "hammer"
+  | "landmark"
+  | "dices"
   | "book-open"
   | "brain"
   | "footprints"
@@ -29,7 +33,9 @@ export interface CourseSubjectIconResolution {
 }
 
 const SUBJECT_ICONS: Record<string, Omit<CourseSubjectIconResolution, "isFallback">> = {
+  civics: { icon: Landmark, key: "landmark" },
   craft: { icon: Hammer, key: "hammer" },
+  games: { icon: Dices, key: "dices" },
   literature: { icon: BookOpen, key: "book-open" },
   "mind & body": { icon: Brain, key: "brain" },
   movement: { icon: Footprints, key: "footprints" },
