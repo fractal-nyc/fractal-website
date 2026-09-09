@@ -25,7 +25,7 @@ export interface EducationEvent {
 
 export const EDUCATION_EVENT: EducationEvent = {
   label: "Sunday · September 20",
-  headline: "Fall Mini Classes at Fractal Campus",
+  headline: "🍁 Fall Mini Classes at Fractal Campus 🍁",
   body:
     "Fall instructors will teach a 30-minute demo of their class, so you " +
     "can try classes out before committing! Pizza and drinks provided.",
