@@ -637,11 +637,11 @@ describe("FractalUniversityPortal", () => {
 
     expect(FRACTALU_SOURCE_PROVENANCE).toEqual({
       url: "mailto:fractalu@fractalnyc.com",
-      verifiedAt: "2026-09-09T15:33:15Z",
-      lastModified: "2026-09-09T15:33:15Z",
+      verifiedAt: "2026-09-09T15:44:54Z",
+      lastModified: "2026-09-09T15:44:54Z",
       etag: "fall-2026-authored",
-      byteLength: 28073,
-      sha256: "aded4de9f9cd61676f52b2e0fd00d900f5cc516da545a42446f60c02044cf009",
+      byteLength: 28060,
+      sha256: "a92912a4c5d97be74ac76a1043291633408bb15ffbfb2a2f7045c42a03183ec9",
     });
   });
 

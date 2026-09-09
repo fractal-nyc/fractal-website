@@ -2,11 +2,11 @@
   "semester": "Fall 2026",
   "sourceProvenance": {
     "url": "mailto:fractalu@fractalnyc.com",
-    "verifiedAt": "2026-09-09T15:33:15Z",
-    "lastModified": "2026-09-09T15:33:15Z",
+    "verifiedAt": "2026-09-09T15:44:54Z",
+    "lastModified": "2026-09-09T15:44:54Z",
     "etag": "fall-2026-authored",
-    "byteLength": 28073,
-    "sha256": "aded4de9f9cd61676f52b2e0fd00d900f5cc516da545a42446f60c02044cf009"
+    "byteLength": 28060,
+    "sha256": "a92912a4c5d97be74ac76a1043291633408bb15ffbfb2a2f7045c42a03183ec9"
   },
   "courses": [
     {
@@ -375,8 +375,8 @@
           "bio": "Tony Rusignuolo grew up in New Jersey and studied civil engineering and computer science. He is a software engineer. He plays volleyball, skates, and snowboards, and he likes ideas."
         }
       ],
-      "schedule": "Evenings — day and time to be confirmed",
-      "dates": "8 sessions in October–December (dates to be confirmed)",
+      "schedule": "Tuesdays, evening — time to be confirmed",
+      "dates": "Oct 20 – Dec 8 (meets Thanksgiving week)",
       "location": "Fractal Campus, 111 Conselyea St",
       "price": "$50 suggested donation",
       "description": "Eight weeks on whether Henry George was right that land should carry the whole tax burden. We read Lars Doucet's Land is a Big Deal against its strongest critics from both the libertarian right and the Marxist left, argue about how much land rent actually exists, and get into the practical question of whether you can even separate the value of a lot from the building on it.",
