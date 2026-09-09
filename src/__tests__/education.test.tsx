@@ -4,6 +4,7 @@ import { Router as WouterRouter } from "wouter";
 import { memoryLocation } from "wouter/memory-location";
 import { HOUSES } from "@/data/houses";
 import { FRACTALU_CATALOG } from "@/data/fractalu";
+import { EDUCATION_EVENT } from "@/data/education-event";
 import { EducationPage } from "@/pages/EducationPage";
 
 function renderEducationPage() {
@@ -105,6 +106,7 @@ describe("EducationPage", () => {
         ...(club.detailsUrl ? [club.detailsUrl] : []),
         club.actionUrl,
       ]),
+      EDUCATION_EVENT.actionUrl,
       "https://ajr.fyi/files/fractal-canon.pdf",
       "https://fractaluniversity.substack.com",
       "mailto:fractalu@fractalnyc.com",
@@ -113,7 +115,7 @@ describe("EducationPage", () => {
       container.querySelectorAll<HTMLAnchorElement>("[data-education-outbound-link]"),
     );
 
-    expect(expectedHrefs).toHaveLength(41);
+    expect(expectedHrefs).toHaveLength(42);
     expect(outboundLinks).toHaveLength(expectedHrefs.length);
     expect(outboundLinks.map((link) => link.getAttribute("href")).sort()).toEqual(
       [...expectedHrefs].sort(),
