@@ -2,11 +2,11 @@
   "semester": "Fall 2026",
   "sourceProvenance": {
     "url": "mailto:fractalu@fractalnyc.com",
-    "verifiedAt": "2026-09-09T16:38:40Z",
-    "lastModified": "2026-09-09T16:38:40Z",
+    "verifiedAt": "2026-09-09T17:47:44Z",
+    "lastModified": "2026-09-09T17:47:44Z",
     "etag": "fall-2026-authored",
-    "byteLength": 28041,
-    "sha256": "e9060f4a3baed4623ed20c33eeb1a1068b9208f19e60f07dc5b43f2f5df880c5"
+    "byteLength": 28015,
+    "sha256": "b000293cbc4d54e77a25e834ad48e5a0ac52884b040d308951d07416df31f7f6"
   },
   "courses": [
     {
@@ -376,7 +376,7 @@
         }
       ],
       "schedule": "Tuesdays, 6:30–8:30pm",
-      "dates": "Oct 20 – Dec 8 (meets Thanksgiving week)",
+      "dates": "Oct 20 – Dec 8",
       "location": "Fractal Campus, 111 Conselyea St",
       "price": "$50 suggested donation",
       "description": "Eight weeks on whether Henry George was right that land should carry the whole tax burden. We read Lars Doucet's Land is a Big Deal against its strongest critics from both the libertarian right and the Marxist left, argue about how much land rent actually exists, and get into the practical question of whether you can even separate the value of a lot from the building on it.",
