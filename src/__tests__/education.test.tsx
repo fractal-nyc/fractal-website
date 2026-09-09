@@ -115,7 +115,7 @@ describe("EducationPage", () => {
       container.querySelectorAll<HTMLAnchorElement>("[data-education-outbound-link]"),
     );
 
-    expect(expectedHrefs).toHaveLength(42);
+    expect(expectedHrefs).toHaveLength(40);
     expect(outboundLinks).toHaveLength(expectedHrefs.length);
     expect(outboundLinks.map((link) => link.getAttribute("href")).sort()).toEqual(
       [...expectedHrefs].sort(),
