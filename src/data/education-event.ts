@@ -27,8 +27,9 @@ export const EDUCATION_EVENT: EducationEvent = {
   label: "Sunday · September 20",
   headline: "🍁 Fall Mini Classes at Fractal Campus 🍁",
   body:
-    "Fall instructors will teach a 30-minute demo of their class, so you " +
-    "can try classes out before committing! Pizza and drinks provided.",
+    "Fall instructors will each teach a 30-minute demo of their class " +
+    "throughout the afternoon, so you can try classes out before " +
+    "committing! Pizza and drinks provided.",
   actionLabel: "RSVP on Partiful",
   actionUrl: "https://partiful.com/e/fJaccVQidLiccM9tORMJ",
   // End of Sept 20 in New York (EDT, UTC-4).
