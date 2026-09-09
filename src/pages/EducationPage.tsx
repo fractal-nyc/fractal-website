@@ -57,8 +57,6 @@ export function EducationPage() {
         </div>
 
         <div className="relative z-10 min-h-screen pt-12 pb-20 md:pt-24 md:pb-32">
-          <EducationEventCallout />
-
           <section
             className="mx-auto w-full max-w-7xl page-gutter [&_[data-sector-letter]]:text-7xl md:[&_[data-sector-letter]]:text-[14rem]"
             data-education-intro
@@ -114,6 +112,8 @@ export function EducationPage() {
               </FadeIn>
             </div>
           </section>
+
+          <EducationEventCallout />
 
           <FractalUContentProvider>
             <FractalUniversityPortal />

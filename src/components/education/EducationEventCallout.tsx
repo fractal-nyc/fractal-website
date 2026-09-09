@@ -17,7 +17,7 @@ export function EducationEventCallout({ event = EDUCATION_EVENT, now }: Educatio
 
   return (
     <section
-      className="mx-auto w-full max-w-7xl page-gutter"
+      className="mx-auto mb-10 w-full max-w-7xl page-gutter md:mb-14"
       aria-labelledby="education-event-title"
       data-education-event
     >
