@@ -2,11 +2,11 @@
   "semester": "Fall 2026",
   "sourceProvenance": {
     "url": "mailto:fractalu@fractalnyc.com",
-    "verifiedAt": "2026-09-09T15:44:54Z",
-    "lastModified": "2026-09-09T15:44:54Z",
+    "verifiedAt": "2026-09-09T16:38:40Z",
+    "lastModified": "2026-09-09T16:38:40Z",
     "etag": "fall-2026-authored",
-    "byteLength": 28060,
-    "sha256": "a92912a4c5d97be74ac76a1043291633408bb15ffbfb2a2f7045c42a03183ec9"
+    "byteLength": 28041,
+    "sha256": "e9060f4a3baed4623ed20c33eeb1a1068b9208f19e60f07dc5b43f2f5df880c5"
   },
   "courses": [
     {
@@ -375,7 +375,7 @@
           "bio": "Tony Rusignuolo grew up in New Jersey and studied civil engineering and computer science. He is a software engineer. He plays volleyball, skates, and snowboards, and he likes ideas."
         }
       ],
-      "schedule": "Tuesdays, evening — time to be confirmed",
+      "schedule": "Tuesdays, 6:30–8:30pm",
       "dates": "Oct 20 – Dec 8 (meets Thanksgiving week)",
       "location": "Fractal Campus, 111 Conselyea St",
       "price": "$50 suggested donation",
