@@ -24,13 +24,11 @@ export interface EducationEvent {
 }
 
 export const EDUCATION_EVENT: EducationEvent = {
-  // TODO(mason): replace label/headline/body/actionLabel with your copy.
   label: "Sunday · September 20",
-  headline: "Mini classes at Fractal Campus",
+  headline: "🍁 Fall Mini Classes at Fractal Campus 🍁",
   body:
-    "PLACEHOLDER COPY — replace this with your own. Every Fall instructor teaches a " +
-    "30-minute taster, so you can sit in on a class before you commit to one. " +
-    "Pizza provided. Drop in any time.",
+    "Fall instructors will teach a 30-minute demo of their class, so you " +
+    "can try classes out before committing! Pizza and drinks provided, come hang out :)",
   actionLabel: "RSVP on Partiful",
   actionUrl: "https://partiful.com/e/fJaccVQidLiccM9tORMJ",
   // End of Sept 20 in New York (EDT, UTC-4).

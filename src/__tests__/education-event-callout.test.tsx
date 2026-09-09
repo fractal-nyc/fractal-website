@@ -36,7 +36,14 @@ describe("Education event callout", () => {
       "id",
       "education-event-title",
     );
-    expect(within(region).getByText(EDUCATION_EVENT.body)).toBeInTheDocument();
+    // Match on normalised text: copy is edited by hand, and incidental whitespace
+    // should never be able to fail a test.
+    const normalise = (value: string) => value.replace(/\s+/g, " ").trim();
+    expect(
+      within(region).getByText((_, element) =>
+        element?.tagName === "P" && normalise(element.textContent ?? "") === normalise(EDUCATION_EVENT.body),
+      ),
+    ).toBeInTheDocument();
 
     const links = region.querySelectorAll<HTMLAnchorElement>("[data-education-outbound-link]");
     expect(links).toHaveLength(1);
