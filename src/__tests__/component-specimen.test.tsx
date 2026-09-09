@@ -492,7 +492,7 @@ describe("interactive component specimens", () => {
       "Writing",
       "Games",
     ]);
-    expect(within(container).getByText("15 courses shown.")).toHaveAttribute("aria-live", "polite");
+    expect(within(container).getByText("18 courses shown.")).toHaveAttribute("aria-live", "polite");
     fireEvent.click(within(group).getByRole("button", { name: "Craft" }));
     expect(within(group).getByRole("button", { name: "Craft" })).toHaveAttribute("aria-pressed", "true");
     expect(within(container).getByText("4 courses shown.")).toBeInTheDocument();

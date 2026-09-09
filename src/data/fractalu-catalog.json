@@ -2,11 +2,11 @@
   "semester": "Fall 2026",
   "sourceProvenance": {
     "url": "mailto:fractalu@fractalnyc.com",
-    "verifiedAt": "2026-09-09T14:39:43Z",
-    "lastModified": "2026-09-09T14:39:43Z",
+    "verifiedAt": "2026-09-09T15:33:15Z",
+    "lastModified": "2026-09-09T15:33:15Z",
     "etag": "fall-2026-authored",
-    "byteLength": 24329,
-    "sha256": "724e53f7ef32537ce49204ff1f2ec410abfe6c522031802050f842b5815be2b8"
+    "byteLength": 28073,
+    "sha256": "aded4de9f9cd61676f52b2e0fd00d900f5cc516da545a42446f60c02044cf009"
   },
   "courses": [
     {
@@ -323,6 +323,66 @@
       "detailsUrl": "https://app.notion.com/p/Poker-Strategy-for-Beginners-1383db5c228982f2bfc701cd3e99ce7f",
       "detailsLabel": "Course details",
       "applicationUrl": "https://docs.google.com/forms/d/e/1FAIpQLScOcxEdkOHLCUHZxvaWjjY8JiPPmdWJIr2Ik_THIz6UUH10pw/viewform",
+      "applicationLabel": "Apply"
+    },
+    {
+      "id": "vajrayana-an-introduction",
+      "title": "Vajrayana: An Introduction",
+      "category": "Mind & Body",
+      "instructors": [
+        {
+          "name": "Andrew Blevins",
+          "bio": "Andrew Blevins is a writer, coach, and teacher who has practiced contemporary Vajrayana for eight years and meditation more broadly for fifteen. Since 2020, he has been an apprentice in Evolving Ground, a community of Vajrayana practitioners, and since 2023 has hosted the Plant Room Sits, a weekly meditation group in Brooklyn. He has taught courses on approaching Vajrayana, working with emotions, Dzogchen movement, embodied play, creative writing, and loving New York. He writes about human development and other topics on his blog, Immediacy."
+        }
+      ],
+      "schedule": "Wednesdays, 7–9pm",
+      "dates": "Oct 7 – Nov 11",
+      "location": "Fractal Campus Lounge, 111 Conselyea St",
+      "price": "$350 flat",
+      "description": "A six-week experiential introduction to Vajrayana, a Buddhist tradition that emphasizes creativity & transformation in ordinary life. You'll establish a daily meditation practice while exploring Vajrayana approaches to perception, emotion, mantra, ritual, and yidam, with special attention to Tantra and Dzogchen. By the end, you'll have a basic map of the tradition, direct experience with several of its methods, and a sense of whether/how you'd like to pursue it further.",
+      "detailsUrl": "https://andrewshadeblevins.com/vajrayana-course/",
+      "detailsLabel": "Course details",
+      "applicationUrl": "https://forms.gle/1UXWkZrMPdTMGNBv6",
+      "applicationLabel": "Apply"
+    },
+    {
+      "id": "intelligent-partner-training",
+      "title": "Intelligent Partner Training",
+      "category": "Movement",
+      "instructors": [
+        {
+          "name": "Zachary Stephens",
+          "bio": "Yoga teacher and personal mobility coach with a background in dance, calisthenics, and team sports. Check out MoveInTune.com for more info."
+        }
+      ],
+      "schedule": "Saturdays, 6–8pm",
+      "dates": "Oct 3 – Nov 7",
+      "location": "Merlin's Place, Bushwick",
+      "price": "$0 – $800 sliding scale",
+      "description": "Learn how to move with a partner and engage with yourself in ways that improve intimacy, consent, strength, mobility, balance, and coordination. Classes will include a mix of dance, yoga, and calisthenics, with the assistance of props such as bands, sticks, and lacrosse balls, that allow you to move with your partner in ways that are challenging, fun, and safe.",
+      "detailsUrl": "https://moveintune.com/partner-training",
+      "detailsLabel": "Course details",
+      "applicationUrl": "https://docs.google.com/forms/d/e/1FAIpQLSdhtMjl-Cvl3Qb2OLQCv5nTlHqubhTRPn30fyXcirSKg40wUg/viewform",
+      "applicationLabel": "Apply"
+    },
+    {
+      "id": "land-is-a-big-deal",
+      "title": "Land Is a Big Deal: Georgism and Its Critics",
+      "category": "Civics",
+      "instructors": [
+        {
+          "name": "Anthony Rusignuolo",
+          "bio": "Tony Rusignuolo grew up in New Jersey and studied civil engineering and computer science. He is a software engineer. He plays volleyball, skates, and snowboards, and he likes ideas."
+        }
+      ],
+      "schedule": "Evenings — day and time to be confirmed",
+      "dates": "8 sessions in October–December (dates to be confirmed)",
+      "location": "Fractal Campus, 111 Conselyea St",
+      "price": "$50 suggested donation",
+      "description": "Eight weeks on whether Henry George was right that land should carry the whole tax burden. We read Lars Doucet's Land is a Big Deal against its strongest critics from both the libertarian right and the Marxist left, argue about how much land rent actually exists, and get into the practical question of whether you can even separate the value of a lot from the building on it.",
+      "detailsUrl": "https://docs.google.com/document/d/1ZsrWqOz2IUdqMEoDC2jkhV1gEUhhFslIUX_Wevo0wBg/edit",
+      "detailsLabel": "Course details",
+      "applicationUrl": "https://docs.google.com/forms/d/e/1FAIpQLSe6rGTXfRwkQcNszrUO88MQFgql_hsvQpsDF60P3Hh_HJXayg/viewform",
       "applicationLabel": "Apply"
     }
   ],

@@ -20,6 +20,10 @@ export const FRACTALU_LOCATION_PRESETS = [
   { title: "Lower East Side, Manhattan", value: "Lower East Side, Manhattan" },
   { title: "Clinton Hill, Brooklyn", value: "Clinton Hill, Brooklyn" },
   { title: "Fractal Campus, 111 Conselyea St", value: "Fractal Campus, 111 Conselyea St" },
+  {
+    title: "Fractal Campus Lounge, 111 Conselyea St",
+    value: "Fractal Campus Lounge, 111 Conselyea St",
+  },
   { title: "Vital Williamsburg", value: "Vital Williamsburg" },
 ] as const;
 
