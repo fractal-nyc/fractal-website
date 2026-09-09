@@ -32,8 +32,7 @@ export const EDUCATION_EVENT: EducationEvent = {
     "30-minute taster, so you can sit in on a class before you commit to one. " +
     "Pizza provided. Drop in any time.",
   actionLabel: "RSVP on Partiful",
-  // TODO(mason): paste the real Partiful URL here.
-  actionUrl: "https://partiful.com/e/REPLACE-WITH-REAL-PARTIFUL-URL",
+  actionUrl: "https://partiful.com/e/fJaccVQidLiccM9tORMJ",
   // End of Sept 20 in New York (EDT, UTC-4).
   hideAfter: "2026-09-21T00:00:00-04:00",
 };
