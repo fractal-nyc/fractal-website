@@ -2,11 +2,11 @@
   "semester": "Fall 2026",
   "sourceProvenance": {
     "url": "mailto:fractalu@fractalnyc.com",
-    "verifiedAt": "2026-09-09T18:54:22Z",
-    "lastModified": "2026-09-09T18:54:22Z",
+    "verifiedAt": "2026-09-10T01:02:04Z",
+    "lastModified": "2026-09-10T01:02:04Z",
     "etag": "fall-2026-authored",
-    "byteLength": 26256,
-    "sha256": "1731765b98cd0fefacde2a6d4c21ef2a65b10700b95dc8229d59df2b400b2089"
+    "byteLength": 26249,
+    "sha256": "54ee5ce93f3d9ea43a712850b46fbe634c07a704473da5cc89aa40bae44a90f2"
   },
   "courses": [
     {
@@ -271,8 +271,8 @@
           "bio": "Sarah is an editor and publisher of award-winning speculative fiction. Her authors' work has been nominated for and won many awards, including the Nebula, the Locus, the World Fantasy Award, and the Arthur C. Clarke Award. She has herself been a finalist for the Hugo Award for Best Editor twice. She studied history and literature at Stanford, and thinks about worldbuilding through an interdisciplinary lens."
         }
       ],
-      "schedule": "Wednesdays, 6:30–8:30pm",
-      "dates": "Oct 7 – Nov 18 (no class Oct 28)",
+      "schedule": "Tuesdays, 6:30–8:30pm",
+      "dates": "Oct 6 – Nov 17 (no class Oct 27)",
       "location": "Fractal Campus, 111 Conselyea St",
       "price": "$250 – $500 sliding scale",
       "description": "This interdisciplinary seminar explores how fictional worlds operate as structured models of society, drawing on speculative fiction, history, anthropology, and political theory. Students analyze how environments, institutions, culture, memory, and technology shape social order, while building a single evolving fictional world across the semester. The course culminates in a cohesive \"world dossier\" integrating these elements into a fully realized speculative society that can be used as a platform for creative projects.",
@@ -351,7 +351,7 @@
           "bio": "Tony Rusignuolo grew up in New Jersey and studied civil engineering and computer science. He is a software engineer. He plays volleyball, skates, and snowboards, and he likes ideas."
         }
       ],
-      "schedule": "Tuesdays, 6:30–8:30pm",
+      "schedule": "Tuesdays, time TBD",
       "dates": "Oct 20 – Dec 8",
       "location": "Fractal Campus, 111 Conselyea St",
       "price": "$50 suggested donation",
