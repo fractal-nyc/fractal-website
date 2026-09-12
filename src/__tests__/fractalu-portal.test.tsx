@@ -224,7 +224,7 @@ describe("FractalUniversityPortal", () => {
     expect(within(catalog).getByText(course.instructors[0].bio)).toBeTruthy();
   });
 
-  it("renders one 18-course collection and the single-club snapshot", () => {
+  it("renders one 18-course collection and the two-club snapshot", () => {
     render(<FractalUniversityPortal />);
     const catalog = screen.getByTestId("fractalu-course-catalog");
     const clubs = screen.getByTestId("fractalu-clubs");
@@ -232,7 +232,7 @@ describe("FractalUniversityPortal", () => {
     expect(document.querySelectorAll("[data-course-collection]")).toHaveLength(1);
     expect(document.querySelector("table")).toBeNull();
     expect(document.querySelector("details, summary")).toBeNull();
-    expect(within(clubs).getAllByRole("article")).toHaveLength(1);
+    expect(within(clubs).getAllByRole("article")).toHaveLength(2);
     expect(within(clubs).queryByText(/^Open group$/)).toBeNull();
     expect(screen.getByRole("heading", { name: "Clubs & open groups" })).toBeTruthy();
     const semester = screen.getByText(FRACTALU_CATALOG.semester, {
@@ -334,7 +334,7 @@ describe("FractalUniversityPortal", () => {
     const clubSlots = Array.from(
       document.querySelectorAll<HTMLElement>('[data-fractalu-reveal-slot="club"]'),
     );
-    expect(clubSlots.map((slot) => slot.dataset.fractaluRevealDelay)).toEqual(["0.00"]);
+    expect(clubSlots.map((slot) => slot.dataset.fractaluRevealDelay)).toEqual(["0.00", "0.06"]);
     expect(document.querySelectorAll("[data-fractalu-information-reveal]")).toHaveLength(4);
 
     fireEvent.click(screen.getByRole("button", { name: "Craft" }));
@@ -725,7 +725,7 @@ describe("FractalUniversityPortal", () => {
     const outboundLinks = Array.from(
       container.querySelectorAll<HTMLAnchorElement>("[data-education-outbound-link]"),
     );
-    expect(expectedHrefs).toHaveLength(40);
+    expect(expectedHrefs).toHaveLength(41);
     expect(outboundLinks).toHaveLength(expectedHrefs.length);
     expect(outboundLinks.map((link) => link.getAttribute("href")).sort()).toEqual(
       [...expectedHrefs].sort(),

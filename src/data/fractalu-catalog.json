@@ -395,6 +395,15 @@
       "location": "Vital Williamsburg",
       "actionUrl": "https://chat.whatsapp.com/FzIgsZtcNeLFUvM1IehCBu?s=cl&p=i&ilr=0",
       "actionLabel": "Join WhatsApp"
+    },
+    {
+      "id": "merlins-monday-meditation",
+      "name": "Merlin's Monday Meditation Group",
+      "description": "A simple but powerful format: 25 minutes of seated meditation, followed by 25 minutes of silent personal practice — journal, stretch, read, or keep meditating, the choice is yours. A brief sharing circle at the end offers a glimpse into one another's inner worlds, and we close with a few minutes of metta. We've been meeting every Monday for over a year. No RSVP needed and totally free. Just show up.",
+      "schedule": "Mondays, 7:30pm. Once a month we host Breaking Bread, a gathering with a large pot of soup for everyone.",
+      "location": "Merlin's Place, Bushwick",
+      "actionUrl": "https://chat.whatsapp.com/Bxl8c9DczYxBYgIURJGKPp",
+      "actionLabel": "Join WhatsApp"
     }
   ]
 }
