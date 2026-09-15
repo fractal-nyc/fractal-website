@@ -37,7 +37,6 @@ import { PeoplePage } from "@/pages/PeoplePage";
 import { ProtocolPage } from "@/pages/ProtocolPage";
 import { EducationPage } from "@/pages/EducationPage";
 import { MembersPage } from "@/pages/MembersPage";
-import { MemberGuidePage } from "@/pages/MemberGuidePage";
 
 // ---------------------------------------------------------------------------
 // Helper: render a page component at the given route
@@ -57,31 +56,33 @@ function renderPage(Page: React.ComponentType, path: string) {
 // ═══════════════════════════════════════════════════════════════════════════
 
 const pages = [
-  { name: "Home", Component: Home, path: "/" },
-  { name: "CampusPage", Component: CampusPage, path: "/campus" },
-  { name: "CoLivingPage", Component: CoLivingPage, path: "/co-living" },
-  { name: "EventsPage", Component: EventsPage, path: "/events" },
-  { name: "EducationPage", Component: EducationPage, path: "/education" },
-  { name: "PoliticalClubPage", Component: PoliticalClubPage, path: "/political-club" },
-  { name: "LibraryPage", Component: LibraryPage, path: "/library" },
-  { name: "PeoplePage", Component: PeoplePage, path: "/people" },
-  { name: "ProtocolPage", Component: ProtocolPage, path: "/the-protocol" },
-  { name: "MembersPage", Component: MembersPage, path: "/members" },
-  { name: "MemberGuidePage", Component: MemberGuidePage, path: "/members/guide" },
+  { name: "Home", Component: Home, path: "/", hasNavbar: true },
+  { name: "CampusPage", Component: CampusPage, path: "/campus", hasNavbar: true },
+  { name: "CoLivingPage", Component: CoLivingPage, path: "/co-living", hasNavbar: true },
+  { name: "EventsPage", Component: EventsPage, path: "/events", hasNavbar: true },
+  { name: "EducationPage", Component: EducationPage, path: "/education", hasNavbar: true },
+  { name: "PoliticalClubPage", Component: PoliticalClubPage, path: "/political-club", hasNavbar: true },
+  { name: "LibraryPage", Component: LibraryPage, path: "/library", hasNavbar: true },
+  { name: "PeoplePage", Component: PeoplePage, path: "/people", hasNavbar: true },
+  { name: "ProtocolPage", Component: ProtocolPage, path: "/the-protocol", hasNavbar: true },
+  { name: "MembersPage", Component: MembersPage, path: "/members", hasNavbar: false },
 ] as const;
 
 describe("Page rendering", () => {
-  for (const { name, Component, path } of pages) {
+  for (const { name, Component, path, hasNavbar } of pages) {
     describe(name, () => {
       it(`should render without crashing at ${path}`, () => {
         const { container } = renderPage(Component, path);
         expect(container.querySelector("main")).toBeTruthy();
       });
 
-      it("should include the Navbar", () => {
+      it(`${hasNavbar ? "should include" : "should not include"} the Navbar`, () => {
         renderPage(Component, path);
-        // Navbar renders a <header> with fixed positioning
-        expect(document.querySelector("header")).toBeTruthy();
+        if (hasNavbar) {
+          expect(document.querySelector("header")).toBeTruthy();
+        } else {
+          expect(document.querySelector("header")).toBeNull();
+        }
       });
 
       it("should include the Footer", () => {
@@ -166,7 +167,6 @@ describe("Route paths match expected URLs", () => {
     { path: "/people", label: "People" },
     { path: "/the-protocol", label: "Protocol" },
     { path: "/members", label: "Members" },
-    { path: "/members/guide", label: "Member Guide" },
   ];
 
   for (const { path, label } of expectedRoutes) {

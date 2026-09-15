@@ -10,7 +10,6 @@ import { LibraryPage } from "@/pages/LibraryPage";
 import { PeoplePage } from "@/pages/PeoplePage";
 import { EducationPage } from "@/pages/EducationPage";
 import { MembersPage } from "@/pages/MembersPage";
-import { MemberGuidePage } from "@/pages/MemberGuidePage";
 import { membersHomePathForHost } from "@/data/member-links";
 
 import NotFound from "@/pages/not-found";
@@ -92,7 +91,6 @@ function Router() {
       <Route path="/library" component={LibraryPage} />
       <Route path="/people" component={PeoplePage} />
       <Route path="/education" component={EducationPage} />
-      <Route path="/members/guide" component={MemberGuidePage} />
       <Route path="/members" component={MembersPage} />
 
       {/* Legacy Education paths now lead to the first-party destination hub. */}
@@ -100,12 +98,14 @@ function Router() {
       <Route path="/new-liberal-arts">{() => <Redirect to="/education" />}</Route>
 
       {/* Internal redirects from old URLs after the content-port renames:
-          Visit → Co-Living, Publications → Library, Story folded into Home. */}
+          Visit → Co-Living, Publications → Library, Story folded into Home.
+          /members/guide folded into the combined Member Guide. */}
       <Route path="/story">{() => <Redirect to="/" />}</Route>
       <Route path="/visit">{() => <Redirect to="/co-living" />}</Route>
       <Route path="/publications">{() => <Redirect to="/library" />}</Route>
       <Route path="/neighborhood">{() => <Redirect to="/co-living" />}</Route>
       <Route path="/lab">{() => <Redirect to="/library" />}</Route>
+      <Route path="/members/guide">{() => <Redirect to="/members" />}</Route>
 
       <Route component={NotFound} />
     </Switch>

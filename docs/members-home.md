@@ -1,6 +1,6 @@
-# Fractal Campus Member Home
+# Fractal Campus Member Guide
 
-Unlisted coworking-member index at `https://members.fractalnyc.com` (SPA route `/members`). Billing, events, Cuties, Discord, and a short member guide are destinations — this page does not reimplement those products.
+Unlisted coworking-member guide at `https://members.fractalnyc.com` (SPA route `/members`). Readable sections for using the space, plus Stripe for billing and text links to Luma, Discord, and Cuties. `/members/guide` redirects here.
 
 This repo deploys on **Vercel** (`vercel.json`). There is no Netlify config in the tree.
 

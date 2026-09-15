@@ -1,14 +1,12 @@
-import { render, screen, within } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import { describe, it, expect, beforeEach, afterEach } from "vitest";
 import { Router as WouterRouter } from "wouter";
 import { memoryLocation } from "wouter/memory-location";
 import { MembersPage } from "@/pages/MembersPage";
-import { MemberGuidePage } from "@/pages/MemberGuidePage";
 import {
   CUTIES_URL,
   DISCORD_URL,
   LUMA_EVENTS_URL,
-  MEMBER_GUIDE_PATH,
   MEMBER_LINKS,
   MEMBERS_HOSTNAME,
   MEMBERS_HOME_PATH,
@@ -16,7 +14,7 @@ import {
   membersHomePathForHost,
   stripeCustomerPortalLoginUrl,
 } from "@/data/member-links";
-import { MEMBER_GUIDE_ADDRESS, MEMBER_GUIDE_CONTACT } from "@/data/member-guide";
+import { MEMBER_GUIDE_WIFI } from "@/data/member-guide";
 
 function renderAt(Page: React.ComponentType, path: string) {
   const { hook } = memoryLocation({ path, static: true });
@@ -43,18 +41,15 @@ describe("member destination config", () => {
     expect(MEMBER_LINKS.discord).toBe("https://discord.gg/Er974gPTXe");
   });
 
-  it("points Cuties at the public Cuties site and the guide at an internal path", () => {
+  it("points Cuties at the public Cuties site", () => {
     expect(MEMBER_LINKS.cuties).toBe(CUTIES_URL);
-    expect(MEMBER_LINKS.memberGuide).toBe(MEMBER_GUIDE_PATH);
   });
 
   it("uses Stripe's no-code Customer Portal login URL pattern", () => {
-    expect(MEMBER_LINKS.manageMembership).toBe(
-      stripeCustomerPortalLoginUrl(),
-    );
-    expect(MEMBER_LINKS.manageMembership.startsWith("https://billing.stripe.com/p/login")).toBe(
-      true,
-    );
+    expect(MEMBER_LINKS.manageMembership).toBe(stripeCustomerPortalLoginUrl());
+    expect(
+      MEMBER_LINKS.manageMembership.startsWith("https://billing.stripe.com/p/login"),
+    ).toBe(true);
     expect(stripeCustomerPortalLoginUrl("")).toBe(
       STRIPE_CUSTOMER_PORTAL_LOGIN_FALLBACK,
     );
@@ -81,103 +76,83 @@ describe("MembersPage", () => {
     document.querySelector('meta[name="robots"]')?.remove();
   });
 
-  it("identifies the page as the Campus coworking member home", () => {
-    renderAt(MembersPage, "/members");
-    expect(
-      screen.getByRole("heading", { level: 1, name: /fractal campus member home/i }),
-    ).toBeTruthy();
-    expect(screen.getByText(/coworking member/i)).toBeTruthy();
+  it("uses a one-line Member Guide headline with no subheading or top wordmark", () => {
+    const { container } = renderAt(MembersPage, "/members");
+    const heading = screen.getByRole("heading", { level: 1, name: "Member Guide" });
+    expect(heading).toHaveClass("whitespace-nowrap");
+    expect(heading.textContent).toBe("Member Guide");
+    expect(screen.queryByText(/everything you need/i)).toBeNull();
+    expect(container.querySelector("[data-sector-letter]")).toBeNull();
+    expect(document.querySelector("header")).toBeNull();
     expect(document.querySelector("[data-members-home]")).toBeTruthy();
   });
 
-  it("makes Manage membership the first destination and the primary Stripe CTA", () => {
+  it("is a text guide, not a destination-card dashboard", () => {
     const { container } = renderAt(MembersPage, "/members");
-    const destinations = container.querySelectorAll("[data-member-destination]");
-    expect(destinations[0]).toHaveAttribute("data-member-destination", "manage");
+    expect(container.querySelector("[data-member-destination]")).toBeNull();
+    expect(container.querySelector(".grid")).toBeNull();
+    expect(screen.getByRole("heading", { name: "Hours and access" })).toBeTruthy();
+    expect(screen.getByRole("heading", { name: "Kitchens" })).toBeTruthy();
+    expect(screen.getByRole("heading", { name: "Desks" })).toBeTruthy();
+    expect(screen.getByRole("heading", { name: "Call booths" })).toBeTruthy();
+    expect(screen.getByRole("heading", { name: "Events" })).toBeTruthy();
+    expect(screen.getByRole("heading", { name: "Quiet hours" })).toBeTruthy();
+    expect(screen.getByRole("heading", { name: "Wi-Fi" })).toBeTruthy();
+  });
 
+  it("covers the operational notes from Campus members", () => {
+    renderAt(MembersPage, "/members");
+    expect(screen.getByText(/open 24\/7/i)).toBeTruthy();
+    expect(screen.getByText(/20 hours a week/i)).toBeTruthy();
+    expect(screen.getByText(/pin code from your member email/i)).toBeTruthy();
+    expect(screen.getByText(/both kitchens are open/i)).toBeTruthy();
+    expect(screen.getByText(/coffee machines/i)).toBeTruthy();
+    expect(screen.getByText(/label food with your name and an expiry date/i)).toBeTruthy();
+    expect(screen.getByText(/open containers in the pantry/i)).toBeTruthy();
+    expect(screen.getByText(/unlabeled or expired food will be thrown out/i)).toBeTruthy();
+    expect(screen.getByText(/name and a reserved sign/i)).toBeTruthy();
+    expect(screen.getByText(/time sheets on the doors/i)).toBeTruthy();
+    expect(screen.getByText(/submit it for approval/i)).toBeTruthy();
+    expect(screen.getByText(/after 8pm/i)).toBeTruthy();
+    expect(screen.getByText(MEMBER_GUIDE_WIFI.network)).toBeTruthy();
+    expect(screen.getByText(MEMBER_GUIDE_WIFI.password)).toBeTruthy();
+  });
+
+  it("keeps a clear Stripe manage-membership CTA", () => {
+    renderAt(MembersPage, "/members");
     const manage = screen.getByRole("link", { name: "Manage membership" });
     expect(manage).toHaveAttribute("href", MEMBER_LINKS.manageMembership);
     expect(manage).toHaveAttribute("target", "_blank");
     expect(manage.getAttribute("rel")).toContain("noopener");
-
-    const manageCard = container.querySelector<HTMLElement>(
-      '[data-member-destination="manage"]',
-    )!;
-    expect(within(manageCard).getByRole("heading", { name: "Manage your membership" })).toBeTruthy();
+    expect(screen.getByText(/cancel or change your membership/i)).toBeTruthy();
   });
 
-  it("links the remaining destinations to the centralized URLs", () => {
+  it("links Luma, Discord, and optional Cuties as text, not cards", () => {
     renderAt(MembersPage, "/members");
-    expect(screen.getByRole("link", { name: "View member guide" })).toHaveAttribute(
-      "href",
-      MEMBER_GUIDE_PATH,
-    );
-    expect(screen.getByRole("link", { name: "See upcoming events" })).toHaveAttribute(
-      "href",
-      LUMA_EVENTS_URL,
-    );
-    expect(screen.getByRole("link", { name: "Join us on Cuties" })).toHaveAttribute(
-      "href",
-      CUTIES_URL,
-    );
-    expect(screen.getByRole("link", { name: "Open Discord" })).toHaveAttribute(
+    const lumaLinks = screen.getAllByRole("link", { name: /luma/i });
+    expect(lumaLinks.length).toBeGreaterThanOrEqual(1);
+    for (const link of lumaLinks) {
+      expect(link).toHaveAttribute("href", LUMA_EVENTS_URL);
+    }
+    expect(screen.getByRole("link", { name: "Discord" })).toHaveAttribute(
       "href",
       DISCORD_URL,
     );
-  });
-
-  it("frames Cuties as optional serendipity, not a membership requirement", () => {
-    renderAt(MembersPage, "/members");
-    expect(screen.getByText(/a profile is optional/i)).toBeTruthy();
-    expect(screen.getByText(/serendipity/i)).toBeTruthy();
+    expect(screen.getByRole("link", { name: "Cuties" })).toHaveAttribute(
+      "href",
+      CUTIES_URL,
+    );
+    expect(screen.getByText(/is optional/i)).toBeTruthy();
     expect(document.body.textContent).not.toMatch(/must (join|have) a cuties/i);
   });
 
-  it("does not add Members to the public navbar", () => {
+  it("marks the page noindex and does not add Members to a public navbar", () => {
     renderAt(MembersPage, "/members");
-    const header = document.querySelector("header")!;
-    expect(header.querySelector('a[href="/members"]')).toBeNull();
-    expect(within(header).queryByText("Member Home")).toBeNull();
-  });
-
-  it("marks the page noindex and sets a member-specific title", () => {
-    renderAt(MembersPage, "/members");
-    expect(document.title).toBe("Fractal Campus Member Home");
-    const robots = document.querySelector('meta[name="robots"]');
-    expect(robots).toHaveAttribute("content", "noindex, nofollow");
-  });
-
-  it("stacks destination cards at the 375px mobile baseline", () => {
-    const { container } = renderAt(MembersPage, "/members");
-    const grid = container.querySelector(".grid");
-    expect(grid).toHaveClass("grid-cols-1");
-    const manageCta = screen.getByRole("link", { name: "Manage membership" });
-    expect(manageCta.className).toMatch(/w-full/);
-  });
-});
-
-describe("MemberGuidePage", () => {
-  afterEach(() => {
-    document.querySelector('meta[name="robots"]')?.remove();
-  });
-
-  it("only exposes known Campus facts and a path back to member home", () => {
-    renderAt(MemberGuidePage, "/members/guide");
-    expect(screen.getByRole("heading", { level: 1, name: /member guide/i })).toBeTruthy();
-    expect(screen.getByRole("link", { name: MEMBER_GUIDE_ADDRESS.label })).toHaveAttribute(
-      "href",
-      MEMBER_GUIDE_ADDRESS.mapsUrl,
+    expect(document.title).toBe("Member Guide");
+    expect(document.querySelector('meta[name="robots"]')).toHaveAttribute(
+      "content",
+      "noindex, nofollow",
     );
-    expect(screen.getByRole("link", { name: MEMBER_GUIDE_CONTACT.email })).toHaveAttribute(
-      "href",
-      MEMBER_GUIDE_CONTACT.mailto,
-    );
-    expect(screen.getByText(/24\/7 access/i)).toBeTruthy();
-    expect(screen.getByText(/20 hours per week/i)).toBeTruthy();
-    expect(screen.getByRole("link", { name: "Back to member home" })).toHaveAttribute(
-      "href",
-      MEMBERS_HOME_PATH,
-    );
-    expect(document.body.textContent).not.toMatch(/wifi password/i);
+    expect(document.querySelector('a[href="/members"]')).toBeNull();
   });
 });

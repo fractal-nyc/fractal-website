@@ -9,7 +9,6 @@ export const RENDERED_ROUTES = [
   "/library",
   "/people",
   "/members",
-  "/members/guide",
   "/responsive-test-404",
 ];
 
@@ -21,4 +20,5 @@ export const INTERNAL_REDIRECTS = [
   { from: "/lab", to: "/library" },
   { from: "/accelerator", to: "/education" },
   { from: "/new-liberal-arts", to: "/education" },
+  { from: "/members/guide", to: "/members" },
 ];

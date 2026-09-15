@@ -10,6 +10,7 @@
 export const MEMBERS_HOSTNAME = "members.fractalnyc.com";
 export const MEMBERS_ORIGIN = `https://${MEMBERS_HOSTNAME}`;
 export const MEMBERS_HOME_PATH = "/members";
+/** Former dedicated guide route; redirects to the combined Member Guide. */
 export const MEMBER_GUIDE_PATH = "/members/guide";
 
 /** Public Luma calendar already used on /events and /campus. */
@@ -44,7 +45,6 @@ export function stripeCustomerPortalLoginUrl(
 
 export const MEMBER_LINKS = {
   manageMembership: stripeCustomerPortalLoginUrl(),
-  memberGuide: MEMBER_GUIDE_PATH,
   events: LUMA_EVENTS_URL,
   cuties: CUTIES_URL,
   discord: DISCORD_URL,
