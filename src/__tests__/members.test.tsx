@@ -193,7 +193,8 @@ describe("MembersPage", () => {
     );
     expect(document.querySelector('header a[href="/members"]')).toBeNull();
     expect(screen.queryByRole("link", { name: "Members" })).toBeNull();
-    expect(screen.getByText("Fractal")).toBeTruthy();
+    expect(screen.getAllByText("Fractal").length).toBeGreaterThanOrEqual(1);
     expect(screen.getAllByText("Collective").length).toBeGreaterThanOrEqual(1);
+    expect(screen.getAllByRole("button", { name: "Open menu" }).length).toBeGreaterThanOrEqual(1);
   });
 });
