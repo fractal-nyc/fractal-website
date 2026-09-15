@@ -13,7 +13,7 @@ import {
   MEMBERS_DISCORD_URL,
   MEMBERS_HOSTNAME,
   MEMBERS_HOME_PATH,
-  STRIPE_CUSTOMER_PORTAL_LOGIN_FALLBACK,
+  STRIPE_CUSTOMER_PORTAL_LOGIN_URL,
   membersHomePathForHost,
   stripeCustomerPortalLoginUrl,
 } from "@/data/member-links";
@@ -50,14 +50,13 @@ describe("member destination config", () => {
     expect(MEMBER_LINKS.cuties).toBe(CUTIES_URL);
   });
 
-  it("uses Stripe's no-code Customer Portal login URL pattern", () => {
-    expect(MEMBER_LINKS.manageMembership).toBe(stripeCustomerPortalLoginUrl());
-    expect(
-      MEMBER_LINKS.manageMembership.startsWith("https://billing.stripe.com/p/login"),
-    ).toBe(true);
-    expect(stripeCustomerPortalLoginUrl("")).toBe(
-      STRIPE_CUSTOMER_PORTAL_LOGIN_FALLBACK,
+  it("uses the live Stripe Customer Portal login URL", () => {
+    expect(MEMBER_LINKS.manageMembership).toBe(STRIPE_CUSTOMER_PORTAL_LOGIN_URL);
+    expect(MEMBER_LINKS.manageMembership).toBe(
+      "https://billing.stripe.com/p/login/7sI8zddAWdabfYc144",
     );
+    expect(stripeCustomerPortalLoginUrl()).toBe(STRIPE_CUSTOMER_PORTAL_LOGIN_URL);
+    expect(stripeCustomerPortalLoginUrl("")).toBe(STRIPE_CUSTOMER_PORTAL_LOGIN_URL);
     expect(
       stripeCustomerPortalLoginUrl(" https://billing.stripe.com/p/login/live_abc "),
     ).toBe("https://billing.stripe.com/p/login/live_abc");

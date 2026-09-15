@@ -4,8 +4,8 @@
  * Keep member-home URLs here rather than scattering literals through UI.
  * Luma reuses the public calendar. Discord is the members-only invite
  * (distinct from the public Discord linked on Home, Campus, People,
- * and Co-Living). The Stripe Customer Portal login URL is
- * Dashboard-provisioned — see docs/members-home.md.
+ * and Co-Living). Manage membership uses the live Stripe Customer Portal
+ * login URL (overridable via VITE_STRIPE_CUSTOMER_PORTAL_URL).
  */
 
 export const MEMBERS_HOSTNAME = "members.fractalnyc.com";
@@ -31,12 +31,12 @@ export const MEMBERS_DISCORD_URL = "https://discord.gg/DaHFyPubNv";
 export const CUTIES_URL = "https://cuties.app/";
 
 /**
- * Stripe no-code Customer Portal login.
- * Shape: https://billing.stripe.com/p/login/{LIVE_ID}
- * Set VITE_STRIPE_CUSTOMER_PORTAL_URL once the Dashboard link is activated.
+ * Stripe no-code Customer Portal login (public; Dashboard → Activate link).
+ * Return URL is already set to https://members.fractalnyc.com.
+ * Optional override: VITE_STRIPE_CUSTOMER_PORTAL_URL.
  */
-export const STRIPE_CUSTOMER_PORTAL_LOGIN_FALLBACK =
-  "https://billing.stripe.com/p/login/";
+export const STRIPE_CUSTOMER_PORTAL_LOGIN_URL =
+  "https://billing.stripe.com/p/login/7sI8zddAWdabfYc144";
 
 export function stripeCustomerPortalLoginUrl(
   envUrl: string | undefined = import.meta.env.VITE_STRIPE_CUSTOMER_PORTAL_URL,
@@ -44,7 +44,7 @@ export function stripeCustomerPortalLoginUrl(
   const trimmed = envUrl?.trim();
   return trimmed && trimmed.length > 0
     ? trimmed
-    : STRIPE_CUSTOMER_PORTAL_LOGIN_FALLBACK;
+    : STRIPE_CUSTOMER_PORTAL_LOGIN_URL;
 }
 
 export const MEMBER_LINKS = {

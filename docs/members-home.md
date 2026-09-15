@@ -20,25 +20,17 @@ Code already redirects `members.fractalnyc.com/` → `/members`. Remaining opera
 2. Create the DNS record Vercel shows (typically a CNAME `members` → `cname.vercel-dns.com`).
 3. Confirm `https://members.fractalnyc.com` loads the member home and is not linked from the public nav.
 
-## Stripe Customer Portal (Dashboard-only)
+## Stripe Customer Portal
 
-The site has **Payment Links** for signup (`buy.stripe.com` on `/campus`) but no Customer Portal login ID in the repo. Manage membership is wired to Stripe's no-code portal URL:
+Manage membership on `/members` uses the live no-code Customer Portal login:
 
-`https://billing.stripe.com/p/login/{LIVE_ID}`
+`https://billing.stripe.com/p/login/7sI8zddAWdabfYc144`
 
-Until `{LIVE_ID}` is pasted in, the CTA uses the fallback `https://billing.stripe.com/p/login/` (correct pattern, incomplete ID).
+That URL is the committed default in `src/data/member-links.ts`, so the button works on preview without a Vercel env var. Optional override: `VITE_STRIPE_CUSTOMER_PORTAL_URL`.
 
-### Activate the login link
-
-1. Open [Customer portal settings](https://dashboard.stripe.com/settings/billing/portal) (test mode first, then live).
-2. Click **Activate link**.
-3. Copy the login URL (`https://billing.stripe.com/p/login/…`).
-4. Set Vercel env `VITE_STRIPE_CUSTOMER_PORTAL_URL` to that live URL (or put it in `src/data/member-links.ts`). Redeploy so the client bundle picks it up.
-5. Optional: `?prefilled_email=` can be appended when emailing a member directly.
+The portal return/redirect URL is already `https://members.fractalnyc.com`.
 
 ### Portal configuration (MVP)
-
-Set the default redirect / return URL to `https://members.fractalnyc.com`.
 
 Enable:
 
@@ -54,6 +46,8 @@ Leave **disabled**:
 - Retention coupons, unless Fractal already has a membership-policy coupon
 
 Do not build a custom cancellation UI.
+
+Optional: `?prefilled_email=` can be appended when emailing a member directly.
 
 ### Branding
 
