@@ -100,6 +100,13 @@ describe("MembersPage", () => {
     expect(screen.getByRole("heading", { name: "Wi-Fi" })).toBeTruthy();
   });
 
+  it("renders every section immediately, without a scroll-into-view fade", () => {
+    const { container } = renderAt(MembersPage, "/members");
+    expect(container.querySelector("[style*='opacity']")).toBeNull();
+    expect(screen.getByRole("heading", { name: "Community" })).toBeVisible();
+    expect(screen.getByRole("heading", { name: "Wi-Fi" })).toBeVisible();
+  });
+
   it("covers the operational notes from Campus members", () => {
     renderAt(MembersPage, "/members");
     expect(screen.getByText(/open 24\/7/i)).toBeTruthy();

@@ -71,4 +71,4 @@ In Stripe **Branding** and **Public account details**, set the public business n
 
 ## Destinations
 
-Canonical URLs live in `src/data/member-links.ts`. Guide facts (address, amenities, Crystal) live in `src/data/member-guide.ts` and only restate public Campus copy.
+Canonical URLs live in `src/data/member-links.ts`. Wi-Fi credentials live in `src/data/member-guide.ts`; the rest of the guide copy is on `src/pages/MembersPage.tsx`.
