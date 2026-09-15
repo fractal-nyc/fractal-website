@@ -10,6 +10,7 @@ import {
   DISCORD_URL,
   LUMA_EVENTS_URL,
   MEMBER_LINKS,
+  MEMBERS_DISCORD_URL,
   MEMBERS_HOSTNAME,
   MEMBERS_HOME_PATH,
   STRIPE_CUSTOMER_PORTAL_LOGIN_FALLBACK,
@@ -36,11 +37,13 @@ function setViewport(width: number) {
 }
 
 describe("member destination config", () => {
-  it("reuses the public Luma and Discord URLs", () => {
+  it("reuses the public Luma calendar and the members Discord invite", () => {
     expect(MEMBER_LINKS.events).toBe(LUMA_EVENTS_URL);
     expect(MEMBER_LINKS.events).toBe("https://lu.ma/nyc-tech");
-    expect(MEMBER_LINKS.discord).toBe(DISCORD_URL);
-    expect(MEMBER_LINKS.discord).toBe("https://discord.gg/Er974gPTXe");
+    expect(MEMBER_LINKS.discord).toBe(MEMBERS_DISCORD_URL);
+    expect(MEMBER_LINKS.discord).toBe("https://discord.gg/DaHFyPubNv");
+    expect(MEMBER_LINKS.discord).not.toBe(DISCORD_URL);
+    expect(DISCORD_URL).toBe("https://discord.gg/Er974gPTXe");
   });
 
   it("points Cuties at the public Cuties site", () => {
@@ -78,14 +81,14 @@ describe("MembersPage", () => {
     document.querySelector('meta[name="robots"]')?.remove();
   });
 
-  it("uses a one-line Member Guide headline with no subheading or top wordmark", () => {
+  it("uses a one-line Member Guide headline with no page subheading", () => {
     const { container } = renderAt(MembersPage, "/members");
     const heading = screen.getByRole("heading", { level: 1, name: "Member Guide" });
     expect(heading).toHaveClass("whitespace-nowrap");
     expect(heading.textContent).toBe("Member Guide");
     expect(screen.queryByText(/everything you need/i)).toBeNull();
     expect(container.querySelector("[data-sector-letter]")).toBeNull();
-    expect(document.querySelector("header")).toBeNull();
+    expect(document.querySelector("[data-site-navbar]")).toBeTruthy();
     expect(document.querySelector("[data-members-home]")).toBeTruthy();
   });
 
@@ -100,6 +103,9 @@ describe("MembersPage", () => {
     expect(screen.getByRole("heading", { name: "Events" })).toBeTruthy();
     expect(screen.getByRole("heading", { name: "Quiet hours" })).toBeTruthy();
     expect(screen.getByRole("heading", { name: "Wi-Fi" })).toBeTruthy();
+    expect(screen.getByRole("heading", { name: "Community" })).toBeTruthy();
+    expect(screen.getByRole("heading", { name: "Membership Changes" })).toBeTruthy();
+    expect(screen.queryByRole("heading", { name: /^Membership$/ })).toBeNull();
   });
 
   it("renders every section immediately, without a scroll-into-view fade", () => {
@@ -108,9 +114,9 @@ describe("MembersPage", () => {
       "utf8",
     );
     expect(source).not.toMatch(/FadeIn/);
+    expect(source).not.toMatch(/FractalPattern/);
     renderAt(MembersPage, "/members");
     for (const name of [
-      "Membership",
       "Hours and access",
       "Kitchens",
       "Desks",
@@ -119,6 +125,7 @@ describe("MembersPage", () => {
       "Quiet hours",
       "Wi-Fi",
       "Community",
+      "Membership Changes",
     ]) {
       expect(screen.getByRole("heading", { name })).toBeVisible();
     }
@@ -129,29 +136,34 @@ describe("MembersPage", () => {
     expect(screen.getByText(/open 24\/7/i)).toBeTruthy();
     expect(screen.getByText(/20 hours a week/i)).toBeTruthy();
     expect(screen.getByText(/pin code from your member email/i)).toBeTruthy();
-    expect(screen.getByText(/both kitchens are open/i)).toBeTruthy();
+    expect(screen.getByText(/you may leave food in the fridge and pantry/i)).toBeTruthy();
     expect(screen.getByText(/coffee machines/i)).toBeTruthy();
     expect(screen.getByText(/label food with your name and an expiry date/i)).toBeTruthy();
     expect(screen.getByText(/open containers in the pantry/i)).toBeTruthy();
     expect(screen.getByText(/unlabeled or expired food will be thrown out/i)).toBeTruthy();
+    expect(screen.queryByText(/both kitchens are open/i)).toBeNull();
+    expect(screen.queryByText(/there are no restrictions/i)).toBeNull();
     expect(screen.getByText(/name and a reserved sign/i)).toBeTruthy();
     expect(screen.getByText(/time sheets on the doors/i)).toBeTruthy();
-    expect(screen.getByText(/submit it for approval/i)).toBeTruthy();
+    expect(screen.getByText(/submit it for approval by clicking/i)).toBeTruthy();
+    expect(screen.getByText(/Submit Event/)).toBeTruthy();
     expect(screen.getByText(/after 8pm/i)).toBeTruthy();
     expect(screen.getByText(MEMBER_GUIDE_WIFI.network)).toBeTruthy();
     expect(screen.getByText(MEMBER_GUIDE_WIFI.password)).toBeTruthy();
   });
 
-  it("keeps a clear Stripe manage-membership CTA", () => {
+  it("keeps a Stripe manage-membership button as the last section, without extra copy", () => {
     renderAt(MembersPage, "/members");
+    const headings = screen.getAllByRole("heading", { level: 2 }).map((el) => el.textContent);
+    expect(headings.at(-1)).toBe("Membership Changes");
     const manage = screen.getByRole("link", { name: "Manage membership" });
     expect(manage).toHaveAttribute("href", MEMBER_LINKS.manageMembership);
     expect(manage).toHaveAttribute("target", "_blank");
     expect(manage.getAttribute("rel")).toContain("noopener");
-    expect(screen.getByText(/cancel or change your membership/i)).toBeTruthy();
+    expect(screen.queryByText(/cancel or change your membership/i)).toBeNull();
   });
 
-  it("links Luma, Discord, and optional Cuties as text, not cards", () => {
+  it("links Luma, the members Discord, and Cuties as text, not cards", () => {
     renderAt(MembersPage, "/members");
     const lumaLinks = screen.getAllByRole("link", { name: /luma/i });
     expect(lumaLinks.length).toBeGreaterThanOrEqual(1);
@@ -160,23 +172,28 @@ describe("MembersPage", () => {
     }
     expect(screen.getByRole("link", { name: "Discord" })).toHaveAttribute(
       "href",
-      DISCORD_URL,
+      MEMBERS_DISCORD_URL,
     );
     expect(screen.getByRole("link", { name: "Cuties" })).toHaveAttribute(
       "href",
       CUTIES_URL,
     );
-    expect(screen.getByText(/is optional/i)).toBeTruthy();
+    expect(screen.getByText(/say hi and ask questions/i)).toBeTruthy();
+    expect(screen.getByText(/make friends, find collaborators, or look for love/i)).toBeTruthy();
+    expect(screen.queryByText(/is optional/i)).toBeNull();
     expect(document.body.textContent).not.toMatch(/must (join|have) a cuties/i);
   });
 
-  it("marks the page noindex and does not add Members to a public navbar", () => {
+  it("marks the page noindex and does not add Members to the public navbar", () => {
     renderAt(MembersPage, "/members");
     expect(document.title).toBe("Member Guide");
     expect(document.querySelector('meta[name="robots"]')).toHaveAttribute(
       "content",
       "noindex, nofollow",
     );
-    expect(document.querySelector('a[href="/members"]')).toBeNull();
+    expect(document.querySelector('header a[href="/members"]')).toBeNull();
+    expect(screen.queryByRole("link", { name: "Members" })).toBeNull();
+    expect(screen.getByText("Fractal")).toBeTruthy();
+    expect(screen.getAllByText("Collective").length).toBeGreaterThanOrEqual(1);
   });
 });

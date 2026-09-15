@@ -121,7 +121,7 @@ Every course requires an ordered `instructors` array of exact `{ name, bio }` so
 
 ### Campus Member Guide (`/members` — `src/pages/MembersPage.tsx`)
 
-Unlisted coworking-member guide for `https://members.fractalnyc.com`. Not in the public navbar. No top wordmark. Headline *"Member Guide"*. Copy: `src/data/member-guide.ts` and the page file. Destinations (Stripe, Luma, Cuties, Discord): `src/data/member-links.ts`. `/members/guide` redirects here. Operator steps (Vercel domain + Stripe Dashboard): [`docs/members-home.md`](./docs/members-home.md).
+Unlisted coworking-member guide for `https://members.fractalnyc.com`. Not a public navbar *destination* (no Members link in the menu). Uses the shared site header (Fractal Collective + hamburger) so members can reach the rest of the site. Headline *"Member Guide"*. Copy: `src/data/member-guide.ts` and the page file. Destinations (Stripe, Luma, Cuties, members Discord): `src/data/member-links.ts`. `/members/guide` redirects here. Operator steps (Vercel domain + Stripe Dashboard): [`docs/members-home.md`](./docs/members-home.md).
 
 ### The Protocol (`/the-protocol` — `src/pages/ProtocolPage.tsx`)
 

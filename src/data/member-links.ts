@@ -2,9 +2,10 @@
  * Canonical destinations for Fractal Campus coworking members.
  *
  * Keep member-home URLs here rather than scattering literals through UI.
- * Luma and Discord reuse the public site's existing destinations.
- * The Stripe Customer Portal login URL is Dashboard-provisioned — see
- * docs/members-home.md.
+ * Luma reuses the public calendar. Discord is the members-only invite
+ * (distinct from the public Discord linked on Home, Campus, People,
+ * and Co-Living). The Stripe Customer Portal login URL is
+ * Dashboard-provisioned — see docs/members-home.md.
  */
 
 export const MEMBERS_HOSTNAME = "members.fractalnyc.com";
@@ -16,8 +17,11 @@ export const MEMBER_GUIDE_PATH = "/members/guide";
 /** Public Luma calendar already used on /events and /campus. */
 export const LUMA_EVENTS_URL = "https://lu.ma/nyc-tech";
 
-/** Public Discord invite already used on Home, Campus, People, Co-Living. */
+/** Public Discord invite used on Home, Campus, People, and Co-Living. */
 export const DISCORD_URL = "https://discord.gg/Er974gPTXe";
+
+/** Campus coworking members Discord (not the public-site invite). */
+export const MEMBERS_DISCORD_URL = "https://discord.gg/DaHFyPubNv";
 
 /**
  * Cuties is not linked anywhere in this repo. The public Cuties site
@@ -47,7 +51,7 @@ export const MEMBER_LINKS = {
   manageMembership: stripeCustomerPortalLoginUrl(),
   events: LUMA_EVENTS_URL,
   cuties: CUTIES_URL,
-  discord: DISCORD_URL,
+  discord: MEMBERS_DISCORD_URL,
 } as const;
 
 export function membersHomePathForHost(

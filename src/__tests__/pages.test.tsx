@@ -65,7 +65,7 @@ const pages = [
   { name: "LibraryPage", Component: LibraryPage, path: "/library", hasNavbar: true },
   { name: "PeoplePage", Component: PeoplePage, path: "/people", hasNavbar: true },
   { name: "ProtocolPage", Component: ProtocolPage, path: "/the-protocol", hasNavbar: true },
-  { name: "MembersPage", Component: MembersPage, path: "/members", hasNavbar: false },
+  { name: "MembersPage", Component: MembersPage, path: "/members", hasNavbar: true },
 ] as const;
 
 describe("Page rendering", () => {
