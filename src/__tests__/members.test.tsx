@@ -160,6 +160,10 @@ describe("MembersPage", () => {
     const headings = screen.getAllByRole("heading", { level: 2 }).map((el) => el.textContent);
     expect(headings.at(-1)).toBe("Membership Changes");
     const manage = screen.getByRole("link", { name: "Manage membership" });
+    expect(manage).toHaveAttribute(
+      "href",
+      "https://billing.stripe.com/p/login/7sI8zddAWdabfYc144",
+    );
     expect(manage).toHaveAttribute("href", MEMBER_LINKS.manageMembership);
     expect(manage).toHaveAttribute("target", "_blank");
     expect(manage.getAttribute("rel")).toContain("noopener");
