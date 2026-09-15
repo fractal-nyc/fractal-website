@@ -135,7 +135,9 @@ describe("MembersPage", () => {
     renderAt(MembersPage, "/members");
     expect(screen.getByText(/open 24\/7/i)).toBeTruthy();
     expect(screen.getByText(/20 hours a week/i)).toBeTruthy();
-    expect(screen.getByText(/pin code from your member email/i)).toBeTruthy();
+    expect(
+      screen.getByText(/pin code we emailed to you/i),
+    ).toBeTruthy();
     expect(screen.getByText(/you may leave food in the fridge and pantry/i)).toBeTruthy();
     expect(screen.getByText(/coffee machines/i)).toBeTruthy();
     expect(screen.getByText(/label food with your name and an expiry date/i)).toBeTruthy();

@@ -65,8 +65,8 @@ export function MembersPage() {
                 up to 20 hours a week.
               </p>
               <p>
-                After hours, let yourself in with the pin code from your
-                member email.
+                After hours, let yourself in with the pin code we emailed to
+                you.
               </p>
             </GuideSection>
 
