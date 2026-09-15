@@ -55,9 +55,11 @@ describe("Inner page navbar", () => {
     }
   });
 
-  it("should NOT render Political Club or People in nav (FRAC-161)", () => {
+  it("should NOT render Political Club, People, or Members in nav (FRAC-161)", () => {
     expect(screen.queryByText("Political Club")).toBeNull();
     expect(screen.queryByText("People")).toBeNull();
+    expect(screen.queryByText("Member Home")).toBeNull();
+    expect(screen.queryByText("Members")).toBeNull();
   });
 
   it("should NOT use Jacquard font styling on inner page nav links (FRAC-83 regression)", () => {

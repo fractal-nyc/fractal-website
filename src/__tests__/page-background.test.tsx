@@ -30,6 +30,9 @@ vi.mock("@/pages/PeoplePage", () => ({
 vi.mock("@/pages/EducationPage", () => ({
   EducationPage: () => <main data-testid="page-education" />,
 }));
+vi.mock("@/pages/MembersPage", () => ({
+  MembersPage: () => <main data-testid="page-members" />,
+}));
 vi.mock("@/pages/not-found", () => ({
   default: () => <div data-testid="page-not-found" />,
 }));
@@ -50,6 +53,7 @@ const CANONICAL_ROUTE_BACKGROUNDS = [
   ["/education", "var(--color-house-education-deep)"],
   ["/political-club", "var(--color-house-political-club-deep)"],
   ["/library", "var(--color-house-library-light)"],
+  ["/members", CREAM],
 ] as const;
 
 const LEGACY_ROUTE_BACKGROUNDS = [
@@ -60,6 +64,7 @@ const LEGACY_ROUTE_BACKGROUNDS = [
   ["/lab", "var(--color-house-library-light)"],
   ["/accelerator", "var(--color-house-education-deep)"],
   ["/new-liberal-arts", "var(--color-house-education-deep)"],
+  ["/members/guide", CREAM],
 ] as const;
 
 function setViewport(width: number) {
