@@ -1,5 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import { describe, it, expect, beforeEach, afterEach } from "vitest";
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
 import { Router as WouterRouter } from "wouter";
 import { memoryLocation } from "wouter/memory-location";
 import { MembersPage } from "@/pages/MembersPage";
@@ -101,10 +103,25 @@ describe("MembersPage", () => {
   });
 
   it("renders every section immediately, without a scroll-into-view fade", () => {
-    const { container } = renderAt(MembersPage, "/members");
-    expect(container.querySelector("[style*='opacity']")).toBeNull();
-    expect(screen.getByRole("heading", { name: "Community" })).toBeVisible();
-    expect(screen.getByRole("heading", { name: "Wi-Fi" })).toBeVisible();
+    const source = readFileSync(
+      resolve(process.cwd(), "src/pages/MembersPage.tsx"),
+      "utf8",
+    );
+    expect(source).not.toMatch(/FadeIn/);
+    renderAt(MembersPage, "/members");
+    for (const name of [
+      "Membership",
+      "Hours and access",
+      "Kitchens",
+      "Desks",
+      "Call booths",
+      "Events",
+      "Quiet hours",
+      "Wi-Fi",
+      "Community",
+    ]) {
+      expect(screen.getByRole("heading", { name })).toBeVisible();
+    }
   });
 
   it("covers the operational notes from Campus members", () => {
