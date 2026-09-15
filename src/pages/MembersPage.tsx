@@ -97,14 +97,14 @@ export function MembersPage() {
               </p>
             </GuideSection>
 
-            <GuideSection title="Events">
+            <GuideSection title="Hosting Events">
               <p>
-                Members can host events on the Fractal{" "}
+                Members can host events at Fractal Campus. Go to our{" "}
                 <OutboundLink href={MEMBER_LINKS.events} variant="inline">
                   Luma calendar
-                </OutboundLink>
-                . Choose a date and time that does not already have an event,
-                then submit it for approval by clicking “Submit Event”.
+                </OutboundLink>{" "}
+                and click “Submit Event”. Please first check our existing
+                events to make sure you aren't double scheduling.
               </p>
             </GuideSection>
 

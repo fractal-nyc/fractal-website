@@ -100,7 +100,7 @@ describe("MembersPage", () => {
     expect(screen.getByRole("heading", { name: "Kitchens" })).toBeTruthy();
     expect(screen.getByRole("heading", { name: "Desks" })).toBeTruthy();
     expect(screen.getByRole("heading", { name: "Call booths" })).toBeTruthy();
-    expect(screen.getByRole("heading", { name: "Events" })).toBeTruthy();
+    expect(screen.getByRole("heading", { name: "Hosting Events" })).toBeTruthy();
     expect(screen.getByRole("heading", { name: "Quiet hours" })).toBeTruthy();
     expect(screen.getByRole("heading", { name: "Wi-Fi" })).toBeTruthy();
     expect(screen.getByRole("heading", { name: "Community" })).toBeTruthy();
@@ -121,7 +121,7 @@ describe("MembersPage", () => {
       "Kitchens",
       "Desks",
       "Call booths",
-      "Events",
+      "Hosting Events",
       "Quiet hours",
       "Wi-Fi",
       "Community",
@@ -147,8 +147,10 @@ describe("MembersPage", () => {
     expect(screen.queryByText(/there are no restrictions/i)).toBeNull();
     expect(screen.getByText(/name and a reserved sign/i)).toBeTruthy();
     expect(screen.getByText(/time sheets on the doors/i)).toBeTruthy();
-    expect(screen.getByText(/submit it for approval by clicking/i)).toBeTruthy();
+    expect(screen.getByText(/host events at Fractal Campus/i)).toBeTruthy();
     expect(screen.getByText(/Submit Event/)).toBeTruthy();
+    expect(screen.getByText(/aren't double scheduling/i)).toBeTruthy();
+    expect(screen.queryByText(/submit it for approval/i)).toBeNull();
     expect(screen.getByText(/after 8pm/i)).toBeTruthy();
     expect(screen.getByText(MEMBER_GUIDE_WIFI.network)).toBeTruthy();
     expect(screen.getByText(MEMBER_GUIDE_WIFI.password)).toBeTruthy();
