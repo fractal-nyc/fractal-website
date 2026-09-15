@@ -36,6 +36,8 @@ import { LibraryPage } from "@/pages/LibraryPage";
 import { PeoplePage } from "@/pages/PeoplePage";
 import { ProtocolPage } from "@/pages/ProtocolPage";
 import { EducationPage } from "@/pages/EducationPage";
+import { MembersPage } from "@/pages/MembersPage";
+import { MemberGuidePage } from "@/pages/MemberGuidePage";
 
 // ---------------------------------------------------------------------------
 // Helper: render a page component at the given route
@@ -64,6 +66,8 @@ const pages = [
   { name: "LibraryPage", Component: LibraryPage, path: "/library" },
   { name: "PeoplePage", Component: PeoplePage, path: "/people" },
   { name: "ProtocolPage", Component: ProtocolPage, path: "/the-protocol" },
+  { name: "MembersPage", Component: MembersPage, path: "/members" },
+  { name: "MemberGuidePage", Component: MemberGuidePage, path: "/members/guide" },
 ] as const;
 
 describe("Page rendering", () => {
@@ -161,6 +165,8 @@ describe("Route paths match expected URLs", () => {
     { path: "/library", label: "Library" },
     { path: "/people", label: "People" },
     { path: "/the-protocol", label: "Protocol" },
+    { path: "/members", label: "Members" },
+    { path: "/members/guide", label: "Member Guide" },
   ];
 
   for (const { path, label } of expectedRoutes) {

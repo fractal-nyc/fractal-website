@@ -48,6 +48,8 @@ If step 5 fails, tell Claude what's wrong — one round of correction is usually
 - **`src/data/publications-documents.ts`** — every entry in the Publications archive (`/publications`): title, authors, description, URL, category, tags, `featured` flag.
 - **`src/data/storyPhotos.ts`** — the Story page photo gallery: image paths, alt text, and gallery layout.
 - **`src/data/fractalu-catalog.json`** — reviewed FractalU fallback snapshot. Update it alongside approved published catalog changes so first-paint/offline behavior stays aligned; see [`docs/sanity-cms.md`](./docs/sanity-cms.md).
+- **`src/data/member-links.ts`** — canonical URLs for the unlisted Campus member home (Stripe portal, Luma, Cuties, Discord, member guide).
+- **`src/data/member-guide.ts`** — known-fact copy for `/members/guide` (address, access, amenities, Crystal). Do not invent Wi-Fi or house rules here.
 
 ### Site-wide (every page)
 
@@ -116,6 +118,10 @@ Every course requires an ordered `instructors` array of exact `{ name, bio }` so
 ### People (`/people` — `src/pages/PeoplePage.tsx`)
 
 - Headline *"A Fractal Is a Friendship Infrastructure"*, Discord button, and the members-portal teaser. Hidden from the navbar.
+
+### Campus Member Home (`/members` — `src/pages/MembersPage.tsx`)
+
+Unlisted coworking-member index for `https://members.fractalnyc.com`. Not in the public navbar. Destinations and Stripe portal URL: `src/data/member-links.ts`. Guide facts: `src/data/member-guide.ts` / `src/pages/MemberGuidePage.tsx`. Operator steps (Vercel domain + Stripe Dashboard): [`docs/members-home.md`](./docs/members-home.md).
 
 ### The Protocol (`/the-protocol` — `src/pages/ProtocolPage.tsx`)
 

@@ -4,9 +4,22 @@
   "installCommand": "pnpm install",
   "outputDirectory": "dist",
   "framework": "vite",
+  "redirects": [
+    {
+      "source": "/",
+      "has": [
+        {
+          "type": "host",
+          "value": "members.fractalnyc.com"
+        }
+      ],
+      "destination": "/members",
+      "permanent": false
+    }
+  ],
   "rewrites": [
     {
-      "source": "/((?!assets/|images/|favicon|apple-touch-icon).*)",
+      "source": "/((?!assets/|images/|favicon|apple-touch-icon|robots\\.txt).*)",
       "destination": "/index.html"
     }
   ]

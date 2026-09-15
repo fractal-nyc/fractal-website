@@ -8,6 +8,8 @@ export const RENDERED_ROUTES = [
   "/political-club",
   "/library",
   "/people",
+  "/members",
+  "/members/guide",
   "/responsive-test-404",
 ];
 
