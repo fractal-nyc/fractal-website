@@ -2,11 +2,11 @@
   "semester": "Fall 2026",
   "sourceProvenance": {
     "url": "mailto:fractalu@fractalnyc.com",
-    "verifiedAt": "2026-09-09T17:47:44Z",
-    "lastModified": "2026-09-09T17:47:44Z",
+    "verifiedAt": "2026-09-09T18:54:22Z",
+    "lastModified": "2026-09-09T18:54:22Z",
     "etag": "fall-2026-authored",
-    "byteLength": 28015,
-    "sha256": "b000293cbc4d54e77a25e834ad48e5a0ac52884b040d308951d07416df31f7f6"
+    "byteLength": 26256,
+    "sha256": "1731765b98cd0fefacde2a6d4c21ef2a65b10700b95dc8229d59df2b400b2089"
   },
   "courses": [
     {
@@ -67,30 +67,6 @@
       "detailsUrl": "https://theactualizedalien.com/drum-circle-101",
       "detailsLabel": "Course details",
       "applicationUrl": "https://forms.gle/8gjQordczWZUoxuR8",
-      "applicationLabel": "Apply"
-    },
-    {
-      "id": "dating-dojo",
-      "title": "Dating Dojo",
-      "category": "Mind & Body",
-      "instructors": [
-        {
-          "name": "Samson Zhilyaev",
-          "bio": "I arrived into the maelstrom that is the NYC dating scene with nothing but the shirt on my back and a dream in 2021. That dream was to have meaningful and fulfilling relationships! From simple—and perhaps initially awkward—origins I built a vibrant and spiritually fulfilling dating life that continues to flourish. This embodied and hard fought knowledge is paired with my training in group facilitation and chaplaincy to offer thoughtful support to those interested in transforming their dating life."
-        },
-        {
-          "name": "Joanna Koren",
-          "bio": "I've come to realize that the most important relationship to build is with myself. I've spent years exploring my own internal wiring—diving into attachment theory and early childhood conditioning—to figure out why my system panics at the slightest hint of a real connection. I'm here to offer an honest, pressure-free space for exploring those internal reactions—the anxiety, the urge to retreat, and what it might take to navigate them."
-        }
-      ],
-      "schedule": "Tuesdays, 7–8:30pm",
-      "dates": "Oct 6 – Nov 10",
-      "location": "Merlin's Place, Bushwick",
-      "price": "$200 – $700 sliding scale",
-      "description": "Through the practice of embodied relational exercises, large and small group discussions, and 1-on-1 coaching participants will be able to identify key hurdles in their dating life to become more confident and competent in their romantic pursuits. Leading to more fulfilling and meaningful relationships.",
-      "detailsUrl": "https://app.notion.com/p/Dating-Dojo-3ca8cf824a118006ac6bf31fe3ffef85",
-      "detailsLabel": "Course details",
-      "applicationUrl": "https://forms.gle/rcNY5CppHUSzmd9KA",
       "applicationLabel": "Apply"
     },
     {
