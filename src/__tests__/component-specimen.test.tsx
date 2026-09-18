@@ -5,6 +5,7 @@ import { COMPONENT_REGISTRY } from "../../components/catalog/registry";
 import { VisualSpecimenCard } from "../../components/catalog/VisualSpecimenCard";
 import { ComponentDetail } from "../../components/catalog/ComponentDetail";
 import { ComponentLibraryApp } from "../../components/ComponentLibraryApp";
+import { FRACTALU_CATALOG, FRACTALU_CATEGORIES } from "@/data/fractalu";
 
 const FINE_POINTER_QUERY =
   "(min-width: 64rem) and (hover: hover) and (pointer: fine)";
@@ -481,21 +482,16 @@ describe("interactive component specimens", () => {
     expect(outerScope).toHaveAttribute("data-component-colorway", "education");
     expect(outerScope).toHaveAttribute("data-component-surface", "deep");
     const group = within(container).getByRole("group", { name: "Filter classes by subject" });
+    // Chips and counts come from the generated catalog -- see FRAC-232.
     expect(within(group).getAllByRole("button").map((button) => button.textContent)).toEqual([
-      "All",
-      "Craft",
-      "Civics",
-      "Music",
-      "Mind & Body",
-      "Movement",
-      "Literature",
-      "Writing",
-      "Games",
+      ...FRACTALU_CATEGORIES,
     ]);
-    expect(within(container).getByText("18 courses shown.")).toHaveAttribute("aria-live", "polite");
+    const courseCount = FRACTALU_CATALOG.courses.length;
+    const craftCount = FRACTALU_CATALOG.courses.filter((c) => c.category === "Craft").length;
+    expect(within(container).getByText(`${courseCount} courses shown.`)).toHaveAttribute("aria-live", "polite");
     fireEvent.click(within(group).getByRole("button", { name: "Craft" }));
     expect(within(group).getByRole("button", { name: "Craft" })).toHaveAttribute("aria-pressed", "true");
-    expect(within(container).getByText("4 courses shown.")).toBeInTheDocument();
+    expect(within(container).getByText(`${craftCount} courses shown.`)).toBeInTheDocument();
 
     fireEvent.change(within(container).getByLabelText("Selection behavior"), { target: { value: "multiple" } });
     expect(within(container).getByRole("group", { name: "Filter by tag" })).toBeInTheDocument();

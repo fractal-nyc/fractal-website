@@ -12,6 +12,24 @@ import {
   FRACTALU_SOURCE_PROVENANCE,
 } from "@/data/fractalu";
 
+// Catalog inventory is generated from Sanity, so it changes whenever a class is
+// added or pulled. Derive every size from the catalog; assert behaviour, never
+// inventory. See FRAC-232.
+const COURSE_COUNT = FRACTALU_CATALOG.courses.length;
+const CLUB_COUNT = FRACTALU_CATALOG.clubs.length;
+const INSTRUCTOR_COUNT = FRACTALU_CATALOG.courses.reduce(
+  (total, course) => total + course.instructors.length,
+  0,
+);
+const REVEAL_STEP = 0.06;
+const REVEAL_MAX = 0.3;
+const courseRevealDelays = (count: number) =>
+  Array.from({ length: count }, (_, i) => Math.min(i * REVEAL_STEP, REVEAL_MAX).toFixed(2));
+const clubRevealDelays = (count: number) =>
+  Array.from({ length: count }, (_, i) => (i * REVEAL_STEP).toFixed(2));
+const coursesInCategory = (category: string) =>
+  FRACTALU_CATALOG.courses.filter((course) => course.category === category).length;
+
 const MEL_BRAND_BIO =
   "Mel Brand is a Brooklyn-based industrial designer creating environmentally conscious furniture that balances sustainability with playful conceptual thinking. With 10 years of experience in architecture, architectural lighting design, and industrial design her work considers the relationship between furniture, space, and human interaction in the home. She brings levity to complex topics, using humor as a design tool to make serious issues more approachable. Her recent projects span furniture, lighting, and home goods, often working with materials such as wood, 3D printing, ceramics, and fabric. By combining thoughtful design with a systems-oriented mindset, Mel aims to create work that sparks both joy and reflection.";
 const JULIANNE_LEFELHOCZ_BIO =
@@ -224,15 +242,15 @@ describe("FractalUniversityPortal", () => {
     expect(within(catalog).getByText(course.instructors[0].bio)).toBeTruthy();
   });
 
-  it("renders one 18-course collection and the single-club snapshot", () => {
+  it("renders one course collection and the club snapshot", () => {
     render(<FractalUniversityPortal />);
     const catalog = screen.getByTestId("fractalu-course-catalog");
     const clubs = screen.getByTestId("fractalu-clubs");
-    expect(within(catalog).getAllByRole("article")).toHaveLength(18);
+    expect(within(catalog).getAllByRole("article")).toHaveLength(COURSE_COUNT);
     expect(document.querySelectorAll("[data-course-collection]")).toHaveLength(1);
     expect(document.querySelector("table")).toBeNull();
     expect(document.querySelector("details, summary")).toBeNull();
-    expect(within(clubs).getAllByRole("article")).toHaveLength(1);
+    expect(within(clubs).getAllByRole("article")).toHaveLength(CLUB_COUNT);
     expect(within(clubs).queryByText(/^Open group$/)).toBeNull();
     expect(screen.getByRole("heading", { name: "Clubs & open groups" })).toBeTruthy();
     const semester = screen.getByText(FRACTALU_CATALOG.semester, {
@@ -315,16 +333,10 @@ describe("FractalUniversityPortal", () => {
     const initialCourseSlots = Array.from(
       document.querySelectorAll<HTMLElement>('[data-fractalu-reveal-slot="course"]'),
     );
-    expect(initialCourseSlots).toHaveLength(18);
-    expect(initialCourseSlots.map((slot) => slot.dataset.fractaluRevealDelay)).toEqual([
-      "0.00",
-      "0.06",
-      "0.12",
-      "0.18",
-      "0.24",
-      "0.30",
-      ...Array(12).fill("0.30"),
-    ]);
+    expect(initialCourseSlots).toHaveLength(COURSE_COUNT);
+    expect(initialCourseSlots.map((slot) => slot.dataset.fractaluRevealDelay)).toEqual(
+      courseRevealDelays(COURSE_COUNT),
+    );
     expect(
       initialCourseSlots.every(
         (slot) => slot.dataset.fractaluRevealMode === "animated",
@@ -334,28 +346,30 @@ describe("FractalUniversityPortal", () => {
     const clubSlots = Array.from(
       document.querySelectorAll<HTMLElement>('[data-fractalu-reveal-slot="club"]'),
     );
-    expect(clubSlots.map((slot) => slot.dataset.fractaluRevealDelay)).toEqual(["0.00"]);
+    expect(clubSlots.map((slot) => slot.dataset.fractaluRevealDelay)).toEqual(
+      clubRevealDelays(CLUB_COUNT),
+    );
     expect(document.querySelectorAll("[data-fractalu-information-reveal]")).toHaveLength(4);
 
     fireEvent.click(screen.getByRole("button", { name: "Craft" }));
     const filteredSlots = Array.from(
       document.querySelectorAll<HTMLElement>('[data-fractalu-reveal-slot="course"]'),
     );
-    expect(filteredSlots).toHaveLength(4);
+    expect(filteredSlots).toHaveLength(coursesInCategory("Craft"));
     expect(filteredSlots.every((slot) => slot.dataset.fractaluRevealMode === "static")).toBe(
       true,
     );
-    expect(screen.getByText("4 courses shown.")).toHaveAttribute("aria-live", "polite");
+    expect(screen.getByText(`${coursesInCategory("Craft")} courses shown.`)).toHaveAttribute("aria-live", "polite");
 
     fireEvent.click(screen.getByRole("button", { name: "All" }));
     const restoredSlots = Array.from(
       document.querySelectorAll<HTMLElement>('[data-fractalu-reveal-slot="course"]'),
     );
-    expect(restoredSlots).toHaveLength(18);
+    expect(restoredSlots).toHaveLength(COURSE_COUNT);
     expect(restoredSlots.every((slot) => slot.dataset.fractaluRevealMode === "static")).toBe(
       true,
     );
-    expect(screen.getByText("18 courses shown.")).toHaveAttribute("aria-live", "polite");
+    expect(screen.getByText(`${COURSE_COUNT} courses shown.`)).toHaveAttribute("aria-live", "polite");
   });
 
   it("promotes labelled club schedules and locations directly below each title", () => {
@@ -444,13 +458,13 @@ describe("FractalUniversityPortal", () => {
     expect(technology.className).toContain("bg-[var(--component-accent");
     expect(all).toHaveAttribute("aria-pressed", "false");
     expect(all).toHaveClass("border-foreground-faint", "bg-background", "text-foreground-muted");
-    expect(within(screen.getByTestId("fractalu-course-catalog")).getAllByRole("article")).toHaveLength(4);
-    expect(screen.getByText("4 courses shown.")).toHaveAttribute("aria-live", "polite");
+    expect(within(screen.getByTestId("fractalu-course-catalog")).getAllByRole("article")).toHaveLength(coursesInCategory("Craft"));
+    expect(screen.getByText(`${coursesInCategory("Craft")} courses shown.`)).toHaveAttribute("aria-live", "polite");
     expect(screen.queryByText("Drum Circle 101")).toBeNull();
 
     fireEvent.click(screen.getByRole("button", { name: "All" }));
-    expect(within(screen.getByTestId("fractalu-course-catalog")).getAllByRole("article")).toHaveLength(18);
-    expect(screen.getByText("18 courses shown.")).toHaveAttribute("aria-live", "polite");
+    expect(within(screen.getByTestId("fractalu-course-catalog")).getAllByRole("article")).toHaveLength(COURSE_COUNT);
+    expect(screen.getByText(`${COURSE_COUNT} courses shown.`)).toHaveAttribute("aria-live", "polite");
   });
 
   it("resets a removed semester category to All while keeping source-derived chips", () => {
@@ -479,9 +493,9 @@ describe("FractalUniversityPortal", () => {
     const category = within(firstCard).getByText(FRACTALU_CATALOG.courses[0].category);
     const title = firstCard.querySelector("h3")!;
     expect(category.compareDocumentPosition(title) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
-    expect(cards).toHaveLength(18);
-    expect(catalog.querySelectorAll("[data-category-icon-label]")).toHaveLength(18);
-    expect(catalog.querySelectorAll("[data-category-icon]")).toHaveLength(18);
+    expect(cards).toHaveLength(COURSE_COUNT);
+    expect(catalog.querySelectorAll("[data-category-icon-label]")).toHaveLength(COURSE_COUNT);
+    expect(catalog.querySelectorAll("[data-category-icon]")).toHaveLength(COURSE_COUNT);
     for (const icon of catalog.querySelectorAll("[data-category-icon]")) {
       expect(icon).toHaveClass("h-7", "w-7", "shrink-0");
       expect(icon).toHaveAttribute("aria-hidden", "true");
@@ -520,7 +534,7 @@ describe("FractalUniversityPortal", () => {
     render(<FractalUniversityPortal />);
     const catalog = screen.getByTestId("fractalu-course-catalog");
     const verifiedCourses = FRACTALU_CATALOG.courses.filter((course) => course.detailsUrl);
-    expect(verifiedCourses).toHaveLength(18);
+    expect(verifiedCourses).toHaveLength(COURSE_COUNT);
     for (const course of verifiedCourses) {
       const link = within(catalog).getByRole("link", {
         name: `${course.title} course description (opens in a new tab)`,
@@ -562,10 +576,10 @@ describe("FractalUniversityPortal", () => {
     mockFinePointer(false);
     render(<FractalUniversityPortal />);
     const catalog = screen.getByTestId("fractalu-course-catalog");
-    expect(catalog.querySelectorAll("[data-course-description]")).toHaveLength(18);
-    expect(catalog.querySelectorAll("[data-instructor-bio]")).toHaveLength(18);
-    expect(catalog.querySelectorAll("[data-instructor-record]")).toHaveLength(22);
-    expect(catalog.querySelectorAll("[data-instructor-name]")).toHaveLength(18);
+    expect(catalog.querySelectorAll("[data-course-description]")).toHaveLength(COURSE_COUNT);
+    expect(catalog.querySelectorAll("[data-instructor-bio]")).toHaveLength(COURSE_COUNT);
+    expect(catalog.querySelectorAll("[data-instructor-record]")).toHaveLength(INSTRUCTOR_COUNT);
+    expect(catalog.querySelectorAll("[data-instructor-name]")).toHaveLength(COURSE_COUNT);
     expect(within(catalog).queryByRole("button", { name: "Elena Navarrete & Stephen Thomas" })).toBeNull();
     const firstCard = catalog.querySelector<HTMLElement>(
       '[data-course-id="social-climbers"]',
@@ -611,7 +625,7 @@ describe("FractalUniversityPortal", () => {
     mockFinePointer(true);
     render(<FractalUniversityPortal />);
 
-    expect(FRACTALU_CATALOG.courses).toHaveLength(18);
+    expect(FRACTALU_CATALOG.courses.length).toBeGreaterThan(0);
     for (const course of FRACTALU_CATALOG.courses) {
       expect(course.instructors.length).toBeGreaterThan(0);
       expect(course.instructors.every(({ name, bio }) => name.length > 0 && bio.length > 0)).toBe(true);
@@ -635,14 +649,15 @@ describe("FractalUniversityPortal", () => {
       expect(panel.querySelector("a, button")).toBeNull();
     }
 
-    expect(FRACTALU_SOURCE_PROVENANCE).toEqual({
-      url: "mailto:fractalu@fractalnyc.com",
-      verifiedAt: "2026-09-09T17:47:44Z",
-      lastModified: "2026-09-09T17:47:44Z",
-      etag: "fall-2026-authored",
-      byteLength: 28015,
-      sha256: "b000293cbc4d54e77a25e834ad48e5a0ac52884b040d308951d07416df31f7f6",
-    });
+    // The snapshot is generated from Sanity, so provenance describes that
+    // response and changes on every regeneration. Assert its shape, not its
+    // values -- the values are a fingerprint, not a contract. See FRAC-232.
+    expect(Object.keys(FRACTALU_SOURCE_PROVENANCE).sort()).toEqual([
+      "byteLength", "etag", "lastModified", "sha256", "url", "verifiedAt",
+    ]);
+    expect(FRACTALU_SOURCE_PROVENANCE.byteLength).toBeGreaterThan(0);
+    expect(FRACTALU_SOURCE_PROVENANCE.sha256).toMatch(/^[0-9a-f]{64}$/);
+    expect(Date.parse(FRACTALU_SOURCE_PROVENANCE.verifiedAt)).not.toBeNaN();
   });
 
   it("progressively enhances instructor bios with focus, pinning, and Escape", () => {
@@ -725,7 +740,7 @@ describe("FractalUniversityPortal", () => {
     const outboundLinks = Array.from(
       container.querySelectorAll<HTMLAnchorElement>("[data-education-outbound-link]"),
     );
-    expect(expectedHrefs).toHaveLength(40);
+    expect(new Set(expectedHrefs).size).toBe(expectedHrefs.length);
     expect(outboundLinks).toHaveLength(expectedHrefs.length);
     expect(outboundLinks.map((link) => link.getAttribute("href")).sort()).toEqual(
       [...expectedHrefs].sort(),
