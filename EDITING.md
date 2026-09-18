@@ -80,8 +80,18 @@ If step 5 fails, tell Claude what's wrong — one round of correction is usually
 
 The longest page; everything below is in `Campus.tsx`:
 
-- Headline *"Be Ambitious with Us"*, address link, membership tiers + pricing, *"First time here?"* contact.
-- Section copy: overview + amenities, four audiences, AI Accelerator (+ apply link), *"A place to get shit done…"*, quotes from Andrew Rose and Jake Zegil, events list, Williamsburg / McCarren Park blurbs, team bios, *"…by the way, what's Fractal?"*.
+Sections, in page order:
+
+1. **Hero** — headline *"Be Ambitious with Us"*, address link (Google Maps), the *"First time here?"* line with the guided-tour (cal.com) link and the `campus@fractalnyc.com` contact, the two membership buttons (`MembershipButtonGroup`), and a Join Discord button.
+2. **Overview** — *"A campus in the heart of Williamsburg."* — the orientation paragraph (mission sentence + AI training program + daily community events) and the square-footage paragraph (text only; the real overview photos don't exist yet — see the TODO in `Campus.tsx`).
+3. **Coworking** — free drop-in line pointing at the tour, the two membership tiers as HighlightBox cards with price + access rule + Stripe link (`membershipTiers` array, rendered by `MembershipTiers`), and the *"All members have access to:"* amenities list (`amenities` array).
+4. **Events** — Luma calendar link, the free vs. paid hosting paths as two HighlightBox cards and the Fractal U mention.
+5. **AI Accelerator** — what the program teaches (`acceleratorOutcomes` array) and the *"Apply to the Accelerator"* button.
+6. **Meet the Space** — intro paragraph + the photo carousel.
+7. **Stay in the Loop** — Discord button.
+8. **Already a member?** — View Member Handbook (`/members`) and Manage Membership (Stripe portal).
+
+- URLs live in the constants at the top of the file (Luma, Accelerator, Fractal U, the two Stripe checkouts, Google Maps, the `campus@fractalnyc.com` mailto, the cal.com tour, Discord).
 - **Photo grid** — the `campusPhotos` array (src, alt, caption); images in `public/images/campus/`.
 
 ### Visit (`/visit` — `src/pages/VisitPage.tsx`)
@@ -90,7 +100,7 @@ The longest page; everything below is in `Campus.tsx`:
 
 ### Events (`/events` — `src/pages/EventsPage.tsx`)
 
-- Headline *"See You at Fractal"*, *"Host an event in our space"*; Luma calendar embed + link; hosting instructions; `crystal@fractalnyc.com` — all in the page file. (The *"Stay in the Loop"* heading and its Discord button were removed.)
+- Headline *"See You at Fractal"*, *"Host an event in our space"*; Luma calendar embed + link; hosting instructions; `campus@fractalnyc.com` — all in the page file. (The *"Stay in the Loop"* heading and its Discord button were removed.)
 
 ### Education hub (`/education`)
 

@@ -144,7 +144,10 @@ export function MeetTheSpaceCarousel({
                 <img
                   src={photo.src}
                   alt={photo.alt}
-                  loading="lazy"
+                  // The first slide is the active one on arrival; lazy-loading
+                  // it lets the section fade in around an empty frame.
+                  loading={i === 0 ? "eager" : "lazy"}
+                  fetchPriority={i === 0 ? "high" : undefined}
                   decoding="async"
                   className="h-full w-full object-cover"
                 />

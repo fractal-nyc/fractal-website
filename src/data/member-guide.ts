@@ -4,6 +4,6 @@
  */
 
 export const MEMBER_GUIDE_WIFI = {
-  network: "fractal",
+  network: "Fractal Campus",
   password: "beepboopbop",
 } as const;

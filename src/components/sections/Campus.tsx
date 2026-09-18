@@ -5,6 +5,7 @@ import { MeetTheSpaceCarousel } from "@/components/sections/MeetTheSpaceCarousel
 import { HighlightBox } from "@/components/content/HighlightBox";
 import { OutboundLink } from "@/components/content/OutboundLink";
 import { cn } from "@/lib/utils";
+import { MEMBERS_HOME_PATH, MEMBER_LINKS } from "@/data/member-links";
 
 const LUMA_EVENTS_URL = "https://lu.ma/nyc-tech";
 const FRACTAL_U_URL = "https://fractaluniversity.substack.com/";
@@ -13,7 +14,9 @@ const STRIPE_FULLTIME_URL = "https://buy.stripe.com/4gM5kDckk5r008p3B608g0L";
 const STRIPE_PARTTIME_URL = "https://buy.stripe.com/eVq4gzckk06G3kB1sY08g0G";
 const GOOGLE_MAPS_URL =
   "https://www.google.com/maps/place/111+Conselyea+St,+Brooklyn,+NY+11211/";
-const CRYSTAL_MAILTO = "mailto:crystal@fractalnyc.com";
+const CAMPUS_MAILTO = "mailto:campus@fractalnyc.com";
+const CAMPUS_TOUR_URL =
+  "https://general-fractal-corporation.cal.com/general-fractal-corporation/fractal-campus-tour";
 const DISCORD_URL = "https://discord.gg/Er974gPTXe";
 
 function InlineLink({
@@ -26,64 +29,49 @@ function InlineLink({
   external?: boolean;
 }) {
   return (
-    <OutboundLink href={href} variant="inline" tone="dark" {...(!external ? { target: undefined, rel: undefined } : {})}>
+    <OutboundLink href={href} variant="inline" tone="dark" className="font-semibold" {...(!external ? { target: undefined, rel: undefined } : {})}>
       {children}
     </OutboundLink>
   );
 }
 
+// FRAC-53: the two membership tiers, rendered as HighlightBox cards so the
+// price and the access rule stay with the tier name (the reference site lists
+// both) instead of being compressed into button chrome.
+const membershipTiers = [
+  {
+    name: "Full-time membership",
+    price: "$300/mo",
+    access: "Unlimited 24/7 access.",
+    href: STRIPE_FULLTIME_URL,
+  },
+  {
+    name: "Part-time membership",
+    price: "$150/mo",
+    access: "Choose your hours — up to 20 hrs per week.",
+    href: STRIPE_PARTTIME_URL,
+  },
+];
+
 const amenities = [
-  "Stocked kitchen w/ espresso machine",
-  "3D printer and tool library",
-  "Cozy lounge for relaxing and chatting",
   "Soundproof phone booths",
+  "Stocked kitchen w/ espresso machine",
+  "Cozy lounge + library for relaxing and chatting",
+  "3D printer and tool library",
   "Rooftop coworking (with wifi!)",
   "Free near-daily tech events",
 ];
 
-const audiences = [
-  {
-    num: "01",
-    title: "Accelerator participants",
-    description:
-      "Students of the Fractal AI Accelerator, our 6-week program for mastering AI.",
-    href: FRACTAL_ACCELERATOR_URL,
-  },
-  {
-    num: "02",
-    title: "Fractal U students",
-    description:
-      "Participants in one of the community-taught classes held on Campus.",
-    href: FRACTAL_U_URL,
-  },
-  {
-    num: "03",
-    title: "Members",
-    description: "24/7 access to our space for coworking and socializing.",
-    href: STRIPE_FULLTIME_URL,
-  },
-  {
-    num: "04",
-    title: "Guests",
-    description: "Visitors joining one of the 5+ events we host every week.",
-    href: LUMA_EVENTS_URL,
-  },
+const acceleratorOutcomes = [
+  "Ship real personal software — tools, dashboards, automations, and workflows — starting from nothing but a plain-language description of what you want",
+  "Build an AI agent that knows your work, learns your preferences, and takes action across your email, calendar, and the rest of your apps",
+  "Set up a computer that keeps working when you walk away, with agents running in the background and reachable from your phone",
 ];
 
 // TODO: the design references dedicated overview photos
 // (images/campus/overview-workspace.png + overview-lounge.png) which don't
-// exist yet. Substituting two existing Campus photos until the real overview
-// shots are shot; swap `src`/`alt` here once they land.
-const overviewPhotos = [
-  {
-    src: "/images/campus/coworking-space.webp",
-    alt: "Open coworking space at Fractal Campus",
-  },
-  {
-    src: "/images/campus/seating.webp",
-    alt: "Lounge seating at Fractal Campus",
-  },
-];
+// exist yet. Until those are shot, the Overview section stays text-only — the
+// Meet the Space carousel further down already carries the photography load.
 
 const campusPhotos = [
   {
@@ -153,7 +141,7 @@ function PrimaryButton({
     : {};
   // FRAC-52: Campus inherits the sitewide frost recipe (cream-tinted glass +
   // accent border via `--accent` set on CampusPage's <main>).
-  const widthClass = fullWidth ? "w-full" : "max-w-xs w-full";
+  const widthClass = fullWidth ? "w-full" : "w-full sm:max-w-xs";
   // FRAC-53: Long membership labels wrap to 2-3 lines via whitespace-normal +
   // leading-snug at the 375px mobile baseline.
   const wrapClass = wrap ? "whitespace-normal leading-snug" : "";
@@ -168,6 +156,11 @@ function PrimaryButton({
 
 export type MembershipButtonGroupLayout = "responsive" | "stacked" | "side-by-side";
 
+/**
+ * The two Stripe membership CTAs as a button pair. Not rendered on /campus —
+ * the page uses `MembershipTiers` so each tier keeps its price and access rule
+ * — but kept as a catalog specimen (`components/catalog/registry.tsx`).
+ */
 export function MembershipButtonGroup({ layout = "responsive" }: { layout?: MembershipButtonGroupLayout }) {
   const layoutClass = layout === "stacked"
     ? "flex-col"
@@ -177,42 +170,42 @@ export function MembershipButtonGroup({ layout = "responsive" }: { layout?: Memb
   return (
     <div className="w-full">
       <div className={`flex ${layoutClass} gap-4 items-stretch w-full`} data-membership-layout={layout}>
-        <PrimaryButton href={STRIPE_FULLTIME_URL} fullWidth>
-          <span className="flex flex-col items-center gap-1">
-            <span>Full time membership</span>
-            <span className="opacity-80">24/7 access $300/mo</span>
-          </span>
-        </PrimaryButton>
-        <PrimaryButton href={STRIPE_PARTTIME_URL} fullWidth>
-          <span className="flex flex-col items-center gap-1">
-            <span>Part time membership</span>
-            <span className="opacity-80">20 hr/wk $150/mo</span>
-          </span>
-        </PrimaryButton>
+        {membershipTiers.map((tier) => (
+          <PrimaryButton key={tier.name} href={tier.href} fullWidth>
+            <span className="flex flex-col items-center gap-1">
+              <span>{tier.name}</span>
+              <span className="opacity-80">{tier.price}</span>
+            </span>
+          </PrimaryButton>
+        ))}
       </div>
     </div>
   );
 }
 
-export function AudienceHighlight({
-  num,
-  title,
-  description,
-  href,
-}: {
-  num: string;
-  title: string;
-  description: string;
-  href: string | null;
-}) {
-  return <HighlightBox eyebrow={num} title={title} description={description} href={href} accessibleName={title} />;
+/** The two priced membership tiers. Rendered once, in Coworking. */
+export function MembershipTiers() {
+  return (
+    <div className="grid grid-cols-1 sm:grid-cols-2 auto-rows-fr gap-4">
+      {membershipTiers.map((tier) => (
+        <HighlightBox
+          key={tier.name}
+          eyebrow={tier.price}
+          title={tier.name}
+          description={`${tier.access} Sign up here.`}
+          href={tier.href}
+          accessibleName={`${tier.name} — ${tier.price}, sign up`}
+        />
+      ))}
+    </div>
+  );
 }
 
 export function Campus() {
   return (
     <section id="campus" className="text-background">
       {/* Hero */}
-      <div className="min-h-screen flex flex-col items-center justify-start pt-16 md:pt-24 pb-16 md:pb-24 w-full">
+      <div className="flex flex-col items-center justify-start pt-16 md:pt-24 pb-24 md:pb-32 w-full">
         <div className="page-gutter w-full">
           <FadeIn>
             <SectorHeader
@@ -223,25 +216,29 @@ export function Campus() {
           </FadeIn>
 
           <FadeIn>
-            <div className="text-center max-w-4xl mx-auto">
-              <p className="text-display text-background mb-4 text-center">
-                Be Ambitious with Us
-              </p>
-              <p className="text-subtitle text-background/80 mb-8 normal-case">
+            {/* max-w-3xl (not 4xl) so the display line clears the flanking
+                CAMPUS banners at laptop widths. */}
+            <div className="text-center max-w-3xl mx-auto">
+              <p className="text-subtitle text-background/90 mb-6 normal-case">
                 <InlineLink href={GOOGLE_MAPS_URL}>
                   111 Conselyea St, Brooklyn, NY
                 </InlineLink>
               </p>
-              <div className="flex flex-col gap-4 items-center mb-4 max-w-2xl mx-auto">
-                <MembershipButtonGroup />
-              </div>
-              <p className="text-body-lead text-background/70 text-center">
-                First time here? Drop by for free! Contact Crystal (
-                <InlineLink href={CRYSTAL_MAILTO} external={false}>
-                  crystal@fractalnyc.com
+              <p className="text-body-lead text-background/90 text-center mb-8">
+                First time here? Drop by for free!{" "}
+                <InlineLink href={CAMPUS_TOUR_URL}>
+                  Sign up for a guided tour here
                 </InlineLink>
-                ) for a guided tour.
+                . Email{" "}
+                <InlineLink href={CAMPUS_MAILTO} external={false}>
+                  campus@fractalnyc.com
+                </InlineLink>{" "}
+                with any questions about memberships.
               </p>
+              <div className="flex flex-col gap-4 items-center max-w-2xl mx-auto">
+                <MembershipButtonGroup />
+                <PrimaryButton href={DISCORD_URL}>Join our Discord</PrimaryButton>
+              </div>
             </div>
           </FadeIn>
         </div>
@@ -250,38 +247,59 @@ export function Campus() {
       {/* Overview */}
       <div className="max-w-7xl mx-auto page-gutter pb-24 md:pb-32">
         <FadeIn>
-          <div className="max-w-3xl mx-auto">
+          <div className="max-w-2xl mx-auto">
             <p className="text-title leading-tight mb-8 normal-case">
               A <span className="italic">campus</span> in the heart of
               Williamsburg.
             </p>
-            <p className="text-body-lead text-background/90">
-              Fractal Campus is a meeting place in the heart of Williamsburg for
-              builders, creators, and technologists to do their most ambitious
-              work. We offer 4000+ square feet of both co-working space, two
-              kitchens, a communal lounge, and a private roof deck.
+            <p className="text-body-lead text-background mb-6">
+              Fractal Campus is a meeting place in the heart of Williamsburg
+              for builders, creators, and technologists to do their most
+              ambitious work. We run an{" "}
+              <InlineLink href={FRACTAL_ACCELERATOR_URL}>
+                AI training program
+              </InlineLink>{" "}
+              and host{" "}
+              <InlineLink href={LUMA_EVENTS_URL}>
+                daily community events
+              </InlineLink>
+              .
             </p>
-            {/* Overview photo pair — see `overviewPhotos` TODO above. */}
-            <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 gap-6">
-              {overviewPhotos.map((photo) => (
-                <div
-                  key={photo.src}
-                  className="aspect-[4/3] w-full overflow-hidden rounded-md border border-background/10 bg-background/5"
-                >
-                  <img
-                    src={photo.src}
-                    alt={photo.alt}
-                    loading="lazy"
-                    decoding="async"
-                    className="h-full w-full object-cover"
-                  />
-                </div>
-              ))}
+            <p className="text-body-lead text-background">
+              The Campus is 4000+ sq ft of indoor space — coworking floors, two
+              kitchens, and a communal lounge — plus a 5000 sq ft private roof
+              deck.
+            </p>
+          </div>
+        </FadeIn>
+      </div>
+
+      {/* Coworking */}
+      <div className="max-w-7xl mx-auto page-gutter pb-24 md:pb-32">
+        <FadeIn>
+          <div className="max-w-2xl mx-auto">
+            <h2 className="text-title mb-6 normal-case">Coworking</h2>
+            <p className="text-body-lead text-background">
+              Drop by for free to see our space.{" "}
+              <InlineLink href={CAMPUS_TOUR_URL}>
+                Book a guided tour
+              </InlineLink>{" "}
+              or email{" "}
+              <InlineLink href={CAMPUS_MAILTO} external={false}>
+                campus@fractalnyc.com
+              </InlineLink>{" "}
+              to plan a visit.
+            </p>
+            <p className="mt-6 text-body-lead text-background">
+              We offer two kinds of membership:
+            </p>
+            <div className="mt-6">
+              <MembershipTiers />
             </div>
-            <p className="mt-8 text-body text-background/90">
+            <p className="mt-10 text-body text-background">
               All members have access to:
             </p>
-            <ul className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-3 text-body text-background/90">
+            <ul className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-3 text-body text-background">
               {amenities.map((item) => (
                 <li key={item} className="flex gap-3">
                   <span aria-hidden className="text-background/50">
@@ -295,108 +313,69 @@ export function Campus() {
         </FadeIn>
       </div>
 
-      {/* Four audiences */}
+      {/* Events */}
       <div className="max-w-7xl mx-auto page-gutter pb-24 md:pb-32">
         <FadeIn>
-          <div className="max-w-3xl mx-auto">
-            <h2 className="text-title mb-8 normal-case">
-              Fractal Campus serves four audiences
-            </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-              {audiences.map((audience) => (
-                <HighlightBox key={audience.num} eyebrow={audience.num} title={audience.title} description={audience.description} href={audience.href} accessibleName={audience.title} />
-              ))}
+          <div className="max-w-2xl mx-auto">
+            <h2 className="text-title mb-6 normal-case">Events</h2>
+            <p className="text-body-lead text-background">
+              Our community hosts events nearly every day — talks, demo nights,
+              dinners, reading groups, and hackathons. Community members also
+              teach their own classes on Campus through{" "}
+              <InlineLink href={FRACTAL_U_URL}>Fractal U</InlineLink>.
+            </p>
+            <div className="mt-8 flex justify-center sm:justify-start">
+              <PrimaryButton href={LUMA_EVENTS_URL}>See upcoming events</PrimaryButton>
+            </div>
+            <h3 className="mt-12 text-subtitle text-background normal-case font-semibold">
+              Host your own event
+            </h3>
+            <p className="mt-3 text-body-lead text-background">
+              Anyone can host an event in our space, even non-members.
+            </p>
+            <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 auto-rows-fr gap-4">
+              <HighlightBox
+                eyebrow="Free events"
+                title="Add it to our Luma calendar"
+                description="Post your event directly to the Fractal calendar and the community will see it."
+                href={LUMA_EVENTS_URL}
+                accessibleName="Add a free event to the Luma calendar"
+              />
+              <HighlightBox
+                eyebrow="Paid events"
+                title="Email us"
+                description="Send campus@fractalnyc.com what you have in mind and we'll work out the space and the details."
+                href={CAMPUS_MAILTO}
+                accessibleName="Email us about hosting a paid event"
+              />
             </div>
           </div>
         </FadeIn>
       </div>
 
-      {/* Get shit done */}
+      {/* AI Accelerator */}
       <div className="max-w-7xl mx-auto page-gutter pb-24 md:pb-32">
         <FadeIn>
-          <div className="max-w-3xl mx-auto">
-            <h2 className="text-title mb-6 normal-case">
-              A place to get shit done…
-            </h2>
-            <p className="text-body-lead text-background/90 leading-relaxed">
-              Companies and members that work from the Campus have earnest
-              intentions and a firm grip on reality. When we're not doing focused
-              work, we're scheming with one another on side projects, figuring
-              out how to advise the city government on tech policy, unblocking
-              each other by asking incisive questions, or taking a look at that
-              bug you're stuck on, just because it's fun.
+          <div className="max-w-2xl mx-auto">
+            <h2 className="text-title mb-6 normal-case">AI Accelerator</h2>
+            <p className="text-body-lead text-background">
+              We run an AI training program. Our program teaches you how to:
             </p>
-          </div>
-        </FadeIn>
-      </div>
-
-      {/* And have a good time */}
-      <div className="max-w-7xl mx-auto page-gutter pb-24 md:pb-32">
-        <FadeIn>
-          <div className="max-w-3xl mx-auto">
-            <h2 className="text-title mb-6 normal-case">
-              …and have a good time doing it.
-            </h2>
-            <p className="text-body-lead text-background/90 leading-relaxed">
-              We prioritize intentional community: you'll share space, meals,
-              conversations, and ideate with small companies, talented founders,
-              designers, and engineers from all over New York City, as well as be
-              motivated by working alongside our{" "}
-              <InlineLink href={FRACTAL_ACCELERATOR_URL}>
-                Fractal AI Accelerator cohorts
-              </InlineLink>
-              .
-            </p>
-          </div>
-        </FadeIn>
-      </div>
-
-      {/* More than a WeWork */}
-      <div className="max-w-7xl mx-auto page-gutter pb-24 md:pb-32">
-        <FadeIn>
-          <div className="max-w-3xl mx-auto">
-            <h2 className="text-title mb-10 normal-case">
-              More than a WeWork…
-            </h2>
-            <blockquote className="relative border-l-2 border-background/35 pl-8 md:pl-12">
-              <span
-                aria-hidden
-                className="absolute -top-7 left-4 md:left-8 select-none font-serif text-background/25 leading-none text-[96px]"
-              >
-                “
-              </span>
-              <div className="space-y-6 text-subtitle text-background leading-relaxed normal-case italic">
-                <p>
-                  When I was building my first startup, I'd eat my Chipotle bowl
-                  in the WeWork kitchen and eavesdrop on conversations about
-                  “optimizing engagement metrics through synergistic
-                  strategies.”
-                </p>
-                <p>
-                  It was lonely. Life is too short for bullshit jobs and wasteful
-                  meetings.
-                </p>
-                <p>
-                  Fractal Campus is a sanctuary for serious, experimental
-                  tinkerers. Our relationships here matter, and you can trust
-                  that we are conspiring with everyone in the building to push
-                  your work forward. We're building a startup community the way
-                  we've always wanted — as a home away from home.
-                </p>
-              </div>
-              {/* Semantic <footer> for the citation. The banner-clearance hook
-                  (useBannerAboveFooter) targets [data-site-footer] specifically
-                  so it never mistakes this for the page footer. */}
-              <footer className="mt-8 flex items-center gap-3">
-                <span
-                  aria-hidden
-                  className="block h-px w-8 bg-background/50"
-                />
-                <span className="text-aside text-background/75">
-                  Andrew Rose · Fractal Campus co-founder
-                </span>
-              </footer>
-            </blockquote>
+            <ul className="mt-4 grid grid-cols-1 gap-y-3 text-body text-background">
+              {acceleratorOutcomes.map((item) => (
+                <li key={item} className="flex gap-3">
+                  <span aria-hidden className="text-background/50">
+                    —
+                  </span>
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+            <div className="mt-8 flex justify-center">
+              <PrimaryButton href={FRACTAL_ACCELERATOR_URL}>
+                Apply to the Accelerator
+              </PrimaryButton>
+            </div>
           </div>
         </FadeIn>
       </div>
@@ -404,13 +383,12 @@ export function Campus() {
       {/* Meet the Space */}
       <div className="max-w-7xl mx-auto page-gutter pb-24 md:pb-32">
         <FadeIn>
-          <div className="max-w-3xl mx-auto mb-12">
+          <div className="max-w-2xl mx-auto mb-12">
             <h2 className="text-title mb-6 normal-case">Meet the Space</h2>
-            <p className="text-body-lead text-background/90">
-              4200 sq ft of open working space, kitchen, phone booths, and large
-              meeting rooms. Oh, and a giant, sunny rooftop. We're re-decorating
-              the space now, and will continue to do so throughout winter, with
-              an eye towards creativity, focus, and sunny vibes.
+            <p className="text-body-lead text-background">
+              4000+ sq ft of open working space, kitchens, phone booths, and
+              large meeting rooms. Oh, and a giant, sunny 5000 sq ft rooftop —
+              decorated with an eye towards creativity, focus, and sunny vibes.
             </p>
           </div>
         </FadeIn>
@@ -424,7 +402,22 @@ export function Campus() {
         <FadeIn>
           <p className="text-display text-background mb-6">Stay in the Loop</p>
           <div className="flex justify-center">
-            <PrimaryButton href={DISCORD_URL}>Join Discord</PrimaryButton>
+            <PrimaryButton href={DISCORD_URL}>Join our Discord</PrimaryButton>
+          </div>
+        </FadeIn>
+      </div>
+
+      {/* Already a member? */}
+      <div className="max-w-7xl mx-auto page-gutter pb-24 md:pb-40 text-center">
+        <FadeIn>
+          <p className="text-display text-background mb-6">Already a member?</p>
+          <div className="flex flex-col sm:flex-row gap-4 items-stretch sm:items-center justify-center w-full max-w-2xl mx-auto">
+            <PrimaryButton href={MEMBERS_HOME_PATH} external={false}>
+              View Member Handbook
+            </PrimaryButton>
+            <PrimaryButton href={MEMBER_LINKS.manageMembership}>
+              Manage Membership
+            </PrimaryButton>
           </div>
         </FadeIn>
       </div>

@@ -13,7 +13,7 @@ import { EventsBannerSVG } from "@/components/house/EventsBannerSVG";
 import { HOUSES } from "@/data/houses";
 
 const LUMA_EVENTS_URL = "https://lu.ma/nyc-tech";
-const CRYSTAL_MAILTO = "mailto:crystal@fractalnyc.com";
+const CAMPUS_MAILTO = "mailto:campus@fractalnyc.com";
 
 // FRAC-206/219: SVG stroke/fill needs a literal hex (var() doesn't resolve in SVG
 // presentation attributes); sourced from the canonical Events palette.
@@ -89,7 +89,7 @@ export function EventsPage() {
                   To host a paid event email:
                 </p>
                 <Button asChild className="max-w-xs w-full text-center">
-                  <a href={CRYSTAL_MAILTO}>crystal@fractalnyc.com</a>
+                  <a href={CAMPUS_MAILTO}>campus@fractalnyc.com</a>
                 </Button>
               </div>
             </FadeIn>
