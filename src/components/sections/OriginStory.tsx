@@ -25,7 +25,7 @@ export function OriginStory() {
         <div className="max-w-5xl mx-auto page-gutter mt-10 md:mt-16">
           <img
             src="/images/fractal-nyc-diagram.png"
-            alt="Fractal NYC neighborhood campus diagram — four pillars around a central geometric shape: Campus, Visit, Events, and Education (Fractal Tech and Fractal University)"
+            alt="Fractal NYC neighborhood campus diagram — four pillars around the Fractal Collective: Campus, Visit, Events, and Education (Fractal AI Accelerator and Fractal University)"
             className="block w-full h-auto mx-auto"
             loading="lazy"
             decoding="async"
