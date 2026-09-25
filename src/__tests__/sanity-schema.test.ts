@@ -50,7 +50,14 @@ describe("focused FractalU Sanity schema", () => {
     ];
     expect(values.every((value) => value.trim().length > 0)).toBe(true);
     expect(new Set(values).size).toBe(values.length);
-    expect(new Set(values)).toEqual(new Set(catalogValues));
+    // The preset list is a convenience menu, not a closed vocabulary: the schema
+    // supports free-form "Other" (FRACTALU_LOCATION_OTHER_VALUE), and the catalog
+    // is now generated from Sanity. Asserting set equality with the venues in use
+    // meant that booking a class at a new room reddened the suite until someone
+    // edited a schema file, and that a venue could not be pre-added. What still
+    // matters is that presets are well-formed and every venue string is real.
+    // See FRAC-232.
+    expect(catalogValues.every((value) => typeof value === "string" && value.trim().length > 0)).toBe(true);
     expect(schemaTypes).toHaveLength(4);
     expect(schemaTypes.map(({ name }) => name)).not.toContain("fractalULocation");
   });
