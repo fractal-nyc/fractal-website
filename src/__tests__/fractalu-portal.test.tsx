@@ -224,11 +224,11 @@ describe("FractalUniversityPortal", () => {
     expect(within(catalog).getByText(course.instructors[0].bio)).toBeTruthy();
   });
 
-  it("renders one 18-course collection and the single-club snapshot", () => {
+  it("renders one 17-course collection and the single-club snapshot", () => {
     render(<FractalUniversityPortal />);
     const catalog = screen.getByTestId("fractalu-course-catalog");
     const clubs = screen.getByTestId("fractalu-clubs");
-    expect(within(catalog).getAllByRole("article")).toHaveLength(18);
+    expect(within(catalog).getAllByRole("article")).toHaveLength(17);
     expect(document.querySelectorAll("[data-course-collection]")).toHaveLength(1);
     expect(document.querySelector("table")).toBeNull();
     expect(document.querySelector("details, summary")).toBeNull();
@@ -315,7 +315,7 @@ describe("FractalUniversityPortal", () => {
     const initialCourseSlots = Array.from(
       document.querySelectorAll<HTMLElement>('[data-fractalu-reveal-slot="course"]'),
     );
-    expect(initialCourseSlots).toHaveLength(18);
+    expect(initialCourseSlots).toHaveLength(17);
     expect(initialCourseSlots.map((slot) => slot.dataset.fractaluRevealDelay)).toEqual([
       "0.00",
       "0.06",
@@ -323,7 +323,7 @@ describe("FractalUniversityPortal", () => {
       "0.18",
       "0.24",
       "0.30",
-      ...Array(12).fill("0.30"),
+      ...Array(11).fill("0.30"),
     ]);
     expect(
       initialCourseSlots.every(
@@ -351,11 +351,11 @@ describe("FractalUniversityPortal", () => {
     const restoredSlots = Array.from(
       document.querySelectorAll<HTMLElement>('[data-fractalu-reveal-slot="course"]'),
     );
-    expect(restoredSlots).toHaveLength(18);
+    expect(restoredSlots).toHaveLength(17);
     expect(restoredSlots.every((slot) => slot.dataset.fractaluRevealMode === "static")).toBe(
       true,
     );
-    expect(screen.getByText("18 courses shown.")).toHaveAttribute("aria-live", "polite");
+    expect(screen.getByText("17 courses shown.")).toHaveAttribute("aria-live", "polite");
   });
 
   it("promotes labelled club schedules and locations directly below each title", () => {
@@ -449,8 +449,8 @@ describe("FractalUniversityPortal", () => {
     expect(screen.queryByText("Drum Circle 101")).toBeNull();
 
     fireEvent.click(screen.getByRole("button", { name: "All" }));
-    expect(within(screen.getByTestId("fractalu-course-catalog")).getAllByRole("article")).toHaveLength(18);
-    expect(screen.getByText("18 courses shown.")).toHaveAttribute("aria-live", "polite");
+    expect(within(screen.getByTestId("fractalu-course-catalog")).getAllByRole("article")).toHaveLength(17);
+    expect(screen.getByText("17 courses shown.")).toHaveAttribute("aria-live", "polite");
   });
 
   it("resets a removed semester category to All while keeping source-derived chips", () => {
@@ -479,9 +479,9 @@ describe("FractalUniversityPortal", () => {
     const category = within(firstCard).getByText(FRACTALU_CATALOG.courses[0].category);
     const title = firstCard.querySelector("h3")!;
     expect(category.compareDocumentPosition(title) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
-    expect(cards).toHaveLength(18);
-    expect(catalog.querySelectorAll("[data-category-icon-label]")).toHaveLength(18);
-    expect(catalog.querySelectorAll("[data-category-icon]")).toHaveLength(18);
+    expect(cards).toHaveLength(17);
+    expect(catalog.querySelectorAll("[data-category-icon-label]")).toHaveLength(17);
+    expect(catalog.querySelectorAll("[data-category-icon]")).toHaveLength(17);
     for (const icon of catalog.querySelectorAll("[data-category-icon]")) {
       expect(icon).toHaveClass("h-7", "w-7", "shrink-0");
       expect(icon).toHaveAttribute("aria-hidden", "true");
@@ -520,7 +520,7 @@ describe("FractalUniversityPortal", () => {
     render(<FractalUniversityPortal />);
     const catalog = screen.getByTestId("fractalu-course-catalog");
     const verifiedCourses = FRACTALU_CATALOG.courses.filter((course) => course.detailsUrl);
-    expect(verifiedCourses).toHaveLength(18);
+    expect(verifiedCourses).toHaveLength(17);
     for (const course of verifiedCourses) {
       const link = within(catalog).getByRole("link", {
         name: `${course.title} course description (opens in a new tab)`,
@@ -562,10 +562,10 @@ describe("FractalUniversityPortal", () => {
     mockFinePointer(false);
     render(<FractalUniversityPortal />);
     const catalog = screen.getByTestId("fractalu-course-catalog");
-    expect(catalog.querySelectorAll("[data-course-description]")).toHaveLength(18);
-    expect(catalog.querySelectorAll("[data-instructor-bio]")).toHaveLength(18);
-    expect(catalog.querySelectorAll("[data-instructor-record]")).toHaveLength(22);
-    expect(catalog.querySelectorAll("[data-instructor-name]")).toHaveLength(18);
+    expect(catalog.querySelectorAll("[data-course-description]")).toHaveLength(17);
+    expect(catalog.querySelectorAll("[data-instructor-bio]")).toHaveLength(17);
+    expect(catalog.querySelectorAll("[data-instructor-record]")).toHaveLength(20);
+    expect(catalog.querySelectorAll("[data-instructor-name]")).toHaveLength(17);
     expect(within(catalog).queryByRole("button", { name: "Elena Navarrete & Stephen Thomas" })).toBeNull();
     const firstCard = catalog.querySelector<HTMLElement>(
       '[data-course-id="social-climbers"]',
@@ -611,7 +611,7 @@ describe("FractalUniversityPortal", () => {
     mockFinePointer(true);
     render(<FractalUniversityPortal />);
 
-    expect(FRACTALU_CATALOG.courses).toHaveLength(18);
+    expect(FRACTALU_CATALOG.courses).toHaveLength(17);
     for (const course of FRACTALU_CATALOG.courses) {
       expect(course.instructors.length).toBeGreaterThan(0);
       expect(course.instructors.every(({ name, bio }) => name.length > 0 && bio.length > 0)).toBe(true);
@@ -637,11 +637,11 @@ describe("FractalUniversityPortal", () => {
 
     expect(FRACTALU_SOURCE_PROVENANCE).toEqual({
       url: "mailto:fractalu@fractalnyc.com",
-      verifiedAt: "2026-09-09T17:47:44Z",
-      lastModified: "2026-09-09T17:47:44Z",
+      verifiedAt: "2026-09-09T18:54:22Z",
+      lastModified: "2026-09-09T18:54:22Z",
       etag: "fall-2026-authored",
-      byteLength: 28015,
-      sha256: "b000293cbc4d54e77a25e834ad48e5a0ac52884b040d308951d07416df31f7f6",
+      byteLength: 26256,
+      sha256: "1731765b98cd0fefacde2a6d4c21ef2a65b10700b95dc8229d59df2b400b2089",
     });
   });
 
@@ -725,7 +725,7 @@ describe("FractalUniversityPortal", () => {
     const outboundLinks = Array.from(
       container.querySelectorAll<HTMLAnchorElement>("[data-education-outbound-link]"),
     );
-    expect(expectedHrefs).toHaveLength(40);
+    expect(expectedHrefs).toHaveLength(38);
     expect(outboundLinks).toHaveLength(expectedHrefs.length);
     expect(outboundLinks.map((link) => link.getAttribute("href")).sort()).toEqual(
       [...expectedHrefs].sort(),
