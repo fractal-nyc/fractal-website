@@ -219,6 +219,9 @@ export function Navbar() {
 
   return (
     <>
+      {/* Home stays clear over the hero. Other pages take the page surface:
+          a transparent bar lets "Member Guide" show through the wordmark
+          while it scrolls, before hide-on-scroll starts at 150px. */}
       <motion.header
         variants={{
           visible: { y: 0 },
@@ -230,7 +233,7 @@ export function Navbar() {
             ? { duration: 0 }
             : { duration: 0.4, ease: [0.25, 1, 0.5, 1] }
         }
-        className="site-navbar fixed top-0 left-0 right-0 z-50 bg-transparent"
+        className={`site-navbar fixed top-0 left-0 right-0 z-50 ${isHome ? "bg-transparent" : "bg-inherit"}`}
         data-site-navbar
       >
         {showFull ? (

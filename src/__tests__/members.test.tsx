@@ -87,7 +87,10 @@ describe("MembersPage", () => {
     expect(heading.textContent).toBe("Member Guide");
     expect(screen.queryByText(/everything you need/i)).toBeNull();
     expect(container.querySelector("[data-sector-letter]")).toBeNull();
-    expect(document.querySelector("[data-site-navbar]")).toBeTruthy();
+    const navbar = document.querySelector("[data-site-navbar]");
+    expect(navbar).toBeTruthy();
+    expect(navbar).toHaveClass("bg-inherit");
+    expect(navbar).not.toHaveClass("bg-transparent");
     expect(document.querySelector("[data-members-home]")).toBeTruthy();
   });
 
