@@ -101,6 +101,16 @@ describe("Co-Living page — content", () => {
     expect(screen.queryByText("Homebrew")).not.toBeInTheDocument();
   });
 
+  it("links the Williamsburg Lighthouse marker to lighthouse.nyc", () => {
+    renderCoLiving();
+
+    const lighthouseLink = screen.getByText("Lighthouse").closest("a");
+    expect(lighthouseLink).toHaveAttribute("href", "https://lighthouse.nyc/");
+    expect(lighthouseLink).toHaveAttribute("target", "_blank");
+    expect(lighthouseLink).toHaveAttribute("rel", "noopener noreferrer");
+    expect(lighthouseLink).toHaveTextContent("Williamsburg");
+  });
+
   it("should use a full-viewport-height top-aligned layout (mobile-first)", () => {
     const { container } = renderCoLiving();
     // Content wrapper is a full-viewport flex column, top-aligned (justify-start).
