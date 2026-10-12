@@ -1,5 +1,17 @@
 import { spawn } from "node:child_process";
+import { readFileSync } from "node:fs";
 import { chromium } from "@playwright/test";
+
+const fractaluCatalog = JSON.parse(
+  readFileSync(new URL("../src/data/fractalu-catalog.json", import.meta.url), "utf8"),
+);
+const educationCategories = ["All", ...new Set(fractaluCatalog.courses.map((course) => course.category))];
+const educationCourseCount = fractaluCatalog.courses.length;
+const educationClubCount = fractaluCatalog.clubs.length;
+const educationSubjectFilter = "Craft";
+const educationSubjectCount = fractaluCatalog.courses.filter(
+  (course) => course.category === educationSubjectFilter,
+).length;
 
 const origin = "http://127.0.0.1:4174";
 const productionOrigin = "http://127.0.0.1:4175";
@@ -576,7 +588,7 @@ try {
   assert(courseInstructorFont.includes("Inter"), `Course Card instructor is not Inter: ${courseInstructorFont}.`);
   assert(await page.locator(".library-detail-preview [data-instructor-name].text-body").count() === 1, "Course Card lost its text-body instructor role.");
   const courseSubject = page.getByLabel("Subject and icon");
-  for (const [subject, key] of [["Literature", "book-open"], ["Technology", "cpu"], ["Experimental category", "shapes"]]) {
+  for (const [subject, key] of [["Literature", "book-open"], [educationSubjectFilter, "hammer"], ["Experimental category", "shapes"]]) {
     await courseSubject.selectOption(subject);
     const lockup = page.locator(".library-detail-preview [data-category-icon-label]");
     assert(await lockup.getAttribute("data-category-icon-key") === key, `${subject} did not resolve to ${key}.`);
@@ -883,16 +895,15 @@ try {
   await page.locator("[data-filter-mode='single']").waitFor();
   assert(await page.locator("[data-filter-mode='single']").count() === 1, "Filter Bar did not start in single-select mode.");
   assert(await page.getByLabel("Site color").inputValue() === "education" && await page.getByLabel("Background").inputValue() === "deep", "Filter Bar does not default to Education/deep context.");
-  const expectedEducationCategories = ["All", "Literature", "Writing", "Movement", "Music", "Technology", "Craft", "Nature", "Mind & Body"];
   const singleChips = page.locator("[data-filter-bar] button");
-  assert(JSON.stringify(await singleChips.allTextContents()) === JSON.stringify(expectedEducationCategories), `Filter Bar does not show the live Education categories: ${(await singleChips.allTextContents()).join(", ")}.`);
+  assert(JSON.stringify(await singleChips.allTextContents()) === JSON.stringify(educationCategories), `Filter Bar does not show the live Education categories: ${(await singleChips.allTextContents()).join(", ")}.`);
   assert(await singleChips.evaluateAll((buttons) => buttons.every((button) => Math.round(button.getBoundingClientRect().height) >= 44 && Math.round(button.getBoundingClientRect().width) >= 44)), "Filter chips are smaller than 44px.");
-  assert((await page.locator("[data-filter-bar]").textContent()).includes("20 courses shown."), "Education specimen has the wrong initial result count.");
-  const catalogTechnology = page.getByRole("button", { name: "Technology", exact: true });
-  await catalogTechnology.click();
+  assert((await page.locator("[data-filter-bar]").textContent()).includes(`${educationCourseCount} courses shown.`), "Education specimen has the wrong initial result count.");
+  const catalogSubject = page.getByRole("button", { name: educationSubjectFilter, exact: true });
+  await catalogSubject.click();
   await page.waitForTimeout(250);
-  assert(await catalogTechnology.getAttribute("aria-pressed") === "true" && await page.locator("[data-filter-bar] button[aria-pressed='true']").count() === 1, "Education specimen is not single-select.");
-  assert((await page.locator("[data-filter-bar]").textContent()).includes("3 courses shown."), "Education specimen has the wrong Technology count.");
+  assert(await catalogSubject.getAttribute("aria-pressed") === "true" && await page.locator("[data-filter-bar] button[aria-pressed='true']").count() === 1, "Education specimen is not single-select.");
+  assert((await page.locator("[data-filter-bar]").textContent()).includes(`${educationSubjectCount} courses shown.`), "Education specimen has the wrong filtered course count.");
   await page.screenshot({ path: "/tmp/frac125-catalog-filter-1440x900.png" });
   await page.getByLabel("Selection behavior").selectOption("multiple");
   const multiChips = page.locator("[data-filter-bar] button");
@@ -1092,7 +1103,7 @@ try {
       assert(await overflow(mobile) <= 1, `${filename} detail overflows at 375px.`);
       if (id === "filter-bar" && value === "single") {
         const filterButtons = mobile.locator("[data-filter-bar] button");
-        assert(JSON.stringify(await filterButtons.allTextContents()) === JSON.stringify(["All", "Literature", "Writing", "Movement", "Music", "Technology", "Craft", "Nature", "Mind & Body"]), "Mobile Filter Bar lost live Education categories.");
+        assert(JSON.stringify(await filterButtons.allTextContents()) === JSON.stringify(educationCategories), "Mobile Filter Bar lost live Education categories.");
         assert(new Set((await filterButtons.evaluateAll((buttons) => buttons.map((button) => Math.round(button.getBoundingClientRect().y))))).size > 1, "Mobile Filter Bar did not wrap.");
         await mobile.screenshot({ path: "/tmp/frac125-catalog-filter-375x812.png" });
       }
@@ -1317,7 +1328,7 @@ try {
         assert(await jump.locator(".lucide-arrow-down").count() === 1 && await jump.getAttribute("target") === null, "Education information jump semantics changed.");
         const educationFilter = production.getByRole("group", { name: "Filter classes by subject" });
         const educationButtons = educationFilter.getByRole("button");
-        assert(JSON.stringify(await educationButtons.allTextContents()) === JSON.stringify(["All", "Literature", "Writing", "Movement", "Music", "Technology", "Craft", "Nature", "Mind & Body"]), `Production Education categories differ at ${width}px.`);
+        assert(JSON.stringify(await educationButtons.allTextContents()) === JSON.stringify(educationCategories), `Production Education categories differ at ${width}px.`);
         assert(await production.locator(".fractalu-filter-row").evaluate((element) => getComputedStyle(element).backgroundColor) === "rgba(0, 0, 0, 0)", `Production Education filter has a row-wide background at ${width}px.`);
         const courseCatalog = production.locator("[data-course-collection]");
         const courseScope = courseCatalog.locator("..");
@@ -1336,17 +1347,17 @@ try {
         });
         assert(teachingSurface.background === "rgb(247, 246, 242)" && !teachingSurface.redundantScope && teachingSurface.corners === 4 && teachingSurface.arrows === 0, `Production Education Note Box changed at ${width}px: ${JSON.stringify(teachingSurface)}.`);
         const clubCards = production.locator("[data-club-id]");
-        assert(await clubCards.count() === 4, `Production Education club inventory changed at ${width}px.`);
+        assert(await clubCards.count() === educationClubCount, `Production Education club inventory changed at ${width}px.`);
         assert(await clubCards.evaluateAll((cards) => cards.every((card) => {
           const scope = card.closest("[data-component-colorway]");
           return scope !== null && getComputedStyle(scope).backgroundColor === "rgba(0, 0, 0, 0)" && getComputedStyle(card).backgroundColor === "rgb(247, 246, 242)";
         })), `Production Education club scope/card backgrounds diverged at ${width}px.`);
         assert(await educationButtons.evaluateAll((buttons) => buttons.every((button) => Math.round(button.getBoundingClientRect().height) >= 44 && Math.round(button.getBoundingClientRect().width) >= 44)), `Production Education chips are undersized at ${width}px.`);
-        await production.getByRole("button", { name: "Technology", exact: true }).click();
-        assert(await production.locator("[data-course-id]").count() === 3 && await production.locator("[data-filter-bar] button[aria-pressed='true']").count() === 1, `Production Education filtering failed at ${width}px.`);
+        await production.getByRole("button", { name: educationSubjectFilter, exact: true }).click();
+        assert(await production.locator("[data-course-id]").count() === educationSubjectCount && await production.locator("[data-filter-bar] button[aria-pressed='true']").count() === 1, `Production Education filtering failed at ${width}px.`);
         assert(await courseScope.evaluate((element) => getComputedStyle(element).backgroundColor) === "rgba(0, 0, 0, 0)", `Production Education filtering repainted the course collection at ${width}px.`);
         await production.getByRole("button", { name: "All", exact: true }).click();
-        assert(await production.locator("[data-course-id]").count() === 20, `Production Education All recovery failed at ${width}px.`);
+        assert(await production.locator("[data-course-id]").count() === educationCourseCount, `Production Education All recovery failed at ${width}px.`);
         await educationFilter.scrollIntoViewIfNeeded();
         await production.screenshot({ path: `/tmp/frac125-production-education-filter-${width === 375 ? "375x812" : "1440x900"}.png` });
       }
