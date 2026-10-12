@@ -26,7 +26,7 @@ function GuideSection({
 
 function ManageMembershipButton({ className }: { className?: string }) {
   return (
-    <Button asChild className={className ?? "w-full max-w-xs text-center"}>
+    <Button asChild className={className ?? "w-full max-w-xs whitespace-normal text-center"}>
       <a
         href={MEMBER_LINKS.manageMembership}
         target="_blank"
@@ -52,9 +52,9 @@ export function MembersPage() {
       style={{ "--accent": "var(--color-house-campus-deep)" } as CSSProperties}
     >
       <Navbar />
-      <div className="flex flex-col items-stretch pt-24 pb-16 md:pt-28 md:pb-20 w-full">
+      <div className="flex flex-col items-stretch pt-24 pb-16 md:pt-36 md:pb-20 w-full">
         <article className="page-gutter mx-auto max-w-2xl w-full">
-          <h1 className="text-title whitespace-nowrap text-foreground mb-6">
+          <h1 className="text-title text-foreground mb-6">
             Member Guide
           </h1>
 
