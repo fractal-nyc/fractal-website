@@ -31,6 +31,12 @@ for (const route of RENDERED_ROUTES) {
 
     await assertTouchTargets(page);
 
+    if (route === "/members") {
+      await page.evaluate(() => window.scrollTo(0, 48));
+      const headerBackground = await page.locator("[data-site-navbar]").evaluate((element) => getComputedStyle(element).backgroundColor);
+      expect(headerBackground, "Member Guide header lets the title show through while scrolling").not.toBe("rgba(0, 0, 0, 0)");
+    }
+
     expect(pageErrors, `uncaught page errors: ${pageErrors.join("\n")}`).toEqual([]);
     // Some pages embed third-party services whose 4xx console string omits its
     // URL. First-party response failures are checked separately with origins;

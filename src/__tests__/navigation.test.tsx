@@ -249,6 +249,13 @@ describe("Internal Education section link", () => {
 // Scrolled home navbar (FRAC-84 regression) — compact bar shows branding
 // ═══════════════════════════════════════════════════════════════════════════
 
+describe("Home navbar surface", () => {
+  it("stays transparent so the hero shows through the wordmark", () => {
+    renderNavbar("/");
+    expect(document.querySelector("[data-site-navbar]")).toHaveClass("bg-transparent");
+  });
+});
+
 describe("Scrolled home navbar (FRAC-84 regression)", () => {
   it("should have a scrolled compact bar variant that shows Fractal Collective branding", () => {
     // The scrolled home navbar is the third variant in the ternary:
