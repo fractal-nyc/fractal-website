@@ -12,6 +12,23 @@ const educationSubjectFilter = "Craft";
 const educationSubjectCount = fractaluCatalog.courses.filter(
   (course) => course.category === educationSubjectFilter,
 ).length;
+const SUBJECT_ICON_KEYS = {
+  civics: "landmark",
+  craft: "hammer",
+  games: "dices",
+  literature: "book-open",
+  "mind & body": "brain",
+  movement: "footprints",
+  music: "music-2",
+  nature: "sprout",
+  technology: "cpu",
+  writing: "pen-line",
+};
+const sampleCourse = fractaluCatalog.courses[0];
+const sampleInstructorName = sampleCourse.instructors.map((instructor) => instructor.name).join(" & ");
+const sampleSubjectIconKey = SUBJECT_ICON_KEYS[sampleCourse.category.trim().toLowerCase()] ?? "shapes";
+const escapeRegExp = (value) => value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+const sampleApplyName = new RegExp(`${escapeRegExp(sampleCourse.applicationLabel)} for ${escapeRegExp(sampleCourse.title)}`);
 
 const origin = "http://127.0.0.1:4174";
 const productionOrigin = "http://127.0.0.1:4175";
@@ -396,7 +413,14 @@ try {
   await page.goBack({ waitUntil: "networkidle" });
   await page.waitForFunction(() => window.location.hash === "#browse/actions?q=inline");
   assert(await actionSearch.inputValue() === "inline", "Browser Back did not restore the prior component query.");
-  assert(await page.locator("#inline-text-link .library-open-component").evaluate((link) => document.activeElement === link), "Browser Back did not restore focus to the View options link.");
+  try {
+    await page.waitForFunction(() => {
+      const link = document.querySelector("#inline-text-link .library-open-component");
+      return link instanceof HTMLElement && document.activeElement === link;
+    });
+  } catch {
+    fail("Browser Back did not restore focus to the View options link.");
+  }
 
   await page.goto(`${componentUrl}#browse/actions`, { waitUntil: "networkidle" });
   const actionsHash = new URL(page.url()).hash;
@@ -664,7 +688,7 @@ try {
   assert(await galleryBiography.evaluate((element) => getComputedStyle(element).visibility) === "hidden", "Course title hover incorrectly revealed the instructor biography.");
   await page.screenshot({ path: "/tmp/frac129-course-card-title-preview-1440x900.png" });
 
-  const galleryApplyLink = galleryCourseCard.getByRole("link", { name: /Apply for The Lost Generation Close Reading/ });
+  const galleryApplyLink = galleryCourseCard.getByRole("link", { name: sampleApplyName });
   await galleryApplyLink.focus();
   await galleryApplyLink.evaluate((element) => element.blur());
   await galleryInstructor.hover();
@@ -728,7 +752,7 @@ try {
   assert(await reportedCollection.getAttribute("data-preview-mode") === "enhanced", "873px browse specimen did not resolve to the real enhanced Course Card mode.");
   assert(await reportedCollection.locator('[data-fractalu-reveal-mode="static"]').count() === 1, "873px browse specimen changed the static gallery entrance policy.");
   assert(await reportedCollection.locator(".fractalu-course-card").count() === 1 && await reportedCollection.locator("[data-course-id]").count() === 1, "873px browse specimen cloned or replaced the real Course Card DOM.");
-  assert(await reportedCard.locator('[data-category-icon-key="book-open"] [data-category-icon]').count() === 1, "873px browse specimen lost the derived Literature icon.");
+  assert(await reportedCard.locator(`[data-category-icon-key="${sampleSubjectIconKey}"] [data-category-icon]`).count() === 1, "873px browse specimen lost the derived subject icon.");
   const reportedRest = await reportedCard.evaluate((card) => {
     const tile = card.closest(".library-visual-card");
     const description = card.querySelector("[data-course-description]");
@@ -808,7 +832,7 @@ try {
   const productionAt873 = reportedCoursePage.locator("[data-course-collection]");
   assert(await productionAt873.getAttribute("data-preview-mode") === "inline", "Production Education incorrectly adopted the gallery's 873px enhancement policy.");
   assert(await productionAt873.getAttribute("data-course-presentation-context") === null, "Production Education leaked the component-library presentation marker.");
-  assert(await productionAt873.getByRole("button", { name: "Elena Navarrete" }).count() === 0 && await productionAt873.locator("[data-instructor-name]").first().evaluate((element) => element.tagName === "P"), "Production Education changed its approved 873px inline instructor behavior.");
+  assert(await productionAt873.getByRole("button", { name: sampleInstructorName, exact: true }).count() === 0 && await productionAt873.locator("[data-instructor-name]").first().evaluate((element) => element.tagName === "P"), "Production Education changed its approved 873px inline instructor behavior.");
   assert(await productionAt873.locator("[data-course-description]").first().evaluate((element) => getComputedStyle(element).position === "static" && getComputedStyle(element).visibility === "visible"), "Production Education changed its approved 873px inline description behavior.");
   await reportedCoursePage.screenshot({ path: "/tmp/frac133-production-education-873x863@2x.png" });
   await reportedCourseContext.close();
@@ -825,7 +849,7 @@ try {
   await touchCoursePage.goto(`${componentUrl}#component/course-card`, { waitUntil: "networkidle" });
   const touchCourseCollection = touchCoursePage.locator("[data-course-collection]");
   assert(await touchCourseCollection.getAttribute("data-course-presentation-context") === "component-library" && await touchCourseCollection.getAttribute("data-preview-mode") === "inline", "873px touch Course Card was forced into a hover-only catalog demonstration.");
-  assert(await touchCourseCollection.getByRole("button", { name: "Elena Navarrete" }).count() === 0, "873px touch Course Card kept a hover-preview instructor control.");
+  assert(await touchCourseCollection.getByRole("button", { name: sampleInstructorName, exact: true }).count() === 0, "873px touch Course Card kept a hover-preview instructor control.");
   await touchCourseContext.close();
 
   const largeTextCourseContext = await browser.newContext({ viewport: { width: 873, height: 863 } });
@@ -834,7 +858,7 @@ try {
   await largeTextCoursePage.evaluate(() => { document.documentElement.style.fontSize = "24px"; });
   await largeTextCoursePage.waitForFunction(() => document.querySelector("[data-course-collection]")?.getAttribute("data-preview-mode") === "inline");
   const largeTextCourseCollection = largeTextCoursePage.locator("[data-course-collection]");
-  assert(await largeTextCourseCollection.getByRole("button", { name: "Elena Navarrete" }).count() === 0 && await largeTextCourseCollection.locator("[data-course-description]").evaluate((element) => getComputedStyle(element).position === "static"), "873px large-text Course Card did not retain its accessible inline fallback.");
+  assert(await largeTextCourseCollection.getByRole("button", { name: sampleInstructorName, exact: true }).count() === 0 && await largeTextCourseCollection.locator("[data-course-description]").evaluate((element) => getComputedStyle(element).position === "static"), "873px large-text Course Card did not retain its accessible inline fallback.");
   assert(await overflow(largeTextCoursePage) <= 1, "873px large-text Course Card overflows horizontally.");
   await largeTextCourseContext.close();
 
@@ -1081,7 +1105,7 @@ try {
     const mobileDescription = mobileCollection.locator("[data-course-description]");
     const mobileBiography = mobileCollection.locator("[data-instructor-bio]");
     assert(await mobileCollection.getAttribute("data-preview-mode") === "inline", `${width}px Course Card did not use inline mode.`);
-    assert(await mobileCollection.getByRole("button", { name: "Elena Navarrete" }).count() === 0, `${width}px instructor should be non-interactive body text.`);
+    assert(await mobileCollection.getByRole("button", { name: sampleInstructorName, exact: true }).count() === 0, `${width}px instructor should be non-interactive body text.`);
     assert(await mobileDescription.evaluate((element) => {
       const style = getComputedStyle(element);
       return style.position === "static" && style.visibility === "visible";
@@ -1362,10 +1386,15 @@ try {
         await production.screenshot({ path: `/tmp/frac125-production-education-filter-${width === 375 ? "375x812" : "1440x900"}.png` });
       }
       if (route === "/campus") {
-        const crystal = production.getByRole("link", { name: "crystal@fractalnyc.com" });
-        assert((await crystal.getAttribute("href")) === "mailto:crystal@fractalnyc.com", "Crystal contact lost its mailto destination.");
-        assert(await crystal.locator("[data-outbound-arrow]").count() === 0 && await crystal.getAttribute("target") === null && await crystal.getAttribute("rel") === null, "Crystal contact lost inline same-context behavior.");
-        assert((await crystal.evaluate((element) => getComputedStyle(element).fontFamily)).includes("Inter") && await crystal.evaluate((element) => Number.parseFloat(getComputedStyle(element).fontSize)) === 18, `Crystal contact does not inherit lead Inter at ${width}px.`);
+        const contacts = production.getByRole("link", { name: "campus@fractalnyc.com", exact: true });
+        const contactCount = await contacts.count();
+        assert(contactCount >= 1, "Campus contact link is missing.");
+        for (let index = 0; index < contactCount; index += 1) {
+          const contact = contacts.nth(index);
+          assert((await contact.getAttribute("href")) === "mailto:campus@fractalnyc.com", "Campus contact lost its mailto destination.");
+          assert(await contact.locator("[data-outbound-arrow]").count() === 0 && await contact.getAttribute("target") === null && await contact.getAttribute("rel") === null, "Campus contact lost inline same-context behavior.");
+          assert((await contact.evaluate((element) => getComputedStyle(element).fontFamily)).includes("Inter") && await contact.evaluate((element) => Number.parseFloat(getComputedStyle(element).fontSize)) === 18, `Campus contact does not inherit lead Inter at ${width}px.`);
+        }
       }
       const slug = route === "/" ? "home" : route.slice(1);
       await production.screenshot({ path: `/tmp/frac124-production-${slug}-${width === 375 ? "375x812" : "1440x900"}.png` });

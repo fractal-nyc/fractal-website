@@ -1,4 +1,5 @@
 import { cleanup, fireEvent, render, waitFor, within } from "@testing-library/react";
+import { act } from "react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { SpecimenCard } from "../../components/catalog/SpecimenCard";
 import { COMPONENT_REGISTRY } from "../../components/catalog/registry";
@@ -180,6 +181,25 @@ describe("interactive component specimens", () => {
     expect(within(container).getByRole("searchbox", { name: "Search components" })).toBeInTheDocument();
     expect(within(container).getByRole("button", { name: "Browse components" })).toBeInTheDocument();
     expect(within(container).getByRole("button", { name: "Edit Education courses" })).toBeInTheDocument();
+  });
+
+  it("restores focus to the opened card after browser Back", async () => {
+    window.sessionStorage.removeItem("component-gallery-focus");
+    window.history.replaceState(null, "", "/components/#browse/actions?q=inline");
+    const { container } = render(<ComponentLibraryApp />);
+    const preview = container.querySelector("#inline-text-link .library-gallery-preview");
+    expect(preview).toBeInTheDocument();
+    fireEvent.click(preview!);
+    expect(window.location.hash).toBe("#component/inline-text-link");
+
+    act(() => {
+      window.history.back();
+    });
+
+    await waitFor(() => {
+      expect(document.activeElement).toBe(container.querySelector("#inline-text-link .library-open-component"));
+    });
+    expect(window.location.hash).toBe("#browse/actions?q=inline");
   });
 
   it("copies the same context-aware prompt from browse and detail with localized feedback", async () => {
