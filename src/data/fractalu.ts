@@ -1,4 +1,4 @@
-import catalogSnapshot from "@/data/fractalu-catalog.json";
+import catalogSnapshot from "./fractalu-catalog.json" with { type: "json" };
 
 /** Canonical source for the reviewed public catalog snapshot. */
 export const FRACTALU_SOURCE_URL = "https://www.fractalu.nyc/";

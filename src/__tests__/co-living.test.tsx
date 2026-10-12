@@ -111,6 +111,14 @@ describe("Co-Living page — content", () => {
     expect(lighthouseLink).toHaveTextContent("Williamsburg");
   });
 
+  it("shows Penelope House in Park Slope without an outbound link", () => {
+    renderCoLiving();
+
+    const name = screen.getByText("Penelope House");
+    expect(name.closest("a")).toBeNull();
+    expect(name.parentElement).toHaveTextContent("Park Slope");
+  });
+
   it("should use a full-viewport-height top-aligned layout (mobile-first)", () => {
     const { container } = renderCoLiving();
     // Content wrapper is a full-viewport flex column, top-aligned (justify-start).
