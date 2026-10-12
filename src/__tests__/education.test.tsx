@@ -3,8 +3,8 @@ import { describe, expect, it, vi } from "vitest";
 import { Router as WouterRouter } from "wouter";
 import { memoryLocation } from "wouter/memory-location";
 import { HOUSES } from "@/data/houses";
-import { FRACTALU_CATALOG } from "@/data/fractalu";
-import { EDUCATION_EVENT } from "@/data/education-event";
+import { EDUCATION_EVENT, isEducationEventVisible } from "@/data/education-event";
+import { educationPageOutboundHrefs } from "@/data/education-outbound-hrefs";
 import { EducationPage } from "@/pages/EducationPage";
 
 function renderEducationPage() {
@@ -95,27 +95,24 @@ describe("EducationPage", () => {
 
   it("covers the complete standalone outbound inventory without changing destinations", () => {
     const { container } = renderEducationPage();
-    const expectedHrefs = [
-      "https://fractaluniversity.substack.com",
-      ...FRACTALU_CATALOG.courses.flatMap((course) => [
-        ...(course.detailsUrl ? [course.detailsUrl] : []),
-        course.applicationUrl,
-        ...(course.videoUrl ? [course.videoUrl] : []),
-      ]),
-      ...FRACTALU_CATALOG.clubs.flatMap((club) => [
-        ...(club.detailsUrl ? [club.detailsUrl] : []),
-        club.actionUrl,
-      ]),
-      EDUCATION_EVENT.actionUrl,
-      "https://ajr.fyi/files/fractal-canon.pdf",
-      "https://fractaluniversity.substack.com",
-      "mailto:fractalu@fractalnyc.com",
-    ];
+    const now = new Date();
+    const expectedHrefs = educationPageOutboundHrefs(now);
     const outboundLinks = Array.from(
       container.querySelectorAll<HTMLAnchorElement>("[data-education-outbound-link]"),
     );
 
-    expect(expectedHrefs).toHaveLength(42);
+    // The Sept 20 RSVP is part of the inventory only until hideAfter. Locking a
+    // literal count (previously 42) goes stale the moment that card unmounts.
+    const eventLink = screen.queryByRole("link", {
+      name: new RegExp(EDUCATION_EVENT.actionLabel),
+    });
+    if (isEducationEventVisible(EDUCATION_EVENT, now)) {
+      expect(expectedHrefs).toContain(EDUCATION_EVENT.actionUrl);
+      expect(eventLink).toHaveAttribute("href", EDUCATION_EVENT.actionUrl);
+    } else {
+      expect(expectedHrefs).not.toContain(EDUCATION_EVENT.actionUrl);
+      expect(eventLink).toBeNull();
+    }
     expect(outboundLinks).toHaveLength(expectedHrefs.length);
     expect(outboundLinks.map((link) => link.getAttribute("href")).sort()).toEqual(
       [...expectedHrefs].sort(),

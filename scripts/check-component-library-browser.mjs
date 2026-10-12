@@ -1,5 +1,34 @@
 import { spawn } from "node:child_process";
+import { readFileSync } from "node:fs";
 import { chromium } from "@playwright/test";
+
+const fractaluCatalog = JSON.parse(
+  readFileSync(new URL("../src/data/fractalu-catalog.json", import.meta.url), "utf8"),
+);
+const educationCategories = ["All", ...new Set(fractaluCatalog.courses.map((course) => course.category))];
+const educationCourseCount = fractaluCatalog.courses.length;
+const educationClubCount = fractaluCatalog.clubs.length;
+const educationSubjectFilter = "Craft";
+const educationSubjectCount = fractaluCatalog.courses.filter(
+  (course) => course.category === educationSubjectFilter,
+).length;
+const SUBJECT_ICON_KEYS = {
+  civics: "landmark",
+  craft: "hammer",
+  games: "dices",
+  literature: "book-open",
+  "mind & body": "brain",
+  movement: "footprints",
+  music: "music-2",
+  nature: "sprout",
+  technology: "cpu",
+  writing: "pen-line",
+};
+const sampleCourse = fractaluCatalog.courses[0];
+const sampleInstructorName = sampleCourse.instructors.map((instructor) => instructor.name).join(" & ");
+const sampleSubjectIconKey = SUBJECT_ICON_KEYS[sampleCourse.category.trim().toLowerCase()] ?? "shapes";
+const escapeRegExp = (value) => value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+const sampleApplyName = new RegExp(`${escapeRegExp(sampleCourse.applicationLabel)} for ${escapeRegExp(sampleCourse.title)}`);
 
 const origin = "http://127.0.0.1:4174";
 const productionOrigin = "http://127.0.0.1:4175";
@@ -384,7 +413,14 @@ try {
   await page.goBack({ waitUntil: "networkidle" });
   await page.waitForFunction(() => window.location.hash === "#browse/actions?q=inline");
   assert(await actionSearch.inputValue() === "inline", "Browser Back did not restore the prior component query.");
-  assert(await page.locator("#inline-text-link .library-open-component").evaluate((link) => document.activeElement === link), "Browser Back did not restore focus to the View options link.");
+  try {
+    await page.waitForFunction(() => {
+      const link = document.querySelector("#inline-text-link .library-open-component");
+      return link instanceof HTMLElement && document.activeElement === link;
+    });
+  } catch {
+    fail("Browser Back did not restore focus to the View options link.");
+  }
 
   await page.goto(`${componentUrl}#browse/actions`, { waitUntil: "networkidle" });
   const actionsHash = new URL(page.url()).hash;
@@ -576,7 +612,7 @@ try {
   assert(courseInstructorFont.includes("Inter"), `Course Card instructor is not Inter: ${courseInstructorFont}.`);
   assert(await page.locator(".library-detail-preview [data-instructor-name].text-body").count() === 1, "Course Card lost its text-body instructor role.");
   const courseSubject = page.getByLabel("Subject and icon");
-  for (const [subject, key] of [["Literature", "book-open"], ["Technology", "cpu"], ["Experimental category", "shapes"]]) {
+  for (const [subject, key] of [["Literature", "book-open"], [educationSubjectFilter, "hammer"], ["Experimental category", "shapes"]]) {
     await courseSubject.selectOption(subject);
     const lockup = page.locator(".library-detail-preview [data-category-icon-label]");
     assert(await lockup.getAttribute("data-category-icon-key") === key, `${subject} did not resolve to ${key}.`);
@@ -652,7 +688,7 @@ try {
   assert(await galleryBiography.evaluate((element) => getComputedStyle(element).visibility) === "hidden", "Course title hover incorrectly revealed the instructor biography.");
   await page.screenshot({ path: "/tmp/frac129-course-card-title-preview-1440x900.png" });
 
-  const galleryApplyLink = galleryCourseCard.getByRole("link", { name: /Apply for The Lost Generation Close Reading/ });
+  const galleryApplyLink = galleryCourseCard.getByRole("link", { name: sampleApplyName });
   await galleryApplyLink.focus();
   await galleryApplyLink.evaluate((element) => element.blur());
   await galleryInstructor.hover();
@@ -716,7 +752,7 @@ try {
   assert(await reportedCollection.getAttribute("data-preview-mode") === "enhanced", "873px browse specimen did not resolve to the real enhanced Course Card mode.");
   assert(await reportedCollection.locator('[data-fractalu-reveal-mode="static"]').count() === 1, "873px browse specimen changed the static gallery entrance policy.");
   assert(await reportedCollection.locator(".fractalu-course-card").count() === 1 && await reportedCollection.locator("[data-course-id]").count() === 1, "873px browse specimen cloned or replaced the real Course Card DOM.");
-  assert(await reportedCard.locator('[data-category-icon-key="book-open"] [data-category-icon]').count() === 1, "873px browse specimen lost the derived Literature icon.");
+  assert(await reportedCard.locator(`[data-category-icon-key="${sampleSubjectIconKey}"] [data-category-icon]`).count() === 1, "873px browse specimen lost the derived subject icon.");
   const reportedRest = await reportedCard.evaluate((card) => {
     const tile = card.closest(".library-visual-card");
     const description = card.querySelector("[data-course-description]");
@@ -796,7 +832,7 @@ try {
   const productionAt873 = reportedCoursePage.locator("[data-course-collection]");
   assert(await productionAt873.getAttribute("data-preview-mode") === "inline", "Production Education incorrectly adopted the gallery's 873px enhancement policy.");
   assert(await productionAt873.getAttribute("data-course-presentation-context") === null, "Production Education leaked the component-library presentation marker.");
-  assert(await productionAt873.getByRole("button", { name: "Elena Navarrete" }).count() === 0 && await productionAt873.locator("[data-instructor-name]").first().evaluate((element) => element.tagName === "P"), "Production Education changed its approved 873px inline instructor behavior.");
+  assert(await productionAt873.getByRole("button", { name: sampleInstructorName, exact: true }).count() === 0 && await productionAt873.locator("[data-instructor-name]").first().evaluate((element) => element.tagName === "P"), "Production Education changed its approved 873px inline instructor behavior.");
   assert(await productionAt873.locator("[data-course-description]").first().evaluate((element) => getComputedStyle(element).position === "static" && getComputedStyle(element).visibility === "visible"), "Production Education changed its approved 873px inline description behavior.");
   await reportedCoursePage.screenshot({ path: "/tmp/frac133-production-education-873x863@2x.png" });
   await reportedCourseContext.close();
@@ -813,7 +849,7 @@ try {
   await touchCoursePage.goto(`${componentUrl}#component/course-card`, { waitUntil: "networkidle" });
   const touchCourseCollection = touchCoursePage.locator("[data-course-collection]");
   assert(await touchCourseCollection.getAttribute("data-course-presentation-context") === "component-library" && await touchCourseCollection.getAttribute("data-preview-mode") === "inline", "873px touch Course Card was forced into a hover-only catalog demonstration.");
-  assert(await touchCourseCollection.getByRole("button", { name: "Elena Navarrete" }).count() === 0, "873px touch Course Card kept a hover-preview instructor control.");
+  assert(await touchCourseCollection.getByRole("button", { name: sampleInstructorName, exact: true }).count() === 0, "873px touch Course Card kept a hover-preview instructor control.");
   await touchCourseContext.close();
 
   const largeTextCourseContext = await browser.newContext({ viewport: { width: 873, height: 863 } });
@@ -822,7 +858,7 @@ try {
   await largeTextCoursePage.evaluate(() => { document.documentElement.style.fontSize = "24px"; });
   await largeTextCoursePage.waitForFunction(() => document.querySelector("[data-course-collection]")?.getAttribute("data-preview-mode") === "inline");
   const largeTextCourseCollection = largeTextCoursePage.locator("[data-course-collection]");
-  assert(await largeTextCourseCollection.getByRole("button", { name: "Elena Navarrete" }).count() === 0 && await largeTextCourseCollection.locator("[data-course-description]").evaluate((element) => getComputedStyle(element).position === "static"), "873px large-text Course Card did not retain its accessible inline fallback.");
+  assert(await largeTextCourseCollection.getByRole("button", { name: sampleInstructorName, exact: true }).count() === 0 && await largeTextCourseCollection.locator("[data-course-description]").evaluate((element) => getComputedStyle(element).position === "static"), "873px large-text Course Card did not retain its accessible inline fallback.");
   assert(await overflow(largeTextCoursePage) <= 1, "873px large-text Course Card overflows horizontally.");
   await largeTextCourseContext.close();
 
@@ -883,16 +919,15 @@ try {
   await page.locator("[data-filter-mode='single']").waitFor();
   assert(await page.locator("[data-filter-mode='single']").count() === 1, "Filter Bar did not start in single-select mode.");
   assert(await page.getByLabel("Site color").inputValue() === "education" && await page.getByLabel("Background").inputValue() === "deep", "Filter Bar does not default to Education/deep context.");
-  const expectedEducationCategories = ["All", "Literature", "Writing", "Movement", "Music", "Technology", "Craft", "Nature", "Mind & Body"];
   const singleChips = page.locator("[data-filter-bar] button");
-  assert(JSON.stringify(await singleChips.allTextContents()) === JSON.stringify(expectedEducationCategories), `Filter Bar does not show the live Education categories: ${(await singleChips.allTextContents()).join(", ")}.`);
+  assert(JSON.stringify(await singleChips.allTextContents()) === JSON.stringify(educationCategories), `Filter Bar does not show the live Education categories: ${(await singleChips.allTextContents()).join(", ")}.`);
   assert(await singleChips.evaluateAll((buttons) => buttons.every((button) => Math.round(button.getBoundingClientRect().height) >= 44 && Math.round(button.getBoundingClientRect().width) >= 44)), "Filter chips are smaller than 44px.");
-  assert((await page.locator("[data-filter-bar]").textContent()).includes("20 courses shown."), "Education specimen has the wrong initial result count.");
-  const catalogTechnology = page.getByRole("button", { name: "Technology", exact: true });
-  await catalogTechnology.click();
+  assert((await page.locator("[data-filter-bar]").textContent()).includes(`${educationCourseCount} courses shown.`), "Education specimen has the wrong initial result count.");
+  const catalogSubject = page.getByRole("button", { name: educationSubjectFilter, exact: true });
+  await catalogSubject.click();
   await page.waitForTimeout(250);
-  assert(await catalogTechnology.getAttribute("aria-pressed") === "true" && await page.locator("[data-filter-bar] button[aria-pressed='true']").count() === 1, "Education specimen is not single-select.");
-  assert((await page.locator("[data-filter-bar]").textContent()).includes("3 courses shown."), "Education specimen has the wrong Technology count.");
+  assert(await catalogSubject.getAttribute("aria-pressed") === "true" && await page.locator("[data-filter-bar] button[aria-pressed='true']").count() === 1, "Education specimen is not single-select.");
+  assert((await page.locator("[data-filter-bar]").textContent()).includes(`${educationSubjectCount} courses shown.`), "Education specimen has the wrong filtered course count.");
   await page.screenshot({ path: "/tmp/frac125-catalog-filter-1440x900.png" });
   await page.getByLabel("Selection behavior").selectOption("multiple");
   const multiChips = page.locator("[data-filter-bar] button");
@@ -1070,7 +1105,7 @@ try {
     const mobileDescription = mobileCollection.locator("[data-course-description]");
     const mobileBiography = mobileCollection.locator("[data-instructor-bio]");
     assert(await mobileCollection.getAttribute("data-preview-mode") === "inline", `${width}px Course Card did not use inline mode.`);
-    assert(await mobileCollection.getByRole("button", { name: "Elena Navarrete" }).count() === 0, `${width}px instructor should be non-interactive body text.`);
+    assert(await mobileCollection.getByRole("button", { name: sampleInstructorName, exact: true }).count() === 0, `${width}px instructor should be non-interactive body text.`);
     assert(await mobileDescription.evaluate((element) => {
       const style = getComputedStyle(element);
       return style.position === "static" && style.visibility === "visible";
@@ -1092,7 +1127,7 @@ try {
       assert(await overflow(mobile) <= 1, `${filename} detail overflows at 375px.`);
       if (id === "filter-bar" && value === "single") {
         const filterButtons = mobile.locator("[data-filter-bar] button");
-        assert(JSON.stringify(await filterButtons.allTextContents()) === JSON.stringify(["All", "Literature", "Writing", "Movement", "Music", "Technology", "Craft", "Nature", "Mind & Body"]), "Mobile Filter Bar lost live Education categories.");
+        assert(JSON.stringify(await filterButtons.allTextContents()) === JSON.stringify(educationCategories), "Mobile Filter Bar lost live Education categories.");
         assert(new Set((await filterButtons.evaluateAll((buttons) => buttons.map((button) => Math.round(button.getBoundingClientRect().y))))).size > 1, "Mobile Filter Bar did not wrap.");
         await mobile.screenshot({ path: "/tmp/frac125-catalog-filter-375x812.png" });
       }
@@ -1317,7 +1352,7 @@ try {
         assert(await jump.locator(".lucide-arrow-down").count() === 1 && await jump.getAttribute("target") === null, "Education information jump semantics changed.");
         const educationFilter = production.getByRole("group", { name: "Filter classes by subject" });
         const educationButtons = educationFilter.getByRole("button");
-        assert(JSON.stringify(await educationButtons.allTextContents()) === JSON.stringify(["All", "Literature", "Writing", "Movement", "Music", "Technology", "Craft", "Nature", "Mind & Body"]), `Production Education categories differ at ${width}px.`);
+        assert(JSON.stringify(await educationButtons.allTextContents()) === JSON.stringify(educationCategories), `Production Education categories differ at ${width}px.`);
         assert(await production.locator(".fractalu-filter-row").evaluate((element) => getComputedStyle(element).backgroundColor) === "rgba(0, 0, 0, 0)", `Production Education filter has a row-wide background at ${width}px.`);
         const courseCatalog = production.locator("[data-course-collection]");
         const courseScope = courseCatalog.locator("..");
@@ -1336,25 +1371,30 @@ try {
         });
         assert(teachingSurface.background === "rgb(247, 246, 242)" && !teachingSurface.redundantScope && teachingSurface.corners === 4 && teachingSurface.arrows === 0, `Production Education Note Box changed at ${width}px: ${JSON.stringify(teachingSurface)}.`);
         const clubCards = production.locator("[data-club-id]");
-        assert(await clubCards.count() === 4, `Production Education club inventory changed at ${width}px.`);
+        assert(await clubCards.count() === educationClubCount, `Production Education club inventory changed at ${width}px.`);
         assert(await clubCards.evaluateAll((cards) => cards.every((card) => {
           const scope = card.closest("[data-component-colorway]");
           return scope !== null && getComputedStyle(scope).backgroundColor === "rgba(0, 0, 0, 0)" && getComputedStyle(card).backgroundColor === "rgb(247, 246, 242)";
         })), `Production Education club scope/card backgrounds diverged at ${width}px.`);
         assert(await educationButtons.evaluateAll((buttons) => buttons.every((button) => Math.round(button.getBoundingClientRect().height) >= 44 && Math.round(button.getBoundingClientRect().width) >= 44)), `Production Education chips are undersized at ${width}px.`);
-        await production.getByRole("button", { name: "Technology", exact: true }).click();
-        assert(await production.locator("[data-course-id]").count() === 3 && await production.locator("[data-filter-bar] button[aria-pressed='true']").count() === 1, `Production Education filtering failed at ${width}px.`);
+        await production.getByRole("button", { name: educationSubjectFilter, exact: true }).click();
+        assert(await production.locator("[data-course-id]").count() === educationSubjectCount && await production.locator("[data-filter-bar] button[aria-pressed='true']").count() === 1, `Production Education filtering failed at ${width}px.`);
         assert(await courseScope.evaluate((element) => getComputedStyle(element).backgroundColor) === "rgba(0, 0, 0, 0)", `Production Education filtering repainted the course collection at ${width}px.`);
         await production.getByRole("button", { name: "All", exact: true }).click();
-        assert(await production.locator("[data-course-id]").count() === 20, `Production Education All recovery failed at ${width}px.`);
+        assert(await production.locator("[data-course-id]").count() === educationCourseCount, `Production Education All recovery failed at ${width}px.`);
         await educationFilter.scrollIntoViewIfNeeded();
         await production.screenshot({ path: `/tmp/frac125-production-education-filter-${width === 375 ? "375x812" : "1440x900"}.png` });
       }
       if (route === "/campus") {
-        const crystal = production.getByRole("link", { name: "crystal@fractalnyc.com" });
-        assert((await crystal.getAttribute("href")) === "mailto:crystal@fractalnyc.com", "Crystal contact lost its mailto destination.");
-        assert(await crystal.locator("[data-outbound-arrow]").count() === 0 && await crystal.getAttribute("target") === null && await crystal.getAttribute("rel") === null, "Crystal contact lost inline same-context behavior.");
-        assert((await crystal.evaluate((element) => getComputedStyle(element).fontFamily)).includes("Inter") && await crystal.evaluate((element) => Number.parseFloat(getComputedStyle(element).fontSize)) === 18, `Crystal contact does not inherit lead Inter at ${width}px.`);
+        const contacts = production.getByRole("link", { name: "campus@fractalnyc.com", exact: true });
+        const contactCount = await contacts.count();
+        assert(contactCount >= 1, "Campus contact link is missing.");
+        for (let index = 0; index < contactCount; index += 1) {
+          const contact = contacts.nth(index);
+          assert((await contact.getAttribute("href")) === "mailto:campus@fractalnyc.com", "Campus contact lost its mailto destination.");
+          assert(await contact.locator("[data-outbound-arrow]").count() === 0 && await contact.getAttribute("target") === null && await contact.getAttribute("rel") === null, "Campus contact lost inline same-context behavior.");
+          assert((await contact.evaluate((element) => getComputedStyle(element).fontFamily)).includes("Inter") && await contact.evaluate((element) => Number.parseFloat(getComputedStyle(element).fontSize)) === 18, `Campus contact does not inherit lead Inter at ${width}px.`);
+        }
       }
       const slug = route === "/" ? "home" : route.slice(1);
       await production.screenshot({ path: `/tmp/frac124-production-${slug}-${width === 375 ? "375x812" : "1440x900"}.png` });

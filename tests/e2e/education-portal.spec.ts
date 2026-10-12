@@ -1,16 +1,31 @@
 import { expect, test } from "@playwright/test";
+import { educationPageOutboundHrefs } from "../../src/data/education-outbound-hrefs";
+import { FRACTALU_CATALOG } from "../../src/data/fractalu";
 import type { ResponsiveProfile } from "./support/profiles";
 import { preparePage } from "./support/layout-assertions";
+
+const COURSE_COUNT = FRACTALU_CATALOG.courses.length;
+const CLUB_COUNT = FRACTALU_CATALOG.clubs.length;
+const INSTRUCTOR_RECORD_COUNT = FRACTALU_CATALOG.courses.reduce(
+  (count, course) => count + course.instructors.length,
+  0,
+);
+const SUBJECT_FILTER = "Craft";
+const SUBJECT_COURSE_COUNT = FRACTALU_CATALOG.courses.filter(
+  (course) => course.category === SUBJECT_FILTER,
+).length;
+const SAMPLE_COURSE = FRACTALU_CATALOG.courses.find((course) => course.id === "days-into-gold")!;
+const COMPACT_COURSE_IDS = [
+  "days-into-gold",
+  "speculative-worldbuilding",
+  "making-a-lamp",
+  "social-climbers",
+];
 
 const MEL_BRAND_BIO =
   "Mel Brand is a Brooklyn-based industrial designer creating environmentally conscious furniture that balances sustainability with playful conceptual thinking. With 10 years of experience in architecture, architectural lighting design, and industrial design her work considers the relationship between furniture, space, and human interaction in the home. She brings levity to complex topics, using humor as a design tool to make serious issues more approachable. Her recent projects span furniture, lighting, and home goods, often working with materials such as wood, 3D printing, ceramics, and fabric. By combining thoughtful design with a systems-oriented mindset, Mel aims to create work that sparks both joy and reflection.";
 const JULIANNE_LEFELHOCZ_BIO =
   "Julianne Lefelhocz is a multidisciplinary creative technologist and designer merging fashion, design, math, and technology. With over 10 years of experience 3D modeling, two degrees in Computer Science and Footwear and Accessories Design, she is a teacher at the Brooklyn Shoe Space for 3D modeling footwear and a software engineer building CAD tools for jewelry design. She leverages tools such as 3D printing, laser cutting, electronics, kinetics and parametric code to create unique designs for accessories, home goods and fashion. Inspired by the natural world and the mathematical formulas that underpin it, her work often reflects themes of recursion, geometry, and dichotomy.";
-const ANDREW_ROSE_BIO =
-  "Andrew Rose, Founder of Fractal, Fractal University, and Fractal Bootcamp — Andrew has trained 100 engineers in the last 2 years, following his career as a software engineer and educator.";
-const LIAM_DUFFY_BIO =
-  "Liam Duffy, senior software engineer at Seso Inc. — Liam has been a senior software engineer for over 5 years and has been engineering for over a decade. At Seso, he is leading the adoption of AI engineering practices, and now he's bringing that real-world expertise to Fractal Accelerator students.";
-
 test("Education portal keeps one wide accessible catalog across input modes", async ({
   page,
   browserName,
@@ -19,9 +34,11 @@ test("Education portal keeps one wide accessible catalog across input modes", as
   const width = profile?.viewport.width ?? 1440;
   const hasTouch = profile?.hasTouch ?? false;
   const compactDensityTargets = {
-    "phone-density-375x812": { maxTop: 852, maxHeight: 660 },
-    "phone-390x844": { maxTop: 845, maxHeight: 635 },
-    "phone-density-440x956": { maxTop: 956, maxHeight: 585 },
+    // Height budgets follow the current first catalog card (Days into Gold),
+    // which wraps taller than the Summer sample these numbers used to track.
+    "phone-density-375x812": { maxTop: 852, maxHeight: 750 },
+    "phone-390x844": { maxTop: 845, maxHeight: 725 },
+    "phone-density-440x956": { maxTop: 956, maxHeight: 675 },
   } as const;
   const densityTarget = profile?.name
     ? compactDensityTargets[profile.name as keyof typeof compactDensityTargets]
@@ -110,7 +127,7 @@ test("Education portal keeps one wide accessible catalog across input modes", as
   ).toBe(true);
   const semesterEyebrow = page.locator("[data-fractalu-semester-eyebrow]");
   const catalogHeading = page.getByRole("heading", { level: 2, name: "Course Catalog" });
-  await expect(semesterEyebrow).toHaveText("Summer 2026");
+  await expect(semesterEyebrow).toHaveText(FRACTALU_CATALOG.semester);
   await expect(catalogHeading).toBeVisible();
   expect(
     await semesterEyebrow.evaluate(
@@ -124,7 +141,7 @@ test("Education portal keeps one wide accessible catalog across input modes", as
       exact: true,
     }),
   ).toBeVisible();
-  await expect(page.getByRole("heading", { name: "Summer 2026 semester" })).toHaveCount(0);
+  await expect(page.getByRole("heading", { name: `${FRACTALU_CATALOG.semester} semester` })).toHaveCount(0);
   const filterEyebrow = page.locator("[data-fractalu-filter-eyebrow]");
   const filterGroup = page.getByRole("group", { name: "Filter classes by subject" });
   const filterScope = page.locator(".fractalu-filter-row");
@@ -181,7 +198,7 @@ test("Education portal keeps one wide accessible catalog across input modes", as
 
   const catalog = page.getByTestId("fractalu-course-catalog");
   await expect(catalog).toBeVisible();
-  await expect(catalog.locator("article")).toHaveCount(20);
+  await expect(catalog.locator("article")).toHaveCount(COURSE_COUNT);
   const catalogScope = catalog.locator("..");
   await expect(catalogScope).toHaveAttribute("data-component-colorway", "education");
   await expect(catalogScope).toHaveAttribute("data-component-surface", "paper");
@@ -191,7 +208,7 @@ test("Education portal keeps one wide accessible catalog across input modes", as
     "rgb(247, 246, 242)",
   );
   const initialCourseRevealSlots = catalog.locator('[data-fractalu-reveal-slot="course"]');
-  await expect(initialCourseRevealSlots).toHaveCount(20);
+  await expect(initialCourseRevealSlots).toHaveCount(COURSE_COUNT);
   await expect(initialCourseRevealSlots.first()).toHaveAttribute(
     "data-fractalu-reveal-delay",
     "0.00",
@@ -209,11 +226,12 @@ test("Education portal keeps one wide accessible catalog across input modes", as
     "animated",
   );
   await expect(page.locator("[data-course-collection]")).toHaveCount(1);
-  await expect(catalog.locator("[data-instructor-bio]")).toHaveCount(20);
-  await expect(catalog.locator("[data-instructor-record]")).toHaveCount(23);
+  await expect(catalog.locator("[data-instructor-bio]")).toHaveCount(COURSE_COUNT);
+  await expect(catalog.locator("[data-instructor-record]")).toHaveCount(INSTRUCTOR_RECORD_COUNT);
   const outboundLinks = page.locator("[data-education-outbound-link]");
-  await expect(outboundLinks).toHaveCount(52);
-  await expect(outboundLinks.locator("svg[data-education-outbound-arrow]")).toHaveCount(52);
+  const expectedOutboundCount = educationPageOutboundHrefs().length;
+  await expect(outboundLinks).toHaveCount(expectedOutboundCount);
+  await expect(outboundLinks.locator("svg[data-education-outbound-arrow]")).toHaveCount(expectedOutboundCount);
   expect(
     await outboundLinks.evaluateAll((links) =>
       links.every(
@@ -240,22 +258,17 @@ test("Education portal keeps one wide accessible catalog across input modes", as
 
   const clubs = page.getByTestId("fractalu-clubs");
   const clubCards = clubs.locator("article[data-club-id]");
-  await expect(clubCards).toHaveCount(4);
+  await expect(clubCards).toHaveCount(CLUB_COUNT);
   const clubScopes = clubs.locator("[data-component-colorway='education'][data-component-surface='paper']");
-  await expect(clubScopes).toHaveCount(4);
-  for (let index = 0; index < 4; index += 1) {
+  await expect(clubScopes).toHaveCount(CLUB_COUNT);
+  for (let index = 0; index < CLUB_COUNT; index += 1) {
     await expect(clubScopes.nth(index)).toHaveCSS("background-color", "rgba(0, 0, 0, 0)");
     await expect(clubCards.nth(index)).toHaveCSS("background-color", "rgb(247, 246, 242)");
   }
   await expect(clubs.getByText("Open group", { exact: true })).toHaveCount(0);
   await expect(page.getByRole("heading", { name: "Clubs & open groups" })).toBeVisible();
 
-  for (const clubId of [
-    "controversial-politics-salon",
-    "last-summer-lecture-series",
-    "founding-debate-reading-group",
-    "claude-squad",
-  ]) {
+  for (const clubId of FRACTALU_CATALOG.clubs.map((club) => club.id)) {
     const card = clubs.locator(`article[data-club-id="${clubId}"]`);
     const title = card.locator("h3");
     const metadata = card.locator("[data-club-metadata]");
@@ -287,18 +300,10 @@ test("Education portal keeps one wide accessible catalog across input modes", as
     ).toBeTruthy();
   }
 
-  const lastSummer = clubs.locator('article[data-club-id="last-summer-lecture-series"]');
-  await expect(lastSummer.locator("dd").nth(0)).toHaveText(
-    "Saturdays, time varies — join the WhatsApp for details",
-  );
-  await expect(lastSummer.locator("dd").nth(1)).toHaveText(
-    "Fractal Campus, 111 Conselyea St",
-  );
   const claudeSquad = clubs.locator('article[data-club-id="claude-squad"]');
-  await expect(claudeSquad.locator("dd").nth(0)).toHaveText(
-    "6:30 pm, usually every other Thursday. Join the WhatsApp group for dates.",
-  );
-  await expect(claudeSquad.locator("dd").nth(1)).toHaveText("Vital Williamsburg");
+  const claudeSquadData = FRACTALU_CATALOG.clubs.find((club) => club.id === "claude-squad")!;
+  await expect(claudeSquad.locator("dd").nth(0)).toHaveText(claudeSquadData.schedule);
+  await expect(claudeSquad.locator("dd").nth(1)).toHaveText(claudeSquadData.location);
 
   const lampCourse = catalog.locator('article[data-course-id="making-a-lamp"]');
   const lampBio = lampCourse.locator("[data-instructor-bio]");
@@ -308,17 +313,10 @@ test("Education portal keeps one wide accessible catalog across input modes", as
     JULIANNE_LEFELHOCZ_BIO,
   );
 
-  const acceleratorCourse = catalog.locator('article[data-course-id="fractal-accelerator"]');
-  const acceleratorBio = acceleratorCourse.locator("[data-instructor-bio]");
-  await expect(acceleratorBio.locator("[data-instructor-record]")).toHaveCount(2);
-  await expect(acceleratorBio.locator("[data-instructor-record]").nth(0)).toHaveText(
-    ANDREW_ROSE_BIO,
-  );
-  await expect(acceleratorBio.locator("[data-instructor-record]").nth(1)).toHaveText(
-    LIAM_DUFFY_BIO,
-  );
+  const pairedCourse = catalog.locator('article[data-course-id="social-climbers"]');
+  const pairedBio = pairedCourse.locator("[data-instructor-bio]");
 
-  const technology = page.getByRole("button", { name: "Technology" });
+  const technology = page.getByRole("button", { name: SUBJECT_FILTER });
   const allFilter = page.getByRole("button", { name: "All" });
   const selectedFilterStyles = await allFilter.evaluate((button) => ({
     background: getComputedStyle(button).backgroundColor,
@@ -351,7 +349,7 @@ test("Education portal keeps one wide accessible catalog across input modes", as
     await page.mouse.move(0, 0);
     const filters = filterGroup.getByRole("button");
     const filterNames = await filters.allTextContents();
-    const technologyIndex = filterNames.indexOf("Technology");
+    const technologyIndex = filterNames.indexOf(SUBJECT_FILTER);
     expect(technologyIndex).toBeGreaterThan(0);
     await filters.nth(technologyIndex - 1).focus();
     await page.keyboard.press("Tab");
@@ -371,32 +369,30 @@ test("Education portal keeps one wide accessible catalog across input modes", as
   await expect(allFilter).toHaveCSS("background-color", restingFilterStyles.background);
   await expect(allFilter).toHaveCSS("color", restingFilterStyles.color);
   await expect(allFilter).toHaveCSS("border-color", restingFilterStyles.borderColor);
-  await expect(page.getByText("3 courses shown.")).toHaveText("3 courses shown.");
-  await expect(catalog.locator("article")).toHaveCount(3);
-  await expect(catalog.locator('[data-fractalu-reveal-slot="course"]')).toHaveCount(3);
+  await expect(page.getByText(`${SUBJECT_COURSE_COUNT} courses shown.`)).toHaveText(
+    `${SUBJECT_COURSE_COUNT} courses shown.`,
+  );
+  await expect(catalog.locator("article")).toHaveCount(SUBJECT_COURSE_COUNT);
+  await expect(catalog.locator('[data-fractalu-reveal-slot="course"]')).toHaveCount(SUBJECT_COURSE_COUNT);
   await expect(
     catalog.locator('[data-fractalu-reveal-slot="course"][data-fractalu-reveal-mode="static"]'),
-  ).toHaveCount(3);
+  ).toHaveCount(SUBJECT_COURSE_COUNT);
   await page.getByRole("button", { name: "All" }).click();
-  await expect(page.getByText("20 courses shown.")).toHaveText("20 courses shown.");
-  await expect(catalog.locator("article")).toHaveCount(20);
+  await expect(page.getByText(`${COURSE_COUNT} courses shown.`)).toHaveText(`${COURSE_COUNT} courses shown.`);
+  await expect(catalog.locator("article")).toHaveCount(COURSE_COUNT);
   await expect(
     catalog.locator('[data-fractalu-reveal-slot="course"][data-fractalu-reveal-mode="static"]'),
-  ).toHaveCount(20);
+  ).toHaveCount(COURSE_COUNT);
 
-  const firstCourse = catalog.locator('article[data-course-id="lost-generation-close-reading"]');
+  const firstCourse = catalog.locator(`article[data-course-id="${SAMPLE_COURSE.id}"]`);
   const description = firstCourse.locator("[data-course-description]");
   const titleLink = firstCourse.getByRole("link", {
-    name: /The Lost Generation Close Reading course description/,
+    name: new RegExp(`${SAMPLE_COURSE.title} course description`),
   });
-  await expect(titleLink).toHaveAttribute(
-    "href",
-    "https://closereadingnyc.notion.site/The-Lost-Generation-Close-Reading-359c580377d680b0b8fefba14aaef8a0",
-  );
-  await expect(titleLink).toHaveAttribute("aria-describedby", "lost-generation-close-reading-description");
+  await expect(titleLink).toHaveAttribute("href", SAMPLE_COURSE.detailsUrl!);
+  await expect(titleLink).toHaveAttribute("aria-describedby", `${SAMPLE_COURSE.id}-description`);
   const titleArrow = titleLink.locator("[data-course-external-icon]");
   await expect(titleArrow).toHaveCount(1);
-  await expect(catalog.locator('article[data-course-id="butoh-into-the-depth"] [data-course-external-icon]')).toHaveCount(0);
   const instructorName = firstCourse.locator("[data-instructor-name]");
   const instructorBio = firstCourse.locator("[data-instructor-bio]");
   const facts = firstCourse.locator("[data-course-facts]");
@@ -423,12 +419,7 @@ test("Education portal keeps one wide accessible catalog across input modes", as
     expect(new Set(factBoxes.map(({ x }) => x)).size).toBe(2);
     expect(new Set(factBoxes.map(({ y }) => y)).size).toBe(2);
 
-    for (const courseId of [
-      "lost-generation-close-reading",
-      "worldbuilding-for-storytellers",
-      "making-a-lamp",
-      "fractal-accelerator",
-    ]) {
+    for (const courseId of COMPACT_COURSE_IDS) {
       const compactCard = catalog.locator(`article[data-course-id="${courseId}"]`);
       await expect(compactCard.locator("[data-course-description]")).toBeVisible();
       await expect(compactCard.locator("[data-instructor-name]")).toBeVisible();
@@ -472,7 +463,7 @@ test("Education portal keeps one wide accessible catalog across input modes", as
     await expect(description).toHaveCSS("visibility", "visible");
     await expect(titleArrow).toHaveCSS("opacity", "1");
 
-    const instructor = firstCourse.getByRole("button", { name: "Elena Navarrete" });
+    const instructor = firstCourse.getByRole("button", { name: SAMPLE_COURSE.instructor });
     const instructorPreview = firstCourse.locator(".fractalu-instructor-preview");
     const instructorBio = firstCourse.locator("[data-instructor-bio]");
     await instructor.focus();
@@ -489,7 +480,7 @@ test("Education portal keeps one wide accessible catalog across input modes", as
 
     await page.setViewportSize({ width: 900, height: 900 });
     await expect(catalog).toHaveAttribute("data-preview-mode", "inline");
-    await expect(firstCourse.getByRole("button", { name: "Elena Navarrete" })).toHaveCount(0);
+    await expect(firstCourse.getByRole("button", { name: SAMPLE_COURSE.instructor })).toHaveCount(0);
     await expect(instructorPreview).toHaveAttribute("data-suppressed", "false");
     await expect(instructorBio).toHaveCSS("position", "static");
     await expect(instructorBio).toHaveCSS("visibility", "visible");
@@ -497,7 +488,7 @@ test("Education portal keeps one wide accessible catalog across input modes", as
 
     await page.setViewportSize({ width, height: profile?.viewport.height ?? 900 });
     await expect(catalog).toHaveAttribute("data-preview-mode", "enhanced");
-    const restoredInstructor = firstCourse.getByRole("button", { name: "Elena Navarrete" });
+    const restoredInstructor = firstCourse.getByRole("button", { name: SAMPLE_COURSE.instructor });
     await expect(instructorPreview).toHaveAttribute("data-suppressed", "false");
     await restoredInstructor.focus();
     await expect(instructorBio).toHaveCSS("visibility", "visible");
@@ -510,7 +501,7 @@ test("Education portal keeps one wide accessible catalog across input modes", as
       document.documentElement.style.fontSize = "200%";
     });
     await expect(catalog).toHaveAttribute("data-preview-mode", "inline");
-    await expect(firstCourse.getByRole("button", { name: "Elena Navarrete" })).toHaveCount(0);
+    await expect(firstCourse.getByRole("button", { name: SAMPLE_COURSE.instructor })).toHaveCount(0);
     await expect(instructorPreview).toHaveAttribute("data-suppressed", "false");
     await expect(instructorBio).toHaveCSS("position", "static");
     await expect(instructorBio).toHaveCSS("visibility", "visible");
@@ -520,11 +511,11 @@ test("Education portal keeps one wide accessible catalog across input modes", as
     });
     await expect(catalog).toHaveAttribute("data-preview-mode", "enhanced");
     await expect(instructorPreview).toHaveAttribute("data-suppressed", "false");
-    await firstCourse.getByRole("button", { name: "Elena Navarrete" }).focus();
+    await firstCourse.getByRole("button", { name: SAMPLE_COURSE.instructor }).focus();
     await expect(instructorBio).toHaveCSS("visibility", "visible");
 
     await page.mouse.move(0, 0);
-    await firstCourse.getByRole("link", { name: /Apply for The Lost Generation/ }).focus();
+    await firstCourse.getByRole("link", { name: new RegExp(`Apply for ${SAMPLE_COURSE.title}`) }).focus();
     await expect(instructorPreview).toHaveAttribute("data-suppressed", "false");
     await instructor.focus();
     await expect(instructorBio).toHaveCSS("visibility", "visible");
@@ -547,11 +538,11 @@ test("Education portal keeps one wide accessible catalog across input modes", as
     if (width < 768) {
       await expect(firstCourse.locator("[data-instructor-bio]")).toBeHidden();
       await expect(lampBio).toBeHidden();
-      await expect(acceleratorBio).toBeHidden();
+      await expect(pairedBio).toBeHidden();
     } else {
       await expect(firstCourse.locator("[data-instructor-bio]")).toBeVisible();
       await expect(lampBio).toBeVisible();
-      await expect(acceleratorBio).toBeVisible();
+      await expect(pairedBio).toBeVisible();
     }
   }
 
@@ -560,7 +551,7 @@ test("Education portal keeps one wide accessible catalog across input modes", as
   await expect(page).toHaveURL(/#what-is-fractalu$/);
   await expect(page.locator("#what-is-fractalu")).toBeFocused();
 
-  const longTitle = catalog.getByText("Worldbuilding for Storytellers and Narrative Designers");
+  const longTitle = catalog.getByText(SAMPLE_COURSE.title);
   await expect(longTitle).toBeVisible();
   expect((await longTitle.boundingBox())?.width).toBeLessThanOrEqual((await longTitle.locator("xpath=ancestor::article").boundingBox())!.width);
 

@@ -26,10 +26,12 @@ type House = {
 const HOUSE_LOCATIONS: House[] = [
   { name: "Commonwell", area: "Chinatown", lat: 40.7158, lng: -73.997, side: "top", url: "https://www.commonwell.nyc/" },
   { name: "Canopy", area: "FiDi", lat: 40.7075, lng: -74.0113, side: "bottom" },
+  { name: "Lighthouse", area: "Williamsburg", lat: 40.718215, lng: -73.948206, side: "top", url: "https://lighthouse.nyc/" },
   { name: "Baby Haus", area: "Williamsburg", lat: 40.7118, lng: -73.944, side: "top" },
   { name: "The McKibbin Lofts", area: "East Williamsburg", lat: 40.706, lng: -73.9337, side: "right" },
   { name: "Bebop", area: "Fort Greene", lat: 40.6893, lng: -73.974, side: "right", url: "https://youtu.be/e79kOV_Qgvw?si=R1_J8vlXz46zlJYh" },
   { name: "Bergen House", area: "Boerum Hill", lat: 40.6845, lng: -73.984, side: "left" },
+  { name: "Penelope House", area: "Park Slope", lat: 40.679916, lng: -73.977322, side: "right" },
   { name: "Lofi House", area: "Park Slope", lat: 40.672, lng: -73.98, side: "bottom" },
 ];
 
@@ -73,7 +75,7 @@ function markerHtml(h: House): string {
 }
 
 /**
- * "Where We Live" Leaflet map — seven Fractal houses across NYC, ported from the
+ * "Where We Live" Leaflet map — nine Fractal houses across NYC, ported from the
  * Claude design's `setupHousingMap()`.
  *
  * Lifecycle: the map is created once per effect run on a ref'd div and torn down

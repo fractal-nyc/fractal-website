@@ -80,10 +80,10 @@ describe("MembersPage", () => {
     document.querySelector('meta[name="robots"]')?.remove();
   });
 
-  it("uses a one-line Member Guide headline with no page subheading", () => {
+  it("uses a Member Guide headline with no page subheading", () => {
     const { container } = renderAt(MembersPage, "/members");
     const heading = screen.getByRole("heading", { level: 1, name: "Member Guide" });
-    expect(heading).toHaveClass("whitespace-nowrap");
+    expect(heading).not.toHaveClass("whitespace-nowrap");
     expect(heading.textContent).toBe("Member Guide");
     expect(screen.queryByText(/everything you need/i)).toBeNull();
     expect(container.querySelector("[data-sector-letter]")).toBeNull();

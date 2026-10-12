@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { CategoryChooser } from "./catalog/CategoryChooser";
 import { ComponentDetail } from "./catalog/ComponentDetail";
 import { VisualSpecimenCard } from "./catalog/VisualSpecimenCard";
@@ -63,6 +63,7 @@ export function ComponentLibraryApp() {
   const [route, setRoute] = useState<CatalogRoute>(() => readRoute());
   const previousBrowse = useRef("#browse/common");
   const restoreFocusId = useRef<string | null>(window.sessionStorage.getItem("component-gallery-focus"));
+  const pendingRestoreFocus = useRef(false);
   const navigate = (next: CatalogRoute, replace = false) => {
     const hash = routeHash(next);
     if (replace) history.replaceState({ catalog: true }, "", hash);
@@ -71,6 +72,13 @@ export function ComponentLibraryApp() {
     window.scrollTo({ top: 0, behavior: "instant" });
   };
 
+  useLayoutEffect(() => {
+    if (!pendingRestoreFocus.current || route.view !== "browse" || !restoreFocusId.current) return;
+    pendingRestoreFocus.current = false;
+    const id = restoreFocusId.current;
+    document.querySelector<HTMLAnchorElement>(`#${CSS.escape(id)} .library-open-component`)?.focus();
+  }, [route]);
+
   useEffect(() => {
     const canonical = routeHash(readRoute());
     if (window.location.hash !== canonical) history.replaceState({ catalog: true }, "", canonical);
@@ -78,12 +86,9 @@ export function ComponentLibraryApp() {
       const next = readRoute();
       const nextCanonical = routeHash(next);
       if (window.location.hash !== nextCanonical) history.replaceState({ catalog: true }, "", nextCanonical);
+      if (next.view === "browse" && restoreFocusId.current) pendingRestoreFocus.current = true;
       setRoute(next);
       window.scrollTo({ top: 0, behavior: "instant" });
-      if (next.view === "browse" && restoreFocusId.current) {
-        const id = restoreFocusId.current;
-        requestAnimationFrame(() => document.querySelector<HTMLAnchorElement>(`#${CSS.escape(id)} .library-open-component`)?.focus());
-      }
     };
     window.addEventListener("popstate", sync);
     window.addEventListener("hashchange", sync);
