@@ -1,6 +1,6 @@
 import { Fragment, useState } from "react";
 import { motion, useScroll, useMotionValueEvent } from "framer-motion";
-import { Menu, X } from "lucide-react";
+import { ArrowUpRight, Menu, X } from "lucide-react";
 import { Link, useLocation } from "wouter";
 import { HOUSES, NAVBAR_HIDDEN_ROUTES, SECTIONS } from "@/data/houses";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
@@ -25,6 +25,7 @@ interface SectionLink {
   // default unless a section explicitly sets `defaultTone` to `light`.
   colorDeep: string;
   defaultTone?: "light" | "deep";
+  external?: boolean;
 }
 
 const sectionLinks: SectionLink[] = [
@@ -58,9 +59,21 @@ function SectionAnchor({
   onBlur?: () => void;
 }) {
   const handlers = { onMouseEnter, onMouseLeave, onFocus, onBlur };
-  if (link.href.startsWith("#")) {
+  if (link.external || link.href.startsWith("#")) {
     return (
-      <a href={link.href} className={className} style={style} {...handlers}>
+      <a
+        href={link.href}
+        className={className}
+        style={style}
+        {...handlers}
+        {...(link.external
+          ? {
+              target: "_blank",
+              rel: "noopener noreferrer",
+              "aria-label": `${link.name} (opens in a new tab)`,
+            }
+          : {})}
+      >
         {children}
       </a>
     );
@@ -92,7 +105,14 @@ const storySectionLink: SectionLink = {
   color: SECTIONS.story.accent,
   colorDeep: SECTIONS.story.accent,
 };
-const homeSectionLinks = [...visibleSectionLinks, storySectionLink];
+const findTheOthersLink: SectionLink = {
+  name: "Find the others",
+  href: "http://fractal.cuties.app",
+  color: "var(--color-foreground)",
+  colorDeep: "var(--color-foreground)",
+  external: true,
+};
+const homeSectionLinks = [...visibleSectionLinks, storySectionLink, findTheOthersLink];
 
 // Inner-page navbar hides all remaining section links. The home page navbar
 // and the full-screen overlay menu still expose the visible sections.
@@ -114,6 +134,18 @@ const LEFT_TEXT =
 
 const RIGHT_TEXT =
   "we believe small groups who share context deeply can move dramatically faster than individuals working alone, so We embrace experimentation, joyful cyborgism & fun-first collaboration to solve problems together with friends.";
+
+function ExternalMenuArrow() {
+  return (
+    <ArrowUpRight
+      size={15}
+      strokeWidth={1.5}
+      className="ml-1 inline-block shrink-0 align-[-2px]"
+      aria-hidden="true"
+      data-outbound-arrow=""
+    />
+  );
+}
 
 function NavLink(link: SectionLink) {
   const { name, color, colorDeep } = link;
@@ -140,10 +172,10 @@ function NavLink(link: SectionLink) {
       // FRAC-14: publish this link's route to the hero octahedron so the matching
       // vertex node glows and rotates to the front while the link is hovered or
       // keyboard-focused. Cleared on leave/blur so the octant resumes auto-spin.
-      onMouseEnter={() => setHeroNavHover(link.href)}
-      onMouseLeave={() => setHeroNavHover(null)}
-      onFocus={() => setHeroNavHover(link.href)}
-      onBlur={() => setHeroNavHover(null)}
+      onMouseEnter={link.external ? undefined : () => setHeroNavHover(link.href)}
+      onMouseLeave={link.external ? undefined : () => setHeroNavHover(null)}
+      onFocus={link.external ? undefined : () => setHeroNavHover(link.href)}
+      onBlur={link.external ? undefined : () => setHeroNavHover(null)}
     >
       {words.map((word, i) => (
         <Fragment key={i}>
@@ -184,6 +216,7 @@ function NavLink(link: SectionLink) {
           </span>
         </Fragment>
       ))}
+      {link.external && <ExternalMenuArrow />}
     </SectionAnchor>
   );
 }
@@ -213,7 +246,11 @@ export function Navbar() {
   });
 
   const leftLinks = homeSectionLinks.slice(0, 3);
-  const rightLinks = homeSectionLinks.slice(3);
+  // The external item is wider than the remaining right-column gutter at the
+  // lg breakpoint, so it sits on its own right-aligned row under Events,
+  // Library, and Story instead of sharing their justify-between line.
+  const rightLinks = homeSectionLinks.slice(3).filter((link) => !link.external);
+  const externalHomeLinks = homeSectionLinks.filter((link) => link.external);
 
   const showFull = isHome && !hasScrolledPast;
 
@@ -273,9 +310,16 @@ export function Navbar() {
                   <p className="font-mono text-[13px] leading-[18px] font-normal uppercase text-justify">
                     {RIGHT_TEXT}
                   </p>
-                  <nav className="flex items-baseline justify-between">
-                    {rightLinks.map((link) => (
-                      <NavLink key={link.name} {...link} />
+                  <nav className="flex min-w-0 flex-col items-stretch gap-2">
+                    <div className="flex items-baseline justify-between">
+                      {rightLinks.map((link) => (
+                        <NavLink key={link.name} {...link} />
+                      ))}
+                    </div>
+                    {externalHomeLinks.map((link) => (
+                      <div key={link.name} className="flex justify-end">
+                        <NavLink {...link} />
+                      </div>
                     ))}
                   </nav>
                 </div>
@@ -491,6 +535,31 @@ export function Navbar() {
               </button>
             );
           })}
+          <a
+            href={findTheOthersLink.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={`${findTheOthersLink.name} (opens in a new tab)`}
+            onClick={() => setMobileMenuOpen(false)}
+            className="flex items-center gap-5 min-h-[56px] py-3 border-b border-foreground-faint cursor-pointer hover:bg-foreground/5 active:bg-foreground/10 transition-colors text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-foreground"
+            style={{ borderLeft: `3px solid ${findTheOthersLink.color}`, paddingLeft: "16px" }}
+          >
+            <span
+              style={{
+                fontFamily: "'Jacquard 24', system-ui",
+                fontSize: "36px",
+                lineHeight: 1,
+                color: findTheOthersLink.color,
+                minWidth: "44px",
+              }}
+            >
+              F
+            </span>
+            <span className="text-label text-foreground inline-flex items-center">
+              {findTheOthersLink.name}
+              <ExternalMenuArrow />
+            </span>
+          </a>
         </nav>
       </motion.div>
     </>

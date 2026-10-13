@@ -130,6 +130,20 @@ describe("Inner page navbar", () => {
     expect(buttons.length).toBe(5);
   });
 
+  it("ends the overlay with an external Find the others link", () => {
+    const overlay = document.querySelector(".fixed.inset-0.z-40");
+    expect(overlay).toBeTruthy();
+    const items = Array.from(overlay!.querySelectorAll("button, a"));
+    const last = items.at(-1) as HTMLAnchorElement;
+    expect(last.tagName).toBe("A");
+    expect(last).toHaveAttribute("href", "http://fractal.cuties.app");
+    expect(last).toHaveAttribute("target", "_blank");
+    expect(last).toHaveAttribute("rel", "noopener noreferrer");
+    expect(last).toHaveAccessibleName("Find the others (opens in a new tab)");
+    expect(last.querySelector("[data-outbound-arrow]")).toBeTruthy();
+    expect(last.textContent).toContain("Find the others");
+  });
+
   it("should expose all 5 visible sections via the overlay menu (FRAC-161)", () => {
     // Inner-page mobile/desktop headers delegate section navigation to the
     // hamburger-triggered overlay. FRAC-161: overlay contains 5 buttons
@@ -165,6 +179,21 @@ describe("Home page navbar (full state)", () => {
     // grid only renders at >= 1024px where it has room to fit.
     const desktopNav = document.querySelector(".max-lg\\:hidden");
     expect(desktopNav).toBeTruthy();
+  });
+
+  it("ends the desktop link row with the external Find the others link", () => {
+    const link = document.querySelector<HTMLAnchorElement>(
+      'header a.nav-link[href="http://fractal.cuties.app"]',
+    );
+    expect(link).toBeTruthy();
+    expect(link).toHaveAttribute("target", "_blank");
+    expect(link).toHaveAttribute("rel", "noopener noreferrer");
+    expect(link?.querySelector("[data-outbound-arrow]")).toBeTruthy();
+    const row = Array.from(
+      link!.closest("nav")!.querySelectorAll("a.nav-link"),
+      (item) => (item.textContent ?? "").replace(/\u00A0/g, " "),
+    );
+    expect(row.at(-1)).toBe("Find the others");
   });
 
   it("renders the mobile home header as a prominent one-line wordmark, descriptor, and hamburger (FRAC-21)", () => {
