@@ -1,4 +1,4 @@
-import { Fragment, useState } from "react";
+import { Fragment, useLayoutEffect, useRef, useState } from "react";
 import { motion, useScroll, useMotionValueEvent } from "framer-motion";
 import { ArrowUpRight, Menu, X } from "lucide-react";
 import { Link, useLocation } from "wouter";
@@ -206,6 +206,8 @@ export function Navbar() {
 
   const [hasScrolledPast, setHasScrolledPast] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const headerRef = useRef<HTMLElement>(null);
+  const [headerHeight, setHeaderHeight] = useState(0);
   const [location, setLocation] = useLocation();
   const isHome = location === "/" || location === "";
   const prefersReducedMotion = usePrefersReducedMotion();
@@ -229,17 +231,34 @@ export function Navbar() {
 
   const showFull = isHome && !hasScrolledPast;
 
+  useLayoutEffect(() => {
+    const header = headerRef.current;
+    if (!header) return;
+    // The wordmark changes height across routes, breakpoints, and font loads.
+    // Height stays valid even while hide-on-scroll translates the header.
+    const measure = () => setHeaderHeight(header.getBoundingClientRect().height);
+    measure();
+    if (typeof ResizeObserver !== "undefined") {
+      const observer = new ResizeObserver(measure);
+      observer.observe(header);
+      return () => observer.disconnect();
+    }
+    window.addEventListener("resize", measure);
+    return () => window.removeEventListener("resize", measure);
+  }, [isHome, showFull]);
+
   return (
     <>
       {/* Home stays clear over the hero. Other pages take the page surface:
           a transparent bar lets "Member Guide" show through the wordmark
           while it scrolls, before hide-on-scroll starts at 150px. */}
       <motion.header
+        ref={headerRef}
         variants={{
           visible: { y: 0 },
           hidden: { y: "-100%" },
         }}
-        animate={hidden ? "hidden" : "visible"}
+        animate={hidden && !mobileMenuOpen ? "hidden" : "visible"}
         transition={
           prefersReducedMotion
             ? { duration: 0 }
@@ -467,10 +486,11 @@ export function Navbar() {
             ? { duration: 0 }
             : { duration: 0.3, ease: "easeInOut" }
         }
-        className="fixed inset-0 z-40 bg-background overflow-y-auto"
+        className="fixed inset-0 z-40 bg-background text-foreground overflow-y-auto"
+        style={{ top: headerHeight }}
       >
         {/* Section page list */}
-        <nav className="flex flex-col w-full pt-24 pb-8 page-gutter max-w-md mx-auto">
+        <nav className="flex flex-col w-full pt-4 pb-8 page-gutter max-w-md mx-auto">
           {overlaySectionLinks.map((link) => {
             const letter = link.name === "Political Club" ? "PC" : link.name[0];
             const rowClassName = "flex items-center gap-5 min-h-[56px] py-3 border-b border-foreground-faint cursor-pointer hover:bg-foreground/5 active:bg-foreground/10 transition-colors text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-foreground";
