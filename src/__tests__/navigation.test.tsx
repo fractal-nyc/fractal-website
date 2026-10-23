@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, within } from "@testing-library/react";
+import { act, fireEvent, render, screen, within } from "@testing-library/react";
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { Router as WouterRouter, useLocation } from "wouter";
 import { memoryLocation } from "wouter/memory-location";
@@ -34,6 +34,67 @@ function renderNavbar(path = "/co-living") {
     </WouterRouter>,
   );
 }
+
+describe("Menu header clearance", () => {
+  const originalWidth = window.innerWidth;
+  let headerHeight: number;
+  let onResize: ResizeObserverCallback;
+  const disconnect = vi.fn();
+  const observe = vi.fn();
+
+  beforeEach(() => {
+    headerHeight = 80;
+    disconnect.mockClear();
+    observe.mockClear();
+    vi.spyOn(HTMLElement.prototype, "getBoundingClientRect").mockImplementation(function (this: HTMLElement) {
+      return { height: this.matches("[data-site-navbar]") ? headerHeight : 0, top: -40, bottom: headerHeight - 40 } as DOMRect;
+    });
+    vi.stubGlobal("ResizeObserver", class {
+      constructor(callback: ResizeObserverCallback) { onResize = callback; }
+      observe = observe;
+      disconnect = disconnect;
+    });
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+    vi.unstubAllGlobals();
+    Object.defineProperty(window, "innerWidth", { configurable: true, value: originalWidth });
+  });
+
+  it.each(["/cap", "/campus", "/"])("keeps the 375px menu below the measured header on %s and follows resizing", (path) => {
+    Object.defineProperty(window, "innerWidth", { configurable: true, value: 375 });
+    const { unmount } = renderNavbar(path);
+    const header = document.querySelector<HTMLElement>("[data-site-navbar]")!;
+    const overlay = document.querySelector<HTMLElement>(".fixed.inset-0.z-40")!;
+    fireEvent.click(within(header.querySelector<HTMLElement>(".lg\\:hidden")!).getByRole("button", { name: "Open menu" }));
+    expect(observe).toHaveBeenCalledWith(header);
+    expect(overlay.style.top).toBe("80px");
+    expect(overlay).toHaveClass("overflow-y-auto");
+    // A translated header's bottom is not its height. ResizeObserver updates
+    // clearance when fonts or the desktop/mobile header variant change.
+    Object.defineProperty(window, "innerWidth", { configurable: true, value: 1417 });
+    headerHeight = 120;
+    act(() => onResize([], {} as ResizeObserver));
+    expect(overlay.style.top).toBe("120px");
+    expect(overlay.querySelector("nav")!.firstElementChild).toHaveTextContent("Campus");
+    expect(overlay.querySelector("nav")!.lastElementChild).toHaveTextContent("AI Accelerator");
+    unmount();
+    expect(disconnect).toHaveBeenCalledOnce();
+  });
+
+  it("updates on window resize without ResizeObserver and removes the fallback listener", () => {
+    vi.stubGlobal("ResizeObserver", undefined);
+    const removeListener = vi.spyOn(window, "removeEventListener");
+    const { unmount } = renderNavbar("/cap");
+    const overlay = document.querySelector<HTMLElement>(".fixed.inset-0.z-40")!;
+    headerHeight = 132;
+    fireEvent(window, new Event("resize"));
+    expect(overlay.style.top).toBe("132px");
+    unmount();
+    expect(removeListener).toHaveBeenCalledWith("resize", expect.any(Function));
+  });
+});
 
 // ═══════════════════════════════════════════════════════════════════════════
 // Inner page navbar — the navbar shown on section pages like /co-living, /campus
