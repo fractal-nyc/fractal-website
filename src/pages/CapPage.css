@@ -1,0 +1,69 @@
+/* Archival visual exception requested by the operator: retain the original
+   Super/Notion page's white surface, Inter headings and pastel highlights.
+   All rules are scoped; shared navigation and DESIGN.md remain unchanged. */
+.cap-page { min-height: 100vh; background: white; color: #37352f; }
+.cap-archive {
+  --column-spacing: 46px;
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.5;
+  max-width: 1000px;
+  margin-inline: auto;
+  padding: 112px 24px 80px;
+  overflow-wrap: anywhere;
+}
+.cap-archive * { box-sizing: border-box; }
+.cap-archive [id] { scroll-margin-top: 100px; }
+.cap-archive-notice { font-size: 14px; line-height: 1.6; padding: 12px 16px; margin-bottom: 40px; border: 1px solid var(--color-foreground-faint); color: var(--color-foreground-muted); background: var(--color-background); }
+.cap-archive :is(h1,h2,h3,h4) { font-family: inherit; font-style: normal; text-transform: none; letter-spacing: normal; font-weight: 600; line-height: 1.3; padding: 3px 2px; margin-bottom: 0; }
+.cap-archive h1.notion-header__title { font-size: 40px; font-weight: 700; line-height: 1.2; margin: 0 0 24px; }
+.cap-archive .notion-header__icon-wrapper { font-size: 78px; line-height: 1.1; margin-bottom: 24px; }
+.cap-archive .notion-heading { white-space: pre-wrap; }
+.cap-archive h1.notion-heading { font-size: 30px; }
+.cap-archive h2.notion-heading { font-size: 24px; margin-top: 16px; }
+.cap-archive h3.notion-heading { font-size: 20px; margin-top: 12px; }
+.cap-archive strong { font-weight: 600; }
+.cap-archive .notion-text { padding: 3px 2px; margin: 0; min-height: 30px; white-space: pre-wrap; }
+.cap-archive .notion-divider { border-top: 1px solid var(--color-foreground-faint); margin: 16px 0; }
+.cap-archive .highlighted-background { padding: 0 2px; border-radius: 3px; color: #37352f; box-decoration-break: clone; -webkit-box-decoration-break: clone; }
+.cap-archive :is(.bg-yellow,.bg-yellow-light) { background: hsl(38 100% 90%); color: #37352f; }
+.cap-archive .bg-orange { background: hsl(30 87% 90%); }
+.cap-archive .bg-blue { background: hsl(202 53% 90%); }
+.cap-archive .bg-red { background: hsl(2 62% 90%); }
+.cap-archive .bg-green { background: hsl(149 31% 90%); }
+.cap-archive .color-green { color: hsl(149 31% 39%); }
+.cap-archive a { color: inherit; text-decoration: underline; text-underline-offset: 3px; }
+.cap-archive :is(a,summary):focus-visible { outline: 2px solid currentColor; outline-offset: 4px; }
+.cap-archive .notion-column-list { display: flex; flex-direction: column; gap: 0; }
+.cap-archive .notion-column { min-width: 0; padding: 12px 0; }
+.cap-archive .notion-image { margin: 8px 0; max-width: 100%; }
+.cap-archive .notion-image > span { display: block; max-width: 100% !important; }
+.cap-archive img { display: block; max-width: 100%; height: auto; }
+.cap-archive .notion-caption { font-size: 14px; line-height: 1.4; color: var(--color-foreground-muted); padding: 6px 2px; white-space: pre-wrap; }
+.cap-archive :is(ul,ol) { padding-left: 28px; margin: 4px 0; }
+.cap-archive ul { list-style: disc; }
+.cap-archive ol { list-style: decimal; }
+.cap-archive li { padding: 3px 2px; }
+.cap-archive .notion-callout { display: flex; gap: 12px; padding: 16px; border-radius: 3px; margin: 4px 0; }
+.cap-archive .notion-callout__content { min-width: 0; flex: 1; }
+.cap-archive .notion-callout__icon { flex: 0 0 24px; }
+.cap-archive .notion-quote { border-left: 3px solid currentColor; padding: 0 14px; margin: 8px 0; font-size: 19px; white-space: pre-wrap; }
+.cap-archive details { margin: 8px 0; }
+.cap-archive summary { cursor: pointer; min-height: 44px; padding: 8px 0; }
+.cap-archive summary .notion-heading { display: inline; margin: 0; }
+.cap-archive .notion-toggle__content { padding-left: 20px; }
+.cap-archive .cap-enrollment-note { margin: 12px 0; padding: 12px; border: 1px solid var(--color-foreground-faint); }
+.cap-archive .cap-embed { margin: 12px 0; }
+.cap-archive .cap-embed iframe { width: 100%; aspect-ratio: 16 / 9; border: 0; display: block; }
+.cap-archive .cap-carousel iframe { aspect-ratio: auto; height: 517px; }
+.cap-archive .cap-embed > a { display: inline-block; font-size: 14px; margin-top: 8px; }
+.cap-archive .notion-page { display: flex; align-items: center; gap: 8px; padding: 6px 2px; }
+@media (min-width: 681px) {
+  .cap-archive { padding: 144px 96px 100px; }
+  .cap-archive .notion-column-list { flex-direction: row; gap: var(--column-spacing); }
+
+}
+
+@media (max-width: 680px) {
+  .cap-archive .notion-column { width: 100% !important; }
+}
