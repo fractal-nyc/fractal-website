@@ -60,10 +60,10 @@
 .cap-archive .notion-page { display: flex; align-items: center; gap: 8px; padding: 6px 2px; }
 @media (min-width: 681px) {
   .cap-archive { padding: 144px 96px 100px; }
-  .cap-archive .notion-column-list { flex-direction: row; gap: var(--column-spacing); }
+  .cap-archive .notion-column-list { flex-direction: row; gap: 0; }
 
 }
 
 @media (max-width: 680px) {
-  .cap-archive .notion-column { width: 100% !important; }
+  .cap-archive .notion-column { width: 100% !important; margin-inline: 0 !important; }
 }
