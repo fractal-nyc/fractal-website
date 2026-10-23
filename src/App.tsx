@@ -9,6 +9,7 @@ import { PoliticalClubPage } from "@/pages/PoliticalClubPage";
 import { LibraryPage } from "@/pages/LibraryPage";
 import { PeoplePage } from "@/pages/PeoplePage";
 import { EducationPage } from "@/pages/EducationPage";
+import { CapPage } from "@/pages/CapPage";
 import { MembersPage } from "@/pages/MembersPage";
 import { membersHomePathForHost } from "@/data/member-links";
 
@@ -33,6 +34,7 @@ const PAGE_BACKGROUND_BY_ROUTE: Record<string, string> = {
   "/library": "var(--color-house-library-light)",
   "/publications": "var(--color-house-library-light)",
   "/lab": "var(--color-house-library-light)",
+  "/cap": "white", // Preserve the historical page’s original surface.
   "/members": DEFAULT_PAGE_BACKGROUND,
   "/members/guide": DEFAULT_PAGE_BACKGROUND,
 };
@@ -86,6 +88,7 @@ function Router() {
       <Route path="/the-protocol" component={ProtocolPage} />
       <Route path="/co-living" component={CoLivingPage} />
       <Route path="/campus" component={CampusPage} />
+      <Route path="/cap" component={CapPage} />
       <Route path="/events" component={EventsPage} />
       <Route path="/political-club" component={PoliticalClubPage} />
       <Route path="/library" component={LibraryPage} />

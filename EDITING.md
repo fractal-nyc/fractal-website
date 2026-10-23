@@ -129,6 +129,10 @@ Every course requires an ordered `instructors` array of exact `{ name, bio }` so
 
 - Headline *"A Fractal Is a Friendship Infrastructure"*, Discord button, and the members-portal teaser. Hidden from the navbar.
 
+### Campus Accelerator Archive (`/cap` — `src/pages/CapPage.tsx`)
+
+Unlisted historical program page with the shared Navbar. Full archived copy: `src/data/cap-archive.html`; original-style scoped CSS: `src/pages/CapPage.css`; images: `public/images/cap/`. Program and enrollment are inactive. See `docs/cap-archive.md` for provenance and refresh rules. Do not add a menu entry.
+
 ### Campus Member Guide (`/members` — `src/pages/MembersPage.tsx`)
 
 Unlisted coworking-member guide for `https://members.fractalnyc.com`. Not a public navbar *destination* (no Members link in the menu). Uses the shared site header (Fractal Collective + hamburger) so members can reach the rest of the site. Headline *"Member Guide"*. Copy: `src/data/member-guide.ts` and the page file. Destinations (Stripe, Luma, Cuties, members Discord): `src/data/member-links.ts`. `/members/guide` redirects here. Operator steps (Vercel domain + Stripe Dashboard): [`docs/members-home.md`](./docs/members-home.md).
