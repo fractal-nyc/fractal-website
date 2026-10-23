@@ -1,6 +1,6 @@
-import { render, screen } from "@testing-library/react";
-import { describe, it, expect, vi, beforeEach } from "vitest";
-import { Router as WouterRouter } from "wouter";
+import { fireEvent, render, screen, within } from "@testing-library/react";
+import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
+import { Router as WouterRouter, useLocation } from "wouter";
 import { memoryLocation } from "wouter/memory-location";
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -13,12 +13,18 @@ vi.mock("@/components/three/FractalCityScene", () => ({
 }));
 
 import { Navbar } from "@/components/layout/Navbar";
+import { EDUCATION_ACCELERATOR } from "@/data/education";
 import { HOUSES } from "@/data/houses";
 import { OUTER_NAV_NODES } from "@/components/three/heroNavNodes";
 
 // ---------------------------------------------------------------------------
 // Helper: render the Navbar at a given route
 // ---------------------------------------------------------------------------
+
+function LocationProbe() {
+  const [location] = useLocation();
+  return <output data-testid="current-location">{location}</output>;
+}
 
 function renderNavbar(path = "/co-living") {
   const { hook } = memoryLocation({ path, static: true });
@@ -192,7 +198,7 @@ describe("Internal Education section link", () => {
     renderNavbar("/");
   });
 
-  it("renders an internal Education route and no external program nav anchors", () => {
+  it("keeps Education internal alongside the separate Accelerator destination", () => {
     const links = Array.from(
       document.querySelectorAll<HTMLAnchorElement>('a[href="/education"]'),
     );
@@ -200,11 +206,6 @@ describe("Internal Education section link", () => {
     for (const a of links) {
       expect(a.getAttribute("target")).not.toBe("_blank");
     }
-    expect(
-      document.querySelector(
-        'a[href="https://go.fractalaccelerator.com/fractalnycwebsite"]',
-      ),
-    ).toBeNull();
     expect(document.querySelector('a[href="https://www.fractalu.nyc/"]')).toBeNull();
   });
 
@@ -276,5 +277,66 @@ describe("Scrolled home navbar (FRAC-84 regression)", () => {
     // is conditionally rendered). The key assertion: branding text exists in the tree.
     expect(fractalElements.length).toBeGreaterThanOrEqual(1);
     expect(collectiveElements.length).toBeGreaterThanOrEqual(1);
+  });
+});
+
+
+describe("AI Accelerator navigation", () => {
+  const originalWidth = window.innerWidth;
+  afterEach(() => {
+    Object.defineProperty(window, "innerWidth", { configurable: true, value: originalWidth });
+  });
+
+  it("replaces the final desktop Story link with a safe external destination and decorative arrow", () => {
+    renderNavbar("/");
+    const links = Array.from(document.querySelectorAll<HTMLAnchorElement>("header nav a"));
+    expect(links.map((link) => link.textContent?.replace(/\s+/g, " "))).toEqual([
+      "Campus", "Co-Living", "Education", "Events", "Library", "AI Accelerator",
+    ]);
+    const accelerator = links.at(-1)!;
+    expect(accelerator).toHaveAttribute("href", EDUCATION_ACCELERATOR.url);
+    expect(accelerator).toHaveAttribute("target", "_blank");
+    expect(accelerator).toHaveAttribute("rel", "noopener noreferrer");
+    expect(accelerator.querySelector("svg")).toHaveAttribute("aria-hidden", "true");
+    expect(document.querySelector('header a[href="#story"]')).toBeNull();
+  });
+
+  it.each(["/", "/campus", "/co-living", "/education", "/events", "/library"])(
+    "appends Accelerator after Library in the 375px menu on %s and closes without internal navigation",
+    (path) => {
+      Object.defineProperty(window, "innerWidth", { configurable: true, value: 375 });
+      const { hook } = memoryLocation({ path });
+      render(<WouterRouter hook={hook}><Navbar /><LocationProbe /></WouterRouter>);
+      const mobileHeader = document.querySelector<HTMLElement>(".lg\\:hidden")!;
+      const toggle = within(mobileHeader).getByRole("button", { name: "Open menu" });
+      fireEvent.click(toggle);
+      expect(toggle).toHaveAttribute("aria-expanded", "true");
+      const menu = document.querySelector<HTMLElement>(".fixed.inset-0.z-40 nav")!;
+      expect(Array.from(menu.children, (row) => row.querySelector(".text-label")?.textContent)).toEqual([
+        "Campus", "Co-Living", "Education", "Events", "Library", "AI Accelerator",
+      ]);
+      const accelerator = within(menu).getByRole("link", { name: /AI Accelerator/ });
+      expect(accelerator).toBe(menu.lastElementChild);
+      expect(accelerator).toHaveAttribute("href", EDUCATION_ACCELERATOR.url);
+      expect(accelerator).toHaveAttribute("target", "_blank");
+      expect(accelerator).toHaveAttribute("rel", "noopener noreferrer");
+      expect(accelerator.querySelector("svg")).toHaveAttribute("aria-hidden", "true");
+      fireEvent.click(accelerator);
+      expect(toggle).toHaveAttribute("aria-expanded", "false");
+      // A native outbound anchor does not route the SPA away from this page.
+      expect(screen.getByTestId("current-location")).toHaveTextContent(path);
+      if (path !== "/") expect(document.querySelectorAll("header nav a")).toHaveLength(0);
+    },
+  );
+
+  it("preserves internal menu navigation and closes the overlay", () => {
+    const { hook } = memoryLocation({ path: "/" });
+    render(<WouterRouter hook={hook}><Navbar /><LocationProbe /></WouterRouter>);
+    const toggle = screen.getByRole("button", { name: "Open menu" });
+    fireEvent.click(toggle);
+    const menu = document.querySelector<HTMLElement>(".fixed.inset-0.z-40 nav")!;
+    fireEvent.click(within(menu).getByRole("button", { name: /Campus/ }));
+    expect(screen.getByTestId("current-location")).toHaveTextContent("/campus");
+    expect(screen.queryAllByRole("button", { name: "Close menu" })).toHaveLength(0);
   });
 });

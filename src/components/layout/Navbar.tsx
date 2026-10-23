@@ -1,8 +1,9 @@
 import { Fragment, useState } from "react";
 import { motion, useScroll, useMotionValueEvent } from "framer-motion";
-import { Menu, X } from "lucide-react";
+import { ArrowUpRight, Menu, X } from "lucide-react";
 import { Link, useLocation } from "wouter";
 import { HOUSES, NAVBAR_HIDDEN_ROUTES, SECTIONS } from "@/data/houses";
+import { EDUCATION_ACCELERATOR } from "@/data/education";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 import { setHeroNavHover, useHeroNavHover } from "@/hooks/useHeroNavHover";
 
@@ -25,6 +26,7 @@ interface SectionLink {
   // default unless a section explicitly sets `defaultTone` to `light`.
   colorDeep: string;
   defaultTone?: "light" | "deep";
+  external?: boolean;
 }
 
 const sectionLinks: SectionLink[] = [
@@ -58,6 +60,13 @@ function SectionAnchor({
   onBlur?: () => void;
 }) {
   const handlers = { onMouseEnter, onMouseLeave, onFocus, onBlur };
+  if (link.external) {
+    return (
+      <a href={link.href} target="_blank" rel="noopener noreferrer" className={className} style={style} {...handlers}>
+        {children}
+      </a>
+    );
+  }
   if (link.href.startsWith("#")) {
     return (
       <a href={link.href} className={className} style={style} {...handlers}>
@@ -83,16 +92,18 @@ const visibleSectionLinks = sectionLinks.filter(
     !NAVBAR_HIDDEN_ROUTES.has(link.href) && !EXTRA_HIDDEN_HREFS.has(link.href),
 );
 
-// Story is an in-page destination on Home rather than a route. Keep it in the
-// full hero navbar only, after Library; the mobile menu continues
-// to list section pages while its existing hero CTA links to this same target.
-const storySectionLink: SectionLink = {
-  name: "Story",
-  href: "#story",
-  color: SECTIONS.story.accent,
-  colorDeep: SECTIONS.story.accent,
+// Accelerator belongs to Education and is available in the full home header
+// and every overlay menu; compact inner-page headers stay unchanged.
+const acceleratorSectionLink: SectionLink = {
+  name: "AI Accelerator",
+  href: EDUCATION_ACCELERATOR.url,
+  color: houseColor("/education"),
+  colorDeep: houseColor("/education", "deep"),
+  defaultTone: "light",
+  external: true,
 };
-const homeSectionLinks = [...visibleSectionLinks, storySectionLink];
+const homeSectionLinks = [...visibleSectionLinks, acceleratorSectionLink];
+const overlaySectionLinks = homeSectionLinks;
 
 // Inner-page navbar hides all remaining section links. The home page navbar
 // and the full-screen overlay menu still expose the visible sections.
@@ -131,7 +142,7 @@ function NavLink(link: SectionLink) {
       // FRAC-13: .nav-link uses the section's semantic default tone and shifts
       // to `.light` on hover/focus/active/highlight. The spans inherit `color`
       // from the anchor's token variables.
-      className={isActive ? "nav-link is-active" : "nav-link"}
+      className={`nav-link whitespace-nowrap${isActive ? " is-active" : ""}`}
       style={{
         "--nav-c": color,
         "--nav-c-deep": colorDeep,
@@ -184,6 +195,7 @@ function NavLink(link: SectionLink) {
           </span>
         </Fragment>
       ))}
+      {link.external && <ArrowUpRight aria-hidden="true" className="inline-block ml-1 align-baseline" size={18} />}
     </SectionAnchor>
   );
 }
@@ -273,7 +285,7 @@ export function Navbar() {
                   <p className="font-mono text-[13px] leading-[18px] font-normal uppercase text-justify">
                     {RIGHT_TEXT}
                   </p>
-                  <nav className="flex items-baseline justify-between">
+                  <nav className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-2">
                     {rightLinks.map((link) => (
                       <NavLink key={link.name} {...link} />
                     ))}
@@ -459,19 +471,12 @@ export function Navbar() {
       >
         {/* Section page list */}
         <nav className="flex flex-col w-full pt-24 pb-8 page-gutter max-w-md mx-auto">
-          {visibleSectionLinks.map((link) => {
+          {overlaySectionLinks.map((link) => {
             const letter = link.name === "Political Club" ? "PC" : link.name[0];
-            return (
-              <button
-                key={link.name}
-                type="button"
-                onClick={() => {
-                  setMobileMenuOpen(false);
-                  setLocation(link.href);
-                }}
-                className="flex items-center gap-5 min-h-[56px] py-3 border-b border-foreground-faint cursor-pointer hover:bg-foreground/5 active:bg-foreground/10 transition-colors text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-foreground"
-                style={{ borderLeft: `3px solid ${link.color}`, paddingLeft: "16px" }}
-              >
+            const rowClassName = "flex items-center gap-5 min-h-[56px] py-3 border-b border-foreground-faint cursor-pointer hover:bg-foreground/5 active:bg-foreground/10 transition-colors text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-foreground";
+            const rowStyle = { borderLeft: `3px solid ${link.color}`, paddingLeft: "16px" };
+            const content = (
+              <>
                 <span
                   style={{
                     fontFamily: "'Jacquard 24', system-ui",
@@ -488,6 +493,33 @@ export function Navbar() {
                 >
                   {link.name}
                 </span>
+                {link.external && <ArrowUpRight aria-hidden="true" className="ml-auto shrink-0 text-foreground" size={20} />}
+              </>
+            );
+            return link.external ? (
+              <a
+                key={link.name}
+                href={link.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => setMobileMenuOpen(false)}
+                className={rowClassName}
+                style={rowStyle}
+              >
+                {content}
+              </a>
+            ) : (
+              <button
+                key={link.name}
+                type="button"
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  setLocation(link.href);
+                }}
+                className={rowClassName}
+                style={rowStyle}
+              >
+                {content}
               </button>
             );
           })}
