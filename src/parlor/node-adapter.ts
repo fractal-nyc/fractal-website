@@ -2,6 +2,8 @@ import type { IncomingMessage, ServerResponse } from "node:http";
 
 import { handleParlorRequest } from "./http";
 
+export { handleParlorRequest };
+
 type NodeRequest = IncomingMessage & { body?: unknown };
 
 const SKIP_HEADERS = new Set(["host", "connection", "content-length", "transfer-encoding"]);
