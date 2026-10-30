@@ -1,8 +1,8 @@
 import { handleNodeParlor, handleParlorRequest } from "./handler.mjs";
 
 function failure(error) {
-  const message = error instanceof Error ? `${error.message}\n${error.stack ?? ""}` : String(error);
-  console.error(message);
+  console.error(error);
+  const message = error instanceof Error ? error.message : String(error);
   return JSON.stringify({ error: message });
 }
 

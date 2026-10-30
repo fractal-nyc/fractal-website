@@ -929,13 +929,18 @@ function postgresStore() {
   };
 }
 var BLOB_PATH = "parlor/state.json";
+function normalizeEtag(etag) {
+  const weak = etag.trim().replace(/^W\//, "");
+  if (weak.startsWith('"') && weak.endsWith('"')) return weak.slice(1, -1);
+  return weak;
+}
 function blobStore() {
   async function loadBlob() {
     try {
       const result = await get(BLOB_PATH, { access: "private", useCache: false });
       if (!result || result.statusCode !== 200 || !result.stream) return null;
       const text2 = await new Response(result.stream).text();
-      return { state: parseState(text2), etag: result.blob.etag };
+      return { state: parseState(text2), etag: normalizeEtag(result.blob.etag) };
     } catch (error) {
       if (error instanceof BlobNotFoundError) return null;
       throw error;
@@ -953,7 +958,7 @@ function blobStore() {
         allowOverwrite: false,
         cacheControlMaxAge: 60
       });
-      return { state: seed, etag: saved.etag };
+      return { state: seed, etag: normalizeEtag(saved.etag) };
     } catch (error) {
       const raced = await loadBlob();
       if (raced) return raced;
@@ -967,13 +972,14 @@ function blobStore() {
         const current = await readBlob();
         const next = update(structuredClone(current.state));
         next.version = current.state.version + 1;
+        const conditional = attempt < 4 && current.etag.length > 0;
         try {
           await put(BLOB_PATH, JSON.stringify(next), {
             access: "private",
             contentType: "application/json",
             addRandomSuffix: false,
             allowOverwrite: true,
-            ifMatch: current.etag,
+            ...conditional ? { ifMatch: current.etag } : {},
             cacheControlMaxAge: 60
           });
           return next;
