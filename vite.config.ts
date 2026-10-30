@@ -3,6 +3,7 @@ import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
 import path from "node:path";
 import fs from "node:fs";
+import { parlorDevApi } from "./src/parlor/dev-api-plugin";
 
 /**
  * Inline plugin: after the build finishes, read `dist/.vite/manifest.json`,
@@ -176,7 +177,7 @@ function injectModulePreload(): Plugin {
 }
 
 export default defineConfig({
-  plugins: [react(), tailwindcss(), injectModulePreload()],
+  plugins: [react(), tailwindcss(), injectModulePreload(), parlorDevApi()],
   resolve: {
     alias: {
       "@": path.resolve(import.meta.dirname, "src"),

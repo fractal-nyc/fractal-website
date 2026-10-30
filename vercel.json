@@ -19,7 +19,7 @@
   ],
   "rewrites": [
     {
-      "source": "/((?!assets/|images/|favicon|apple-touch-icon|robots\\.txt).*)",
+      "source": "/((?!assets/|images/|favicon|apple-touch-icon|robots\\.txt|api/).*)",
       "destination": "/index.html"
     }
   ]
