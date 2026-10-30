@@ -137,6 +137,10 @@ Unlisted historical program page with the shared Navbar. Full archived copy: `sr
 
 Unlisted coworking-member guide for `https://members.fractalnyc.com`. Not a public navbar *destination* (no Members link in the menu). Uses the shared site header (Fractal Collective + hamburger) so members can reach the rest of the site. Headline *"Member Guide"*. Copy: `src/data/member-guide.ts` and the page file. Destinations (Stripe, Luma, Cuties, members Discord): `src/data/member-links.ts`. `/members/guide` redirects here. Operator steps (Vercel domain + Stripe Dashboard): [`docs/members-home.md`](./docs/members-home.md).
 
+### Parlor (`/parlor` and `/parlor/admin`)
+
+Unlisted invitation for one evening. Not in the navbar. Guest copy and the guest list live in the ledger (Neon on Vercel, `.data/parlor.json` locally), edited from `/parlor/admin`. The first-run placeholder copy and example guests are in `src/parlor/seed.ts` and apply only when the ledger is empty. Setup: [`docs/parlor.md`](./docs/parlor.md).
+
 ### The Protocol (`/the-protocol` — `src/pages/ProtocolPage.tsx`)
 
 - Visual-only page (animated Sierpinski carpet, `src/components/sections/SierpinskiCarpet.tsx`). No copy.
