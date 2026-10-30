@@ -63,39 +63,14 @@ export async function buildForVercel({
   return { includesComponentCatalog: true };
 }
 
-export function bundleParlorApi(root = process.cwd()) {
-  const esbuild = path.join(root, "node_modules", ".bin", process.platform === "win32" ? "esbuild.cmd" : "esbuild");
-  return new Promise((resolve, reject) => {
-    const child = spawn(
-      esbuild,
-      [
-        path.join(root, "src", "parlor", "node-adapter.ts"),
-        "--bundle",
-        "--platform=node",
-        "--format=esm",
-        "--target=node22",
-        `--outfile=${path.join(root, "api", "parlor", "handler.mjs")}`,
-        "--external:@vercel/blob",
-        "--external:@neondatabase/serverless",
-      ],
-      { cwd: root, stdio: "inherit" },
-    );
-    child.once("error", reject);
-    child.once("exit", (code) => {
-      if (code === 0) resolve();
-      else reject(new Error(`Parlor API bundle failed (exit ${code}).`));
-    });
-  });
-}
-
 const isDirectRun = process.argv[1]
   && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url);
 
 if (isDirectRun) {
-  bundleParlorApi()
-    .then(() => buildForVercel())
-    .catch((error) => {
-      console.error(error);
-      process.exitCode = 1;
-    });
+  // api/parlor/handler.mjs is committed. Regenerating it here would spawn
+  // esbuild, whose install script is skipped on Vercel, so the binary is absent.
+  buildForVercel().catch((error) => {
+    console.error(error);
+    process.exitCode = 1;
+  });
 }

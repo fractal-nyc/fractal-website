@@ -41,6 +41,12 @@ The site had no party database. Sanity is only the Fractal University catalog. T
 
 Seed data is written only when the ledger is missing, so later edits in `seed.ts` do not overwrite responses. Change the live copy on the desk.
 
+The Vercel functions load `api/parlor/handler.mjs`, a committed bundle of `src/parlor`. After changing that server code, regenerate it locally (esbuild's binary is not available in the Vercel install):
+
+```sh
+node_modules/.bin/esbuild src/parlor/node-adapter.ts --bundle --platform=node --format=esm --target=node22 --outfile=api/parlor/handler.mjs --external:@vercel/blob --external:@neondatabase/serverless
+```
+
 ### Environment variables
 
 | Name | Where | Purpose |
