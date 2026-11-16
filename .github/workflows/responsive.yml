@@ -11,7 +11,9 @@ permissions:
 
 jobs:
   local-responsive:
-    runs-on: ubuntu-latest
+    # ubuntu-latest is 26.04, and Playwright 1.59.1 refuses to install
+    # Chromium there. Stay on 24.04 until the browser package supports it.
+    runs-on: ubuntu-24.04
     timeout-minutes: 45
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
