@@ -36,6 +36,43 @@ describe("Campus — contact link", () => {
     }
   });
 
+  it("puts a short access line above each hero membership price", () => {
+    renderCampus();
+    const fullTime = screen.getByRole("link", {
+      name: "Full-time membership, 24/7 access · guests welcome, $300/mo",
+    });
+    const partTime = screen.getByRole("link", {
+      name: "Part-time membership, 20 hrs/week · no guests, $150/mo",
+    });
+    expect(fullTime).toHaveAttribute(
+      "href",
+      "https://buy.stripe.com/4gM5kDckk5r008p3B608g0L",
+    );
+    expect(partTime).toHaveAttribute(
+      "href",
+      "https://buy.stripe.com/eVq4gzckk06G3kB1sY08g0G",
+    );
+    for (const link of [fullTime, partTime]) {
+      const lines = [...link.querySelectorAll("span")]
+        .map((span) => span.textContent?.trim() ?? "")
+        .filter(Boolean);
+      const detail = link === fullTime
+        ? "24/7 access · guests welcome"
+        : "20 hrs/week · no guests";
+      const price = link === fullTime ? "$300/mo" : "$150/mo";
+      expect(lines.indexOf(detail)).toBeGreaterThan(lines.indexOf(lines[0]));
+      expect(lines.indexOf(price)).toBeGreaterThan(lines.indexOf(detail));
+    }
+    // Coworking cards keep their own access sentences and do not pick up the
+    // button lines.
+    expect(
+      screen.getByRole("link", { name: "Full-time membership — $300/mo, sign up (opens in a new tab)" }),
+    ).not.toHaveTextContent("guests welcome");
+    expect(
+      screen.getByRole("link", { name: "Part-time membership — $150/mo, sign up (opens in a new tab)" }),
+    ).not.toHaveTextContent("no guests");
+  });
+
   it("keeps the hero contact inside the lead-size tour paragraph", () => {
     renderCampus();
     const tour = screen.getByRole("link", {

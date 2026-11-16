@@ -82,7 +82,7 @@ The longest page; everything below is in `Campus.tsx`:
 
 Sections, in page order:
 
-1. **Hero** — headline *"Be Ambitious with Us"*, address link (Google Maps), the *"First time here?"* line with the guided-tour (cal.com) link and the `campus@fractalnyc.com` contact, the two membership buttons (`MembershipButtonGroup`), and a Join Discord button.
+1. **Hero** — headline *"Be Ambitious with Us"*, address link (Google Maps), the *"First time here?"* line with the guided-tour (cal.com) link and the `campus@fractalnyc.com` contact, the two membership buttons (`MembershipButtonGroup`: name, then "24/7 access · guests welcome" or "20 hrs/week · no guests" above the price), and a Join Discord button.
 2. **Overview** — *"A campus in the heart of Williamsburg."* — the orientation paragraph (mission sentence + AI training program + daily community events) and the square-footage paragraph (text only; the real overview photos don't exist yet — see the TODO in `Campus.tsx`).
 3. **Coworking** — free drop-in line pointing at the tour, the two membership tiers as HighlightBox cards with price + access rule + Stripe link (`membershipTiers` array, rendered by `MembershipTiers`), and the *"All members have access to:"* amenities list (`amenities` array).
 4. **Events** — Luma calendar link, the free vs. paid hosting paths as two HighlightBox cards and the Fractal U mention.

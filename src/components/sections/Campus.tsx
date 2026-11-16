@@ -43,12 +43,16 @@ const membershipTiers = [
     name: "Full-time membership",
     price: "$300/mo",
     access: "Unlimited 24/7 access.",
+    // Hero button only. Sits above the price so the two CTAs aren't just a
+    // name and a dollar amount.
+    buttonDetail: "24/7 access · guests welcome",
     href: STRIPE_FULLTIME_URL,
   },
   {
     name: "Part-time membership",
     price: "$150/mo",
     access: "Choose your hours — up to 20 hrs per week.",
+    buttonDetail: "20 hrs/week · no guests",
     href: STRIPE_PARTTIME_URL,
   },
 ];
@@ -129,25 +133,27 @@ function PrimaryButton({
   external = true,
   fullWidth = false,
   wrap = true,
+  label,
 }: {
   href: string;
   children: React.ReactNode;
   external?: boolean;
   fullWidth?: boolean;
   wrap?: boolean;
+  label?: string;
 }) {
   const externalProps = external
     ? { target: "_blank" as const, rel: "noopener noreferrer" }
     : {};
   // FRAC-52: Campus inherits the sitewide frost recipe (cream-tinted glass +
   // accent border via `--accent` set on CampusPage's <main>).
-  const widthClass = fullWidth ? "w-full" : "w-full sm:max-w-xs";
+  const widthClass = fullWidth ? "h-full w-full" : "w-full sm:max-w-xs";
   // FRAC-53: Long membership labels wrap to 2-3 lines via whitespace-normal +
   // leading-snug at the 375px mobile baseline.
   const wrapClass = wrap ? "whitespace-normal leading-snug" : "";
   return (
     <Button asChild className={cn(widthClass, "text-center", wrapClass)}>
-      <a href={href} {...externalProps}>
+      <a href={href} {...externalProps} aria-label={label}>
         {children}
       </a>
     </Button>
@@ -157,9 +163,9 @@ function PrimaryButton({
 export type MembershipButtonGroupLayout = "responsive" | "stacked" | "side-by-side";
 
 /**
- * The two Stripe membership CTAs as a button pair. Not rendered on /campus —
- * the page uses `MembershipTiers` so each tier keeps its price and access rule
- * — but kept as a catalog specimen (`components/catalog/registry.tsx`).
+ * The two Stripe membership CTAs in the Campus hero, also a catalog specimen
+ * (`components/catalog/registry.tsx`). The coworking section uses
+ * `MembershipTiers` for the longer access copy.
  */
 export function MembershipButtonGroup({ layout = "responsive" }: { layout?: MembershipButtonGroupLayout }) {
   const layoutClass = layout === "stacked"
@@ -171,9 +177,17 @@ export function MembershipButtonGroup({ layout = "responsive" }: { layout?: Memb
     <div className="w-full">
       <div className={`flex ${layoutClass} gap-4 items-stretch w-full`} data-membership-layout={layout}>
         {membershipTiers.map((tier) => (
-          <PrimaryButton key={tier.name} href={tier.href} fullWidth>
-            <span className="flex flex-col items-center gap-1">
+          <PrimaryButton
+            key={tier.name}
+            href={tier.href}
+            fullWidth
+            label={`${tier.name}, ${tier.buttonDetail}, ${tier.price}`}
+          >
+            <span className="flex w-full flex-col items-center gap-1 text-balance">
               <span>{tier.name}</span>
+              {/* Normal tracking keeps the longer phrase on one line inside
+                  the button, so the two prices stay aligned. */}
+              <span className="opacity-80 tracking-normal">{tier.buttonDetail}</span>
               <span className="opacity-80">{tier.price}</span>
             </span>
           </PrimaryButton>
