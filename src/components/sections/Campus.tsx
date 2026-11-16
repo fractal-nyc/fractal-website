@@ -45,14 +45,14 @@ const membershipTiers = [
     access: "Unlimited 24/7 access.",
     // Hero button only. Sits above the price so the two CTAs aren't just a
     // name and a dollar amount.
-    buttonDetail: "24/7 access; can bring guests",
+    buttonDetail: "24/7 access · guests welcome",
     href: STRIPE_FULLTIME_URL,
   },
   {
     name: "Part-time membership",
     price: "$150/mo",
     access: "Choose your hours — up to 20 hrs per week.",
-    buttonDetail: "20 hrs/week; no guests",
+    buttonDetail: "20 hrs/week · no guests",
     href: STRIPE_PARTTIME_URL,
   },
 ];
