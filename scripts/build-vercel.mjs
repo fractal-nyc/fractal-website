@@ -67,6 +67,8 @@ const isDirectRun = process.argv[1]
   && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url);
 
 if (isDirectRun) {
+  // api/parlor/handler.mjs is committed. Regenerating it here would spawn
+  // esbuild, whose install script is skipped on Vercel, so the binary is absent.
   buildForVercel().catch((error) => {
     console.error(error);
     process.exitCode = 1;

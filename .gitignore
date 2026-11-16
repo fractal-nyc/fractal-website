@@ -10,6 +10,9 @@ dist-components
 .env
 .env.*
 !.env.example
+
+# Parlor local ledger (dev fallback when Neon is not configured)
+.data/
 .sanity/
 
 # IDEs

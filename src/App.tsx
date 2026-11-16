@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect } from "react";
+import { lazy, Suspense, useEffect, useLayoutEffect } from "react";
 import { Switch, Route, Redirect, Router as WouterRouter, useLocation } from "wouter";
 import { Home } from "@/pages/Home";
 import { ProtocolPage } from "@/pages/ProtocolPage";
@@ -12,6 +12,17 @@ import { EducationPage } from "@/pages/EducationPage";
 import { CapPage } from "@/pages/CapPage";
 import { MembersPage } from "@/pages/MembersPage";
 import { membersHomePathForHost } from "@/data/member-links";
+
+const ParlorPage = lazy(() =>
+  import("@/pages/ParlorPage").then((module) => ({ default: module.ParlorPage })),
+);
+const ParlorAdminPage = lazy(() =>
+  import("@/pages/ParlorAdminPage").then((module) => ({ default: module.ParlorAdminPage })),
+);
+
+function ParlorFallback() {
+  return <main className="min-h-screen bg-background text-foreground" />;
+}
 
 import NotFound from "@/pages/not-found";
 
@@ -37,6 +48,8 @@ const PAGE_BACKGROUND_BY_ROUTE: Record<string, string> = {
   "/cap": "white", // Preserve the historical page’s original surface.
   "/members": DEFAULT_PAGE_BACKGROUND,
   "/members/guide": DEFAULT_PAGE_BACKGROUND,
+  "/parlor": DEFAULT_PAGE_BACKGROUND,
+  "/parlor/admin": DEFAULT_PAGE_BACKGROUND,
 };
 
 function PageBackground() {
@@ -95,6 +108,16 @@ function Router() {
       <Route path="/people" component={PeoplePage} />
       <Route path="/education" component={EducationPage} />
       <Route path="/members" component={MembersPage} />
+      <Route path="/parlor/admin">
+        <Suspense fallback={<ParlorFallback />}>
+          <ParlorAdminPage />
+        </Suspense>
+      </Route>
+      <Route path="/parlor">
+        <Suspense fallback={<ParlorFallback />}>
+          <ParlorPage />
+        </Suspense>
+      </Route>
 
       {/* Legacy Education paths now lead to the first-party destination hub. */}
       <Route path="/accelerator">{() => <Redirect to="/education" />}</Route>

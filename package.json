@@ -41,10 +41,12 @@
     "sanity:seed": "node --import tsx scripts/sanity/generate-seed.ts"
   },
   "dependencies": {
+    "@neondatabase/serverless": "1.0.2",
     "@radix-ui/react-slot": "^1.2.0",
     "@react-three/drei": "^10.7.7",
     "@react-three/fiber": "^9.5.0",
     "@sanity/client": "7.18.0",
+    "@vercel/blob": "2.3.1",
     "class-variance-authority": "^0.7.1",
     "clsx": "2.1.1",
     "framer-motion": "12.35.1",
@@ -75,8 +77,8 @@
     "jsdom": "^29.0.2",
     "png-to-ico": "^3.0.1",
     "sanity": "4.22.0",
-    "styled-components": "6.5.3",
     "sharp": "^0.34.5",
+    "styled-components": "6.5.3",
     "tailwindcss": "^4.1.14",
     "tsx": "4.21.0",
     "typescript": "~5.9.3",
